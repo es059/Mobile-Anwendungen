@@ -52,3 +52,5 @@ war/WEB-INF/classes/
 .svn/
 /.settings
 /.gwt
+/.gitignore
+/android
