@@ -5,7 +5,11 @@ public class Exercise {
 	private String mName = "";
 	private  int mID = 0;
 	
-	public  Exercise(String name){
+	public Exercise(){
+		
+	}
+	
+	public Exercise(String name){
 		setName(name);
 		setID(getID() + 1);
 	}

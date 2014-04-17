@@ -5,6 +5,10 @@ public class TrainingDay {
 	private String mName = "";
 	private  int mID = 0;
 	
+	public TrainingDay(){
+		
+	}
+	
 	public  TrainingDay(String name){
 		setName(name);
 		setID(getID() + 1);
