@@ -8,13 +8,17 @@ import com.example.workoutlog.R.id;
 import com.example.workoutlog.R.layout;
 import com.example.workoutlog.R.menu;
 import com.workout.log.data.Exercise;
+import com.workout.log.data.MenueListe;
 import com.workout.log.data.Set;
+import com.workout.log.listAdapter.CustomDrawerAdapter;
 import com.workout.log.listAdapter.SetListAdapter;
 
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +29,9 @@ import android.os.Build;
 
 public class ExerciseSpecific extends Activity {
 
+	
+	    
+	    
 	ListView exerciseView;
 	Exercise exercise;
 	
