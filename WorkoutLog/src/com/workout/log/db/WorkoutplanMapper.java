@@ -51,7 +51,7 @@ public class WorkoutplanMapper   {
 		if (cursor.moveToFirst()){
 			id = Integer.parseInt(cursor.getString(0));
 		}
-		sql = "INSERT INTO Trainingsplan VALUES (" + id + ", " + w.getName() +", " + String.valueOf(date) + ")";
+		sql = "INSERT INTO WorkoutPlan VALUES (" + id + ", " + w.getName() +", " + String.valueOf(date) + ")";
 		db.execSQL(sql);
 		// Insert ID into Data Object
 		w.setID(id);

@@ -2,7 +2,7 @@ package com.workout.log.data;
 
 import java.util.Date;
 
-public class executionActual {
+public class ExecutionActual {
 	
 	private int executionActualId;
 	private int repsActual;
@@ -10,10 +10,11 @@ public class executionActual {
 	private double weight;
 	private Date executionTimestamp;
 	private int exerciseId;
+	
 	public int getExecutionActualId() {
 		return executionActualId;
 	}
-	public void setExecutionActualId(int executionActualId) {
+	public void setId(int executionActualId) {
 		this.executionActualId = executionActualId;
 	}
 	public int getRepsActual() {

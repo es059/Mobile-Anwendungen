@@ -32,6 +32,20 @@ public class ExerciseMapper {
 	 	}
 	}
 	public void add(Exercise e){
+		int id = 0;
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "SELECT MAX(Exercise_id) FROM Exercise";
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			id = Integer.parseInt(cursor.getString(0));
+		}
+		sql = "INSERT INTO Exercise (Exercise_Id) VALUES (id)";
+		db.execSQL(sql);
+		e.setID(id);
+		db.close();
+			
+		
+		
 		
 	}
 	public void delete(Exercise e){	
@@ -74,7 +88,7 @@ public class ExerciseMapper {
 	}
 	
 	
-	public ArrayList<Exercise> findExerciseByName(){
+	public ArrayList<Exercise> getAllExercise(){
 		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
 		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
@@ -86,14 +100,20 @@ public class ExerciseMapper {
 				Exercise ex = new Exercise();
 				ex.setID(Integer.parseInt(cursor.getString(0)));
 				ex.setName(cursor.getString(1));
-			//	w.setTimeStamp(new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH).parse(cursor.getString(2)));
 				exerciseList.add(ex);
 			}while(cursor.moveToNext());
 		}
 		db.close();
 		return exerciseList;
-	
-	
-	
+		}
+		
+	 public Exercise getExerciseById(int id){
+		    SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
+		    sql = "SELECT Exercise_Id FROM Exercise WHERE Exercise_Id = " + id;
+		    Cursor cursor = db.rawQuery(sql, null);
+		    Exercise ex = new Exercise();
+		    ex.setID(Integer.parseInt(cursor.getString(0)));
+		    db.close();
+		    return ex;
 	}
 }
