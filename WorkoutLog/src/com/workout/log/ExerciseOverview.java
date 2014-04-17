@@ -85,12 +85,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
                                                               // onPrepareOptionsMenu()
               }
         };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        
-        if (savedInstanceState == null) {
-              SelectItem(0);
-        }
-        
+        mDrawerLayout.setDrawerListener(mDrawerToggle);      
         
         //Start alter Teil
 		
