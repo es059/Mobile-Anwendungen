@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Workout Log</string>
+    <string name="title_activity_exercise_specific">Übung</string>
+    <string name="title_activity_add">Übung hinzufügen</string>
+    <string name="title_activity_workoutplan_add">Trainingsplan</string>
+    <string name="menu_add">Übung hinzufügen</string>
+    <string name="menu_edit">Übung ändern</string>
+    <string name="menu_workoutplan">Trainingsplan</string>
+    <string name="menu_settings">Einstellungen</string>
+    <string name="specific_repetition">Wdh</string>
+    <string name="specific_set">Satz</string>
+    <string name="specific_weight">Gewicht</string>
+    <string name="drawer_open">Open drawer</string>
+    <string name="drawer_close">Close drawer</string>
+
+    <string-array name="exerciseLongClickDialogArray">
+        <item>Löschen</item>
+        <item>Ändern</item>
+    </string-array>
+
+    <string name="title_activity_training_day_add">TrainingDayAdd</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="navigations_Liste">
+        <item>Home</item>
+        <item>Tagebuch</item>
+        <item>Trainingsplan</item>
+    </string-array>
+
+    <string name="title_activity_workout_select">WorkoutSelect</string>
+
+</resources>

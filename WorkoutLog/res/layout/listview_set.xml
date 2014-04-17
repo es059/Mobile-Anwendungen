@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+     android:id="@+id/listExercise"
+	 android:layout_width="match_parent"
+	 android:layout_height="match_parent"
+	 android:orientation="horizontal">
+	<LinearLayout     
+    	android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:gravity="top"
+	    android:orientation="horizontal" >
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+	       <TableRow
+	            android:id="@+id/tableRow1"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content" >
+	             
+		        <TextView
+		            android:id="@+id/specific_set"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_gravity="center"
+	        		android:gravity="center"
+		            android:layout_weight="1"
+		            android:text="Satz 1"
+		            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+	
+		       <EditText
+		            android:id="@+id/specific_edit_repetition"
+		            android:layout_weight="1"
+		            android:layout_width="5dp"
+		            android:layout_marginLeft="10dp"
+		            android:gravity="center"
+		            android:layout_height="wrap_content"
+					android:hint="Wdh"
+					android:inputType="phone"
+		            android:ems="10" />
+		            
+		       <EditText
+		            android:id="@+id/specific_edit_weight"
+		            android:layout_weight="1"
+		            android:layout_width="5dp"
+		            android:layout_marginLeft="10dp"
+		            android:layout_height="wrap_content"
+					android:hint="Gewicht"
+					android:inputType="phone"
+		            android:ems="10" />
+        	</TableRow>
+    	</TableLayout>
+	</LinearLayout>
+</RelativeLayout>

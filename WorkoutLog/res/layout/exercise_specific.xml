@@ -1,0 +1,74 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.workout.log.ExerciseSpecific"
+    tools:ignore="MergeRootFrame" >
+
+    <fragment
+        android:id="@+id/specific_dateTimePicker"
+        android:name="com.workout.log.fragment.ActionBarDatePickerFragment"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/actionbar_height"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        tools:layout="@layout/actionbar_datepicker_fragment" />
+
+    <ListView
+        android:id="@+id/exerciseSpecificList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tableLayout"
+        android:layout_centerHorizontal="true"
+        android:longClickable="true" >
+
+    </ListView>
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_below="@+id/specific_dateTimePicker"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentLeft="true" >
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+	        <TextView
+	            android:id="@+id/textView1"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center"
+        		android:gravity="center"
+        		android:textStyle="bold"
+	            android:layout_weight="1"
+	            android:text="@+string/specific_set"
+	            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+	        
+	        <TextView
+		        android:id="@+id/textView3"
+		        android:layout_width="wrap_content"
+		        android:layout_weight="1"
+		        android:layout_gravity="center"
+		        android:gravity="center"
+		        android:textStyle="bold"
+		        android:layout_height="wrap_content"
+		        android:text="@+string/specific_weight"
+		        android:textAppearance="?android:attr/textAppearanceListItemSmall"  />
+	
+	    	<TextView
+		        android:id="@+id/textView2"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:textStyle="bold"
+		        android:layout_gravity="center"
+		        android:gravity="center"
+		        android:text="@+string/specific_repetition"
+		        android:textAppearance="?android:attr/textAppearanceListItemSmall"  />
+        </TableRow>
+    </TableLayout>
+</RelativeLayout>
