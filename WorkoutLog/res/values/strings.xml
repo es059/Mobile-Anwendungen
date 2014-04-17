@@ -30,6 +30,7 @@
         <item>Trainingsplan</item>
     </string-array>
 
+    <string name="title_activity_training_day_select">TrainingDaySelect</string>
     <string name="title_activity_workout_select">WorkoutSelect</string>
 
 </resources>
