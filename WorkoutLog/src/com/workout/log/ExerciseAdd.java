@@ -22,6 +22,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,7 +39,7 @@ import android.widget.ListView;
 import android.os.Build;
 
 public class ExerciseAdd extends Activity{
-	// Attribute für Menü
+	// Attribute für Menü 1
 		private DrawerLayout mDrawerLayout;
 	    private ListView mDrawerList;
 	    private ActionBarDrawerToggle mDrawerToggle;
@@ -46,7 +48,7 @@ public class ExerciseAdd extends Activity{
 	    private CharSequence mTitle;
 	    CustomDrawerAdapter adapter1;
 	    MenueListe l = new MenueListe();
-	
+	    EditText search;
 	
     WorkoutplanMapper m = new WorkoutplanMapper(this);
 	
@@ -54,6 +56,8 @@ public class ExerciseAdd extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.exercise_add);
+		
+		search = (EditText) findViewById(R.id.trainingDay_subject);
 		
 		ListView exerciseListView = (ListView) findViewById(R.id.add_exerciseList);
 		
@@ -94,6 +98,33 @@ public class ExerciseAdd extends Activity{
               }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle); 
+        
+        // Implementierung Text Change Listener für Live Suche
+        
+        search.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1,
+					int arg2, int arg3) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) {
+				// TODO Auto-generated method stub
+				
+			}
+        	
+        });
+        		
 	}
 
 	@Override
