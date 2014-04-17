@@ -31,7 +31,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.os.Build;
 
 public class ExerciseOverview extends ActionBarActivity implements OnItemLongClickListener, OnItemClickListener, ExerciseSelectionDialogListener  {
-
+// Version 1.1 
 	ListView exerciseView; 
 	ArrayList<Exercise> exerciseList;
 	private DrawerLayout mDrawerLayout;
