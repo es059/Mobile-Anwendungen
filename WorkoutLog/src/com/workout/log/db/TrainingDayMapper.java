@@ -2,7 +2,10 @@ package com.workout.log.db;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import com.workout.log.data.Exercise;
 import com.workout.log.data.TrainingDay;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -66,4 +69,15 @@ public class TrainingDayMapper {
 		db.close();
 		return d;
 	}
+	public TrainingDay getTrainingDayById(int id){
+		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
+	    sql = "SELECT TrainingDay_Id FROM TrainingDay WHERE TrainingDay_Id = " + id;
+	    Cursor cursor = db.rawQuery(sql, null);
+	    TrainingDay d = new TrainingDay();
+	    d.setID(Integer.parseInt(cursor.getString(0)));
+	    db.close();
+	    return d;
+
+	}
 }
+
