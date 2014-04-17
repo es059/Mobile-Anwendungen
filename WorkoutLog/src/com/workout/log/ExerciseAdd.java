@@ -10,6 +10,7 @@ import com.workout.log.data.Default;
 import com.workout.log.data.Exercise;
 import com.workout.log.data.MenueListe;
 import com.workout.log.data.Workoutplan;
+import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.listAdapter.CustomDrawerAdapter;
 import com.workout.log.listAdapter.DefaultAddListAdapter;
@@ -49,6 +50,8 @@ public class ExerciseAdd extends Activity{
 	    CustomDrawerAdapter adapter1;
 	    MenueListe l = new MenueListe();
 	    EditText search;
+	    
+	    ExerciseMapper em = new ExerciseMapper(this);
 	
     WorkoutplanMapper m = new WorkoutplanMapper(this);
 	

@@ -46,15 +46,15 @@ public class ExerciseMapper {
 	}
 	
 	
-	public String searchKeyString(String key){
+	public ArrayList<Exercise> searchKeyString(String key){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-	    StringBuilder rtn = new StringBuilder();
+	    ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
 	   // Log.d("searchKeyString");
 
 	        // Alles Anfragen auswählen
-	        String selectQuery = "SELECT  * FROM Exercise WHERE KEY_KEY=?";
+	        String selectQuery = "SELECT  * FROM Exercise WHERE "+ key +"";
 
-	        Cursor cursor = db.rawQuery(selectQuery,  new String[] {key});
+	        Cursor cursor = db.rawQuery(selectQuery, null);
 	        // you can change it to
 	        // db.rawQuery("SELECT * FROM "+table+" WHERE KEY_KEY LIKE ?", new String[] {key+"%"});
 	        // if you want to get everything starting with that key value
@@ -62,15 +62,18 @@ public class ExerciseMapper {
 	        // looping through all rows and adding to list
 	        if (cursor.moveToFirst()) {
 	            do {
-	               // Log.d("searchKeyString","searching");
-
-	                rtn.append(",").append(cursor.getString(2));
+	              Exercise e = new Exercise();
+	              e.setID(Integer.parseInt(cursor.getString(0)));
+	              e.setName(cursor.getString(1));
+	              exerciseList.add(e);
+	            	
 	            } while (cursor.moveToNext());
 	        }
+	   
 	        cursor.close();
-	        //Log.d("searchKeyString","finish search");
+	        
 
-	    return rtn.toString();
+	    return exerciseList;
 	}
 	
 	
