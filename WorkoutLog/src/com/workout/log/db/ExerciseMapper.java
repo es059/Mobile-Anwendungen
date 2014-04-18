@@ -87,20 +87,24 @@ public class ExerciseMapper {
 	    return rtn.toString();
 	}
 	
-	
-	public ArrayList<Exercise> getAllExercise(){
+	/*
+	 * Get all Exercises from one TrainingDay
+	 * 
+	 * @param int trainingDayId
+	 * @return ArrayList<Exercise>
+	 * @author Eric Schmidt & Florian Belssing
+	 */
+	public ArrayList<Exercise> getAllExercise(int trainingDayId){
 		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
 		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		
-		sql = "SELECT * FROM Exercise";
+		sql = "SELECT UebungId FROM TrainingstagHatUebung WHERE TrainingstagId = " + trainingDayId;
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
 			do{
-				Exercise ex = new Exercise();
-				ex.setID(Integer.parseInt(cursor.getString(0)));
-				ex.setName(cursor.getString(1));
-				exerciseList.add(ex);
+				Exercise exercise = getExerciseById(Integer.parseInt(cursor.getString(0)));
+				exerciseList.add(exercise);
 			}while(cursor.moveToNext());
 		}
 		db.close();
@@ -108,12 +112,15 @@ public class ExerciseMapper {
 		}
 		
 	 public Exercise getExerciseById(int id){
+		    Exercise exercise = new Exercise();
 		    SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
-		    sql = "SELECT Exercise_Id FROM Exercise WHERE Exercise_Id = " + id;
+		    sql = "SELECT Exercise_Id, ExerciseName FROM Exercise WHERE Exercise_Id = " + id;
 		    Cursor cursor = db.rawQuery(sql, null);
-		    Exercise ex = new Exercise();
-		    ex.setID(Integer.parseInt(cursor.getString(0)));
+		    if (cursor.moveToFirst()){
+			    exercise.setID(Integer.parseInt(cursor.getString(0)));
+			    exercise.setName(cursor.getString(1));
+		    }
 		    db.close();
-		    return ex;
+		    return exercise;
 	}
 }

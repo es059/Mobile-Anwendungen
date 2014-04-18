@@ -6,6 +6,8 @@ import java.util.List;
 import com.workout.log.data.*;
 import com.example.workoutlog.R;
 import com.workout.log.data.Exercise;
+import com.workout.log.db.ExerciseMapper;
+import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment.ExerciseSelectionDialogListener;
@@ -32,25 +34,24 @@ import android.os.Build;
 
 public class ExerciseOverview extends ActionBarActivity implements OnItemLongClickListener, OnItemClickListener, ExerciseSelectionDialogListener  {
 // Version 1.1 
-	ListView exerciseView; 
-	ArrayList<Exercise> exerciseList;
+	private ListView exerciseView; 
+	private ArrayList<Exercise> exerciseList;
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    CustomDrawerAdapter adapter;
+    private CustomDrawerAdapter adapter;
 
+    private MenueListe l = new MenueListe();
     
-    MenueListe l = new MenueListe();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.exercise_overview);
 		
 		// Initializing
-       
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -58,13 +59,9 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
                     GravityCompat.START);
         
-     // Add Drawer Item to dataList
-       
-		
+        // Add Drawer Item to dataList
         adapter = new CustomDrawerAdapter(this, R.layout.custom_drawer_item, l.getDataList());
-
         mDrawerList.setAdapter(adapter);
-        
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -78,30 +75,38 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
                     invalidateOptionsMenu(); // creates call to
                                                               // onPrepareOptionsMenu()
               }
-
               public void onDrawerOpened(View drawerView) {
                     getActionBar().setTitle(mDrawerTitle);
                     invalidateOptionsMenu(); // creates call to
-                                                              // onPrepareOptionsMenu()
+                    // onPrepareOptionsMenu()
               }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);      
         
-        //Start alter Teil
-		
+        /*
+         * Anbindung an Datenbank
+         * @author Eric Schmidt
+         * @date 18.04.2014
+         */
+        
 		exerciseView = (ListView) findViewById(R.id.exerciseOverviewList);
 		
-		//Dummy Daten
-		exerciseList = new ArrayList<Exercise>();
-		Exercise Kniebeugen = new Exercise("Kniebeugen");
-		exerciseList.add(Kniebeugen);
-		Exercise Bankdruecken = new Exercise("Bankdruecken");
-		exerciseList.add(Bankdruecken);
+		//Select Current Workoutplan
+		WorkoutplanMapper wMapper = new WorkoutplanMapper(this);
+		Workoutplan w = wMapper.getCurrent();
 		
+		//Select all Trainingdays from the current Workoutplan
+		TrainingDayMapper tMapper = new TrainingDayMapper(this);
+		ArrayList<TrainingDay> tList = tMapper.getAll(w.getID());
 		
-		ExerciseListAdapter adapter = new ExerciseListAdapter(this, 0, exerciseList);
+		//Select Exercises from Trainingday
+		ExerciseMapper eMapper = new ExerciseMapper(this);
+		ArrayList<Exercise> eList = eMapper.getAllExercise(tList.get(0).getID());
+		
+		ExerciseListAdapter adapter = new ExerciseListAdapter(this, 0, eList);
+		
 		exerciseView.setAdapter(adapter);
-		
+
 		exerciseView.setOnItemLongClickListener(this);
 		exerciseView.setOnItemClickListener(this);
 		
