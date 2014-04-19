@@ -35,7 +35,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.os.Build;
 
 public class ExerciseOverview extends ActionBarActivity implements OnItemLongClickListener, OnItemClickListener, ExerciseSelectionDialogListener  {
-// Version 1.1 
+
 	private ListView exerciseView; 
 	private ArrayList<Exercise> exerciseList;
 	private DrawerLayout mDrawerLayout;
@@ -86,7 +86,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
         mDrawerLayout.setDrawerListener(mDrawerToggle);      
         
         /*
-         * Anbindung an Datenbank
+         * Anbindung an Datenbank - Füllen der ListView
          * @author Eric Schmidt
          * @date 18.04.2014
          */
@@ -101,9 +101,11 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 		TrainingDayMapper tMapper = new TrainingDayMapper(this);
 		ArrayList<TrainingDay> tList = tMapper.getAll(w.getID());
 		
-		//Select Exercises from Trainingday
+		//Select Exercises from first or Selected Trainingday --> TODO
 		ExerciseMapper eMapper = new ExerciseMapper(this);
 		ArrayList<Exercise> eList = eMapper.getAllExercise(tList.get(0).getID());
+		
+		
 		
 		ExerciseListAdapter adapter = new ExerciseListAdapter(this, 0, eList);
 		
@@ -170,7 +172,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 	private void openExerciseSpecific (Exercise exercise){
 		Intent intent = new Intent();
 		intent.setClass(this, ExerciseSpecific.class);
-		intent.putExtra("ExerciseID", exercise.getID());
+		intent.putExtra("ExerciseID", exercise.getId());
 		intent.putExtra("ExerciseName", exercise.getName());
 		startActivity(intent);
 	}

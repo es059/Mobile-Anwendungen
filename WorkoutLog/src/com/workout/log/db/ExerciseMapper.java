@@ -15,8 +15,8 @@ import android.util.Log;
 
 public class ExerciseMapper {
 	
-	DataBaseHelper myDBHelper;
-	String sql;
+	private DataBaseHelper myDBHelper;
+	private String sql;
 	
 	public ExerciseMapper(Context context){
 		myDBHelper = new DataBaseHelper(context);
@@ -99,7 +99,7 @@ public class ExerciseMapper {
 		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		
-		sql = "SELECT UebungId FROM TrainingstagHatUebung WHERE TrainingstagId = " + trainingDayId; 
+		sql = "SELECT Exercise_Id FROM TrainingDayHasExercise WHERE TrainingDay_Id = " + trainingDayId; 
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
 			do{
@@ -110,7 +110,13 @@ public class ExerciseMapper {
 		db.close();
 		return exerciseList;
 		}
-		
+	/*
+	 * Get one Exercise by an id
+	 * 
+	 *  @param int id
+	 *  @return Exercise
+	 *  @author Eric Schmidt & Florian Blessing
+	 */
 	 public Exercise getExerciseById(int id){
 		    Exercise exercise = new Exercise();
 		    SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
