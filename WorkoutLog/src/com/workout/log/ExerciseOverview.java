@@ -85,29 +85,16 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);      
         
-        /*
-         * Anbindung an Datenbank - Füllen der ListView
+        /**
+         * Calls the <code>UpdateListView</code> Singleton Constructor for the first time 
+         * and sets the ListView reference
+         * 
          * @author Eric Schmidt
          * @date 18.04.2014
          */
-        
 		exerciseView = (ListView) findViewById(R.id.exerciseOverviewList);
-		
-		//Select Current Workoutplan
-		WorkoutplanMapper wMapper = new WorkoutplanMapper(this);
-		Workoutplan w = wMapper.getCurrent();
-		
-		//Select all Trainingdays from the current Workoutplan
-		TrainingDayMapper tMapper = new TrainingDayMapper(this);
-		ArrayList<TrainingDay> tList = tMapper.getAll(w.getID());
-		
-		//Select Exercises from first or Selected Trainingday --> TODO
-		ExerciseMapper eMapper = new ExerciseMapper(this);
-		ArrayList<Exercise> eList = eMapper.getAllExercise(tList.get(0).getID());
-		
-		ExerciseListAdapter adapter = new ExerciseListAdapter(this, 0, eList);
-		
-		exerciseView.setAdapter(adapter);
+		UpdateListView updateOverview = UpdateListView.updateListView(exerciseView);
+		updateOverview.ExerciseListViewUpdate(this, 1);
 
 		exerciseView.setOnItemLongClickListener(this);
 		exerciseView.setOnItemClickListener(this);

@@ -3,7 +3,7 @@ package com.workout.log.bo;
 public class TrainingDay {
 
 	private String mName = "";
-	private  int mID = 0;
+	private  int mId = 0;
 	
 	public TrainingDay(){
 		
@@ -23,10 +23,10 @@ public class TrainingDay {
 	}
 
 	public  int getID() {
-		return mID;
+		return mId;
 	}
 
-	public void setID(int ID) {
-		mID = ID;
+	public void setID(int Id) {
+		mId = Id;
 	}
 }

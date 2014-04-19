@@ -87,7 +87,7 @@ public class ExerciseMapper {
 	    return rtn.toString();
 	}
 	
-	/*
+	/**
 	 * Get all Exercises from one TrainingDay
 	 * 
 	 * @param int trainingDayId
@@ -110,7 +110,7 @@ public class ExerciseMapper {
 		db.close();
 		return exerciseList;
 		}
-	/*
+	/**
 	 * Get one Exercise by an id
 	 * 
 	 *  @param int id

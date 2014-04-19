@@ -37,8 +37,8 @@ public class TrainingDayMapper {
 		db.close();
 	}
 	
-	/*
-	 * Get all TrainingDays from one Workoutplan using the 
+	/**
+	 * Get all TrainingDays from one Workoutplan using the workoutplanId
 	 * 
 	 * @param int workoutplanId
 	 * @return ArrayList<TrainingDay>

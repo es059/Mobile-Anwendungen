@@ -39,7 +39,7 @@ public class WorkoutplanMapper   {
 	 	}
 	}
 	
-	/*
+	/**
 	 * Get Currently selected Workoutplan. Workoutplan is current if column 'Current' 
 	 * has Value 1
 	 * 

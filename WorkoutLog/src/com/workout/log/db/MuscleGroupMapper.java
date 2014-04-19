@@ -8,7 +8,7 @@ import com.workout.log.bo.MuscleGroup;
 import android.content.Context;
 import android.database.SQLException;
 
-/*
+/**
  * Mapper Class of BusinessObject MuscleGroup
  * 
  * @author Eric Schmidt

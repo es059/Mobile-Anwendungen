@@ -25,6 +25,13 @@ public class ListViewExercise extends RelativeLayout{
 		repetitionView = (TextView) listViewExercise.findViewById(R.id.repetitions);
 		addView(listViewExercise);
 	}
+	/**
+	 * Set the Text of the TextViews within the Custom Layout using the parameter 
+	 * Exercise
+	 * 
+	 * @param Exercise exercise
+	 * @author Eric Schmidt
+	 */
 	public void setExercise(Exercise exercise){
 		this.exerciseView.setText(exercise.getName());
 		//Get target performance information (Set & Repetition)
