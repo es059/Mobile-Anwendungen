@@ -27,7 +27,7 @@ public class ListViewExercise extends RelativeLayout{
 	}
 	public void setExercise(Exercise exercise){
 		this.exerciseView.setText(exercise.getName());
-		//Get target perfomance information (Set & Repetition)
+		//Get target performance information (Set & Repetition)
 		PerformanceTargetMapper pMapper = new PerformanceTargetMapper(getContext());
 		PerformanceTarget performanceTarget = pMapper.getPerformanceTargetByExerciseId(exercise);
 		this.setView.setHint("(Sätze: " + String.valueOf(performanceTarget.getSet()) + ")");

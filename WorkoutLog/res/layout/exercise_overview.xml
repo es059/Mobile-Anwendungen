@@ -22,12 +22,12 @@
 
 				    <fragment
 				        android:id="@+id/overview_dateTimePicker"
-				        android:name="com.workout.log.fragment.ActionBarDatePickerFragment"
+				        android:name="com.workout.log.fragment.ActionBarTrainingDayPickerFragment"
 				        android:layout_width="match_parent"
 				        android:layout_height="@dimen/actionbar_height"
 				        android:layout_alignParentTop="true"
 				        android:layout_centerHorizontal="true"
-				        tools:layout="@layout/actionbar_datepicker_fragment"/>
+				        tools:layout="@layout/actionbar_training_day_picker_fragment"/>
 				
 				    <ListView
 				        android:id="@+id/exerciseOverviewList"
