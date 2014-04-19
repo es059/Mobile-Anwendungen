@@ -6,6 +6,7 @@ import com.example.workoutlog.R;
 import com.example.workoutlog.R.id;
 import com.example.workoutlog.R.layout;
 import com.example.workoutlog.R.menu;
+import com.workout.log.bo.TrainingDay;
 import com.workout.log.data.*;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment.ExerciseSelectionDialogListener;

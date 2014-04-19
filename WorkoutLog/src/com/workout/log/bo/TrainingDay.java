@@ -1,15 +1,15 @@
-package com.workout.log.data;
+package com.workout.log.bo;
 
-public class Exercise {
+public class TrainingDay {
 
 	private String mName = "";
 	private  int mID = 0;
 	
-	public Exercise(){
+	public TrainingDay(){
 		
 	}
 	
-	public Exercise(String name){
+	public  TrainingDay(String name){
 		setName(name);
 		setID(getID() + 1);
 	}
@@ -18,15 +18,15 @@ public class Exercise {
 		return mName;
 	}
 
-	public void setName(String mName) {
-		this.mName = mName;
+	public void setName(String Name) {
+		this.mName = Name;
 	}
 
 	public  int getID() {
 		return mID;
 	}
 
-	public void setID(int mID) {
-		mID = mID;
+	public void setID(int ID) {
+		mID = ID;
 	}
 }

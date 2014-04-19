@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+import com.workout.log.bo.TrainingDay;
 import com.workout.log.customLayout.ListViewTrainingDay;
-import com.workout.log.data.TrainingDay;
 
 public class TrainingDayListAdapter extends ArrayAdapter<TrainingDay> {
 	public TrainingDayListAdapter(Context context, int textViewResourceId, List<TrainingDay> objects) {

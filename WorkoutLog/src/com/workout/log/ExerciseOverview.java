@@ -3,9 +3,11 @@ package com.workout.log;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.TrainingDay;
+import com.workout.log.bo.Workoutplan;
 import com.workout.log.data.*;
 import com.example.workoutlog.R;
-import com.workout.log.data.Exercise;
 import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.db.WorkoutplanMapper;
@@ -109,8 +111,6 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 
 		exerciseView.setOnItemLongClickListener(this);
 		exerciseView.setOnItemClickListener(this);
-		
-	
 	}
 
 	@Override

@@ -3,8 +3,8 @@ package com.workout.log.db;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.workout.log.data.Exercise;
-import com.workout.log.data.Workoutplan;
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.Workoutplan;
 
 import android.content.Context;
 import android.database.CursorJoiner.Result;
@@ -99,7 +99,7 @@ public class ExerciseMapper {
 		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		
-		sql = "SELECT UebungId FROM TrainingstagHatUebung WHERE TrainingstagId = " + trainingDayId;
+		sql = "SELECT UebungId FROM TrainingstagHatUebung WHERE TrainingstagId = " + trainingDayId; 
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
 			do{

@@ -12,7 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import com.workout.log.data.Workoutplan;
+import com.workout.log.bo.Workoutplan;
 
 import android.content.Context;
 import android.database.Cursor;

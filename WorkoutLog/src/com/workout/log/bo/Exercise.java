@@ -1,15 +1,15 @@
-package com.workout.log.data;
+package com.workout.log.bo;
 
-public class TrainingDay {
+public class Exercise {
 
 	private String mName = "";
 	private  int mID = 0;
 	
-	public TrainingDay(){
+	public Exercise(){
 		
 	}
 	
-	public  TrainingDay(String name){
+	public Exercise(String name){
 		setName(name);
 		setID(getID() + 1);
 	}

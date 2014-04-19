@@ -3,8 +3,8 @@ package com.workout.log.db;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.workout.log.data.Exercise;
-import com.workout.log.data.TrainingDay;
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.TrainingDay;
 
 import android.content.Context;
 import android.database.Cursor;
