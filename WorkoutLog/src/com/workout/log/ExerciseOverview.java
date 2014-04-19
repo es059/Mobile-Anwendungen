@@ -105,8 +105,6 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 		ExerciseMapper eMapper = new ExerciseMapper(this);
 		ArrayList<Exercise> eList = eMapper.getAllExercise(tList.get(0).getID());
 		
-		
-		
 		ExerciseListAdapter adapter = new ExerciseListAdapter(this, 0, eList);
 		
 		exerciseView.setAdapter(adapter);

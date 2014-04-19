@@ -49,7 +49,7 @@ public class TrainingDayMapper {
 		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		
-		sql = "SELECT TrainingstagId FROM TrainingsplanHatTrainingstag WHERE TrainingsplanId = " + workoutplanId;
+		sql = "SELECT TrainingDay_Id FROM WorkoutplanHasTrainingDay WHERE Workoutplan_Id = " + workoutplanId;
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
 			do{
