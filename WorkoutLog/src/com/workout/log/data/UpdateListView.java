@@ -38,11 +38,20 @@ public class UpdateListView {
 	   * @author Eric Schmidt
 	   */
 	  public static UpdateListView updateListView(ListView listView) {
-	    if (updateListView == null) {
+	    if (updateListView == null || listView != mListView ) {
 	    	updateListView = new UpdateListView(listView);
 	    }
 	    return updateListView;
 	  }
+	  /**
+	   * "Constructor" is called if the ListView Object is not known
+	   * 
+	   * @return updateListView
+	   * @author Eric Schmidt
+	   */
+	  public static UpdateListView updateListView() {
+		    return updateListView;
+		  }
 	  
 	/**
 	 * Updates Exercise ListViews using the ExerciseListAdapter. Ensures that there are no unnecessary Datebase querys

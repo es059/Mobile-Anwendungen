@@ -93,14 +93,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 		exerciseView.setOnItemLongClickListener(this);
 		exerciseView.setOnItemClickListener(this);
 	}
-	
-	@Override
-	protected void onPause(){
-		super.onPause();
-		exerciseView = null;
-		updateOverview = null;
-	}
-	
+		
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 

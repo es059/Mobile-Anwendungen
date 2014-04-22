@@ -58,7 +58,7 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 	@Override
 	public void onClick(View v) {
 		if (exerciseListViewUpdate == null){
-			exerciseListViewUpdate = UpdateListView.updateListView(null);
+			exerciseListViewUpdate = UpdateListView.updateListView();
 		}
 		switch (v.getId()){
 		case R.id.Next:
