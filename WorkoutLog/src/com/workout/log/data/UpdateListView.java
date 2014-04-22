@@ -20,9 +20,11 @@ import android.widget.ListView;
  */
 public class UpdateListView {
 	
-	private ListView mListView;
 	private ArrayList<TrainingDay> tList;
+	private ArrayList<Exercise> eList;
+	private static ListView mListView;
 	private static UpdateListView updateListView = null;
+	private static ExerciseListAdapter adapter = null;
 	
 	 protected UpdateListView(ListView listView) {
 		 mListView = listView;
@@ -39,7 +41,6 @@ public class UpdateListView {
 	    if (updateListView == null) {
 	    	updateListView = new UpdateListView(listView);
 	    }
-
 	    return updateListView;
 	  }
 	  
@@ -50,7 +51,7 @@ public class UpdateListView {
 	 * @param int trainingDayId
 	 * @author Eric Schmidt
 	 */
-	public void ExerciseListViewUpdate(Context context, int trainingDayId){
+	public void ExerciseListViewUpdate(Context context){
 		if (tList == null){
 			//Select Current Workoutplan
 			WorkoutplanMapper wMapper = new WorkoutplanMapper(context);
@@ -58,14 +59,20 @@ public class UpdateListView {
 			
 			//Select all Trainingdays from the current Workoutplan
 			TrainingDayMapper tMapper = new TrainingDayMapper(context);
-			ArrayList<TrainingDay> tList = tMapper.getAll(w.getID());
+			tList = tMapper.getAll(w.getID());
 		}
 		//Select Exercises from Selected Trainingday --> TODO
 		ExerciseMapper eMapper = new ExerciseMapper(context);
-		ArrayList<Exercise> eList = eMapper.getAllExercise(trainingDayId);
+		eList = eMapper.getAllExercise(tList.get(0).getID());
+		adapter = new ExerciseListAdapter(context, 0, eList);
 		
-		ExerciseListAdapter adapter = new ExerciseListAdapter(context, 0, eList);
-		
+		mListView.setAdapter(adapter);
+	}
+	public void ExerciseListViewUpdate(Context context, int trainingDayId){
+		//Select Exercises from Selected Trainingday
+		ExerciseMapper eMapper = new ExerciseMapper(context);
+		eList = eMapper.getAllExercise(trainingDayId);
+		adapter = new ExerciseListAdapter(context, 0, eList);
 		mListView.setAdapter(adapter);
 	}
 }

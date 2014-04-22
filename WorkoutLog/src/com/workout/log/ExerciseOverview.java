@@ -1,20 +1,12 @@
 package com.workout.log;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.workout.log.bo.Exercise;
-import com.workout.log.bo.TrainingDay;
-import com.workout.log.bo.Workoutplan;
 import com.workout.log.data.*;
 import com.example.workoutlog.R;
-import com.workout.log.db.ExerciseMapper;
-import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment.ExerciseSelectionDialogListener;
 import com.workout.log.listAdapter.CustomDrawerAdapter;
-import com.workout.log.listAdapter.ExerciseListAdapter;
 
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -29,15 +21,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.os.Build;
 
 public class ExerciseOverview extends ActionBarActivity implements OnItemLongClickListener, OnItemClickListener, ExerciseSelectionDialogListener  {
 
-	private ListView exerciseView; 
-	private ArrayList<Exercise> exerciseList;
+	private static ListView exerciseView; 
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -45,6 +34,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private CustomDrawerAdapter adapter;
+    private UpdateListView updateOverview; 
 
     private MenueListe l = new MenueListe();
     
@@ -84,22 +74,33 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
               }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);      
-        
+	}
+	
+	@Override
+	protected void onResume(){
+		super.onResume();
         /**
          * Calls the <code>UpdateListView</code> Singleton Constructor for the first time 
          * and sets the ListView reference
          * 
          * @author Eric Schmidt
          * @date 18.04.2014
-         */
+         */  
 		exerciseView = (ListView) findViewById(R.id.exerciseOverviewList);
-		UpdateListView updateOverview = UpdateListView.updateListView(exerciseView);
-		updateOverview.ExerciseListViewUpdate(this, 1);
+		updateOverview = UpdateListView.updateListView(exerciseView);
+		updateOverview.ExerciseListViewUpdate(this,1);
 
 		exerciseView.setOnItemLongClickListener(this);
 		exerciseView.setOnItemClickListener(this);
 	}
-
+	
+	@Override
+	protected void onPause(){
+		super.onPause();
+		exerciseView = null;
+		updateOverview = null;
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
