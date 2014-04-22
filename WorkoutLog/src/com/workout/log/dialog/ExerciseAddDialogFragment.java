@@ -16,7 +16,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 public class ExerciseAddDialogFragment extends DialogFragment {
-	private MuscleGroup list = new MuscleGroup();
+	// private MuscleGroup list = new MuscleGroup();
 	
 	static ExerciseMapper em;
 	// Konstruktor 
