@@ -12,7 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import com.workout.log.data.Workoutplan;
+import com.workout.log.bo.Workoutplan;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -39,6 +39,28 @@ public class WorkoutplanMapper   {
 	 	}
 	}
 	
+	/**
+	 * Get Currently selected Workoutplan. Workoutplan is current if column 'Current' 
+	 * has Value 1
+	 * 
+	 * @ return Workoutplan
+	 */
+	public Workoutplan getCurrent(){
+		Workoutplan w = new Workoutplan();
+		//Establish Database Conncetion
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "SELECT Workoutplan_Id, WorkoutplanName, Timestamp FROM Workoutplan WHERE Current = 1";
+		
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			w.setID(Integer.parseInt(cursor.getString(0)));
+			w.setName(cursor.getString(1));
+			//w.setTimeStamp ((cursor.getString(2));
+		}
+
+		return w;
+	}
+	
 	public void  add(Workoutplan w) {
 		int id = 0;
 		Date date;
@@ -51,7 +73,7 @@ public class WorkoutplanMapper   {
 		if (cursor.moveToFirst()){
 			id = Integer.parseInt(cursor.getString(0));
 		}
-		sql = "INSERT INTO Trainingsplan VALUES (" + id + ", " + w.getName() +", " + String.valueOf(date) + ")";
+		sql = "INSERT INTO WorkoutPlan VALUES (" + id + ", " + w.getName() +", " + String.valueOf(date) + ")";
 		db.execSQL(sql);
 		// Insert ID into Data Object
 		w.setID(id);

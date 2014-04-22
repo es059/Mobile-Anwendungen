@@ -1018,8 +1018,8 @@ containing a value of this type.
         public static final int user2=0x7f020070;
     }
     public static final class id {
-        public static final int Next=0x7f05003e;
-        public static final int Previous=0x7f05003c;
+        public static final int Next=0x7f05003f;
+        public static final int Previous=0x7f05003d;
         public static final int action_bar=0x7f05001c;
         public static final int action_bar_activity_content=0x7f050015;
         public static final int action_bar_container=0x7f05001b;
@@ -1042,7 +1042,6 @@ containing a value of this type.
         public static final int collapseActionView=0x7f05000d;
         public static final int container=0x7f050048;
         public static final int content_frame=0x7f050046;
-        public static final int date=0x7f05003d;
         public static final int default_activity_button=0x7f050028;
         public static final int default_add_hint=0x7f050056;
         public static final int default_add_titel=0x7f050055;
@@ -1113,11 +1112,12 @@ containing a value of this type.
         public static final int title=0x7f05002b;
         public static final int top_action_bar=0x7f050020;
         public static final int trainingDayAdd=0x7f05005e;
+        public static final int trainingDayPicker=0x7f05003e;
         public static final int trainingDay_add_list=0x7f050063;
         public static final int trainingDay_fragment=0x7f050062;
         public static final int trainingDay_listview_titel=0x7f05005f;
         public static final int trainingDay_select_list=0x7f050065;
-        public static final int trainingDay_subject=0x7f05003f;
+        public static final int trainingDay_subject=0x7f05003c;
         public static final int training_day_select_fragment=0x7f050064;
         public static final int up=0x7f050021;
         public static final int useLogo=0x7f050003;
@@ -1179,8 +1179,8 @@ containing a value of this type.
         public static final int abc_search_dropdown_item_icons_2line=0x7f030015;
         public static final int abc_search_view=0x7f030016;
         public static final int actionbar_bottom_save_fragment=0x7f030017;
-        public static final int actionbar_datepicker_fragment=0x7f030018;
-        public static final int actionbar_searchbar_fragment=0x7f030019;
+        public static final int actionbar_searchbar_fragment=0x7f030018;
+        public static final int actionbar_training_day_picker_fragment=0x7f030019;
         public static final int actionbar_training_day_select=0x7f03001a;
         public static final int actionbar_training_day_subject_fragment=0x7f03001b;
         public static final int actionbar_workoutplan_subject_fragment=0x7f03001c;

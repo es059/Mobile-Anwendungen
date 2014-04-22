@@ -2,8 +2,8 @@ package com.workout.log.listAdapter;
 
 import java.util.List;
 
+import com.workout.log.bo.Exercise;
 import com.workout.log.customLayout.ListViewExercise;
-import com.workout.log.data.Exercise;
 
 import android.content.Context;
 import android.view.View;

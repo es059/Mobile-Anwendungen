@@ -1,28 +1,20 @@
 package com.workout.log;
 
 import java.util.ArrayList;
-
 import com.example.workoutlog.R;
-import com.example.workoutlog.R.id;
-import com.example.workoutlog.R.layout;
-import com.example.workoutlog.R.menu;
-import com.workout.log.data.Default;
-import com.workout.log.data.Exercise;
+import com.workout.log.bo.Exercise;
 import com.workout.log.data.MenueListe;
-import com.workout.log.data.Workoutplan;
 import com.workout.log.db.ExerciseMapper;
+
 import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.dialog.ExerciseAddDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment.ExerciseSelectionDialogListener;
 import com.workout.log.listAdapter.CustomDrawerAdapter;
-import com.workout.log.listAdapter.DefaultAddListAdapter;
 import com.workout.log.listAdapter.ExerciseListAdapter;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -31,20 +23,13 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.os.Build;
 
 public class ExerciseAdd extends Activity implements ExerciseSelectionDialogListener, OnItemLongClickListener {
 	// Attribute für Menü 1

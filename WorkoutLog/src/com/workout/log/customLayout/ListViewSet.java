@@ -1,7 +1,7 @@
 package com.workout.log.customLayout;
 
 import com.example.workoutlog.R;
-import com.workout.log.data.Set;
+import com.workout.log.bo.Set;
 
 import android.content.Context;
 import android.view.LayoutInflater;

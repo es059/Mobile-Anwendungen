@@ -3,8 +3,8 @@ package com.workout.log;
 import java.util.ArrayList;
 
 import com.example.workoutlog.R;
+import com.workout.log.bo.Workoutplan;
 import com.workout.log.data.MenueListe;
-import com.workout.log.data.Workoutplan;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment.ExerciseSelectionDialogListener;
 import com.workout.log.listAdapter.CustomDrawerAdapter;

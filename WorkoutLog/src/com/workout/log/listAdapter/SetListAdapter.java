@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+import com.workout.log.bo.Set;
 import com.workout.log.customLayout.ListViewSet;
-import com.workout.log.data.Set;
 
 public class SetListAdapter extends ArrayAdapter<Set> {
 	public SetListAdapter(Context context, int textViewResourceId, List<Set> objects) {
