@@ -11,12 +11,15 @@ import android.database.CursorJoiner.Result;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.text.Editable;
 import android.util.Log;
 
 public class ExerciseMapper {
 	
 	DataBaseHelper myDBHelper;
 	String sql;
+	int id =  10;
+	String bezeichung = "Kreuzheben";
 	
 	public ExerciseMapper(Context context){
 		myDBHelper = new DataBaseHelper(context);
@@ -31,7 +34,12 @@ public class ExerciseMapper {
 	 		throw sqle;
 	 	}
 	}
-	public void add(Exercise e){
+	public void add(String a){
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "INSERT INTO Uebung (Bezeichung) VALUES ('" +a +"')";
+		db.execSQL(sql);
+		db.close();
+
 		
 	}
 	public void delete(Exercise e){	
@@ -52,8 +60,8 @@ public class ExerciseMapper {
 	   // Log.d("searchKeyString");
 
 	        // Alles Anfragen auswählen
-	        String selectQuery = "SELECT  * FROM Exercise WHERE "+ key +"";
-
+	     //   String selectQuery = "SELECT  * FROM Uebung WHERE Bezeichung="+"'+ key +'";
+	     String selectQuery =  "SELECT * FROM Uebung WHERE Bezeichung LIKE '%" + key + "%'";
 	        Cursor cursor = db.rawQuery(selectQuery, null);
 	        // you can change it to
 	        // db.rawQuery("SELECT * FROM "+table+" WHERE KEY_KEY LIKE ?", new String[] {key+"%"});

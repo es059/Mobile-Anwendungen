@@ -126,10 +126,10 @@ public class TrainingDaySelect extends Activity implements OnItemClickListener, 
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+      }
+		
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -197,12 +197,27 @@ public class TrainingDaySelect extends Activity implements OnItemClickListener, 
 	}
 }
 	public void SelectItem(int possition) { 
-		Intent intent= null;
+		
 		switch(possition) {
 		case 0:
+			Intent intent= null;
 			intent = new Intent();
-			intent.setClass(this, WorkoutplanSelect.class);
+			intent.setClass(this, ExerciseOverview.class);
 			startActivity(intent);
+			break;
+		case 1: 
+			Intent intent1= null;
+			intent1 = new Intent();
+			intent1.setClass(this, WorkoutplanSelect.class);
+			startActivity(intent1);
+			break;
+		case 2: 
+			break;
+		case 3: 
+			Intent intent2= null;
+			intent2 = new Intent();
+			intent2.setClass(this, ExerciseAdd.class);
+			startActivity(intent2);
 			break;
 		}
 		

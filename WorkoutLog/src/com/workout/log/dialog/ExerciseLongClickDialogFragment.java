@@ -26,8 +26,10 @@ public class ExerciseLongClickDialogFragment extends DialogFragment{
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
 				case 0:
+					System.out.println("1");
 					break;
 				case 1:
+					System.out.println("2");
 					break;
 				case 2: 
 					break;

@@ -40,7 +40,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    CustomDrawerAdapter adapter;
+    CustomDrawerAdapter adapter; 
 
     
     MenueListe l = new MenueListe();
@@ -49,7 +49,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.exercise_overview);
 		
-		// Initializing
+	// Initializing
        
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -70,7 +70,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+       mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                     R.drawable.ic_drawer, R.string.drawer_open,
                     R.string.drawer_close) {
               public void onDrawerClosed(View view) {
@@ -85,7 +85,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
                                                               // onPrepareOptionsMenu()
               }
         };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);      
+        mDrawerLayout.setDrawerListener(mDrawerToggle);   
         
         //Start alter Teil
 		
@@ -121,7 +121,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 		
 		// The action bar home/up action should open or close the drawer.
 	      // ActionBarDrawerToggle will take care of this.
-	      if (mDrawerToggle.onOptionsItemSelected(item)) {
+	     if (mDrawerToggle.onOptionsItemSelected(item)) {
 	            return true;
 	      }
 	 
@@ -188,13 +188,29 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 	 *
 	 */
 	public void SelectItem(int possition) { 
-		Intent intent= null;
+		
 		switch(possition) {
 		case 0:
+			Intent intent= null;
 			intent = new Intent();
-			intent.setClass(this, WorkoutplanSelect.class);
+			intent.setClass(this, ExerciseOverview.class);
 			startActivity(intent);
 			break;
+		case 1: 
+			Intent intent1= null;
+			intent1 = new Intent();
+			intent1.setClass(this, WorkoutplanSelect.class);
+			startActivity(intent1);
+			break;
+		case 2: 
+			break;
+		case 3: 
+			Intent intent2= null;
+			intent2 = new Intent();
+			intent2.setClass(this, ExerciseAdd.class);
+			startActivity(intent2);
+			break;
+			
 		}
 		
 		/**

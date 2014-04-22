@@ -19,6 +19,13 @@
         <item>Löschen</item>
         <item>Ändern</item>
     </string-array>
+    
+     <string-array name="MuscleGroup">
+        <item>Beine</item>
+        <item>Rücken</item>
+          <item>Brust</item>
+            <item>Arme</item>
+    </string-array>
 
     <string name="title_activity_training_day_add">TrainingDayAdd</string>
     <string name="hello_world">Hello world!</string>

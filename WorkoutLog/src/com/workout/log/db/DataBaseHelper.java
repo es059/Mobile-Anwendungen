@@ -19,7 +19,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     	super(context, DB_NAME, null, 1);
         this.myContext = context; }
 
-	private static String DB_PATH = "/data/data/com.example.workoutlog/databases/";
+	 private static String DB_PATH = "/data/data/com.example.workoutlog/databases/";
 	 private static String DB_NAME = "WorkoutLog.db";
 	 private SQLiteDatabase myDataBase;
 	 private final Context myContext;

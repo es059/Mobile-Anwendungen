@@ -12,16 +12,22 @@ import com.workout.log.data.MenueListe;
 import com.workout.log.data.Workoutplan;
 import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.WorkoutplanMapper;
+import com.workout.log.dialog.ExerciseAddDialogFragment;
+import com.workout.log.dialog.ExerciseLongClickDialogFragment;
+import com.workout.log.dialog.ExerciseLongClickDialogFragment.ExerciseSelectionDialogListener;
 import com.workout.log.listAdapter.CustomDrawerAdapter;
 import com.workout.log.listAdapter.DefaultAddListAdapter;
+import com.workout.log.listAdapter.ExerciseListAdapter;
 
 import android.app.Activity;
 import android.app.ActionBar;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -32,6 +38,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -39,21 +46,24 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.os.Build;
 
-public class ExerciseAdd extends Activity{
+public class ExerciseAdd extends Activity implements ExerciseSelectionDialogListener, OnItemLongClickListener {
 	// Attribute für Menü 1
 		private DrawerLayout mDrawerLayout;
-	    private ListView mDrawerList;
+	    private ListView mDrawerListe;
 	    private ActionBarDrawerToggle mDrawerToggle;
 
 	    private CharSequence mDrawerTitle;
 	    private CharSequence mTitle;
-	    CustomDrawerAdapter adapter1;
-	    MenueListe l = new MenueListe();
-	    EditText search;
+	    private CustomDrawerAdapter adapter;
+	   private MenueListe l = new MenueListe();
+	   private EditText search;
+	  ArrayList<Exercise> List;
+	  int counter;
+	  String i;
 	    
-	    ExerciseMapper em = new ExerciseMapper(this);
+	  private  ExerciseMapper em = new ExerciseMapper(this);
 	
-    WorkoutplanMapper m = new WorkoutplanMapper(this);
+	 private  WorkoutplanMapper m = new WorkoutplanMapper(this);
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,25 +72,60 @@ public class ExerciseAdd extends Activity{
 		
 		search = (EditText) findViewById(R.id.trainingDay_subject);
 		
-		ListView exerciseListView = (ListView) findViewById(R.id.add_exerciseList);
-		
-		//Default ListAdapter mit Hinzufügen-Eintrag
-		ArrayList<Default> defaultAddList = new ArrayList<Default>();
-		Default defaultExercise = new Default("Hinzufügen", "(füge eine neue Übung hinzu)");
-		defaultAddList.add(defaultExercise);
-		DefaultAddListAdapter adapter = new DefaultAddListAdapter(this,0,defaultAddList);
-		
-		ArrayAdapter a = new ArrayAdapter(this, android.R.layout.simple_list_item_1, m.getAll());
+		final ListView exerciseListView = (ListView) findViewById(R.id.add_exerciseList);
+		List = new ArrayList<Exercise>();
+		final ExerciseListAdapter a = new ExerciseListAdapter(this , R.layout.listview_exercise, List);
 		exerciseListView.setAdapter(a);
+		exerciseListView.setOnItemLongClickListener(this);
+		search.addTextChangedListener(new TextWatcher() 
+		  {
+	          
+	          public void beforeTextChanged(CharSequence s, int start, int count, int after)
+	          {
+	                    
+	          }
+	 
+	          public void onTextChanged(CharSequence s, int start, int before, int count)
+	          {
+	        	 
+	          }
+
+	          public void afterTextChanged(Editable s)
+	          {
+	              
+	        	  a.clear();
+	        	  List =   em.searchKeyString(String.valueOf(s));
+	        	  
+	        	  
+	        	  a.addAll(List);
+	        	  a.notifyDataSetChanged();
+	        	  exerciseListView.invalidateViews();
+	        	  System.out.println(s);
+	          }
+	  });
+
 		
- // Add Drawer Item to dataList
+	
+	//	ArrayList<Exercise> uebungList = new ArrayList<Exercise>();
+	//	ExerciseListAdapter ExerciseAdapter = new ExerciseListAdapter(null, 0, uebungList);
+	//	exerciseListView.setAdapter(ExerciseAdapter);
+		
+		// Initializing
+	       
+        mTitle = mDrawerTitle = getTitle();
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerListe= (ListView) findViewById(R.id.left_drawer);
+
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
+                    GravityCompat.START);
+        
+		
+		// Add Drawer Item to dataList
        
 		
-        adapter1 = new CustomDrawerAdapter(this, R.layout.custom_drawer_item, l.getDataList());
-
-        mDrawerList.setAdapter(adapter1);
-        
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        adapter = new CustomDrawerAdapter(this, R.layout.custom_drawer_item, l.getDataList());
+        mDrawerListe.setAdapter(adapter);
+        mDrawerListe.setOnItemClickListener(new DrawerItemClickListener());
         
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
@@ -104,38 +149,14 @@ public class ExerciseAdd extends Activity{
         
         // Implementierung Text Change Listener für Live Suche
         
-        search.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void afterTextChanged(Editable arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-					int arg3) {
-				// TODO Auto-generated method stub
-				
-			}
-        	
-        });
-        		
 	}
-
+	 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
-		
-		return true;
+				getMenuInflater().inflate(R.menu.workoutplan_menu, menu);
+				return true;
 	}
 
 	@Override
@@ -143,7 +164,15 @@ public class ExerciseAdd extends Activity{
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+		}
+		
+		switch (item.getItemId()){
+			case R.id.menu_add:
+				this.showDialogAddFragment();
+				break; 
+				}
 		return super.onOptionsItemSelected(item);
 	}
 	private class DrawerItemClickListener implements
@@ -157,12 +186,27 @@ public class ExerciseAdd extends Activity{
 	}
 }
 	public void SelectItem(int possition) { 
-		Intent intent= null;
+		
 		switch(possition) {
 		case 0:
+			Intent intent= null;
 			intent = new Intent();
-			intent.setClass(this, WorkoutplanSelect.class);
+			intent.setClass(this, ExerciseOverview.class);
 			startActivity(intent);
+			break;
+		case 1: 
+			Intent intent1= null;
+			intent1 = new Intent();
+			intent1.setClass(this, WorkoutplanSelect.class);
+			startActivity(intent1);
+			break;
+		case 2: 
+			break;
+		case 3: 
+			Intent intent2= null;
+			intent2 = new Intent();
+			intent2.setClass(this, ExerciseAdd.class);
+			startActivity(intent2);
 			break;
 		}
 		
@@ -177,6 +221,32 @@ public class ExerciseAdd extends Activity{
 	      // Pass any configuration change to the drawer toggles
 	      mDrawerToggle.onConfigurationChanged(newConfig);
 	}
+	public void showDialogAddFragment(){
+		DialogFragment dialogFragment = ExerciseAddDialogFragment.newInstance(this);
+		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
+	}
+
+	@Override
+	public void onExerciseSelectionItemLongClick(
+			ExerciseLongClickDialogFragment dialog) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
+			long arg3) {
+		
+		showDialogLongClickFragment();
+		return false;
+	}
+
+	private void showDialogLongClickFragment() {
+		DialogFragment dialogFragment = ExerciseLongClickDialogFragment.newInstance();
+		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
+		
+	}
+
 }
 
 
