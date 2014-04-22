@@ -1,4 +1,4 @@
-package com.workout.log.data;
+package com.workout.log.bo;
 
 public class Set {
 

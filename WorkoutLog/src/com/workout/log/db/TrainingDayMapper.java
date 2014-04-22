@@ -2,7 +2,10 @@ package com.workout.log.db;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import com.workout.log.data.TrainingDay;
+
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.TrainingDay;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -26,6 +29,7 @@ public class TrainingDayMapper {
 	 		throw sqle;
 	 	}
 	}
+		
 	// Hinzufügen von Trainingstagen
 	public void add(TrainingDay d){
 		int id = 0;
@@ -33,19 +37,23 @@ public class TrainingDayMapper {
 		db.close();
 	}
 	
-	// Abfrage für alle Trainingstage
-	public ArrayList<TrainingDay> getAll() {
+	/**
+	 * Get all TrainingDays from one Workoutplan using the workoutplanId
+	 * 
+	 * @param int workoutplanId
+	 * @return ArrayList<TrainingDay>
+	 * @author Eric Schmidt & Florian Blessing
+	 */
+	public ArrayList<TrainingDay> getAll(int workoutplanId) {
 		ArrayList<TrainingDay> trainingdayList = new ArrayList<TrainingDay>();
 		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		
-		sql = "SELECT * FROM TrainingDay";
+		sql = "SELECT TrainingDay_Id FROM WorkoutplanHasTrainingDay WHERE Workoutplan_Id = " + workoutplanId;
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
 			do{
-				TrainingDay d = new TrainingDay();
-				d.setID(Integer.parseInt(cursor.getString(0)));
-				d.setName(cursor.getString(1));
+				TrainingDay d = getTrainingDayById(Integer.parseInt(cursor.getString(0)));
 				trainingdayList.add(d);
 			}while(cursor.moveToNext());
 		}
@@ -66,4 +74,18 @@ public class TrainingDayMapper {
 		db.close();
 		return d;
 	}
+	public TrainingDay getTrainingDayById(int id){
+		TrainingDay d = new TrainingDay();
+		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
+	    sql = "SELECT TrainingDay_Id, TrainingDayName FROM TrainingDay WHERE TrainingDay_Id = " + id;
+	    Cursor cursor = db.rawQuery(sql, null);
+	    if (cursor.moveToFirst()){
+		    d.setID(Integer.parseInt(cursor.getString(0)));
+		    d.setName(cursor.getString(1));
+	    }
+	    db.close();
+	    return d;
+
+	}
 }
+

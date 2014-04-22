@@ -1,8 +1,8 @@
 package com.workout.log.customLayout;
 
 import com.example.workoutlog.R;
-import com.workout.log.data.TrainingDay;
-import com.workout.log.data.Workoutplan;
+import com.workout.log.bo.TrainingDay;
+import com.workout.log.bo.Workoutplan;
 
 import android.content.Context;
 import android.view.LayoutInflater;

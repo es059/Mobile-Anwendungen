@@ -1,2 +1,7 @@
-/com
 /android
+/com
+<<<<<<< HEAD
+/android
+=======
+/.gitignore
+>>>>>>> refs/remotes/origin/Eric

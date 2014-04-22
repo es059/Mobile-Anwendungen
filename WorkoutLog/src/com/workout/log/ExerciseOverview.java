@@ -1,16 +1,12 @@
 package com.workout.log;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.workout.log.bo.Exercise;
 import com.workout.log.data.*;
 import com.example.workoutlog.R;
-import com.workout.log.data.Exercise;
 import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment.ExerciseSelectionDialogListener;
 import com.workout.log.listAdapter.CustomDrawerAdapter;
-import com.workout.log.listAdapter.ExerciseListAdapter;
 
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -25,32 +21,28 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.os.Build;
 
 public class ExerciseOverview extends ActionBarActivity implements OnItemLongClickListener, OnItemClickListener, ExerciseSelectionDialogListener  {
-// Version 1.1 
-	ListView exerciseView; 
-	ArrayList<Exercise> exerciseList;
+
+	private static ListView exerciseView; 
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    CustomDrawerAdapter adapter; 
 
+    private CustomDrawerAdapter adapter;
+    private UpdateListView updateOverview; 
+    private MenueListe l = new MenueListe();
     
-    MenueListe l = new MenueListe();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.exercise_overview);
 		
-	// Initializing
-       
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -58,13 +50,9 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
                     GravityCompat.START);
         
-     // Add Drawer Item to dataList
-       
-		
+        // Add Drawer Item to dataList
         adapter = new CustomDrawerAdapter(this, R.layout.custom_drawer_item, l.getDataList());
-
         mDrawerList.setAdapter(adapter);
-        
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -78,36 +66,34 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
                     invalidateOptionsMenu(); // creates call to
                                                               // onPrepareOptionsMenu()
               }
-
               public void onDrawerOpened(View drawerView) {
                     getActionBar().setTitle(mDrawerTitle);
                     invalidateOptionsMenu(); // creates call to
-                                                              // onPrepareOptionsMenu()
+                    // onPrepareOptionsMenu()
               }
         };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);   
-        
-        //Start alter Teil
-		
+        mDrawerLayout.setDrawerListener(mDrawerToggle);   	
+        mDrawerLayout.setDrawerListener(mDrawerToggle);      
+	}
+	
+	@Override
+	protected void onResume(){
+		super.onResume();
+        /**
+         * Calls the <code>UpdateListView</code> Singleton Constructor for the first time 
+         * and sets the ListView reference
+         * 
+         * @author Eric Schmidt
+         * @date 18.04.2014
+         */  
 		exerciseView = (ListView) findViewById(R.id.exerciseOverviewList);
-		
-		//Dummy Daten
-		exerciseList = new ArrayList<Exercise>();
-		Exercise Kniebeugen = new Exercise("Kniebeugen");
-		exerciseList.add(Kniebeugen);
-		Exercise Bankdruecken = new Exercise("Bankdruecken");
-		exerciseList.add(Bankdruecken);
-		
-		
-		ExerciseListAdapter adapter = new ExerciseListAdapter(this, 0, exerciseList);
-		exerciseView.setAdapter(adapter);
-		
+		updateOverview = UpdateListView.updateListView(exerciseView);
+		updateOverview.ExerciseListViewUpdate(this,1);
+
 		exerciseView.setOnItemLongClickListener(this);
 		exerciseView.setOnItemClickListener(this);
-		
-	
 	}
-
+		
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -165,7 +151,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 	private void openExerciseSpecific (Exercise exercise){
 		Intent intent = new Intent();
 		intent.setClass(this, ExerciseSpecific.class);
-		intent.putExtra("ExerciseID", exercise.getID());
+		intent.putExtra("ExerciseID", exercise.getId());
 		intent.putExtra("ExerciseName", exercise.getName());
 		startActivity(intent);
 	}

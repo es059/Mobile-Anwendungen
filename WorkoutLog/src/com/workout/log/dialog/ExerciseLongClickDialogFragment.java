@@ -9,6 +9,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 
 public class ExerciseLongClickDialogFragment extends DialogFragment{
 	ExerciseSelectionDialogListener rSDListener;
@@ -39,7 +40,10 @@ public class ExerciseLongClickDialogFragment extends DialogFragment{
 				rSDListener.onExerciseSelectionItemLongClick(ExerciseLongClickDialogFragment.this);
 			}
 		});
+		
 		return builder.create();
+		
+		
 	}
 	
 	public interface ExerciseSelectionDialogListener{
