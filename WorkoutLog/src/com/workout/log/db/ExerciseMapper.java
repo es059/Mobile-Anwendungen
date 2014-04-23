@@ -102,13 +102,14 @@ public class ExerciseMapper {
 	 * @param int trainingDayId
 	 * @return ArrayList<Exercise>
 	 * @author Eric Schmidt & Florian Belssing
-	 */
-	public ArrayList<Exercise> getAllExercise(int trainingDayId){
+	 */	
+	public ArrayList<Exercise> getExerciseByTrainingDay(int trainingDayId){
 		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
 		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		
-		sql = "SELECT Exercise_Id FROM TrainingDayHasExercise WHERE TrainingDay_Id = " + trainingDayId; 
+		sql = "SELECT Exercise_Id FROM TrainingDayHasExercise WHERE TrainingDay_Id = "
+				+ trainingDayId;
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
 			do{
@@ -118,7 +119,31 @@ public class ExerciseMapper {
 		}
 		db.close();
 		return exerciseList;
+	}
+	/**
+	 * Select all Exercises of one Musclegroup using a ArrayList of Exercises of one TrainingDay
+	 * 
+	 * @param ArrayList<Exercise>
+	 * @param MuscleGroupId
+	 * @author Eric Schmidt
+	 */
+	public ArrayList<Exercise> getExerciseByMuscleGroup(ArrayList<Exercise> exercises, int muscleGroupId){
+		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
+		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
+		
+		for (Exercise e : exercises){
+			sql = "SELECT Exercise_Id, ExerciseName FROM Exercise WHERE Exercise_Id = " + e.getId() + " AND MuscleGroup_Id = " + muscleGroupId;
+			Cursor cursor = db.rawQuery(sql, null);
+				if (cursor.moveToFirst()){
+					Exercise exercise = new Exercise();
+				    exercise.setID(Integer.parseInt(cursor.getString(0)));
+				    exercise.setName(cursor.getString(1));
+				    exerciseList.add(exercise);
+				}
 		}
+		
+		return exerciseList;
+	}
 	/**
 	 * Get one Exercise by an id
 	 * 
@@ -126,10 +151,10 @@ public class ExerciseMapper {
 	 *  @return Exercise
 	 *  @author Eric Schmidt & Florian Blessing
 	 */
-	 public Exercise getExerciseById(int id){
+	 public Exercise getExerciseById(int exerciseId){
 		    Exercise exercise = new Exercise();
 		    SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
-		    sql = "SELECT Exercise_Id, ExerciseName FROM Exercise WHERE Exercise_Id = " + id;
+		    sql = "SELECT Exercise_Id, ExerciseName FROM Exercise WHERE Exercise_Id = " + exerciseId;
 		    Cursor cursor = db.rawQuery(sql, null);
 		    if (cursor.moveToFirst()){
 			    exercise.setID(Integer.parseInt(cursor.getString(0)));

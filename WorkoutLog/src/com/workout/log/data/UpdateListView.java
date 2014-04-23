@@ -3,14 +3,19 @@ package com.workout.log.data;
 import java.util.ArrayList;
 
 import com.workout.log.bo.Exercise;
+import com.workout.log.bo.MuscleGroup;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.bo.Workoutplan;
 import com.workout.log.db.ExerciseMapper;
+import com.workout.log.db.MuscleGroupMapper;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.listAdapter.ExerciseListAdapter;
+import com.workout.log.listAdapter.OverviewAdapter;
 
+import android.content.ClipData.Item;
 import android.content.Context;
+import android.view.View;
 import android.widget.ListView;
 
 /*
@@ -22,9 +27,13 @@ public class UpdateListView {
 	
 	private ArrayList<TrainingDay> tList;
 	private ArrayList<Exercise> eList;
+	private ArrayList<MuscleGroup> mList;
+	private ArrayList<ExerciseItem> listComplete;
+	private ArrayList<Exercise> eListMuscleGroup;
+	private MuscleGroupMapper mMapper;
 	private static ListView mListView;
 	private static UpdateListView updateListView = null;
-	private static ExerciseListAdapter adapter = null;
+	private static OverviewAdapter adapter = null;
 	
 	 protected UpdateListView(ListView listView) {
 		 mListView = listView;
@@ -54,10 +63,12 @@ public class UpdateListView {
 		  }
 	  
 	/**
-	 * Updates Exercise ListViews using the ExerciseListAdapter. Ensures that there are no unnecessary Datebase querys
+	 * Updates Exercise ListViews using the ExerciseListAdapter. 
+	 * Ensures that there are no unnecessary Database queries
 	 * if the ArrayList<TrainingDay> is already referenced 
-	 * @param Context context
-	 * @param int trainingDayId
+	 * 
+	 * @param context 
+	 * @param trainingDayId 
 	 * @author Eric Schmidt
 	 */
 	public void ExerciseListViewUpdate(Context context){
@@ -65,23 +76,56 @@ public class UpdateListView {
 			//Select Current Workoutplan
 			WorkoutplanMapper wMapper = new WorkoutplanMapper(context);
 			Workoutplan w = wMapper.getCurrent();
-			
 			//Select all Trainingdays from the current Workoutplan
 			TrainingDayMapper tMapper = new TrainingDayMapper(context);
 			tList = tMapper.getAll(w.getID());
 		}
-		//Select Exercises from Selected Trainingday --> TODO
+		if (mList == null){	
+			//Select all MuscleGroups
+			MuscleGroupMapper mMapper = new MuscleGroupMapper(context);
+			mList = mMapper.getAll();
+		}
+		//Select Exercises from Selected Trainingday and MuscleGroup 
 		ExerciseMapper eMapper = new ExerciseMapper(context);
-		eList = eMapper.getAllExercise(tList.get(0).getID());
-		adapter = new ExerciseListAdapter(context, 0, eList);
+		eList = eMapper.getExerciseByTrainingDay(tList.get(0).getID());
+		listComplete = new ArrayList<ExerciseItem>();
+		for (MuscleGroup m : mList){
+			eListMuscleGroup = eMapper.getExerciseByMuscleGroup(eList, m.getId());
+			if (!eListMuscleGroup.isEmpty()){
+				listComplete.add(new MuscleGroupSectionItem(m.getName()));
+				listComplete.addAll(eListMuscleGroup);
+			}
+		}
 		
+		adapter = new OverviewAdapter(context, listComplete);
 		mListView.setAdapter(adapter);
 	}
+	/**
+	 * If TrainingDayId is known use this method
+	 * 
+	 * @param context
+	 * @param trainingDayId
+	 * @author Eric Schmidt
+	 */
 	public void ExerciseListViewUpdate(Context context, int trainingDayId){
-		//Select Exercises from Selected Trainingday
+		if (mList == null){	
+			//Select all MuscleGroups
+			MuscleGroupMapper mMapper = new MuscleGroupMapper(context);
+			mList = mMapper.getAll();
+		}
+		//Select Exercises from Selected Trainingday and MuscleGroup 
 		ExerciseMapper eMapper = new ExerciseMapper(context);
-		eList = eMapper.getAllExercise(trainingDayId);
-		adapter = new ExerciseListAdapter(context, 0, eList);
+		eList = eMapper.getExerciseByTrainingDay(trainingDayId);
+		listComplete = new ArrayList<ExerciseItem>();
+		for (MuscleGroup m : mList){
+			eListMuscleGroup = eMapper.getExerciseByMuscleGroup(eList, m.getId());
+			if (!eListMuscleGroup.isEmpty()){
+				listComplete.add(new MuscleGroupSectionItem(m.getName()));
+				listComplete.addAll(eListMuscleGroup);
+			}
+		}
+		
+		adapter = new OverviewAdapter(context, listComplete);
 		mListView.setAdapter(adapter);
 	}
 }

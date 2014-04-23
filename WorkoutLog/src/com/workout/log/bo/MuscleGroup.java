@@ -8,7 +8,7 @@ package com.workout.log.bo;
  */
 public class MuscleGroup {
 	private String mName = "";
-	private int mID;
+	private int mId;
 	
 	public MuscleGroup(){
 		
@@ -20,11 +20,11 @@ public class MuscleGroup {
 	public void setName(String mName) {
 		this.mName = mName;
 	}
-	public int getID() {
-		return mID;
+	public int getId() {
+		return mId;
 	}
-	public void setID(int mID) {
-		this.mID = mID;
+	public void setId(int Id) {
+		this.mId = Id;
 	}
 	
 }

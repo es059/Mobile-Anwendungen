@@ -2,7 +2,6 @@ package com.workout.log.dialog;
 
 import com.example.workoutlog.R;
 import com.workout.log.ExerciseAdd;
-import com.workout.log.data.MuscleGroup;
 import com.workout.log.db.ExerciseMapper;
 
 import android.app.AlertDialog;

@@ -1,6 +1,8 @@
 package com.workout.log.bo;
 
-public class Exercise {
+import com.workout.log.data.ExerciseItem;
+
+public class Exercise implements ExerciseItem {
 
 	private String mName = "";
 	private  int mId = 0;
@@ -23,5 +25,11 @@ public class Exercise {
 
 	public void setID(int Id) {
 		mId = Id;
+	}
+
+	@Override
+	public boolean isSection() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

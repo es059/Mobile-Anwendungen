@@ -1,5 +1,7 @@
 package com.workout.log;
 
+import java.util.ArrayList;
+
 import com.workout.log.bo.Exercise;
 import com.workout.log.data.*;
 import com.example.workoutlog.R;
@@ -88,7 +90,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
          */  
 		exerciseView = (ListView) findViewById(R.id.exerciseOverviewList);
 		updateOverview = UpdateListView.updateListView(exerciseView);
-		updateOverview.ExerciseListViewUpdate(this,1);
+		updateOverview.ExerciseListViewUpdate(this);
 
 		exerciseView.setOnItemLongClickListener(this);
 		exerciseView.setOnItemClickListener(this);
