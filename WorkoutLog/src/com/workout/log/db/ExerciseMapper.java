@@ -42,15 +42,42 @@ public class ExerciseMapper {
 
 		
 	}
-	public void delete(Exercise e){	
+	public void delete(int e){	
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "DELETE FROM Exercise WHERE *";
+		sql = "DELETE FROM Uebung WHERE UebungId =" + e + "";
+		db.execSQL(sql);
 		db.close();
 	}
 	
-	public Exercise update(Exercise e){
+	public ArrayList<Exercise> getAll() {
+		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "SELECT * FROM Uebung";
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()) {
+            do {
+              Exercise e = new Exercise();
+              e.setID(Integer.parseInt(cursor.getString(0)));
+              e.setName(cursor.getString(1));
+              exerciseList.add(e);
+            	
+            } while (cursor.moveToNext());
+        }
+   
+        cursor.close();
+        
+
+    return exerciseList;
 		
-	return e;
+	}
+	
+	public void update(int ID, String bezeichnung){
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		String sql = "UPDATE Uebung SET Bezeichung='" + bezeichnung +  "' WHERE UebungId=" + ID + "";
+		db.execSQL(sql);
+		db.close();
+		
+	
 	}
 	
 	

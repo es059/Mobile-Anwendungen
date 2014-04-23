@@ -1,8 +1,5 @@
 package com.workout.log.dialog;
 
-import com.example.workoutlog.R;
-import com.workout.log.ExerciseAdd;
-import com.workout.log.data.MuscleGroup;
 import com.workout.log.db.ExerciseMapper;
 import com.workout.log.listAdapter.ExerciseListAdapter;
 
@@ -12,42 +9,40 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
-public class ExerciseAddDialogFragment extends DialogFragment {
-	// private MuscleGroup list = new MuscleGroup();
-	
+public class ExerciseUpdateDialogFragment extends DialogFragment {
 	private ExerciseListAdapter exerciseListAdapter;
 	private static ExerciseMapper em;
 	private Toast toast;
+	private int b;
 	// Konstruktor 
-	public static ExerciseAddDialogFragment newInstance(Context a, ExerciseListAdapter c) {
-		ExerciseAddDialogFragment exerciseAddDialogFragment = new ExerciseAddDialogFragment(c);
+	public static ExerciseUpdateDialogFragment newInstance(Context a, ExerciseListAdapter c, int i) {
+		ExerciseUpdateDialogFragment ExerciseUpdateDialogFragment = new ExerciseUpdateDialogFragment(c, i);
 		em = new ExerciseMapper(a);
 		
-		return exerciseAddDialogFragment;
+		return ExerciseUpdateDialogFragment;
 		
 	}
 	
-	public ExerciseAddDialogFragment(ExerciseListAdapter c) {
+	public ExerciseUpdateDialogFragment(ExerciseListAdapter c, int i) {
 		super();
 		exerciseListAdapter = c;
+		b = i;
 	}
 
 	public Dialog onCreateDialog(Bundle savedInstanceState){
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 
-		alert.setTitle("Übung hinzufügen");
-		alert.setMessage("Bitte geben sie den Namen Ihrer Übung hier ein:");
+		alert.setTitle("Übung bearbeiten");
+		alert.setMessage("Bitte geben sie den verbesserten Namen Ihrer Übung hier ein:");
 
 		// Set an EditText view to get user input 
 		final EditText input = new EditText(getActivity());
 		alert.setView(input);
 		
-		toast = Toast.makeText(getActivity(), "Übung wurde erfolgreich hinzugefügt!", Toast.LENGTH_SHORT );
+		toast = Toast.makeText(getActivity(), "Übung wurde erfolgreich geändert!", Toast.LENGTH_SHORT );
 		
 		
 	//	final Spinner muskelgruppe = new Spinner(getActivity());
@@ -60,7 +55,7 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 			// String aus Textfeld holen  
 				String value = String.valueOf(input.getText());
 			// Mapper-Methode aufrufen zum Hinzufügen einer neuen Übung
-				em.add(value);
+				em.update(b, value);
 			// Toast einblenden 
 				toast.show();
 			// ListView aktualisieren 
@@ -78,5 +73,6 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 
 		return alert.show();
 	}
+
 
 }

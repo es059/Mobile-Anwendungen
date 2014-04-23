@@ -149,7 +149,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		this.showDialogLongClickFragment();
+	//	this.showDialogLongClickFragment();
 		return true;
 	}
 
@@ -170,11 +170,11 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 		startActivity(intent);
 	}
 	
-	public void showDialogLongClickFragment(){
+/*	public void showDialogLongClickFragment(){
 		DialogFragment dialogFragment = ExerciseLongClickDialogFragment.newInstance();
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
 	}
-
+*/
 	@Override
 	public void onExerciseSelectionItemLongClick(
 			ExerciseLongClickDialogFragment dialog) {

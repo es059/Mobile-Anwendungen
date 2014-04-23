@@ -55,11 +55,13 @@ public class ExerciseAdd extends Activity implements ExerciseSelectionDialogList
 	    private CharSequence mDrawerTitle;
 	    private CharSequence mTitle;
 	    private CustomDrawerAdapter adapter;
-	   private MenueListe l = new MenueListe();
-	   private EditText search;
-	  ArrayList<Exercise> List;
-	  int counter;
-	  String i;
+	    private MenueListe l = new MenueListe();
+	    private EditText search;
+	    private ArrayList<Exercise> List;
+	    private ExerciseListAdapter a;
+	    private ListView exerciseListView;
+	    private DialogFragment dialogFragment;
+	//  int i;
 	    
 	  private  ExerciseMapper em = new ExerciseMapper(this);
 	
@@ -72,9 +74,10 @@ public class ExerciseAdd extends Activity implements ExerciseSelectionDialogList
 		
 		search = (EditText) findViewById(R.id.trainingDay_subject);
 		
-		final ListView exerciseListView = (ListView) findViewById(R.id.add_exerciseList);
+		exerciseListView = (ListView) findViewById(R.id.add_exerciseList);
 		List = new ArrayList<Exercise>();
-		final ExerciseListAdapter a = new ExerciseListAdapter(this , R.layout.listview_exercise, List);
+		List = em.getAll();
+		a = new ExerciseListAdapter(this , R.layout.listview_exercise, List);
 		exerciseListView.setAdapter(a);
 		exerciseListView.setOnItemLongClickListener(this);
 		search.addTextChangedListener(new TextWatcher() 
@@ -222,7 +225,7 @@ public class ExerciseAdd extends Activity implements ExerciseSelectionDialogList
 	      mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 	public void showDialogAddFragment(){
-		DialogFragment dialogFragment = ExerciseAddDialogFragment.newInstance(this);
+		DialogFragment dialogFragment = ExerciseAddDialogFragment.newInstance(this, a);
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
 	}
 
@@ -237,12 +240,23 @@ public class ExerciseAdd extends Activity implements ExerciseSelectionDialogList
 	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
 			long arg3) {
 		
-		showDialogLongClickFragment();
+		Exercise e = (Exercise) arg0.getItemAtPosition(arg2);
+		int i = e.getID();
+		showDialogLongClickFragment(i, a);
+		
+		
+		
 		return false;
 	}
-
-	private void showDialogLongClickFragment() {
-		DialogFragment dialogFragment = ExerciseLongClickDialogFragment.newInstance();
+public void listviewactual() {
+	 a.clear();
+	 a.addAll(em.getAll());
+	 a.notifyDataSetChanged();
+	 exerciseListView.invalidateViews();
+}
+	private void showDialogLongClickFragment(int i, ExerciseListAdapter a) {
+		
+		dialogFragment = ExerciseLongClickDialogFragment.newInstance(i, a);
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
 		
 	}

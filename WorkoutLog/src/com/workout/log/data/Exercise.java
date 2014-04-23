@@ -27,6 +27,6 @@ public class Exercise {
 	}
 
 	public void setID(int mID) {
-		mID = mID;
+		this.mID = mID;
 	}
 }
