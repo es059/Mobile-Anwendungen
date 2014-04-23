@@ -35,7 +35,7 @@ public class ExerciseMapper {
 	
 	public void add(String a){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "INSERT INTO Uebung (Bezeichung) VALUES ('" +a +"')";
+		sql = "INSERT INTO Exercise (ExerciseName) VALUES ('" +a +"')";
 		db.execSQL(sql);
 		db.close();
 	}
@@ -47,7 +47,7 @@ public class ExerciseMapper {
 		sql = "SELECT MAX(Exercise_id) FROM Exercise";
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
-			id = Integer.parseInt(cursor.getString(0));
+			id = Integer.parseInt(cursor.getString(1));
 		}
 		sql = "INSERT INTO Exercise (Exercise_Id) VALUES (id)";
 		db.execSQL(sql);
@@ -57,7 +57,7 @@ public class ExerciseMapper {
 	
 	public void delete(int e){	
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "DELETE FROM Uebung WHERE UebungId =" + e + "";
+		sql = "DELETE FROM Exercise WHERE Exercise_Id =" + e + "";
 		db.execSQL(sql);
 		db.close();
 	}
@@ -65,13 +65,13 @@ public class ExerciseMapper {
 	public ArrayList<Exercise> getAll() {
 		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "SELECT * FROM Uebung";
+		sql = "SELECT * FROM Exercise";
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()) {
             do {
               Exercise e = new Exercise();
-              e.setID(Integer.parseInt(cursor.getString(0)));
-              e.setName(cursor.getString(1));
+              e.setID(Integer.parseInt(cursor.getString(1)));
+              e.setName(cursor.getString(2));
               exerciseList.add(e);
             	
             } while (cursor.moveToNext());
@@ -86,7 +86,7 @@ public class ExerciseMapper {
 	
 	public void update(int ID, String bezeichnung){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		String sql = "UPDATE Uebung SET Bezeichung='" + bezeichnung +  "' WHERE UebungId=" + ID + "";
+		String sql = "UPDATE Exercise SET ExerciseName='" + bezeichnung +  "' WHERE Exercise_Id=" + ID + "";
 		db.execSQL(sql);
 		db.close();
 		
@@ -101,7 +101,7 @@ public class ExerciseMapper {
 
 	        // Alles Anfragen auswählen
 	     //   String selectQuery = "SELECT  * FROM Uebung WHERE Bezeichung="+"'+ key +'";
-	     String selectQuery =  "SELECT * FROM Uebung WHERE Bezeichung LIKE '%" + key + "%'";
+	     String selectQuery =  "SELECT * FROM Exercise WHERE ExerciseName LIKE '%" + key + "%'";
 	        Cursor cursor = db.rawQuery(selectQuery, null);
 	        // you can change it to
 	        // db.rawQuery("SELECT * FROM "+table+" WHERE KEY_KEY LIKE ?", new String[] {key+"%"});
@@ -111,8 +111,8 @@ public class ExerciseMapper {
 	        if (cursor.moveToFirst()) {
 	            do {
 	              Exercise e = new Exercise();
-	              e.setID(Integer.parseInt(cursor.getString(0)));
-	              e.setName(cursor.getString(1));
+	              e.setID(Integer.parseInt(cursor.getString(1)));
+	              e.setName(cursor.getString(2));
 	              exerciseList.add(e);
 	            	
 	            } while (cursor.moveToNext());
