@@ -7,9 +7,9 @@ import com.example.workoutlog.R;
 import com.example.workoutlog.R.id;
 import com.example.workoutlog.R.layout;
 import com.example.workoutlog.R.menu;
-import com.workout.log.data.Exercise;
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.Set;
 import com.workout.log.data.MenueListe;
-import com.workout.log.data.Set;
 import com.workout.log.listAdapter.CustomDrawerAdapter;
 import com.workout.log.listAdapter.SetListAdapter;
 

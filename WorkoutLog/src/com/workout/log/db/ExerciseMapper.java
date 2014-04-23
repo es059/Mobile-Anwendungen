@@ -3,8 +3,8 @@ package com.workout.log.db;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.workout.log.data.Exercise;
-import com.workout.log.data.Workoutplan;
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.Workoutplan;
 
 import android.content.Context;
 import android.database.CursorJoiner.Result;
@@ -16,10 +16,8 @@ import android.util.Log;
 
 public class ExerciseMapper {
 	
-	DataBaseHelper myDBHelper;
-	String sql;
-	int id =  10;
-	String bezeichung = "Kreuzheben";
+	private DataBaseHelper myDBHelper;
+	private String sql;
 	
 	public ExerciseMapper(Context context){
 		myDBHelper = new DataBaseHelper(context);
@@ -34,14 +32,29 @@ public class ExerciseMapper {
 	 		throw sqle;
 	 	}
 	}
+	
 	public void add(String a){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "INSERT INTO Uebung (Bezeichung) VALUES ('" +a +"')";
 		db.execSQL(sql);
 		db.close();
-
-		
 	}
+
+
+	public void add(Exercise e){
+		int id = 0;
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "SELECT MAX(Exercise_id) FROM Exercise";
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			id = Integer.parseInt(cursor.getString(0));
+		}
+		sql = "INSERT INTO Exercise (Exercise_Id) VALUES (id)";
+		db.execSQL(sql);
+		e.setID(id);
+		db.close();
+	}
+	
 	public void delete(int e){	
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "DELETE FROM Uebung WHERE UebungId =" + e + "";
@@ -111,27 +124,46 @@ public class ExerciseMapper {
 	    return exerciseList;
 	}
 	
-	
-	public ArrayList<Exercise> findExerciseByName(){
+	/**
+	 * Get all Exercises from one TrainingDay
+	 * 
+	 * @param int trainingDayId
+	 * @return ArrayList<Exercise>
+	 * @author Eric Schmidt & Florian Belssing
+	 */
+	public ArrayList<Exercise> getAllExercise(int trainingDayId){
 		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
 		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		
-		sql = "SELECT * FROM Exercise";
+		sql = "SELECT Exercise_Id FROM TrainingDayHasExercise WHERE TrainingDay_Id = " + trainingDayId; 
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
 			do{
-				Exercise ex = new Exercise();
-				ex.setID(Integer.parseInt(cursor.getString(0)));
-				ex.setName(cursor.getString(1));
-			//	w.setTimeStamp(new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH).parse(cursor.getString(2)));
-				exerciseList.add(ex);
+				Exercise exercise = getExerciseById(Integer.parseInt(cursor.getString(0)));
+				exerciseList.add(exercise);
 			}while(cursor.moveToNext());
 		}
 		db.close();
 		return exerciseList;
-	
-	
-	
+		}
+	/**
+	 * Get one Exercise by an id
+	 * 
+	 *  @param int id
+	 *  @return Exercise
+	 *  @author Eric Schmidt & Florian Blessing
+	 */
+	 public Exercise getExerciseById(int id){
+		    Exercise exercise = new Exercise();
+		    SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
+		    sql = "SELECT Exercise_Id, ExerciseName FROM Exercise WHERE Exercise_Id = " + id;
+		    Cursor cursor = db.rawQuery(sql, null);
+		    if (cursor.moveToFirst()){
+			    exercise.setID(Integer.parseInt(cursor.getString(0)));
+			    exercise.setName(cursor.getString(1));
+		    }
+		    db.close();
+		    return exercise;
 	}
 }
