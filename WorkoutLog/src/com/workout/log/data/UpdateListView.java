@@ -78,27 +78,29 @@ public class UpdateListView {
 			Workoutplan w = wMapper.getCurrent();
 			//Select all Trainingdays from the current Workoutplan
 			TrainingDayMapper tMapper = new TrainingDayMapper(context);
-			tList = tMapper.getAll(w.getID());
+			tList = tMapper.getAll(w.getId());
 		}
-		if (mList == null){	
-			//Select all MuscleGroups
-			MuscleGroupMapper mMapper = new MuscleGroupMapper(context);
-			mList = mMapper.getAll();
-		}
-		//Select Exercises from Selected Trainingday and MuscleGroup 
-		ExerciseMapper eMapper = new ExerciseMapper(context);
-		eList = eMapper.getExerciseByTrainingDay(tList.get(0).getID());
-		listComplete = new ArrayList<ExerciseItem>();
-		for (MuscleGroup m : mList){
-			eListMuscleGroup = eMapper.getExerciseByMuscleGroup(eList, m.getId());
-			if (!eListMuscleGroup.isEmpty()){
-				listComplete.add(new MuscleGroupSectionItem(m.getName()));
-				listComplete.addAll(eListMuscleGroup);
+		if (!tList.isEmpty()){
+			if (mList == null){	
+				//Select all MuscleGroups
+				MuscleGroupMapper mMapper = new MuscleGroupMapper(context);
+				mList = mMapper.getAll();
 			}
+			//Select Exercises from Selected Trainingday and MuscleGroup 
+			ExerciseMapper eMapper = new ExerciseMapper(context);
+			eList = eMapper.getExerciseByTrainingDay(tList.get(0).getID());
+			listComplete = new ArrayList<ExerciseItem>();
+			for (MuscleGroup m : mList){
+				eListMuscleGroup = eMapper.getExerciseByMuscleGroup(eList, m.getId());
+				if (!eListMuscleGroup.isEmpty()){
+					listComplete.add(new MuscleGroupSectionItem(m.getName()));
+					listComplete.addAll(eListMuscleGroup);
+				}
+			}
+			
+			adapter = new OverviewAdapter(context, listComplete);
+			mListView.setAdapter(adapter);
 		}
-		
-		adapter = new OverviewAdapter(context, listComplete);
-		mListView.setAdapter(adapter);
 	}
 	/**
 	 * If TrainingDayId is known use this method

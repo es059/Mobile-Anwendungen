@@ -4,22 +4,22 @@ import java.util.*;
 
 public class Workoutplan {
 
-	private int mID;
-	private String name;
+	private int mId;
+	private String mName;
 	private Date timeStamp;
 	
 	
-	public int getID() {
-		return mID;
+	public int getId() {
+		return mId;
 	}
-	public void setID(int id) {
-		this.mID = id;
+	public void setId(int Id) {
+		this.mId = Id;
 	}
 	public String getName() {
-		return name;
+		return mName;
 	}
 	public void setName(String name) {
-		this.name = name;
+		this.mName = name;
 	}
 	public Date getTimeStamp() {
 		return timeStamp;
@@ -28,6 +28,17 @@ public class Workoutplan {
 		this.timeStamp = workoutplanTimeStamp;
 	}
 	
+	@Override
+	public boolean equals(Object o){
+		if (o.getClass() == Workoutplan.class){
+			Workoutplan w = (Workoutplan) o;
+			if(w.getId() == this.getId()){
+				return true;
+			}
+		}
+		return false;
+		
+	}
 	
 	
 }

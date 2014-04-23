@@ -39,14 +39,14 @@ import android.os.Build;
 public class TrainingDaySelect extends Activity implements OnItemClickListener, OnItemLongClickListener, ExerciseSelectionDialogListener {
 
 	// Attribute für Menü
-		private DrawerLayout mDrawerLayout;
-	    private ListView mDrawerList;
-	    private ActionBarDrawerToggle mDrawerToggle;
+	private DrawerLayout mDrawerLayout;
+	private ListView mDrawerList;
+	private ActionBarDrawerToggle mDrawerToggle;
 
-	    private CharSequence mDrawerTitle;
-	    private CharSequence mTitle;
-	    CustomDrawerAdapter adapter1;
-	    MenueListe l = new MenueListe();
+	private CharSequence mDrawerTitle;
+	private CharSequence mTitle;
+	CustomDrawerAdapter adapter1;
+	MenueListe l = new MenueListe();
 	    
 	ListView trainingsDayList;
 	ArrayList<TrainingDay> list;
@@ -55,63 +55,58 @@ public class TrainingDaySelect extends Activity implements OnItemClickListener, 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.training_day_select);
-	
-	trainingsDayList = (ListView) findViewById(R.id.trainingDay_select_list);
-	list = new ArrayList<TrainingDay>();
-	TrainingDayListAdapter adapter = new TrainingDayListAdapter(this, 0, list);
-	TrainingDay d = new TrainingDay("test");
-	TrainingDay d1 = new TrainingDay("test");
-	list.add(d);
-	list.add(d1);
-	trainingsDayList.setAdapter(adapter);
-	trainingsDayList.setOnItemClickListener(this);
-	trainingsDayList.setOnItemLongClickListener(this);
-	
-	
-	// Initializing
-    
-    mTitle = mDrawerTitle = getTitle();
-    mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-    mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-    mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-                GravityCompat.START);
-    
- // Add Drawer Item to dataList
-   
-	
-    adapter1 = new CustomDrawerAdapter(this, R.layout.custom_drawer_item, l.getDataList());
-
-    mDrawerList.setAdapter(adapter);
-    
-    mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-    
-    getActionBar().setDisplayHomeAsUpEnabled(true);
-    getActionBar().setHomeButtonEnabled(true);
-
-    mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.drawable.ic_drawer, R.string.drawer_open,
-                R.string.drawer_close) {
-          public void onDrawerClosed(View view) {
-                getActionBar().setTitle(mTitle);
-                invalidateOptionsMenu(); // creates call to
-                                                          // onPrepareOptionsMenu()
-          }
-
-          public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(mDrawerTitle);
-                invalidateOptionsMenu(); // creates call to
-                                                          // onPrepareOptionsMenu()
-          }
-    };
-    mDrawerLayout.setDrawerListener(mDrawerToggle);      
-	
-	
-
-	
-	
-	
 		
+		trainingsDayList = (ListView) findViewById(R.id.trainingDay_select_list);
+		list = new ArrayList<TrainingDay>();
+		TrainingDayListAdapter adapter = new TrainingDayListAdapter(this, 0, list);
+		TrainingDay d = new TrainingDay("test");
+		TrainingDay d1 = new TrainingDay("test");
+		list.add(d);
+		list.add(d1);
+		trainingsDayList.setAdapter(adapter);
+		trainingsDayList.setOnItemClickListener(this);
+		trainingsDayList.setOnItemLongClickListener(this);
+	
+	
+		// Initializing
+	    mTitle = mDrawerTitle = getTitle();
+	    mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+	    mDrawerList = (ListView) findViewById(R.id.left_drawer);
+	    mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
+	                GravityCompat.START);
+    
+	    // Add Drawer Item to dataList
+	    adapter1 = new CustomDrawerAdapter(this, R.layout.custom_drawer_item, l.getDataList());
+	    mDrawerList.setAdapter(adapter);
+	    mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+	    getActionBar().setDisplayHomeAsUpEnabled(true);
+	    getActionBar().setHomeButtonEnabled(true);
+	
+	    mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+	                R.drawable.ic_drawer, R.string.drawer_open,
+	                R.string.drawer_close) {
+	          public void onDrawerClosed(View view) {
+	                getActionBar().setTitle(mTitle);
+	                invalidateOptionsMenu(); // creates call to
+	                // onPrepareOptionsMenu()
+	          }
+	          public void onDrawerOpened(View drawerView) {
+	                getActionBar().setTitle(mDrawerTitle);
+	                invalidateOptionsMenu(); // creates call to
+	                // onPrepareOptionsMenu()
+	          }
+	    };
+	    mDrawerLayout.setDrawerListener(mDrawerToggle);      
+	    
+		//Übergabe der Exercise ID
+		final Bundle intentExtras = getIntent().getExtras();
+		if (intentExtras != null){	
+			try{
+				getActionBar().setTitle(intentExtras.getString("WorkoutplanName"));
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}    
 	}
 
 	@Override

@@ -53,14 +53,22 @@ public class WorkoutplanMapper   {
 		
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
-			w.setID(Integer.parseInt(cursor.getString(0)));
+			w.setId(Integer.parseInt(cursor.getString(0)));
 			w.setName(cursor.getString(1));
-			//w.setTimeStamp ((cursor.getString(2));
+			w.setTimeStamp(new Date(cursor.getLong(2)));
 		}
 
 		return w;
 	}
 	
+	public void setCurrent(int workoutplanId){
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "UPDATE Workoutplan SET Current = NUll";
+		db.execSQL(sql);
+		sql = "Update Workoutplan SET Current = 1 WHERE Workoutplan_Id = " + workoutplanId;
+		db.execSQL(sql);
+		db.close();
+	}
 	public void  add(Workoutplan w) {
 		int id = 0;
 		Date date;
@@ -76,25 +84,30 @@ public class WorkoutplanMapper   {
 		sql = "INSERT INTO WorkoutPlan VALUES (" + id + ", " + w.getName() +", " + String.valueOf(date) + ")";
 		db.execSQL(sql);
 		// Insert ID into Data Object
-		w.setID(id);
+		w.setId(id);
 		w.setTimeStamp(date);
-        db.close();
+        
         // return contact list
 	}
-	
+	/**
+	 * Get all Workoutplans in the Database
+	 * 
+	 * @return ArrayList<Workoutplan>
+	 * @author Eric Schmidt & Florian Blessing
+	 */
 	public ArrayList<Workoutplan> getAll() {
 		ArrayList<Workoutplan> workoutplanList = new ArrayList<Workoutplan>();
 		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		
-		sql = "SELECT * FROM Trainingsplan";
+		sql = "SELECT Workoutplan_Id, WorkoutplanName, Timestamp FROM Workoutplan";
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
 			do{
 				Workoutplan w = new Workoutplan();
-				w.setID(Integer.parseInt(cursor.getString(0)));
+				w.setId(Integer.parseInt(cursor.getString(0)));
 				w.setName(cursor.getString(1));
-			//	w.setTimeStamp(new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH).parse(cursor.getString(2)));
+			    w.setTimeStamp(new Date(cursor.getLong(2)));
 				workoutplanList.add(w);
 			}while(cursor.moveToNext());
 		}

@@ -12,6 +12,7 @@ import com.workout.log.bo.Workoutplan;
 import com.workout.log.customLayout.ListViewWorkoutplan;
 
 public class WorkoutplanListAdapter extends ArrayAdapter<Workoutplan> {
+	
 	public WorkoutplanListAdapter(Context context, int textViewResourceId, List<Workoutplan> objects) {
 		super(context, textViewResourceId, objects);
 	}
@@ -26,7 +27,9 @@ public class WorkoutplanListAdapter extends ArrayAdapter<Workoutplan> {
 			 listViewWorkoutplan = new ListViewWorkoutplan(getContext());
 		 }
 		 listViewWorkoutplan.setWorkoutplan(workoutplan);  
-	     
+		 
 		 return listViewWorkoutplan;
 	 }
 }
+	
+	

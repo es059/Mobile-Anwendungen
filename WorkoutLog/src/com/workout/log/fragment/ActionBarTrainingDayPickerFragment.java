@@ -37,8 +37,9 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 	
 		getAllTrainingDay();
 		trainingDayPicker = (TextView) view.findViewById(R.id.trainingDayPicker);
-		trainingDayPicker.setText(trainingDayList.get(index).getName());
-		
+		if (!trainingDayList.isEmpty()){
+			trainingDayPicker.setText(trainingDayList.get(index).getName());
+		}
 		next = (ImageButton) view.findViewById(R.id.Next);
 		previous = (ImageButton) view.findViewById(R.id.Previous);
 		
@@ -67,8 +68,10 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 			}else{
 				index = 0;
 			}
-			trainingDayPicker.setText(trainingDayList.get(index).getName());
-			exerciseListViewUpdate.ExerciseListViewUpdate(super.getActivity(),trainingDayList.get(index).getID());
+			if (!trainingDayList.isEmpty()){
+				trainingDayPicker.setText(trainingDayList.get(index).getName());
+				exerciseListViewUpdate.ExerciseListViewUpdate(super.getActivity(),trainingDayList.get(index).getID());
+			}
 			break;
 		case R.id.Previous:
 			if (index > 0){
@@ -77,8 +80,10 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 			}else{
 				index = (trainingDayList.size() -1);
 			}
-			trainingDayPicker.setText(trainingDayList.get(index).getName());
-			exerciseListViewUpdate.ExerciseListViewUpdate(super.getActivity(),trainingDayList.get(index).getID());
+			if (!trainingDayList.isEmpty()){
+				trainingDayPicker.setText(trainingDayList.get(index).getName());
+				exerciseListViewUpdate.ExerciseListViewUpdate(super.getActivity(),trainingDayList.get(index).getID());
+			}
 			break;
 		default:
 			break;
@@ -95,6 +100,6 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 		Workoutplan w = wMapper.getCurrent();
 		//Select all TrainingDays from currrent Workoutplan
 		TrainingDayMapper tMapper = new TrainingDayMapper(super.getActivity());
-		trainingDayList = tMapper.getAll(w.getID());
+		trainingDayList = tMapper.getAll(w.getId());
 	}
 }

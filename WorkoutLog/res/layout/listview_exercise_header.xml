@@ -7,5 +7,4 @@
 	    android:id="@+id/listview_exericse_header_text"
 	    layout="@android:layout/preference_category">
 	</include>    
-
 </LinearLayout>
