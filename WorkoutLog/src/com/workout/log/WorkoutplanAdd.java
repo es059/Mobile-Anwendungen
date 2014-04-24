@@ -84,7 +84,7 @@ public class WorkoutplanAdd extends Activity implements OnItemClickListener {
 		switch (item.getItemId()){
 			case R.id.menu_add:
 				intent = new Intent();
-				intent.setClass(this, TrainingDayAdd.class);
+				intent.setClass(this, ManageTrainingDays.class);
 				startActivity(intent);
 				break;
 		}
@@ -98,7 +98,7 @@ public class WorkoutplanAdd extends Activity implements OnItemClickListener {
 	
 	public void openTrainingDayAdd(){
 		Intent intent = new Intent();
-		intent.setClass(this, TrainingDayAdd.class);
+		intent.setClass(this, ManageTrainingDays.class);
 		startActivity(intent);
 	}
 }

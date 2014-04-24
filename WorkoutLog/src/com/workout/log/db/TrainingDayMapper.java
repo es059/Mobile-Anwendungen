@@ -87,5 +87,31 @@ public class TrainingDayMapper {
 	    return d;
 
 	}
+	
+	public ArrayList<TrainingDay> getAllTrainingDay() {
+		ArrayList<TrainingDay> trainingdayList = new ArrayList<TrainingDay>();
+		
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		
+		sql = "SELECT * FROM TrainingDay";
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			do{
+				TrainingDay d = new TrainingDay();
+				d.setID(Integer.parseInt(cursor.getString(0)));
+				d.setName(cursor.getString(1));
+				trainingdayList.add(d);
+			}while(cursor.moveToNext());
+		}
+		db.close();
+		return trainingdayList;
+	}
+	public void ExerciseAddToTrainingDay(int trainingsDayId, int exerciseId) {
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		String sql = "INSERT INTO TrainingDayHasExercise (TrainingDay_Id, Exercise_Id) VALUES (" + trainingsDayId +","+exerciseId+")";
+		db.execSQL(sql);
+		db.close();
+	
+	}
 }
 

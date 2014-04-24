@@ -125,7 +125,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 				break;
 			case R.id.menu_workoutplan:
 				intent = new Intent();
-				intent.setClass(this, WorkoutplanAdd.class);
+				intent.setClass(this, ManageTrainingDays.class);
 				startActivity(intent);
 				break;
 		}
@@ -189,6 +189,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 			startActivity(intent1);
 			break;
 		case 2: 
+			
 			break;
 		case 3: 
 			Intent intent2= null;

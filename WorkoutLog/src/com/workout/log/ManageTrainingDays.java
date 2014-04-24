@@ -10,8 +10,10 @@ import com.workout.log.bo.Exercise;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.data.Default;
 import com.workout.log.data.MenueListe;
+import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.listAdapter.CustomDrawerAdapter;
 import com.workout.log.listAdapter.DefaultAddListAdapter;
+import com.workout.log.listAdapter.TrainingDayListAdapter;
 
 import android.app.Activity;
 import android.app.ActionBar;
@@ -24,37 +26,41 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.os.Build;
 
-public class TrainingDayAdd extends Activity implements OnItemClickListener{
+public class ManageTrainingDays extends Activity implements OnItemClickListener, OnItemLongClickListener{
+	
+	ArrayList<TrainingDay> trainingDayList;
+	TrainingDayListAdapter trainingDayListAdapter;
+	TrainingDayMapper tdMapper;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.training_day_add);
 		
-		/*
-		ListView exerciseListView = (ListView) findViewById(R.id.trainingDay_add_list);
+		tdMapper = new TrainingDayMapper(this);
+		ListView trainingDayListView = (ListView) findViewById(R.id.trainingDay_add_list);
+		trainingDayList = new ArrayList<TrainingDay>();
+		trainingDayList = tdMapper.getAllTrainingDay();
+		trainingDayListAdapter = new TrainingDayListAdapter(this, R.layout.listview_training_day, trainingDayList);
+		trainingDayListView.setAdapter(trainingDayListAdapter);
+		trainingDayListView.setOnItemClickListener(this);
+		trainingDayListView.setOnItemLongClickListener(this);
 		
-		//Default ListAdapter mit Hinzufügen-Eintrag
-		ArrayList<Default> defaultAddList = new ArrayList<Default>();
-		Default defaultExercise = new Default("Hinzufügen", "(füge eine neue Übung hinzu)");
-		defaultAddList.add(defaultExercise);
-		DefaultAddListAdapter adapter = new DefaultAddListAdapter(this,0,defaultAddList);
-		exerciseListView.setAdapter(adapter);
-		
-		exerciseListView.setOnItemClickListener(this);
-		*/
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.workoutplan_menu, menu);
 		
 		return true;
 	}
@@ -71,14 +77,26 @@ public class TrainingDayAdd extends Activity implements OnItemClickListener{
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		openExerciseAdd();
+		TrainingDay td = (TrainingDay) arg0.getItemAtPosition(arg2);
+		int trainingDayId = td.getID();
+		String trainingDayName = td.getName();
+		openExerciseOverview(trainingDayId, trainingDayName);
 		
 	}
 	
-	public void openExerciseAdd(){
+	public void openExerciseOverview(int trainingDayId, String trainingDayName){
 		Intent intent = new Intent();
-		intent.setClass(this, ExerciseAdd.class);
+		intent.putExtra("trainingDayId", trainingDayId);
+		intent.putExtra("trainingDayName", trainingDayName);
+		intent.setClass(this, TrainingDayExerciseOverview.class);
 		startActivity(intent);
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
+			long arg3) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
