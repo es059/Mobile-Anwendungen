@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        tools:context="com.workout.log.ExerciseOverview"
+        tools:ignore="MergeRootFrame" >
+
+        <fragment
+            android:id="@+id/overview_dateTimePicker"
+            android:name="com.workout.log.fragment.ActionBarGraphFragment"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/actionbar_height"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            tools:layout="@layout/actionbargraph_fragment" />
+
+        <fragment
+            android:id="@+id/lineGraph"
+            android:name="com.workout.log.fragment.LineGraphFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/overview_dateTimePicker"
+            android:layout_centerHorizontal="true"
+            tools:layout="@layout/line_graph_fragment" />
+    </RelativeLayout>
+
+</LinearLayout>

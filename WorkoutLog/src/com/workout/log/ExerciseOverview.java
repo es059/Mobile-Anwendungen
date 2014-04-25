@@ -176,35 +176,31 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 	 *
 	 */
 	public void SelectItem(int possition) { 
-		
+		Intent intent= null;
 		switch(possition) {
-		case 0:
-			Intent intent= null;
-			intent = new Intent();
-			intent.setClass(this, ExerciseOverview.class);
-			startActivity(intent);
-			break;
-		case 1: 
-			Intent intent1= null;
-			intent1 = new Intent();
-			intent1.setClass(this, WorkoutplanSelect.class);
-			startActivity(intent1);
-			break;
-		case 2: 
-			break;
-		case 3: 
-			Intent intent2= null;
-			intent2 = new Intent();
-			intent2.setClass(this, ExerciseAdd.class);
-			startActivity(intent2);
-			break;
-			
+			case 0:
+				intent = new Intent();
+				intent.setClass(this, ExerciseOverview.class);
+				startActivity(intent);
+				break;
+			case 1: 
+				intent = new Intent();
+				intent.setClass(this, WorkoutplanSelect.class);
+				startActivity(intent);
+				break;
+			case 2: 
+				break;
+			case 3: 
+				intent = new Intent();
+				intent.setClass(this, ExerciseAdd.class);
+				startActivity(intent);
+				break;
+			case 4: 
+				intent = new Intent();
+				intent.setClass(this, GraphActivity.class);
+				startActivity(intent);
+				break;
 		}
-		
-		/**
-		 * TODOO
-		 * 
-		 */
 	}
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
