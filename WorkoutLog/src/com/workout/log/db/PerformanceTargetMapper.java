@@ -33,7 +33,7 @@ public class PerformanceTargetMapper {
 	 		throw sqle;
 	 	}
 	}
-	/*
+	/**
 	 * Get one PerformanceTarget by an Exercise id
 	 * 
 	 *  @param Exercise exercise

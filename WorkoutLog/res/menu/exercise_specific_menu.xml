@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
      tools:context="com.example.workoutlog.AddActivity" >
 
+    
     <item
         android:id="@+id/menu_add"
         android:orderInCategory="100"
@@ -9,11 +10,13 @@
         android:icon="@android:drawable/ic_menu_add"
         android:showAsAction="always"/>
     
-    <item
-        android:id="@+id/menu_save"
+     <item
+        android:id="@+id/menu_delete"
         android:orderInCategory="100"
-        android:icon="@android:drawable/ic_menu_save"
+        android:title="@string/menu_delete"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
         android:showAsAction="always"/>
+    
      <item
         android:id="@+id/menu_settings"
         android:orderInCategory="100"

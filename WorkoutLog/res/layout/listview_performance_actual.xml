@@ -26,7 +26,17 @@
 		            android:layout_weight="1"
 		            android:text="Satz 1"
 		            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
-	
+	 
+		       <EditText
+		            android:id="@+id/specific_edit_weight"
+		            android:layout_weight="1"
+		            android:layout_width="5dp"
+		            android:layout_marginLeft="10dp"
+		            android:layout_height="wrap_content"
+					android:hint="Gewicht"
+					android:inputType="phone"
+		            android:ems="10" />
+		       
 		       <EditText
 		            android:id="@+id/specific_edit_repetition"
 		            android:layout_weight="1"
@@ -35,16 +45,6 @@
 		            android:gravity="center"
 		            android:layout_height="wrap_content"
 					android:hint="Wdh"
-					android:inputType="phone"
-		            android:ems="10" />
-		            
-		       <EditText
-		            android:id="@+id/specific_edit_weight"
-		            android:layout_weight="1"
-		            android:layout_width="5dp"
-		            android:layout_marginLeft="10dp"
-		            android:layout_height="wrap_content"
-					android:hint="Gewicht"
 					android:inputType="phone"
 		            android:ems="10" />
         	</TableRow>

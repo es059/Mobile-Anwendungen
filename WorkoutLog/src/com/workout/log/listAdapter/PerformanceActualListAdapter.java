@@ -7,16 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.workout.log.bo.Set;
+import com.workout.log.bo.PerformanceActual;
 import com.workout.log.customLayout.ListViewSet;
 
-public class SetListAdapter extends ArrayAdapter<Set> {
-	public SetListAdapter(Context context, int textViewResourceId, List<Set> objects) {
+public class PerformanceActualListAdapter extends ArrayAdapter<PerformanceActual> {
+	public PerformanceActualListAdapter(Context context, int textViewResourceId, List<PerformanceActual> objects) {
 		super(context, textViewResourceId, objects);
 	}
 	@Override
 	 public View getView(int position, View convertView, ViewGroup parent) {
-		 Set set = getItem(position);
+		 PerformanceActual performanceActual = getItem(position);
 		 ListViewSet listViewSet = null;
 		 if(convertView != null){
 			 listViewSet = (ListViewSet) convertView;
@@ -25,7 +25,7 @@ public class SetListAdapter extends ArrayAdapter<Set> {
 			 listViewSet = new ListViewSet(getContext());
 		 }
 		 
-		 listViewSet.setSet(set);
+		 listViewSet.setPerfromanceActual(performanceActual);
 		 return listViewSet;
 	 }
 

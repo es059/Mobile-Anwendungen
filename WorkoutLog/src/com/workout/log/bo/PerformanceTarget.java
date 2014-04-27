@@ -7,6 +7,7 @@ package com.workout.log.bo;
  */
 
 public class PerformanceTarget {
+	private int mId;
 	private int mRepetition;
 	private int mSet;
 	private Exercise mExercise;
