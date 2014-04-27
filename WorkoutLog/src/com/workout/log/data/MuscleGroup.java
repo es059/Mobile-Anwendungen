@@ -20,4 +20,12 @@ public MuscleGroup() {
 
 
 }
+
+public ArrayList<String> getMuscleGroup() {
+	return muscleGroup;
+}
+
+public void setMuscleGroup(ArrayList<String> muscleGroup) {
+	this.muscleGroup = muscleGroup;
+}
 }

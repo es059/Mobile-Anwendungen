@@ -189,7 +189,10 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 			startActivity(intent1);
 			break;
 		case 2: 
-			
+			Intent intent4 = null;
+			intent4 = new Intent();
+			intent4.setClass(this, ManageTrainingDays.class);
+			startActivity(intent4);
 			break;
 		case 3: 
 			Intent intent2= null;

@@ -18,6 +18,7 @@ public class ExerciseMapper {
 	
 	private DataBaseHelper myDBHelper;
 	private String sql;
+	private int mgID;
 	
 	public ExerciseMapper(Context context){
 		myDBHelper = new DataBaseHelper(context);
@@ -33,10 +34,16 @@ public class ExerciseMapper {
 	 	}
 	}
 	
-	public void add(String a){
+	public void add(String a, String b){
+
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "INSERT INTO Exercise (ExerciseName) VALUES ('" +a +"')";
-		db.execSQL(sql);
+		sql = "SELECT MuscleGroup_Id FROM MuscleGroup WHERE MuscleGroupName='" + b + "'";
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			mgID = Integer.parseInt(cursor.getString(0));
+		}
+		String sql1 = "INSERT INTO Exercise (ExerciseName, MuscleGroup_Id ) VALUES ('" +a +"', " + mgID + ")";
+		db.execSQL(sql1);
 		db.close();
 	}
 

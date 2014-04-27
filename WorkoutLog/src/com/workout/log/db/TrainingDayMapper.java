@@ -10,6 +10,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.Editable;
 
 public class TrainingDayMapper {
 	
@@ -106,10 +107,12 @@ public class TrainingDayMapper {
 		db.close();
 		return trainingdayList;
 	}
-	public void ExerciseAddToTrainingDay(int trainingsDayId, int exerciseId) {
+	public void ExerciseAddToTrainingDay(int trainingsDayId, int exerciseId, Editable ETW, Editable ETS) {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		String sql = "INSERT INTO TrainingDayHasExercise (TrainingDay_Id, Exercise_Id) VALUES (" + trainingsDayId +","+exerciseId+")";
+		String sql2 = "INSERT INTO PerformanceTarget (TrainingDay_Id, Exercise_Id, RepetitionTarget, SetTarget) VALUES  (" + trainingsDayId +","+exerciseId+", " + ETW + ","+ETS+")";
 		db.execSQL(sql);
+		db.execSQL(sql2);
 		db.close();
 	
 	}

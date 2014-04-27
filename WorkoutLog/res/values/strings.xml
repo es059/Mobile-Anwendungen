@@ -41,4 +41,15 @@
     <string name="title_activity_exercise_add_to_training_day">ExerciseAddToTrainingDay</string>
     <string name="title_activity_training_day_exercise_overview">TrainingDayExerciseOverview</string>
 
+
+    <string-array name="MuscleGroups">
+        <item>Beine</item>
+        <item>Rücken</item>
+        <item>Brust</item>
+        <item>Trizeps</item>
+        <item>Bizeps</item>
+        <item>Bauch</item>
+        
+    </string-array>
+
 </resources>
