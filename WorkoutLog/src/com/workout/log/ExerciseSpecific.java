@@ -40,10 +40,12 @@ public class ExerciseSpecific extends Activity {
 	private ListView exerciseView;
 	private Exercise exercise;
 	private int exerciseId;
+	private EditText repetition;
+	private EditText weight;
 	
-	//Case: No PerformanceActual Entry Variables
-	PerformanceActualListAdapter adapter;
-	ArrayList<PerformanceActual> performanceActualList;
+	private PerformanceActualListAdapter adapter;
+	PerformanceActualMapper paMapper;
+	private ArrayList<PerformanceActual> performanceActualList;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,11 +78,11 @@ public class ExerciseSpecific extends Activity {
 		ExerciseMapper eMapper = new ExerciseMapper(this);
 		exercise = eMapper.getExerciseById(exerciseId);
 		//PerformanceActual Mapper + Object Liste
-		PerformanceActualMapper paMapper = new PerformanceActualMapper(this);
+		paMapper = new PerformanceActualMapper(this);
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
-		ArrayList<PerformanceActual> performanceActual = paMapper.getPerformanceActualByExerciseId(exercise, sp.format(new Date()));
+		performanceActualList = paMapper.getPerformanceActualByExerciseId(exercise, sp.format(new Date()));
 		
-		if (performanceActual.isEmpty()){
+		if (performanceActualList.isEmpty()){
 			PerformanceTargetMapper ptMapper = new PerformanceTargetMapper(this);
 			PerformanceTarget performanceTarget = ptMapper.getPerformanceTargetByExerciseId(exercise);
 			
@@ -96,7 +98,8 @@ public class ExerciseSpecific extends Activity {
 			adapter = new PerformanceActualListAdapter(this, 0, performanceActualList);
 			exerciseView.setAdapter(adapter);
 		}else{
-			//TODO
+			adapter = new PerformanceActualListAdapter(this, 0, performanceActualList);
+			exerciseView.setAdapter(adapter);
 		}
 	}
 	
@@ -130,7 +133,7 @@ public class ExerciseSpecific extends Activity {
 			case R.id.menu_delete:
 				removePerformanceActualItem();
 				break;
-			case R.id.home:
+			case android.R.id.home:
 				savePerformanceActual();
 				break;
 		}
@@ -159,17 +162,21 @@ public class ExerciseSpecific extends Activity {
 	 */
 	public void savePerformanceActual(){ 
 		PerformanceActualMapper pMapper = new PerformanceActualMapper(this);
-		EditText repetition;
-		EditText weight;
+
 		for(PerformanceActual item : performanceActualList){
-			View v = exerciseView.getChildAt(item.getSet() -1);
-			repetition = (EditText) v.findViewById(R.id.specific_edit_weight);
-			weight = (EditText) v.findViewById(R.id.specific_edit_weight);
-			
-			item.setRepetition(Integer.parseInt(repetition.getText().toString()));
-			item.setRepetition(Integer.parseInt(weight.getText().toString()));
-			
-			PerformanceActual pa = pMapper.savePerformanceActual(item);	
+			if (item.getRepetition() != 0 || item.getWeight() != 0.0){
+				View v = exerciseView.getChildAt(item.getSet() -1);
+				repetition = (EditText) v.findViewById(R.id.specific_edit_repetition);
+				weight = (EditText) v.findViewById(R.id.specific_edit_weight);
+				
+				if (!repetition.getText().toString().isEmpty()){
+					item.setRepetition(Integer.parseInt(repetition.getText().toString()));
+				}
+				if (!weight.getText().toString().isEmpty()){
+					item.setRepetition(Integer.parseInt(weight.getText().toString()));
+				}			
+				PerformanceActual pa = pMapper.savePerformanceActual(item);	
+			}
 		}
 	}
 	
@@ -178,10 +185,14 @@ public class ExerciseSpecific extends Activity {
 	 * 
 	 */
 	public void removePerformanceActualItem(){
+		PerformanceActual performanceActual = performanceActualList.get(performanceActualList.size()-1);
 		//Update Adapter + ListView
-		adapter.remove(performanceActualList.get(performanceActualList.size()-1));
+		adapter.remove(performanceActual);
 		adapter.notifyDataSetChanged();
 		exerciseView.invalidateViews();
+		//Remove Entry from Database
+		paMapper = new PerformanceActualMapper(this);
+		paMapper.deletePerformanceActualById(performanceActual.getId());
 	}
 }
 

@@ -38,6 +38,21 @@ public class PerformanceActualMapper {
 	}
 	
 	/**
+	 * Delete one PerformanceActual Dataset from the database
+	 * 
+	 * @param PerfromanceActualId
+	 * @author Eric Schmidt  
+	 */
+	public void deletePerformanceActualById(int performanceActualId){
+		if (performanceActualId != 0){
+			SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
+			sql = "DELETE FROM PerformanceActual WHERE PerformanceActual_Id =" + performanceActualId;
+			db.execSQL(sql);
+			db.close();
+		}
+	}
+	
+	/**
 	 * Get one PerformanceTarget by an Exercise id
 	 * 
 	 *  @param Exercise exercise
@@ -46,19 +61,21 @@ public class PerformanceActualMapper {
 	 *  @author Eric Schmidt
 	 */
 	public ArrayList<PerformanceActual> getPerformanceActualByExerciseId(Exercise exercise, String timestamp){
-		PerformanceActual performanceActual = new PerformanceActual();
 		ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 		sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + exercise.getId() + " AND TimestampActual = \'" + timestamp + "\'";
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
-			performanceActual.setId(cursor.getInt(0));
-			performanceActual.setRepetition(cursor.getInt(1));
-			performanceActual.setSet(cursor.getInt(2));
-			performanceActual.setWeight(cursor.getDouble(3));
-			performanceActual.setTimestamp(new Date(cursor.getLong(4)));
-			performanceActual.setExercise(exercise);
-			performanceActualList.add(performanceActual);
+			do {
+				PerformanceActual performanceActual = new PerformanceActual();
+				performanceActual.setId(cursor.getInt(0));
+				performanceActual.setRepetition(cursor.getInt(1));
+				performanceActual.setSet(cursor.getInt(2));
+				performanceActual.setWeight(cursor.getDouble(3));
+				performanceActual.setTimestamp(new Date(cursor.getLong(4)));
+				performanceActual.setExercise(exercise);
+				performanceActualList.add(performanceActual);
+			} while (cursor.moveToNext());
 		}
 		db.close();
 		return performanceActualList;
@@ -72,22 +89,29 @@ public class PerformanceActualMapper {
 	 *  @author Eric Schmidt
 	 */
 	public PerformanceActual savePerformanceActual(PerformanceActual performanceActual){
-		int id = 0;
+		int id = 1;
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
-		
-		sql = "SELECT MAX(PerformanceActual_Id) FROM PerformanceActual";
-		Cursor cursor = db.rawQuery(sql, null);
-		if (cursor.moveToFirst()){
-			id = Integer.parseInt(cursor.getString(0));
-		}		
-		sql = "REPLACE INTO PerformanceActual SET PerformaneActual_Id = " + id +
-					", RepetitionActual = " + performanceActual.getRepetition() +
-					", SetActual = "+ performanceActual.getSet() +
-					", WeightActual = " + performanceActual.getWeight() +
-					", TimestampActual = "+ sp.format(new Date()) +
-					", Exercise_Id = '" + performanceActual.getExercise().getId() + "\'";
-	
+		if (performanceActual.getId() == 0){
+			sql = "SELECT MAX(PerformanceActual_Id) FROM PerformanceActual";
+			Cursor cursor = db.rawQuery(sql, null);
+			if (cursor.moveToFirst()){
+				if (!cursor.isNull(0)){
+					id = Integer.parseInt(cursor.getString(0));
+					id++;
+				}
+			}	
+		}else{
+			id = performanceActual.getId();
+		}
+		sql= "INSERT OR REPLACE INTO PerformanceActual "
+				+ "(PerformanceActual_Id, RepetitionActual, SetActual, "
+				+ "WeightActual, TimestampActual, Exercise_Id) "
+				+ "VALUES (" + id + "," + performanceActual.getRepetition() 
+				+ "," + performanceActual.getSet()
+				+ "," + performanceActual.getWeight() + ",'" + sp.format(new Date())
+				+ "'," + performanceActual.getExercise().getId() + ")";
+				
 		db.execSQL(sql);
 		performanceActual.setId(id);
 		performanceActual.setTimestamp(new Date());
