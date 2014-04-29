@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 public class ExerciseOverview extends ActionBarActivity implements OnItemLongClickListener, OnItemClickListener, ExerciseSelectionDialogListener  {
 
@@ -96,9 +97,10 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 		updateOverview = UpdateListView.updateListView(exerciseView);
 		if (intentExtras != null){	
 			try{
-			int trainingDayId = intentExtras.getInt("TrainingDayId");
-			ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = (ActionBarTrainingDayPickerFragment) getFragmentManager().findFragmentById(R.id.overview_trainingDayPicker);
-			actionBarTrainingDayPickerFragment.setCurrentTrainingDay(trainingDayId);
+				Toast.makeText(this, "Daten wurden gespeichert", Toast.LENGTH_SHORT).show();
+				int trainingDayId = intentExtras.getInt("TrainingDayId");
+				ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = (ActionBarTrainingDayPickerFragment) getFragmentManager().findFragmentById(R.id.overview_trainingDayPicker);
+				actionBarTrainingDayPickerFragment.setCurrentTrainingDay(trainingDayId);
 			} catch (Exception e){
 				e.printStackTrace();
 			}

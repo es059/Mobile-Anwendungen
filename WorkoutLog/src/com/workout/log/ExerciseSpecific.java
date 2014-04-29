@@ -34,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.os.Build;
 
 public class ExerciseSpecific extends Activity {
@@ -129,7 +130,6 @@ public class ExerciseSpecific extends Activity {
 	 */
 	@Override 
 	public void onBackPressed(){
-		super.onBackPressed();
 		savePerformanceActual();
 		openExerciseOverview();
 	}
@@ -140,6 +140,7 @@ public class ExerciseSpecific extends Activity {
 	 */
 	@Override
 	public Intent getParentActivityIntent() {
+		savePerformanceActual();
 		Intent intent = new Intent();
 		intent.setClass(this, ExerciseOverview.class);
 		intent.putExtra("TrainingDayId", trainingDayId);
@@ -158,9 +159,6 @@ public class ExerciseSpecific extends Activity {
 				break;
 			case R.id.menu_delete:
 				removePerformanceActualItem();
-				break;
-			case android.R.id.home:
-				savePerformanceActual();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -202,18 +200,18 @@ public class ExerciseSpecific extends Activity {
 		PerformanceActualMapper pMapper = new PerformanceActualMapper(this);
 
 		for(PerformanceActual item : performanceActualList){
+			View v = exerciseView.getChildAt(item.getSet() -1);
+			repetition = (EditText) v.findViewById(R.id.specific_edit_repetition);
+			weight = (EditText) v.findViewById(R.id.specific_edit_weight);
+			
+			if (!repetition.getText().toString().isEmpty()){
+				item.setRepetition(Integer.parseInt(repetition.getText().toString()));
+			}
+			if (!weight.getText().toString().isEmpty()){
+				item.setRepetition(Integer.parseInt(weight.getText().toString()));
+			}	
 			if (item.getRepetition() != 0 || item.getWeight() != 0.0){
-				View v = exerciseView.getChildAt(item.getSet() -1);
-				repetition = (EditText) v.findViewById(R.id.specific_edit_repetition);
-				weight = (EditText) v.findViewById(R.id.specific_edit_weight);
-				
-				if (!repetition.getText().toString().isEmpty()){
-					item.setRepetition(Integer.parseInt(repetition.getText().toString()));
-				}
-				if (!weight.getText().toString().isEmpty()){
-					item.setRepetition(Integer.parseInt(weight.getText().toString()));
-				}			
-				PerformanceActual pa = pMapper.savePerformanceActual(item);	
+				PerformanceActual pa = pMapper.savePerformanceActual(item);
 			}
 		}
 	}

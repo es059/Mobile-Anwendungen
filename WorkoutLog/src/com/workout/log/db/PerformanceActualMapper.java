@@ -96,16 +96,19 @@ public class PerformanceActualMapper {
 		ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 		Cursor cursor;
+		int dayCount=0;
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		/**
-		 * Search for the latest date
+		 * Search for the latest date. If the latest date is older than 100 Days than
+		 * it will be ignored
 		 */
 		do{
-		currentDate.add(Calendar.DATE, -1);
-		sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + currentExercise.getId()
-					+ " AND TimestampActual = '" + sp.format(currentDate.getTime()) + "' ORDER BY SetActual";
-		cursor = db.rawQuery(sql,null);
-		} while (!cursor.moveToFirst());
+			dayCount++;
+			currentDate.add(Calendar.DATE, -1);
+			sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + currentExercise.getId()
+						+ " AND TimestampActual = '" + sp.format(currentDate.getTime()) + "' ORDER BY SetActual";
+			cursor = db.rawQuery(sql,null);
+		} while (!cursor.moveToFirst() && dayCount != 100);
 		cursor = db.rawQuery(sql,null);
 		if (cursor.moveToFirst()){
 			do{
