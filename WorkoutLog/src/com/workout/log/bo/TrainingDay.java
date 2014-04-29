@@ -8,11 +8,6 @@ public class TrainingDay {
 	public TrainingDay(){
 		
 	}
-	
-	public  TrainingDay(String name){
-		setName(name);
-		setID(getID() + 1);
-	}
 
 	public String getName() {
 		return mName;
@@ -22,11 +17,11 @@ public class TrainingDay {
 		this.mName = Name;
 	}
 
-	public  int getID() {
+	public  int getId() {
 		return mId;
 	}
 
-	public void setID(int Id) {
+	public void setId(int Id) {
 		mId = Id;
 	}
 }

@@ -3,6 +3,7 @@ package com.workout.log.db;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import com.workout.log.bo.Exercise;
@@ -63,7 +64,8 @@ public class PerformanceActualMapper {
 	public ArrayList<PerformanceActual> getPerformanceActualByExerciseId(Exercise exercise, String timestamp){
 		ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
-		sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + exercise.getId() + " AND TimestampActual = \'" + timestamp + "\'";
+		sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + exercise.getId() 
+				+ " AND TimestampActual = \'" + timestamp + "\' ORDER BY SetActual";
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
 			do {
@@ -79,6 +81,88 @@ public class PerformanceActualMapper {
 		}
 		db.close();
 		return performanceActualList;
+	}
+	
+	/**
+	 * Get a ArrayList of PerformanceActual Objects from 
+	 * the last workout of one exercise
+	 * 
+	 * @param Date the current Date of the Workout
+	 * @param Exercise the currently selected Exercise
+	 * @return ArrayList<PerformanceActual> a List of PerformanceActual Objects from the last Workout
+	 * @author Eric Schmidt
+	 */
+	public ArrayList<PerformanceActual> getLastPerformanceActual(Calendar currentDate, Exercise currentExercise){
+		ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
+		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
+		Cursor cursor;
+		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
+		/**
+		 * Search for the latest date
+		 */
+		do{
+		currentDate.add(Calendar.DATE, -1);
+		sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + currentExercise.getId()
+					+ " AND TimestampActual = '" + sp.format(currentDate.getTime()) + "' ORDER BY SetActual";
+		cursor = db.rawQuery(sql,null);
+		} while (!cursor.moveToFirst());
+		cursor = db.rawQuery(sql,null);
+		if (cursor.moveToFirst()){
+			do{
+				PerformanceActual performanceActual = new PerformanceActual();
+				performanceActual.setId(cursor.getInt(0));
+				performanceActual.setRepetition(cursor.getInt(1));
+				performanceActual.setSet(cursor.getInt(2));
+				performanceActual.setWeight(cursor.getDouble(3));
+				performanceActual.setTimestamp(new Date(cursor.getLong(4)));
+				performanceActual.setExercise(currentExercise);
+				performanceActualList.add(performanceActual);
+			}while(cursor.moveToNext());
+		}
+		db.close();
+		return performanceActualList;
+		
+	}
+	
+	/**
+	 * Get a ArrayList of PerformanceActual Objects from 
+	 * the last workout of one exercise
+	 * 
+	 * @param Date the current Date of the Workout
+	 * @param Exercise the currently selected Exercise
+	 * @return ArrayList<PerformanceActual> a List of PerformanceActual Objects from the last Workout
+	 * @author Eric Schmidt
+	 */
+	public ArrayList<PerformanceActual> getNextPerformanceActual(Calendar currentDate, Exercise currentExercise){
+		ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
+		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
+		Cursor cursor;
+		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
+		/**
+		 * Search for the latest date
+		 */
+		do{
+		currentDate.add(Calendar.DATE, +1);
+		sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + currentExercise.getId()
+					+ " AND TimestampActual = '" + sp.format(currentDate.getTime()) + "' ORDER BY SetActual";
+		cursor = db.rawQuery(sql,null);
+		} while (!cursor.moveToFirst());
+		cursor = db.rawQuery(sql,null);
+		if (cursor.moveToFirst()){
+			do{
+				PerformanceActual performanceActual = new PerformanceActual();
+				performanceActual.setId(cursor.getInt(0));
+				performanceActual.setRepetition(cursor.getInt(1));
+				performanceActual.setSet(cursor.getInt(2));
+				performanceActual.setWeight(cursor.getDouble(3));
+				performanceActual.setTimestamp(new Date(cursor.getLong(4)));
+				performanceActual.setExercise(currentExercise);
+				performanceActualList.add(performanceActual);
+			}while(cursor.moveToNext());
+		}
+		db.close();
+		return performanceActualList;
+		
 	}
 	
 	/**

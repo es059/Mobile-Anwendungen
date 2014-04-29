@@ -26,7 +26,8 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 	private TextView trainingDayPicker;
 	private int index = 0;
 	private ArrayList<TrainingDay> trainingDayList;
-	private UpdateListView exerciseListViewUpdate;
+	private static UpdateListView exerciseListViewUpdate;
+	private TrainingDayMapper tMapper;
 	
 	
 	@Override
@@ -70,7 +71,7 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 			}
 			if (!trainingDayList.isEmpty()){
 				trainingDayPicker.setText(trainingDayList.get(index).getName());
-				exerciseListViewUpdate.ExerciseListViewUpdate(super.getActivity(),trainingDayList.get(index).getID());
+				exerciseListViewUpdate.ExerciseListViewUpdate(super.getActivity(),trainingDayList.get(index).getId());
 			}
 			break;
 		case R.id.Previous:
@@ -82,7 +83,7 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 			}
 			if (!trainingDayList.isEmpty()){
 				trainingDayPicker.setText(trainingDayList.get(index).getName());
-				exerciseListViewUpdate.ExerciseListViewUpdate(super.getActivity(),trainingDayList.get(index).getID());
+				exerciseListViewUpdate.ExerciseListViewUpdate(super.getActivity(),trainingDayList.get(index).getId());
 			}
 			break;
 		default:
@@ -101,5 +102,42 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 		//Select all TrainingDays from currrent Workoutplan
 		TrainingDayMapper tMapper = new TrainingDayMapper(super.getActivity());
 		trainingDayList = tMapper.getAll(w.getId());
+	}
+	
+	public TrainingDay getCurrentTrainingDay(){
+		return trainingDayList.get(index);
+	}
+	
+	public void setCurrentTrainingDay(int trainingDayId){
+		tMapper = new TrainingDayMapper(super.getActivity());
+		int index;
+		index = indexOfArrayList(tMapper.getTrainingDayById(trainingDayId));
+		if (index != -1){
+			trainingDayPicker.setText(trainingDayList.get(index).getName());
+			if (exerciseListViewUpdate == null){
+				exerciseListViewUpdate = UpdateListView.updateListView();
+			}
+			exerciseListViewUpdate.ExerciseListViewUpdate(super.getActivity(),trainingDayList.get(index).getId());
+		}
+	}
+	
+	/**
+	 * Searches the TrainingDayList for a sepcific trainingDay and returns the 
+	 * index
+	 * 
+	 * @param trainingDay
+	 * @return index of ArrayList where the object was found
+	 */
+	private int indexOfArrayList(TrainingDay trainingDay){
+		int index = -1;
+		int count = 0;
+		for (TrainingDay item : trainingDayList){
+			if (item.getId() == trainingDay.getId()){
+				index = count;
+				return index;
+			}
+			count++;
+		}
+		return index;
 	}
 }

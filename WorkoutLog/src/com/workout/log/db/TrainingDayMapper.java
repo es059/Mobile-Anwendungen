@@ -80,7 +80,7 @@ public class TrainingDayMapper {
 	    sql = "SELECT TrainingDay_Id, TrainingDayName FROM TrainingDay WHERE TrainingDay_Id = " + id;
 	    Cursor cursor = db.rawQuery(sql, null);
 	    if (cursor.moveToFirst()){
-		    d.setID(Integer.parseInt(cursor.getString(0)));
+		    d.setId(Integer.parseInt(cursor.getString(0)));
 		    d.setName(cursor.getString(1));
 	    }
 	    db.close();

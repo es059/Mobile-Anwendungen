@@ -8,6 +8,7 @@ import com.example.workoutlog.R;
 import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment.ExerciseSelectionDialogListener;
+import com.workout.log.fragment.ActionBarTrainingDayPickerFragment;
 import com.workout.log.listAdapter.CustomDrawerAdapter;
 
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -45,6 +46,8 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.exercise_overview);
 		
+		getActionBar().setDisplayShowTitleEnabled(false);
+		
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -77,21 +80,31 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
         mDrawerLayout.setDrawerListener(mDrawerToggle);   	
         mDrawerLayout.setDrawerListener(mDrawerToggle);      
 	}
-	
+    /**
+     * Calls the <code>UpdateListView</code> Singleton Constructor for the first time 
+     * and sets the ListView reference. If the Activity was called through a intent, 
+     * the ListView is filled by a method call in the fragment
+     * 
+     * @author Eric Schmidt
+     * @date 18.04.2014
+     */  
 	@Override
 	protected void onResume(){
 		super.onResume();
-        /**
-         * Calls the <code>UpdateListView</code> Singleton Constructor for the first time 
-         * and sets the ListView reference
-         * 
-         * @author Eric Schmidt
-         * @date 18.04.2014
-         */  
+		final Bundle intentExtras = getIntent().getExtras();
 		exerciseView = (ListView) findViewById(R.id.exerciseOverviewList);
 		updateOverview = UpdateListView.updateListView(exerciseView);
-		updateOverview.ExerciseListViewUpdate(this);
-
+		if (intentExtras != null){	
+			try{
+			int trainingDayId = intentExtras.getInt("TrainingDayId");
+			ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = (ActionBarTrainingDayPickerFragment) getFragmentManager().findFragmentById(R.id.overview_trainingDayPicker);
+			actionBarTrainingDayPickerFragment.setCurrentTrainingDay(trainingDayId);
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}else{	
+			updateOverview.ExerciseListViewUpdate(this);
+		}
 		exerciseView.setOnItemLongClickListener(this);
 		exerciseView.setOnItemClickListener(this);
 	}
@@ -149,12 +162,20 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 		openExerciseSpecific(exercise);
 		
 	}
-	
+	/**
+	 * Method to open the ExerciseSpecific Activity with the selected Exercise and the current TrainingDay
+	 * 
+	 * @param exercise
+	 * @author Eric Schmidt
+	 */
 	private void openExerciseSpecific (Exercise exercise){
 		Intent intent = new Intent();
+		ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = 
+				(ActionBarTrainingDayPickerFragment) getFragmentManager().findFragmentById(R.id.overview_trainingDayPicker);
 		intent.setClass(this, ExerciseSpecific.class);
 		intent.putExtra("ExerciseID", exercise.getId());
 		intent.putExtra("ExerciseName", exercise.getName());
+		intent.putExtra("TrainingDayId", actionBarTrainingDayPickerFragment.getCurrentTrainingDay().getId());
 		startActivity(intent);
 	}
 	
