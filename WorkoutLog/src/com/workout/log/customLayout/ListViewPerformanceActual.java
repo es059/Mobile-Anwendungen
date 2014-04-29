@@ -10,12 +10,12 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class ListViewSet extends RelativeLayout{
+public class ListViewPerformanceActual extends RelativeLayout{
 	private TextView set;
 	private EditText repetition;
 	private EditText weight;
 	
-	public ListViewSet(Context context) {
+	public ListViewPerformanceActual(Context context) {
 		super(context);
 		LayoutInflater inflater = LayoutInflater.from(context);
 		View v = inflater.inflate(R.layout.listview_performance_actual, null);

@@ -1,6 +1,7 @@
 package com.workout.log.db;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -54,6 +55,36 @@ public class PerformanceActualMapper {
 	}
 	
 	/**
+	 * Get All PerformanceTarget by an Exercise id
+	 * 
+	 *  @param Exercise exercise
+	 *  @param String timestamp in SimpleDateFormat dd.MM.yyyy
+	 *  @return Exercise
+	 *  @author Eric Schmidt
+	 */
+	public ArrayList<PerformanceActual> getAllPerformanceActual(Exercise exercise){
+		ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
+		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
+		sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + exercise.getId() + " ORDER BY TimestampActual";
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			do {
+				PerformanceActual performanceActual = new PerformanceActual();
+				performanceActual.setId(cursor.getInt(0));
+				performanceActual.setRepetition(cursor.getInt(1));
+				performanceActual.setSet(cursor.getInt(2));
+				performanceActual.setWeight(cursor.getDouble(3));
+				performanceActual.setTimestamp(new Date(cursor.getLong(4)));
+				performanceActual.setExercise(exercise);
+				performanceActualList.add(performanceActual);
+			} while (cursor.moveToNext());
+		}
+		db.close();
+		return performanceActualList;
+	}
+	
+	
+	/**
 	 * Get one PerformanceTarget by an Exercise id
 	 * 
 	 *  @param Exercise exercise
@@ -61,7 +92,7 @@ public class PerformanceActualMapper {
 	 *  @return Exercise
 	 *  @author Eric Schmidt
 	 */
-	public ArrayList<PerformanceActual> getPerformanceActualByExerciseId(Exercise exercise, String timestamp){
+	public ArrayList<PerformanceActual> getCurrentPerformanceActual(Exercise exercise, String timestamp){
 		ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 		sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + exercise.getId() 
@@ -96,6 +127,7 @@ public class PerformanceActualMapper {
 		ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 		Cursor cursor;
+		Calendar c = currentDate;
 		int dayCount=0;
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		/**
@@ -104,7 +136,7 @@ public class PerformanceActualMapper {
 		 */
 		do{
 			dayCount++;
-			currentDate.add(Calendar.DATE, -1);
+			c.add(Calendar.DATE, -1);
 			sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + currentExercise.getId()
 						+ " AND TimestampActual = '" + sp.format(currentDate.getTime()) + "' ORDER BY SetActual";
 			cursor = db.rawQuery(sql,null);
@@ -117,7 +149,11 @@ public class PerformanceActualMapper {
 				performanceActual.setRepetition(cursor.getInt(1));
 				performanceActual.setSet(cursor.getInt(2));
 				performanceActual.setWeight(cursor.getDouble(3));
-				performanceActual.setTimestamp(new Date(cursor.getLong(4)));
+				try {
+					performanceActual.setTimestamp(sp.parse(cursor.getString(4)));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 				performanceActual.setExercise(currentExercise);
 				performanceActualList.add(performanceActual);
 			}while(cursor.moveToNext());
@@ -140,16 +176,20 @@ public class PerformanceActualMapper {
 		ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 		Cursor cursor;
+		Calendar c = currentDate;
+		int dayCount=0;
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		/**
-		 * Search for the latest date
+		 * Search for the newest date. If the newest date is older than 100 Days than
+		 * the standard PerformanceActual will be shown
 		 */
 		do{
-		currentDate.add(Calendar.DATE, +1);
-		sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + currentExercise.getId()
-					+ " AND TimestampActual = '" + sp.format(currentDate.getTime()) + "' ORDER BY SetActual";
-		cursor = db.rawQuery(sql,null);
-		} while (!cursor.moveToFirst());
+			dayCount++;
+			c.add(Calendar.DATE, 1);
+			sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + currentExercise.getId()
+						+ " AND TimestampActual = '" + sp.format(currentDate.getTime()) + "' ORDER BY SetActual";
+			cursor = db.rawQuery(sql,null);
+		} while (!cursor.moveToFirst() && dayCount != 100);
 		cursor = db.rawQuery(sql,null);
 		if (cursor.moveToFirst()){
 			do{
@@ -158,7 +198,11 @@ public class PerformanceActualMapper {
 				performanceActual.setRepetition(cursor.getInt(1));
 				performanceActual.setSet(cursor.getInt(2));
 				performanceActual.setWeight(cursor.getDouble(3));
-				performanceActual.setTimestamp(new Date(cursor.getLong(4)));
+				try {
+					performanceActual.setTimestamp(sp.parse(cursor.getString(4)));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 				performanceActual.setExercise(currentExercise);
 				performanceActualList.add(performanceActual);
 			}while(cursor.moveToNext());

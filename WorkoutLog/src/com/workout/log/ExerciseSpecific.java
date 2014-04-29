@@ -45,6 +45,7 @@ public class ExerciseSpecific extends Activity {
 	private int trainingDayId;
 	private EditText repetition;
 	private EditText weight;
+	private Boolean saveMode = false;
 	
 	private PerformanceActualListAdapter adapter;
 	private PerformanceActualMapper paMapper;
@@ -85,25 +86,36 @@ public class ExerciseSpecific extends Activity {
 		//PerformanceActual Mapper + Object Liste
 		paMapper = new PerformanceActualMapper(this);
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
-		performanceActualList = paMapper.getPerformanceActualByExerciseId(exercise, sp.format(new Date()));
+		performanceActualList = paMapper.getCurrentPerformanceActual(exercise, sp.format(new Date()));
 		
 		if (performanceActualList.isEmpty()){
-			PerformanceTargetMapper ptMapper = new PerformanceTargetMapper(this);
-			PerformanceTarget performanceTarget = ptMapper.getPerformanceTargetByExerciseId(exercise);
-			
-			performanceActualList = new ArrayList<PerformanceActual>();
-			
-			for (int i = 1;i <= performanceTarget.getSet(); i++){
-				PerformanceActual pa = new PerformanceActual();
-				pa.setExercise(exercise);
-				pa.setSet(i);
-				performanceActualList.add(pa);
-			}
+			performanceActualList = prepareStandardListView();
 			updateListView(performanceActualList);
 		}else{
 			updateListView(performanceActualList);
 		}
 	}
+	
+	/**
+	 * Prepares the ListView for the case that there was no current PerformanceActual Object
+	 * Mainly for the external call from <@see ActionBarDatePickerFragment>
+	 * 
+	 */
+	public ArrayList<PerformanceActual> prepareStandardListView(){
+		PerformanceTargetMapper ptMapper = new PerformanceTargetMapper(this);
+		PerformanceTarget performanceTarget = ptMapper.getPerformanceTargetByExerciseId(exercise);
+		
+		performanceActualList = new ArrayList<PerformanceActual>();
+		
+		for (int i = 1;i <= performanceTarget.getSet(); i++){
+			PerformanceActual pa = new PerformanceActual();
+			pa.setExercise(exercise);
+			pa.setSet(i);
+			performanceActualList.add(pa);
+		}
+		return performanceActualList;
+	}
+	
 	
 	/**
 	 * Update the ListView with a given ArrayList
@@ -144,6 +156,7 @@ public class ExerciseSpecific extends Activity {
 		Intent intent = new Intent();
 		intent.setClass(this, ExerciseOverview.class);
 		intent.putExtra("TrainingDayId", trainingDayId);
+		intent.putExtra("SaveMode", saveMode);
 		return intent;
 	}
 	
@@ -173,6 +186,7 @@ public class ExerciseSpecific extends Activity {
 		Intent intent = new Intent();
 		intent.setClass(this, ExerciseOverview.class);
 		intent.putExtra("TrainingDayId", trainingDayId);
+		intent.putExtra("SaveMode", saveMode);
 		startActivity(intent);
 	}
 	
@@ -208,10 +222,13 @@ public class ExerciseSpecific extends Activity {
 				item.setRepetition(Integer.parseInt(repetition.getText().toString()));
 			}
 			if (!weight.getText().toString().isEmpty()){
-				item.setRepetition(Integer.parseInt(weight.getText().toString()));
+				item.setWeight(Double.parseDouble(weight.getText().toString()));
 			}	
 			if (item.getRepetition() != 0 || item.getWeight() != 0.0){
 				PerformanceActual pa = pMapper.savePerformanceActual(item);
+				saveMode = true;
+			}else{
+				saveMode = false;
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 package com.workout.log.data;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.achartengine.ChartFactory;
@@ -12,6 +13,8 @@ import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
 import com.workout.log.bo.Exercise;
+import com.workout.log.bo.PerformanceActual;
+import com.workout.log.db.PerformanceActualMapper;
 
 import android.content.Context;
 import android.content.Intent;
@@ -27,35 +30,24 @@ import android.view.View;
  */
 public class LineGraph {
 	
-	private int[] repetitions;
-	private Date[] date;
-	private double[] weight;
+	private ArrayList<Integer> repetitions;
+	private ArrayList<Date> date;
+	private ArrayList<Double> weight;
 	
 	/**
-	 * Initializes the variable repetitions with the data from the table PerformanceActuale
+	 * Initializes the variables weight, date and weight with the data from the table PerformanceActuale
 	 * 
 	 * @author Eric Schmidt
 	 */
-	private void fillRepetitions(){
+	private void getPerformanceActualData(Context context, Exercise exercise){
+		PerformanceActualMapper paMapper = new PerformanceActualMapper(context);
+		ArrayList<PerformanceActual> performanceActualList = paMapper.getAllPerformanceActual(exercise);
 		
-	}
-	
-	/**
-	 * Initializes the variable weight with the data from the table PerformanceActuale
-	 * 
-	 * @author Eric Schmidt
-	 */
-	private void fillWeight(){
-		
-	}
-	
-	/**
-	 * Initializes the variable weight with the data from the table PerformanceActuale
-	 * 
-	 * @author Eric Schmidt
-	 */
-	private void fillDate(){
-		
+		for (PerformanceActual item : performanceActualList){
+			repetitions.add(item.getRepetition());
+			weight.add(item.getWeight());
+			date.add(item.getTimestamp());
+		}
 	}
 	
 	/**
@@ -66,9 +58,7 @@ public class LineGraph {
 	public View getView(Context context, Exercise exercise){
 		
 		//Call the Methodes to fill the Variables
-		fillDate();
-		fillWeight();
-		fillRepetitions();
+		getPerformanceActualData(context, exercise);
 		
 		/**
 		 * Creates the renderer which holds all the other renderers and modifies the appearance of the Graph
@@ -128,11 +118,11 @@ public class LineGraph {
 		 * Fills the X and Y Axis with the given Data. If Date equals 0 than abort
 		 */
 		if (date != null){
-			for (int i = 0; i < date.length; i++){
-				timeSeriesRepetitions.add(date[i], repetitions[i]);
+			for (int i = 0; i < date.size(); i++){
+				timeSeriesRepetitions.add(date.get(i), repetitions.get(i));
 			}
-			for (int i = 0; i < date.length; i++){
-				timeSeriesRepetitions.add(date[i], weight[i]);
+			for (int i = 0; i < date.size(); i++){
+				timeSeriesRepetitions.add(date.get(i), weight.get(i));
 			}
 		}
 		//Create View

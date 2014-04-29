@@ -43,7 +43,7 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 		
 		date = (TextView) view.findViewById(R.id.date);
 		calendar  = Calendar.getInstance();
-		dateFormat = new SimpleDateFormat("EEE, MMM d");
+		dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 		
 		paMapper = new PerformanceActualMapper(getActivity());
 		exerciseSpecific = (ExerciseSpecific) getActivity();
@@ -68,18 +68,26 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 				exerciseSpecific.updateListView(performanceActualList);
 				calendar.setTime(performanceActualList.get(0).getTimestamp());
 				getDate();
+			}else{
+				/**
+				 * If the ArrayList is empty it means, that the next PerformanceActual is the current one today
+				 */
+				performanceActualList = exerciseSpecific.prepareStandardListView();
+				exerciseSpecific.updateListView(performanceActualList);
+				calendar.setTime(new Date());
+				getDate();
 			}
 			break;
 		case R.id.Previous:
 			performanceActualList = paMapper.getLastPerformanceActual(calendar, exerciseSpecific.getExercise());
 			if (!performanceActualList.isEmpty()){
-				exerciseSpecific.updateListView(performanceActualList);
-				calendar.setTime(performanceActualList.get(0).getTimestamp());
-				getDate();
 				if (isCurrent){
 					exerciseSpecific.savePerformanceActual();
 					Toast.makeText(getActivity(), "Inhalte wurden gespeichert", Toast.LENGTH_SHORT).show();
 				}
+				exerciseSpecific.updateListView(performanceActualList);
+				calendar.setTime(performanceActualList.get(0).getTimestamp());
+				getDate();
 			}else{
 				Toast.makeText(getActivity(), "Keine letzte Übung gefunden", Toast.LENGTH_SHORT).show();
 			}

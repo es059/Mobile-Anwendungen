@@ -97,7 +97,9 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 		updateOverview = UpdateListView.updateListView(exerciseView);
 		if (intentExtras != null){	
 			try{
-				Toast.makeText(this, "Daten wurden gespeichert", Toast.LENGTH_SHORT).show();
+				if (intentExtras.getBoolean("SaveMode")){
+					Toast.makeText(this, "Daten wurden gespeichert", Toast.LENGTH_SHORT).show();
+				}
 				int trainingDayId = intentExtras.getInt("TrainingDayId");
 				ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = (ActionBarTrainingDayPickerFragment) getFragmentManager().findFragmentById(R.id.overview_trainingDayPicker);
 				actionBarTrainingDayPickerFragment.setCurrentTrainingDay(trainingDayId);
