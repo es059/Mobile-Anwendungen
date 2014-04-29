@@ -1,17 +1,18 @@
 package com.workout.log;
 
 import java.util.ArrayList;
+
 import com.example.workoutlog.R;
 import com.workout.log.bo.Exercise;
 import com.workout.log.data.MenueListe;
 import com.workout.log.db.ExerciseMapper;
-
 import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.dialog.ExerciseAddDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment.ExerciseSelectionDialogListener;
 import com.workout.log.listAdapter.CustomDrawerAdapter;
 import com.workout.log.listAdapter.ExerciseListAdapter;
+import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
 
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -43,7 +44,7 @@ public class ExerciseAdd extends Activity implements ExerciseSelectionDialogList
 	    private MenueListe l = new MenueListe();
 	    private EditText search;
 	    private ArrayList<Exercise> List;
-	    private ExerciseListAdapter a;
+	    private ExerciseListWithoutSetsRepsAdapter a;
 	    private ListView exerciseListView;
 	    private DialogFragment dialogFragment;
 	//  int i;
@@ -62,7 +63,7 @@ public class ExerciseAdd extends Activity implements ExerciseSelectionDialogList
 		exerciseListView = (ListView) findViewById(R.id.add_exerciseList);
 		List = new ArrayList<Exercise>();
 		List = em.getAll();
-		a = new ExerciseListAdapter(this , R.layout.listview_exercise, List);
+		a = new ExerciseListWithoutSetsRepsAdapter(this , R.layout.listview_exercise_without_repssets, List);
 		exerciseListView.setAdapter(a);
 		exerciseListView.setOnItemLongClickListener(this);
 		search.addTextChangedListener(new TextWatcher() 
@@ -239,7 +240,7 @@ public void listviewactual() {
 	 a.notifyDataSetChanged();
 	 exerciseListView.invalidateViews();
 }
-	private void showDialogLongClickFragment(int i, ExerciseListAdapter a) {
+	private void showDialogLongClickFragment(int i, ExerciseListWithoutSetsRepsAdapter a) {
 		
 		dialogFragment = ExerciseLongClickDialogFragment.newInstance(i, a);
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");

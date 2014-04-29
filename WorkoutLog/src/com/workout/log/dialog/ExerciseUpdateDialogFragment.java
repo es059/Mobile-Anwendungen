@@ -2,6 +2,7 @@ package com.workout.log.dialog;
 
 import com.workout.log.db.ExerciseMapper;
 import com.workout.log.listAdapter.ExerciseListAdapter;
+import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,12 +14,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class ExerciseUpdateDialogFragment extends DialogFragment {
-	private ExerciseListAdapter exerciseListAdapter;
+	private ExerciseListWithoutSetsRepsAdapter exerciseListAdapter;
 	private static ExerciseMapper em;
 	private Toast toast;
 	private int b;
 	// Konstruktor 
-	public static ExerciseUpdateDialogFragment newInstance(Context a, ExerciseListAdapter c, int i) {
+	public static ExerciseUpdateDialogFragment newInstance(Context a, ExerciseListWithoutSetsRepsAdapter c, int i) {
 		ExerciseUpdateDialogFragment ExerciseUpdateDialogFragment = new ExerciseUpdateDialogFragment(c, i);
 		em = new ExerciseMapper(a);
 		
@@ -26,7 +27,7 @@ public class ExerciseUpdateDialogFragment extends DialogFragment {
 		
 	}
 	
-	public ExerciseUpdateDialogFragment(ExerciseListAdapter c, int i) {
+	public ExerciseUpdateDialogFragment(ExerciseListWithoutSetsRepsAdapter c, int i) {
 		super();
 		exerciseListAdapter = c;
 		b = i;

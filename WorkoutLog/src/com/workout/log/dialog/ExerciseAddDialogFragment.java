@@ -5,6 +5,7 @@ import com.workout.log.ExerciseAdd;
 import com.workout.log.data.MuscleGroup;
 import com.workout.log.db.ExerciseMapper;
 import com.workout.log.listAdapter.ExerciseListAdapter;
+import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -23,7 +24,7 @@ import android.widget.Toast;
 public class ExerciseAddDialogFragment extends DialogFragment {
 	// private MuscleGroup list = new MuscleGroup();
 	
-	private ExerciseListAdapter exerciseListAdapter;
+	private ExerciseListWithoutSetsRepsAdapter exerciseListAdapter;
 	private static ExerciseMapper em;
 	private Toast toast;
 	private EditText exerciseName;
@@ -33,7 +34,7 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 	private Context applicationContext;
 	private String selectedMuscleGroup;
 	// Konstruktor 
-	public static ExerciseAddDialogFragment newInstance(Context a, ExerciseListAdapter c) {
+	public static ExerciseAddDialogFragment newInstance(Context a, ExerciseListWithoutSetsRepsAdapter c) {
 		ExerciseAddDialogFragment exerciseAddDialogFragment = new ExerciseAddDialogFragment(a, c);
 		em = new ExerciseMapper(a);
 		
@@ -41,7 +42,7 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 		
 	}
 	
-	public ExerciseAddDialogFragment(Context a, ExerciseListAdapter c) {
+	public ExerciseAddDialogFragment(Context a, ExerciseListWithoutSetsRepsAdapter c) {
 		super();
 		exerciseListAdapter = c;
 		applicationContext = a;

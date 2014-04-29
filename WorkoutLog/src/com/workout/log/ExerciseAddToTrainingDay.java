@@ -14,6 +14,7 @@ import com.workout.log.dialog.ExerciseClickDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment.ExerciseSelectionDialogListener;
 import com.workout.log.listAdapter.ExerciseListAdapter;
+import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
 
 import android.app.Activity;
 import android.app.ActionBar;
@@ -38,7 +39,7 @@ import android.os.Build;
 public class ExerciseAddToTrainingDay extends Activity implements ExerciseSelectionDialogListener, OnItemLongClickListener, OnItemClickListener {
 	private EditText search;
     private ArrayList<Exercise> List;
-    private ExerciseListAdapter a;
+    private ExerciseListWithoutSetsRepsAdapter a;
     private ListView exerciseListView;
     private DialogFragment dialogFragment;
     private  ExerciseMapper em = new ExerciseMapper(this);
@@ -46,6 +47,7 @@ public class ExerciseAddToTrainingDay extends Activity implements ExerciseSelect
 	private int trainingDayId;
 	private int exerciseId;
 	private Bundle intent;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -59,7 +61,7 @@ public class ExerciseAddToTrainingDay extends Activity implements ExerciseSelect
 		exerciseListView = (ListView) findViewById(R.id.add_exerciseList);
 		List = new ArrayList<Exercise>();
 		List = em.getAll();
-		a = new ExerciseListAdapter(this , R.layout.listview_exercise, List);
+		a = new ExerciseListWithoutSetsRepsAdapter(this , R.layout.listview_exercise_without_repssets, List);
 		exerciseListView.setAdapter(a);
 		exerciseListView.setOnItemLongClickListener(this);
 		exerciseListView.setOnItemClickListener(this);
@@ -95,7 +97,7 @@ public class ExerciseAddToTrainingDay extends Activity implements ExerciseSelect
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.exercise_add_to_training_day, menu);
+		getMenuInflater().inflate(R.menu.workoutplan_menu, menu);
 		return true;
 	}
 
@@ -105,7 +107,8 @@ public class ExerciseAddToTrainingDay extends Activity implements ExerciseSelect
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.menu_add) {
+			this.showDialogAddFragment();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -141,7 +144,7 @@ public class ExerciseAddToTrainingDay extends Activity implements ExerciseSelect
 		 a.notifyDataSetChanged();
 		 exerciseListView.invalidateViews();
 }
-	private void showDialogLongClickFragment(int i, ExerciseListAdapter a) {
+	private void showDialogLongClickFragment(int i, ExerciseListWithoutSetsRepsAdapter a) {
 		
 		dialogFragment = ExerciseLongClickDialogFragment.newInstance(i, a);
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");

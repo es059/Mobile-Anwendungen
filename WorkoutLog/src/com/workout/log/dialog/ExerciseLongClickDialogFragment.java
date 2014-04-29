@@ -4,6 +4,7 @@ package com.workout.log.dialog;
 import com.example.workoutlog.R;
 import com.workout.log.db.ExerciseMapper;
 import com.workout.log.listAdapter.ExerciseListAdapter;
+import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,9 +12,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
 import android.widget.Toast;
-
 import android.widget.ArrayAdapter;
 
 
@@ -23,18 +22,18 @@ private	ExerciseMapper em;
 private	int b;
 private int duration;
 private Toast toast;
-private ExerciseListAdapter c;
+private ExerciseListWithoutSetsRepsAdapter c;
 private DialogFragment dialogFragment;
 	
 	
-	public static ExerciseLongClickDialogFragment newInstance(int i, ExerciseListAdapter a) {
+	public static ExerciseLongClickDialogFragment newInstance(int i, ExerciseListWithoutSetsRepsAdapter a) {
 		ExerciseLongClickDialogFragment exerciseLongClickDialogFragment = new ExerciseLongClickDialogFragment(i, a);
 		return exerciseLongClickDialogFragment;
 	
 		
 	}
 	
-	public ExerciseLongClickDialogFragment(int i, ExerciseListAdapter a) {
+	public ExerciseLongClickDialogFragment(int i, ExerciseListWithoutSetsRepsAdapter a) {
 		super();
 		b = i;
 		c = a;
