@@ -5,7 +5,8 @@
     <string name="title_activity_exercise_specific">Übung</string>
     <string name="title_activity_add">Übung hinzufügen</string>
     <string name="title_activity_workoutplan_add">Trainingsplan</string>
-    <string name="menu_add">Übung hinzufügen</string>
+    <string name="menu_add">Hinzufügen</string>
+    <string name="menu_delete">Satz Löschen</string>
     <string name="menu_edit">Übung ändern</string>
     <string name="menu_workoutplan">Trainingsplan</string>
     <string name="menu_settings">Einstellungen</string>
@@ -19,12 +20,11 @@
         <item>Löschen</item>
         <item>Ändern</item>
     </string-array>
-    
-     <string-array name="MuscleGroup">
+    <string-array name="MuscleGroup">
         <item>Beine</item>
         <item>Rücken</item>
-          <item>Brust</item>
-            <item>Arme</item>
+        <item>Brust</item>
+        <item>Arme</item>
     </string-array>
 
     <string name="title_activity_training_day_add">TrainingDayAdd</string>
@@ -39,5 +39,6 @@
 
     <string name="title_activity_training_day_select">TrainingDaySelect</string>
     <string name="title_activity_workout_select">WorkoutSelect</string>
+    <string name="title_activity_graph">GraphActivity</string>
 
 </resources>

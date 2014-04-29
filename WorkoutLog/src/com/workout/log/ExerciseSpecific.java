@@ -23,6 +23,7 @@ import com.workout.log.listAdapter.PerformanceActualListAdapter;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -33,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.os.Build;
 
 public class ExerciseSpecific extends Activity {
@@ -40,11 +42,12 @@ public class ExerciseSpecific extends Activity {
 	private ListView exerciseView;
 	private Exercise exercise;
 	private int exerciseId;
+	private int trainingDayId;
 	private EditText repetition;
 	private EditText weight;
 	
 	private PerformanceActualListAdapter adapter;
-	PerformanceActualMapper paMapper;
+	private PerformanceActualMapper paMapper;
 	private ArrayList<PerformanceActual> performanceActualList;
 	
 	@Override
@@ -53,12 +56,14 @@ public class ExerciseSpecific extends Activity {
 		setContentView(R.layout.exercise_specific);
 		
 		getActionBar().setHomeButtonEnabled(true);
+		
 		exerciseView = (ListView) findViewById(R.id.exerciseSpecificList);
 		
 		//Übergabe der Exercise ID und Name
 		final Bundle intentExtras = getIntent().getExtras();
 		if (intentExtras != null){	
 			try{
+				trainingDayId = intentExtras.getInt("TrainingDayId");
 				exerciseId = intentExtras.getInt("ExerciseID");
 				getActionBar().setTitle(intentExtras.getString("ExerciseName"));
 			} catch (Exception e){
@@ -94,14 +99,23 @@ public class ExerciseSpecific extends Activity {
 				pa.setSet(i);
 				performanceActualList.add(pa);
 			}
-			//ListAdapter
-			adapter = new PerformanceActualListAdapter(this, 0, performanceActualList);
-			exerciseView.setAdapter(adapter);
+			updateListView(performanceActualList);
 		}else{
-			adapter = new PerformanceActualListAdapter(this, 0, performanceActualList);
-			exerciseView.setAdapter(adapter);
+			updateListView(performanceActualList);
 		}
 	}
+	
+	/**
+	 * Update the ListView with a given ArrayList
+	 * 
+	 * @param ArrayList<PerformanceActual> 
+	 * @author Eric Schmidt
+	 */
+	public void updateListView(ArrayList<PerformanceActual> pa){
+		adapter = new PerformanceActualListAdapter(this, 0, pa);
+		exerciseView.setAdapter(adapter);
+	}
+	
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -116,8 +130,21 @@ public class ExerciseSpecific extends Activity {
 	 */
 	@Override 
 	public void onBackPressed(){
-		super.onBackPressed();
 		savePerformanceActual();
+		openExerciseOverview();
+	}
+	
+	/**
+	 * Overrides the functionality of the Menu Home Button
+	 * 
+	 */
+	@Override
+	public Intent getParentActivityIntent() {
+		savePerformanceActual();
+		Intent intent = new Intent();
+		intent.setClass(this, ExerciseOverview.class);
+		intent.putExtra("TrainingDayId", trainingDayId);
+		return intent;
 	}
 	
 	@Override
@@ -133,11 +160,20 @@ public class ExerciseSpecific extends Activity {
 			case R.id.menu_delete:
 				removePerformanceActualItem();
 				break;
-			case android.R.id.home:
-				savePerformanceActual();
-				break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	/**
+	 * Opens the ExerciseOverview Activity and tells it which TrainingDay to open
+	 * 
+	 * @author Eric Schmidt
+	 */
+	public void openExerciseOverview(){
+		Intent intent = new Intent();
+		intent.setClass(this, ExerciseOverview.class);
+		intent.putExtra("TrainingDayId", trainingDayId);
+		startActivity(intent);
 	}
 	
 	/**
@@ -164,24 +200,24 @@ public class ExerciseSpecific extends Activity {
 		PerformanceActualMapper pMapper = new PerformanceActualMapper(this);
 
 		for(PerformanceActual item : performanceActualList){
+			View v = exerciseView.getChildAt(item.getSet() -1);
+			repetition = (EditText) v.findViewById(R.id.specific_edit_repetition);
+			weight = (EditText) v.findViewById(R.id.specific_edit_weight);
+			
+			if (!repetition.getText().toString().isEmpty()){
+				item.setRepetition(Integer.parseInt(repetition.getText().toString()));
+			}
+			if (!weight.getText().toString().isEmpty()){
+				item.setRepetition(Integer.parseInt(weight.getText().toString()));
+			}	
 			if (item.getRepetition() != 0 || item.getWeight() != 0.0){
-				View v = exerciseView.getChildAt(item.getSet() -1);
-				repetition = (EditText) v.findViewById(R.id.specific_edit_repetition);
-				weight = (EditText) v.findViewById(R.id.specific_edit_weight);
-				
-				if (!repetition.getText().toString().isEmpty()){
-					item.setRepetition(Integer.parseInt(repetition.getText().toString()));
-				}
-				if (!weight.getText().toString().isEmpty()){
-					item.setRepetition(Integer.parseInt(weight.getText().toString()));
-				}			
-				PerformanceActual pa = pMapper.savePerformanceActual(item);	
+				PerformanceActual pa = pMapper.savePerformanceActual(item);
 			}
 		}
 	}
 	
 	/**
-	 * Remove the last PerfromanceActual Object from the ListView
+	 * Remove the last PerfromanceActual Object from the ListView and the Database
 	 * 
 	 */
 	public void removePerformanceActualItem(){
@@ -193,6 +229,16 @@ public class ExerciseSpecific extends Activity {
 		//Remove Entry from Database
 		paMapper = new PerformanceActualMapper(this);
 		paMapper.deletePerformanceActualById(performanceActual.getId());
+	}
+	
+	/**
+	 * Returns the current Exercise
+	 * 
+	 * @param Exercise 
+	 * @author Eric Schmidt
+	 */
+	public Exercise getExercise(){
+		return exercise;
 	}
 }
 

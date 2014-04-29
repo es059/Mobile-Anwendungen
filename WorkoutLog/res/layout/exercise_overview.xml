@@ -19,7 +19,7 @@
 			    tools:context="com.workout.log.ExerciseOverview"
 			    tools:ignore="MergeRootFrame" >
 				    <fragment
-				        android:id="@+id/overview_dateTimePicker"
+				        android:id="@+id/overview_trainingDayPicker"
 				        android:name="com.workout.log.fragment.ActionBarTrainingDayPickerFragment"
 				        android:layout_width="match_parent"
 				        android:layout_height="@dimen/actionbar_height"
@@ -30,7 +30,7 @@
 				        android:id="@+id/exerciseOverviewList"
 				        android:layout_width="match_parent"
 				        android:layout_height="wrap_content"
-				        android:layout_below="@+id/overview_dateTimePicker"
+				        android:layout_below="@+id/overview_trainingDayPicker"
 				        android:layout_centerHorizontal="true"
 				        android:longClickable="true"
 				        />			  

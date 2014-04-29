@@ -52,18 +52,7 @@ public class WorkoutplanAdd extends Activity implements OnItemClickListener {
 		defaultListView.setOnItemClickListener(this);
 		*/
 		
-		//Dummy Daten
-		ArrayList<TrainingDay> trainingDayList = new ArrayList<TrainingDay>();
-		TrainingDay t1 = new TrainingDay("Trainingstag 1");
-		trainingDayList.add(t1);
-		TrainingDay t2 = new TrainingDay("Trainingstag 2");
-		trainingDayList.add(t2);
-		TrainingDay t3 = new TrainingDay("Trainingstag 3");
-		trainingDayList.add(t3);
-		TrainingDay t4 = new TrainingDay("Trainingstag 4");
-		trainingDayList.add(t4);
-		TrainingDayListAdapter tAdapter = new TrainingDayListAdapter(this,0,trainingDayList);
-		trainingDayListView.setAdapter(tAdapter);
+	
 		
 	}
 

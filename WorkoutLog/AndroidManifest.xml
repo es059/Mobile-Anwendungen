@@ -15,7 +15,7 @@
         android:theme="@style/CustomActionBarTheme" >
         <activity
             android:name="com.workout.log.ExerciseOverview"
-            android:label="@string/app_name" >        
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name="com.workout.log.ExerciseSpecific"
@@ -27,9 +27,7 @@
         </activity>
         <activity
             android:name="com.workout.log.ExerciseAdd"
-            android:label="@string/title_activity_add"
-           >
-           
+            android:label="@string/title_activity_add" >
         </activity>
         <activity
             android:name="com.workout.log.WorkoutplanAdd"
@@ -41,21 +39,24 @@
         </activity>
         <activity
             android:name="com.workout.log.TrainingDayAdd"
-            android:label="@string/title_activity_training_day_add"
-             >
-           
+            android:label="@string/title_activity_training_day_add" >
         </activity>
         <activity
             android:name="com.workout.log.WorkoutplanSelect"
             android:label="@string/title_activity_workout_select" >
         </activity>
-        <activity
-            android:name="com.workout.log.HelperActivity" >
+        <activity android:name="com.workout.log.HelperActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.workout.log.GraphActivity"
+            android:label="@string/title_activity_graph" >
+        </activity>
+        <activity android:name="org.achartengine.GraphicalActivity"/> 
     </application>
 
 </manifest>

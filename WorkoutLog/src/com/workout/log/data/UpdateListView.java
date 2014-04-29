@@ -88,7 +88,7 @@ public class UpdateListView {
 			}
 			//Select Exercises from Selected Trainingday and MuscleGroup 
 			ExerciseMapper eMapper = new ExerciseMapper(context);
-			eList = eMapper.getExerciseByTrainingDay(tList.get(0).getID());
+			eList = eMapper.getExerciseByTrainingDay(tList.get(0).getId());
 			listComplete = new ArrayList<ExerciseItem>();
 			for (MuscleGroup m : mList){
 				eListMuscleGroup = eMapper.getExerciseByMuscleGroup(eList, m.getId());

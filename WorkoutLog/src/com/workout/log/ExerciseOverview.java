@@ -8,6 +8,7 @@ import com.example.workoutlog.R;
 import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment.ExerciseSelectionDialogListener;
+import com.workout.log.fragment.ActionBarTrainingDayPickerFragment;
 import com.workout.log.listAdapter.CustomDrawerAdapter;
 
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -25,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 public class ExerciseOverview extends ActionBarActivity implements OnItemLongClickListener, OnItemClickListener, ExerciseSelectionDialogListener  {
 
@@ -44,6 +46,8 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.exercise_overview);
+		
+		getActionBar().setDisplayShowTitleEnabled(false);
 		
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -77,21 +81,32 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
         mDrawerLayout.setDrawerListener(mDrawerToggle);   	
         mDrawerLayout.setDrawerListener(mDrawerToggle);      
 	}
-	
+    /**
+     * Calls the <code>UpdateListView</code> Singleton Constructor for the first time 
+     * and sets the ListView reference. If the Activity was called through a intent, 
+     * the ListView is filled by a method call in the fragment
+     * 
+     * @author Eric Schmidt
+     * @date 18.04.2014
+     */  
 	@Override
 	protected void onResume(){
 		super.onResume();
-        /**
-         * Calls the <code>UpdateListView</code> Singleton Constructor for the first time 
-         * and sets the ListView reference
-         * 
-         * @author Eric Schmidt
-         * @date 18.04.2014
-         */  
+		final Bundle intentExtras = getIntent().getExtras();
 		exerciseView = (ListView) findViewById(R.id.exerciseOverviewList);
 		updateOverview = UpdateListView.updateListView(exerciseView);
-		updateOverview.ExerciseListViewUpdate(this);
-
+		if (intentExtras != null){	
+			try{
+				Toast.makeText(this, "Daten wurden gespeichert", Toast.LENGTH_SHORT).show();
+				int trainingDayId = intentExtras.getInt("TrainingDayId");
+				ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = (ActionBarTrainingDayPickerFragment) getFragmentManager().findFragmentById(R.id.overview_trainingDayPicker);
+				actionBarTrainingDayPickerFragment.setCurrentTrainingDay(trainingDayId);
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}else{	
+			updateOverview.ExerciseListViewUpdate(this);
+		}
 		exerciseView.setOnItemLongClickListener(this);
 		exerciseView.setOnItemClickListener(this);
 	}
@@ -149,12 +164,20 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 		openExerciseSpecific(exercise);
 		
 	}
-	
+	/**
+	 * Method to open the ExerciseSpecific Activity with the selected Exercise and the current TrainingDay
+	 * 
+	 * @param exercise
+	 * @author Eric Schmidt
+	 */
 	private void openExerciseSpecific (Exercise exercise){
 		Intent intent = new Intent();
+		ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = 
+				(ActionBarTrainingDayPickerFragment) getFragmentManager().findFragmentById(R.id.overview_trainingDayPicker);
 		intent.setClass(this, ExerciseSpecific.class);
 		intent.putExtra("ExerciseID", exercise.getId());
 		intent.putExtra("ExerciseName", exercise.getName());
+		intent.putExtra("TrainingDayId", actionBarTrainingDayPickerFragment.getCurrentTrainingDay().getId());
 		startActivity(intent);
 	}
 	
@@ -176,35 +199,31 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 	 *
 	 */
 	public void SelectItem(int possition) { 
-		
+		Intent intent= null;
 		switch(possition) {
-		case 0:
-			Intent intent= null;
-			intent = new Intent();
-			intent.setClass(this, ExerciseOverview.class);
-			startActivity(intent);
-			break;
-		case 1: 
-			Intent intent1= null;
-			intent1 = new Intent();
-			intent1.setClass(this, WorkoutplanSelect.class);
-			startActivity(intent1);
-			break;
-		case 2: 
-			break;
-		case 3: 
-			Intent intent2= null;
-			intent2 = new Intent();
-			intent2.setClass(this, ExerciseAdd.class);
-			startActivity(intent2);
-			break;
-			
+			case 0:
+				intent = new Intent();
+				intent.setClass(this, ExerciseOverview.class);
+				startActivity(intent);
+				break;
+			case 1: 
+				intent = new Intent();
+				intent.setClass(this, WorkoutplanSelect.class);
+				startActivity(intent);
+				break;
+			case 2: 
+				break;
+			case 3: 
+				intent = new Intent();
+				intent.setClass(this, ExerciseAdd.class);
+				startActivity(intent);
+				break;
+			case 4: 
+				intent = new Intent();
+				intent.setClass(this, GraphActivity.class);
+				startActivity(intent);
+				break;
 		}
-		
-		/**
-		 * TODOO
-		 * 
-		 */
 	}
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {

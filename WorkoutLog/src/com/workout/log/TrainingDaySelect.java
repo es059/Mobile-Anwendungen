@@ -45,7 +45,7 @@ public class TrainingDaySelect extends Activity implements OnItemClickListener, 
 
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
-	CustomDrawerAdapter adapter1;
+	CustomDrawerAdapter adapter;
 	MenueListe l = new MenueListe();
 	    
 	ListView trainingsDayList;
@@ -56,14 +56,7 @@ public class TrainingDaySelect extends Activity implements OnItemClickListener, 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.training_day_select);
 		
-		trainingsDayList = (ListView) findViewById(R.id.trainingDay_select_list);
-		list = new ArrayList<TrainingDay>();
-		TrainingDayListAdapter adapter = new TrainingDayListAdapter(this, 0, list);
-		TrainingDay d = new TrainingDay("test");
-		TrainingDay d1 = new TrainingDay("test");
-		list.add(d);
-		list.add(d1);
-		trainingsDayList.setAdapter(adapter);
+	
 		trainingsDayList.setOnItemClickListener(this);
 		trainingsDayList.setOnItemLongClickListener(this);
 	
@@ -76,7 +69,7 @@ public class TrainingDaySelect extends Activity implements OnItemClickListener, 
 	                GravityCompat.START);
     
 	    // Add Drawer Item to dataList
-	    adapter1 = new CustomDrawerAdapter(this, R.layout.custom_drawer_item, l.getDataList());
+	    adapter = new CustomDrawerAdapter(this, R.layout.custom_drawer_item, l.getDataList());
 	    mDrawerList.setAdapter(adapter);
 	    mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 	    getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -159,7 +152,7 @@ public class TrainingDaySelect extends Activity implements OnItemClickListener, 
 	private void openExerciseOverview(TrainingDay td) {
 		Intent intent = new Intent();
 		intent.setClass(this, ExerciseOverview.class);
-		intent.putExtra("mID", td.getID());
+		intent.putExtra("mID", td.getId());
 		intent.putExtra("mName", td.getName());
 		startActivity(intent);
 		
