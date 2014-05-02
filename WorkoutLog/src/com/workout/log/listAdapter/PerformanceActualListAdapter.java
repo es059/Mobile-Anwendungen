@@ -1,5 +1,6 @@
 package com.workout.log.listAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -11,22 +12,36 @@ import com.workout.log.bo.PerformanceActual;
 import com.workout.log.customLayout.ListViewPerformanceActual;
 
 public class PerformanceActualListAdapter extends ArrayAdapter<PerformanceActual> {
-	public PerformanceActualListAdapter(Context context, int textViewResourceId, List<PerformanceActual> objects) {
+	
+	ArrayList<PerformanceActual> performanceActualList = null;
+	
+	public PerformanceActualListAdapter(Context context, int textViewResourceId, ArrayList<PerformanceActual> objects) {
 		super(context, textViewResourceId, objects);
+		performanceActualList = objects;
 	}
 	@Override
-	 public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(int position, View convertView, ViewGroup parent) {
 		 PerformanceActual performanceActual = getItem(position);
-		 ListViewPerformanceActual listViewSet = null;
+		 ListViewPerformanceActual listViewPerformanceActual = null;
 		 if(convertView != null){
-			 listViewSet = (ListViewPerformanceActual) convertView;
+			 listViewPerformanceActual = (ListViewPerformanceActual) convertView;
 		 }
 		 else{
-			 listViewSet = new ListViewPerformanceActual(getContext());
+			 listViewPerformanceActual = new ListViewPerformanceActual(getContext());
 		 }
 		 
-		 listViewSet.setPerfromanceActual(performanceActual);
-		 return listViewSet;
+		 listViewPerformanceActual.setPerfromanceActual(performanceActual);
+		 return listViewPerformanceActual;
 	 }
+	
+	/**
+	 * Returns the current List<PerformanceActual>
+	 * 
+	 * @return the current List Object
+	 * @author Eric Schmidt
+	 */
+	public ArrayList<PerformanceActual> getPerformanceActualList(){
+		return performanceActualList;
+	}
 
 }

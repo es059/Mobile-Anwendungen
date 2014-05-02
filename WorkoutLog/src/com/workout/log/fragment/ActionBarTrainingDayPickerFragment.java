@@ -4,9 +4,10 @@ package com.workout.log.fragment;
 import java.util.ArrayList;
 
 import com.example.workoutlog.R;
+import com.workout.log.ExerciseOverview;
+import com.workout.log.ExerciseSpecific;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.bo.Workoutplan;
-import com.workout.log.data.UpdateListView;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.db.WorkoutplanMapper;
 
@@ -24,10 +25,10 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 	private ImageButton next;
 	private ImageButton previous;
 	private TextView trainingDayPicker;
-	private int index = 0;
+	private static int index = 0;
 	private ArrayList<TrainingDay> trainingDayList;
-	private static UpdateListView exerciseListViewUpdate;
 	private TrainingDayMapper tMapper;
+	private ExerciseOverview exerciseOverview;
 	
 	
 	@Override
@@ -38,9 +39,13 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 	
 		getAllTrainingDay();
 		trainingDayPicker = (TextView) view.findViewById(R.id.trainingDayPicker);
+		
 		if (!trainingDayList.isEmpty()){
 			trainingDayPicker.setText(trainingDayList.get(index).getName());
 		}
+		
+		exerciseOverview = (ExerciseOverview) getActivity();
+		
 		next = (ImageButton) view.findViewById(R.id.Next);
 		previous = (ImageButton) view.findViewById(R.id.Previous);
 		
@@ -59,9 +64,6 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 	 */
 	@Override
 	public void onClick(View v) {
-		if (exerciseListViewUpdate == null){
-			exerciseListViewUpdate = UpdateListView.updateListView();
-		}
 		switch (v.getId()){
 		case R.id.Next:
 			if (index < (trainingDayList.size() -1)){
@@ -71,7 +73,7 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 			}
 			if (!trainingDayList.isEmpty()){
 				trainingDayPicker.setText(trainingDayList.get(index).getName());
-				exerciseListViewUpdate.ExerciseListViewUpdate(super.getActivity(),trainingDayList.get(index).getId());
+				exerciseOverview.ExerciseListViewUpdate(trainingDayList.get(index).getId());
 			}
 			break;
 		case R.id.Previous:
@@ -83,7 +85,7 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 			}
 			if (!trainingDayList.isEmpty()){
 				trainingDayPicker.setText(trainingDayList.get(index).getName());
-				exerciseListViewUpdate.ExerciseListViewUpdate(super.getActivity(),trainingDayList.get(index).getId());
+				exerciseOverview.ExerciseListViewUpdate(trainingDayList.get(index).getId());
 			}
 			break;
 		default:
@@ -108,16 +110,18 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 		return trainingDayList.get(index);
 	}
 	
+	/**
+	 * Set the current TrainingDay by TrainingDayId
+	 * 
+	 * @param trainingDayId
+	 */
 	public void setCurrentTrainingDay(int trainingDayId){
 		tMapper = new TrainingDayMapper(super.getActivity());
 		int index;
 		index = indexOfArrayList(tMapper.getTrainingDayById(trainingDayId));
 		if (index != -1){
 			trainingDayPicker.setText(trainingDayList.get(index).getName());
-			if (exerciseListViewUpdate == null){
-				exerciseListViewUpdate = UpdateListView.updateListView();
-			}
-			exerciseListViewUpdate.ExerciseListViewUpdate(super.getActivity(),trainingDayList.get(index).getId());
+			exerciseOverview.ExerciseListViewUpdate(trainingDayList.get(index).getId());
 		}
 	}
 	

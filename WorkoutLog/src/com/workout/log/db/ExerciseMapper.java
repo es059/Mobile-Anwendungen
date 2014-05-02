@@ -65,6 +65,29 @@ public class ExerciseMapper {
 	return e;
 	}
 	
+	/**
+	 * Get all Exercises 
+	 * 
+	 * @return ArrayList<Exercise>
+	 * @author Eric Schmidt
+	 */
+	public ArrayList<Exercise> getAllExercise(){
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+	    ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
+	    
+	    sql= "SELECT Exercise_Id, ExerciseName FROM Exercise";
+	    Cursor cursor = db.rawQuery(sql, null);
+	    if ( cursor.moveToFirst()){
+	    	do{
+	            Exercise e = new Exercise();
+	            e.setID(cursor.getInt(0));
+	            e.setName(cursor.getString(1));
+	            exerciseList.add(e);
+	    	}while(cursor.moveToNext());
+	    }
+	    db.close();
+	    return exerciseList;
+	}
 	
 	public ArrayList<Exercise> searchKeyString(String key){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();

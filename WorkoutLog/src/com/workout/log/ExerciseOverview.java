@@ -3,19 +3,27 @@ package com.workout.log;
 import java.util.ArrayList;
 
 import com.workout.log.bo.Exercise;
+import com.workout.log.bo.MuscleGroup;
+import com.workout.log.bo.TrainingDay;
+import com.workout.log.bo.Workoutplan;
 import com.workout.log.data.*;
 import com.example.workoutlog.R;
+import com.workout.log.db.ExerciseMapper;
+import com.workout.log.db.MuscleGroupMapper;
+import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment.ExerciseSelectionDialogListener;
 import com.workout.log.fragment.ActionBarTrainingDayPickerFragment;
 import com.workout.log.listAdapter.CustomDrawerAdapter;
+import com.workout.log.listAdapter.OverviewAdapter;
 
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -28,7 +36,7 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 
-public class ExerciseOverview extends ActionBarActivity implements OnItemLongClickListener, OnItemClickListener, ExerciseSelectionDialogListener  {
+public class ExerciseOverview extends ActionBarActivity implements OnItemClickListener, ExerciseSelectionDialogListener  {
 
 	private static ListView exerciseView; 
 	private DrawerLayout mDrawerLayout;
@@ -39,8 +47,17 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
     private CharSequence mTitle;
 
     private CustomDrawerAdapter adapter;
-    private UpdateListView updateOverview; 
     private MenueListe l = new MenueListe();
+    
+    /**
+     * Variabels for the UpdateListView methode
+     */
+	private ArrayList<TrainingDay> tList;
+	private ArrayList<Exercise> eList;
+	private ArrayList<MuscleGroup> mList;
+	private ArrayList<ExerciseItem> listComplete;
+	private ArrayList<Exercise> eListMuscleGroup;
+	private MuscleGroupMapper mMapper;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +111,6 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 		super.onResume();
 		final Bundle intentExtras = getIntent().getExtras();
 		exerciseView = (ListView) findViewById(R.id.exerciseOverviewList);
-		updateOverview = UpdateListView.updateListView(exerciseView);
 		if (intentExtras != null){	
 			try{
 				if (intentExtras.getBoolean("SaveMode")){
@@ -107,10 +123,82 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 				e.printStackTrace();
 			}
 		}else{	
-			updateOverview.ExerciseListViewUpdate(this);
+			ExerciseListViewUpdate();
 		}
-		exerciseView.setOnItemLongClickListener(this);
 		exerciseView.setOnItemClickListener(this);
+	}
+	
+	  
+	/**
+	 * Updates Exercise ListViews using the ExerciseListAdapter. 
+	 * Ensures that there are no unnecessary Database queries
+	 * if the ArrayList<TrainingDay> is already referenced 
+	 * 
+	 * @param context 
+	 * @param trainingDayId 
+	 * @author Eric Schmidt
+	 */
+	public void ExerciseListViewUpdate(){
+		exerciseView = (ListView) findViewById(R.id.exerciseOverviewList);
+		if (tList == null){
+			//Select Current Workoutplan
+			WorkoutplanMapper wMapper = new WorkoutplanMapper(this);
+			Workoutplan w = wMapper.getCurrent();
+			//Select all Trainingdays from the current Workoutplan
+			TrainingDayMapper tMapper = new TrainingDayMapper(this);
+			tList = tMapper.getAll(w.getId());
+		}
+		if (!tList.isEmpty()){
+			if (mList == null){	
+				//Select all MuscleGroups
+				MuscleGroupMapper mMapper = new MuscleGroupMapper(this);
+				mList = mMapper.getAll();
+			}
+			//Select Exercises from Selected Trainingday and MuscleGroup 
+			ExerciseMapper eMapper = new ExerciseMapper(this);
+			eList = eMapper.getExerciseByTrainingDay(tList.get(0).getId());
+			listComplete = new ArrayList<ExerciseItem>();
+			for (MuscleGroup m : mList){
+				eListMuscleGroup = eMapper.getExerciseByMuscleGroup(eList, m.getId());
+				if (!eListMuscleGroup.isEmpty()){
+					listComplete.add(new MuscleGroupSectionItem(m.getName()));
+					listComplete.addAll(eListMuscleGroup);
+				}
+			}
+			
+			OverviewAdapter adapter = new OverviewAdapter(this, listComplete);
+			exerciseView.setAdapter(adapter);
+		}
+	}
+	
+	/**
+	 * If TrainingDayId is known use this method
+	 * 
+	 * @param context
+	 * @param trainingDayId
+	 * @author Eric Schmidt
+	 */
+	public void ExerciseListViewUpdate(int trainingDayId){
+		exerciseView = (ListView) findViewById(R.id.exerciseOverviewList);
+		if (mList == null){	
+			//Select all MuscleGroups
+			MuscleGroupMapper mMapper = new MuscleGroupMapper(this);
+			mList = mMapper.getAll();
+		}
+		//Select Exercises from Selected Trainingday and MuscleGroup 
+		ExerciseMapper eMapper = new ExerciseMapper(this);
+		eList = eMapper.getExerciseByTrainingDay(trainingDayId);
+		listComplete = new ArrayList<ExerciseItem>();
+		for (MuscleGroup m : mList){
+			eListMuscleGroup = eMapper.getExerciseByMuscleGroup(eList, m.getId());
+			if (!eListMuscleGroup.isEmpty()){
+				listComplete.add(new MuscleGroupSectionItem(m.getName()));
+				listComplete.addAll(eListMuscleGroup);
+			}
+		}
+		
+		OverviewAdapter adapter = new OverviewAdapter(this, listComplete);
+		exerciseView.setAdapter(adapter);
 	}
 		
 	@Override
@@ -124,16 +212,9 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
-		// The action bar home/up action should open or close the drawer.
-	      // ActionBarDrawerToggle will take care of this.
 	     if (mDrawerToggle.onOptionsItemSelected(item)) {
 	            return true;
 	      }
-	 
-	      
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		Intent intent= null;
 		switch (item.getItemId()){
 			case R.id.menu_add:
@@ -150,14 +231,12 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View view,
-			int position, long id) {
-		this.showDialogLongClickFragment();
-		return true;
-	}
-
+	
+	/**
+	 * Overrides the onItemClick Methode to open the ExerciseSpecific Activity
+	 * 
+	 * @author Eric Schmidt
+	 */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {

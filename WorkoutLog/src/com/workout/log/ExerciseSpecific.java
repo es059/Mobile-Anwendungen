@@ -1,42 +1,27 @@
 package com.workout.log;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 import com.example.workoutlog.R;
-import com.example.workoutlog.R.id;
-import com.example.workoutlog.R.layout;
-import com.example.workoutlog.R.menu;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.PerformanceActual;
 import com.workout.log.bo.PerformanceTarget;
-import com.workout.log.data.MenueListe;
 import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.PerformanceActualMapper;
 import com.workout.log.db.PerformanceTargetMapper;
-import com.workout.log.listAdapter.CustomDrawerAdapter;
 import com.workout.log.listAdapter.PerformanceActualListAdapter;
 
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.widget.DrawerLayout;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.os.Build;
-
 public class ExerciseSpecific extends Activity {
   
 	private ListView exerciseView;
@@ -191,7 +176,7 @@ public class ExerciseSpecific extends Activity {
 	}
 	
 	/**
-	 * Add a new PerfromanceActual Object to the ListView
+	 * Add a new PerformanceActual Object to the ListView
 	 * 
 	 */
 	public void addPerformanceActualItem(){
@@ -199,42 +184,16 @@ public class ExerciseSpecific extends Activity {
 		PerformanceActual pa = new PerformanceActual();
 		pa.setExercise(exercise);
 		pa.setSet(performanceActualList.size() + 1);
-		performanceActualList.add(pa);
 		//Update Adapter + ListView
 		adapter.add(pa);
-		adapter.notifyDataSetChanged();
-		exerciseView.invalidateViews();
+		//Set the ArrayList on the current value
+		performanceActualList = adapter.getPerformanceActualList();
+		//Show the User a hint message
+		Toast.makeText(this, "Neuen Satz hinzugefügt!", Toast.LENGTH_SHORT).show();
 	}
-	
-	/**
-	 * Save/Update all PerfromanceActual Objects in Database
-	 * 
-	 */
-	public void savePerformanceActual(){ 
-		PerformanceActualMapper pMapper = new PerformanceActualMapper(this);
 
-		for(PerformanceActual item : performanceActualList){
-			View v = exerciseView.getChildAt(item.getSet() -1);
-			repetition = (EditText) v.findViewById(R.id.specific_edit_repetition);
-			weight = (EditText) v.findViewById(R.id.specific_edit_weight);
-			
-			if (!repetition.getText().toString().isEmpty()){
-				item.setRepetition(Integer.parseInt(repetition.getText().toString()));
-			}
-			if (!weight.getText().toString().isEmpty()){
-				item.setWeight(Double.parseDouble(weight.getText().toString()));
-			}	
-			if (item.getRepetition() != 0 || item.getWeight() != 0.0){
-				PerformanceActual pa = pMapper.savePerformanceActual(item);
-				saveMode = true;
-			}else{
-				saveMode = false;
-			}
-		}
-	}
-	
 	/**
-	 * Remove the last PerfromanceActual Object from the ListView and the Database
+	 * Remove the last PerformanceActual Object from the ListView and the Database
 	 * 
 	 */
 	public void removePerformanceActualItem(){
@@ -246,6 +205,37 @@ public class ExerciseSpecific extends Activity {
 		//Remove Entry from Database
 		paMapper = new PerformanceActualMapper(this);
 		paMapper.deletePerformanceActualById(performanceActual.getId());
+		//Set the ArrayList on the current value
+		performanceActualList = adapter.getPerformanceActualList();
+		Toast.makeText(this, "Letzten Satz entfernt!", Toast.LENGTH_SHORT).show();
+	}
+	
+	/**
+	 * Save/Update all PerfromanceActual Objects in Database
+	 * 
+	 */
+	public void savePerformanceActual(){ 
+		PerformanceActualMapper pMapper = new PerformanceActualMapper(this);
+		for(PerformanceActual item : performanceActualList){
+			View v = exerciseView.getChildAt(item.getSet() -1);
+			repetition = (EditText) v.findViewById(R.id.specific_edit_repetition);
+			weight = (EditText) v.findViewById(R.id.specific_edit_weight);
+			
+			if (!repetition.getText().toString().isEmpty()){
+				item.setRepetition(Integer.parseInt(repetition.getText().toString()));
+			}
+			if (!weight.getText().toString().isEmpty()){
+				item.setWeight(Double.parseDouble(weight.getText().toString()));
+			}	
+			if (saveMode == true){
+				PerformanceActual pa = pMapper.savePerformanceActual(item);
+			}else if (item.getRepetition() != 0 || item.getWeight() != 0.0){
+				PerformanceActual pa = pMapper.savePerformanceActual(item);
+				saveMode = true;
+			}else{
+				saveMode = false;
+			}
+		}
 	}
 	
 	/**

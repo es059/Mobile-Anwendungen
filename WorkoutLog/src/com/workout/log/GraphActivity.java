@@ -2,7 +2,7 @@ package com.workout.log;
 
 import com.example.workoutlog.R;
 import com.example.workoutlog.R.layout;
-import com.workout.log.data.LineGraph;
+import com.workout.log.graph.LineGraph;
 
 import android.app.Activity;
 import android.app.ActionBar;

@@ -29,7 +29,7 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 	private ImageButton next;
 	private ImageButton previous;
 	private SimpleDateFormat dateFormat;
-	private Calendar calendar;
+	private static Calendar calendar;
 	private String formatedDate;
 	private ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
 	private ExerciseSpecific exerciseSpecific;
@@ -61,9 +61,11 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
+		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		switch (v.getId()){
 		case R.id.Next:
 			performanceActualList = paMapper.getNextPerformanceActual(calendar, exerciseSpecific.getExercise());
+			System.out.println(sp.format(calendar.getTime()));
 			if (!performanceActualList.isEmpty()){
 				exerciseSpecific.updateListView(performanceActualList);
 				calendar.setTime(performanceActualList.get(0).getTimestamp());
@@ -80,6 +82,7 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 			break;
 		case R.id.Previous:
 			performanceActualList = paMapper.getLastPerformanceActual(calendar, exerciseSpecific.getExercise());
+			System.out.println(sp.format(calendar.getTime()));
 			if (!performanceActualList.isEmpty()){
 				if (isCurrent){
 					exerciseSpecific.savePerformanceActual();

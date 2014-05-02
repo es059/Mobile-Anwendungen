@@ -1,5 +1,6 @@
 package com.workout.log.listAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.workout.log.bo.Exercise;
@@ -16,7 +17,7 @@ public class ExerciseListAdapter extends ArrayAdapter<Exercise> {
 		}
 		@Override
 		 public View getView(int position, View convertView, ViewGroup parent) {
-			 Exercise exercise = getItem(position);
+			 Exercise exercise = (Exercise) getItem(position);
 			 ListViewExercise listViewExercise = null;
 			 if(convertView != null){
 				 listViewExercise = (ListViewExercise) convertView;

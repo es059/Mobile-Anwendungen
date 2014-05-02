@@ -53,6 +53,13 @@ public class PerformanceActualMapper {
 			db.close();
 		}
 	}
+	
+	/**
+	 * Select all the Dates which are present in the database
+	 * 
+	 * @param exercise
+	 * @return
+	 */
 	public ArrayList<String> getAllDates(Exercise exercise){
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		ArrayList<String> date = new ArrayList<String>();
@@ -102,6 +109,26 @@ public class PerformanceActualMapper {
 	
 		db.close();
 		return performanceActualList;
+	}
+	
+	/**
+	 * Get the number of Training Days of one exercise
+	 * 
+	 * @param int ExerciseId
+	 * @return int Number of TrainingDays
+	 * @author Eric Schmidt
+	 */
+	public int getTrainingDaysbyExercise(int exerciseId){
+		int trainingDays = 0;
+		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
+		sql = "SELECT COUNT(DISTINCT TimestampActual) FROM PerformanceActual WHERE Exercise_Id =" 
+				+ exerciseId;
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			trainingDays = cursor.getInt(0);
+		}
+		db.close();
+		return trainingDays;
 	}
 	
 	
@@ -164,7 +191,7 @@ public class PerformanceActualMapper {
 			dayCount++;
 			c.add(Calendar.DATE, -1);
 			sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + currentExercise.getId()
-						+ " AND TimestampActual = '" + sp.format(currentDate.getTime()) + "' ORDER BY SetActual";
+						+ " AND TimestampActual = '" + sp.format(c.getTime()) + "' ORDER BY SetActual";
 			cursor = db.rawQuery(sql,null);
 		} while (!cursor.moveToFirst() && dayCount != 100);
 		cursor = db.rawQuery(sql,null);
@@ -183,6 +210,8 @@ public class PerformanceActualMapper {
 				performanceActual.setExercise(currentExercise);
 				performanceActualList.add(performanceActual);
 			}while(cursor.moveToNext());
+		}else if (dayCount == 100){
+			c.add(Calendar.DATE, 100);
 		}
 		db.close();
 		return performanceActualList;
@@ -213,7 +242,7 @@ public class PerformanceActualMapper {
 			dayCount++;
 			c.add(Calendar.DATE, 1);
 			sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + currentExercise.getId()
-						+ " AND TimestampActual = '" + sp.format(currentDate.getTime()) + "' ORDER BY SetActual";
+						+ " AND TimestampActual = '" + sp.format(c.getTime()) + "' ORDER BY SetActual";
 			cursor = db.rawQuery(sql,null);
 		} while (!cursor.moveToFirst() && dayCount != 100);
 		cursor = db.rawQuery(sql,null);
