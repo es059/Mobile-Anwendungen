@@ -57,6 +57,26 @@
             android:label="@string/title_activity_graph" >
         </activity>
         <activity android:name="org.achartengine.GraphicalActivity"/> 
+        
+        <activity android:name="com.workout.log.ManageTrainingDays" 
+            android:label="@string/title_activity_training_day_add">   
+        </activity>
+		<activity 
+		    android:name="com.workout.log.ExerciseAddToTrainingDay" 
+		    android:label="@string/title_activity_exercise_add_to_training_day">    
+		</activity>
+		<activity 
+		    android:name="com.workout.log.TrainingDayExerciseOverview" 
+		    android:label="@string/title_activity_training_day_exercise_overview">   
+		</activity>
+		<activity 
+		    android:name="com.workout.log.ManageWorkoutplan" 
+		    android:label="@string/title_activity_manage_workoutplan">  
+		</activity>
+		<activity 
+		    android:name="com.workout.log.TrainingDayAddToWorkoutplan" 
+		    android:label="@string/title_activity_training_day_add_to_workoutplan">  
+		</activity>
     </application>
 
 </manifest>

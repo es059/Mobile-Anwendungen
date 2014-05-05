@@ -187,7 +187,7 @@ public class ExerciseMapper {
 		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		
-		sql = "SELECT Exercise_Id FROM TrainingDayHasExercise WHERE TrainingDay_Id = "
+		sql = "SELECT Exercise_Id,TrainingstagHatUebungId  FROM TrainingDayHasExercise WHERE TrainingDay_Id = "
 				+ trainingDayId;
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){

@@ -77,12 +77,7 @@ public class ExerciseAdd extends Activity implements ExerciseSelectionDialogList
 	abc = em.getAllbyString();
 	List = new ArrayList<Exercise>();
 	List = em.getAll();
-		StableArrayAdapter adapter12 = new StableArrayAdapter(this, R.layout.listview_exercise_without_repssets, List);
-	        DynamicListView listView = (DynamicListView) findViewById(R.id.listview);
-
-	       listView.setCheeseList(List);
-	      listView.setAdapter(adapter12);
-	       listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); 
+		
 		
 		final Toast toast = Toast.makeText(this, "Übung wurde gelöscht!", Toast.LENGTH_SHORT );
 		
@@ -117,7 +112,7 @@ public class ExerciseAdd extends Activity implements ExerciseSelectionDialogList
 	        	  a.addAll(List);
 	        	  a.notifyDataSetChanged();
 	        	  exerciseListView.invalidateViews();
-	        	  System.out.println(s);
+	        	  
 	          }
 	  });
 

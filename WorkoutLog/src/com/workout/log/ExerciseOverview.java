@@ -99,8 +99,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemClickLi
         mDrawerLayout.setDrawerListener(mDrawerToggle);      
 	}
     /**
-     * Calls the <code>UpdateListView</code> Singleton Constructor for the first time 
-     * and sets the ListView reference. If the Activity was called through a intent, 
+     * If the Activity was called through a intent, 
      * the ListView is filled by a method call in the fragment
      * 
      * @author Eric Schmidt
@@ -288,6 +287,9 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemClickLi
 				startActivity(intent);
 				break;
 			case 2: 
+				intent = new Intent();
+				intent.setClass(this, ManageTrainingDays.class);
+				startActivity(intent);
 				break;
 			case 3: 
 				intent = new Intent();
