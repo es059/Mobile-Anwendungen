@@ -1,6 +1,7 @@
 package com.workout.log.dialog;
 
 import com.example.workoutlog.R;
+import com.workout.log.TrainingDayExerciseOverview;
 import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.listAdapter.ExerciseListAdapter;
@@ -10,6 +11,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,6 +80,9 @@ public class ExerciseClickDialogFragment extends DialogFragment {
 				}else {
 				tdMapper.ExerciseAddToTrainingDay(trainingDayId, exerciseId, ETSatzanzahl.getText(), ETwdhAnzahl.getText() );
 				toast.show();
+				Intent intent = new Intent();
+				intent.setClass(getActivity(), TrainingDayExerciseOverview.class);
+				startActivity(intent);
 				}
 					
 			  }

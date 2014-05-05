@@ -18,6 +18,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.Editable;
 
 public class WorkoutplanMapper   {
 
@@ -87,13 +88,13 @@ public class WorkoutplanMapper   {
 		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		
-		sql = "SELECT * FROM Trainingsplan";
+		sql = "SELECT * FROM Workoutplan";
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
 			do{
 				Workoutplan w = new Workoutplan();
-				w.setID(Integer.parseInt(cursor.getString(0)));
-				w.setName(cursor.getString(1));
+				w.setID(Integer.parseInt(cursor.getString(1)));
+				w.setName(cursor.getString(2));
 			//	w.setTimeStamp(new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH).parse(cursor.getString(2)));
 				workoutplanList.add(w);
 			}while(cursor.moveToNext());
@@ -108,5 +109,24 @@ public class WorkoutplanMapper   {
 	
 	public Workoutplan update(Workoutplan w){
 		return w;
-	}	
+	}
+
+	public void addWP(Editable name) {
+		
+		Date date;
+		date = Calendar.getInstance().getTime();
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "INSERT INTO Workoutplan (WorkoutplanName, Timestamp) VALUES ('" + String.valueOf(name) + "', '"+ String.valueOf(date) + "')";
+		db.execSQL(sql);
+		db.close();
+		
+	}
+	
+	public void addTrainingDayToWorkoutplan(int trainingDayId, int workoutplanId) {
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "INSERT INTO WorkoutplanHasTrainingDay (Workoutplan_Id, TrainingDay_Id) VALUES (" + workoutplanId + ", " + trainingDayId + ")";
+		db.execSQL(sql);
+		db.close();
+	}
+	
 }

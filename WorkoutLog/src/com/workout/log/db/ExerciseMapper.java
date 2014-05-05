@@ -90,6 +90,27 @@ public class ExerciseMapper {
     return exerciseList;
 		
 	}
+	public ArrayList<String> getAllbyString() {
+		ArrayList<String> exerciseList = new ArrayList<String>();
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "SELECT * FROM Exercise";
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()) {
+            do {
+            	String e = "";
+              
+              e= cursor.getString(2);
+              exerciseList.add(e);
+            	
+            } while (cursor.moveToNext());
+        }
+   
+        cursor.close();
+        
+
+    return exerciseList;
+		
+	}
 	
 	public void update(int ID, String bezeichnung){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
@@ -143,12 +164,14 @@ public class ExerciseMapper {
 		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		
-		sql = "SELECT Exercise_Id FROM TrainingDayHasExercise WHERE TrainingDay_Id = " + trainingDayId; 
+		sql = "SELECT Exercise_Id, TrainingstagHatUebungId FROM TrainingDayHasExercise WHERE TrainingDay_Id = " + trainingDayId; 
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
 			do{
 				Exercise exercise = getExerciseById(Integer.parseInt(cursor.getString(0)));
+				exercise.setTrainingDayHasExerciseId(cursor.getInt(1));
 				exerciseList.add(exercise);
+				System.out.println(exercise.getId() + exercise.getName() + exercise.getTrainingDayHasExerciseId());
 			}while(cursor.moveToNext());
 		}
 		db.close();

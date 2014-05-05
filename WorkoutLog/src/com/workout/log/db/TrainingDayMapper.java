@@ -114,7 +114,14 @@ public class TrainingDayMapper {
 		db.execSQL(sql);
 		db.execSQL(sql2);
 		db.close();
-	
 	}
+	public void exerciseDeleteFromTrainingDay(int trainingDayHasExerciseId) {
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql ="DELETE FROM TrainingDayHasExercise WHERE TrainingstagHatUebungId = " +trainingDayHasExerciseId + "";
+		db.execSQL(sql);
+		db.close();
+	}
+	
+	
 }
 

@@ -4,7 +4,16 @@ public class Exercise {
 
 	private String mName = "";
 	private  int mId = 0;
+	private int trainingDayHasExerciseId = 0;
 	
+	public int getTrainingDayHasExerciseId() {
+		return trainingDayHasExerciseId;
+	}
+
+	public void setTrainingDayHasExerciseId(int trainingDayHasExerciseId) {
+		this.trainingDayHasExerciseId = trainingDayHasExerciseId;
+	}
+
 	public Exercise(){
 		
 	}

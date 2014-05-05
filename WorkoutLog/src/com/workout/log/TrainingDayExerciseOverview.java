@@ -8,7 +8,9 @@ import com.example.workoutlog.R.layout;
 import com.example.workoutlog.R.menu;
 import com.workout.log.bo.Exercise;
 import com.workout.log.db.ExerciseMapper;
+import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.listAdapter.ExerciseListAdapter;
+import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
 
 import android.app.Activity;
 import android.app.ActionBar;
@@ -22,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.os.Build;
 
 public class TrainingDayExerciseOverview extends Activity {
@@ -33,11 +36,13 @@ public class TrainingDayExerciseOverview extends Activity {
 	private String trainingDayName;
 	private Bundle intent;
 	private TextView TvTrainingDayName;
+	private static TrainingDayMapper tdMapper;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.training_day_exercise_overview);
+		tdMapper = new TrainingDayMapper(this);
 		// Übergabe der Trainingtags-ID über das Intent 
 		intent = getIntent().getExtras();
 		trainingDayId = intent.getInt("trainingDayId");
@@ -53,6 +58,39 @@ public class TrainingDayExerciseOverview extends Activity {
 		exerciseList = eMapper.getAllExercise(trainingDayId);
 		exerciseListAdapter = new ExerciseListAdapter(this, R.layout.listview_exercise, exerciseList);
 		exerciseListView.setAdapter(exerciseListAdapter);
+		
+		/**
+		 * Implementierung Swipe to dissmiss Funktion
+		 */
+		final Toast toast = Toast.makeText(this, "Übung wurde gelöscht!", Toast.LENGTH_SHORT );
+		
+		SwipeDismissListViewTouchListener touchListener =
+                new SwipeDismissListViewTouchListener(
+                		exerciseListView,
+                        new SwipeDismissListViewTouchListener.DismissCallbacks() {
+                            @Override
+                            public boolean canDismiss(int position) {
+                                return true;
+                            }
+
+                            @Override
+                            public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+                                for (int position : reverseSortedPositions) {
+                                	Exercise e = (Exercise) exerciseListView.getItemAtPosition(position);
+                            		int i = e.getTrainingDayHasExerciseId();
+                                	tdMapper.exerciseDeleteFromTrainingDay(i);;
+                                	exerciseListAdapter.remove(exerciseListAdapter.getItem(position));
+                                	toast.show();
+                                    
+                                    
+                                }
+                                exerciseListAdapter.notifyDataSetChanged();
+                            }
+                        });
+        exerciseListView.setOnTouchListener(touchListener);
+        // Setting this scroll listener is required to ensure that during ListView scrolling,
+        // we don't look for swipes.
+        exerciseListView.setOnScrollListener(touchListener.makeScrollListener());
 	}
 
 	@Override

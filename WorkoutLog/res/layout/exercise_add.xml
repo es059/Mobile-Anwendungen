@@ -26,7 +26,15 @@
 		        android:layout_alignParentTop="true"
 		        android:layout_centerHorizontal="true"
 		        tools:layout="@layout/actionbar_searchbar_fragment"/>
-		
+		<ScrollView android:fillViewport="true"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp">
+            <LinearLayout android:id="@+id/dismissable_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
 		
 		    <ListView
 		        android:id="@+id/add_exerciseList"
@@ -36,6 +44,12 @@
 		        android:layout_centerHorizontal="true"
 		        android:longClickable="true"
 		        />
+		    <com.workout.log.DynamicListView android:layout_height="wrap_content" 
+		        android:layout_width="match_parent"
+		        android:id="@+id/listview"
+		        android:background="#0000"
+		        android:layout_below="@id/add_exerciseList"/>
+		    
 		
 		</RelativeLayout>
 	</FrameLayout>

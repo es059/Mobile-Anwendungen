@@ -15,6 +15,7 @@ import com.workout.log.dialog.ExerciseLongClickDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment.ExerciseSelectionDialogListener;
 import com.workout.log.listAdapter.ExerciseListAdapter;
 import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
+import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
 
 import android.app.Activity;
 import android.app.ActionBar;
@@ -33,6 +34,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.os.Build;
 
@@ -47,11 +49,14 @@ public class ExerciseAddToTrainingDay extends Activity implements ExerciseSelect
 	private int trainingDayId;
 	private int exerciseId;
 	private Bundle intent;
+	private Toast toast;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.exercise_add);
+		
+		final Toast toast = Toast.makeText(this, "Übung wurde gelöscht!", Toast.LENGTH_SHORT );
 		// Übergabe der Trainingtags-ID über das Intent 
 		intent = getIntent().getExtras();
 		trainingDayId = intent.getInt("trainingDayId");
@@ -91,6 +96,41 @@ public class ExerciseAddToTrainingDay extends Activity implements ExerciseSelect
 	        	  System.out.println(s);
 	          }
 	  });
+		
+		/**
+		 * Implementierung der Swipe to dissmiss-funktion 
+		 */
+		 // Create a ListView-specific touch listener. ListViews are given special treatment because
+        // by default they handle touches for their list items... i.e. they're in charge of drawing
+        // the pressed state (the list selector), handling list item clicks, etc.
+        SwipeDismissListViewTouchListener touchListener =
+                new SwipeDismissListViewTouchListener(
+                		exerciseListView,
+                        new SwipeDismissListViewTouchListener.DismissCallbacks() {
+                            @Override
+                            public boolean canDismiss(int position) {
+                                return true;
+                            }
+
+                            @Override
+                            public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+                                for (int position : reverseSortedPositions) {
+                                	Exercise e = (Exercise) exerciseListView.getItemAtPosition(position);
+                            		int i = e.getId();
+                                	em.delete(i);
+                                	a.remove(a.getItem(position));
+                                	toast.show();
+                                    
+                                    
+                                }
+                                a.notifyDataSetChanged();
+                            }
+                        });
+        exerciseListView.setOnTouchListener(touchListener);
+        // Setting this scroll listener is required to ensure that during ListView scrolling,
+        // we don't look for swipes.
+        exerciseListView.setOnScrollListener(touchListener.makeScrollListener());
+
 	}
 
 	@Override

@@ -2,7 +2,15 @@ package com.workout.log;
 
 import java.util.ArrayList;
 
+
+
+
+
+
+
+
 import com.example.workoutlog.R;
+import com.workout.log.listAdapter.*;
 import com.workout.log.bo.Exercise;
 import com.workout.log.data.MenueListe;
 import com.workout.log.db.ExerciseMapper;
@@ -27,10 +35,13 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class ExerciseAdd extends Activity implements ExerciseSelectionDialogListener, OnItemLongClickListener {
 	// Attribute für Menü 1
@@ -47,6 +58,9 @@ public class ExerciseAdd extends Activity implements ExerciseSelectionDialogList
 	    private ExerciseListWithoutSetsRepsAdapter a;
 	    private ListView exerciseListView;
 	    private DialogFragment dialogFragment;
+	    private Toast toast;
+	    private ArrayList<String> abc;
+	 //   private DynamicListView dlv = new DynamicListView(this);
 	//  int i;
 	    
 	  private  ExerciseMapper em = new ExerciseMapper(this);
@@ -58,13 +72,27 @@ public class ExerciseAdd extends Activity implements ExerciseSelectionDialogList
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.exercise_add);
 		
+		 
+	abc = new ArrayList<String>();
+	abc = em.getAllbyString();
+	List = new ArrayList<Exercise>();
+	List = em.getAll();
+		StableArrayAdapter adapter12 = new StableArrayAdapter(this, R.layout.listview_exercise_without_repssets, List);
+	        DynamicListView listView = (DynamicListView) findViewById(R.id.listview);
+
+	       listView.setCheeseList(List);
+	      listView.setAdapter(adapter12);
+	       listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); 
+		
+		final Toast toast = Toast.makeText(this, "Übung wurde gelöscht!", Toast.LENGTH_SHORT );
+		
 		search = (EditText) findViewById(R.id.trainingDay_subject);
 		
 		exerciseListView = (ListView) findViewById(R.id.add_exerciseList);
-		List = new ArrayList<Exercise>();
-		List = em.getAll();
+		
 		a = new ExerciseListWithoutSetsRepsAdapter(this , R.layout.listview_exercise_without_repssets, List);
 		exerciseListView.setAdapter(a);
+		
 		exerciseListView.setOnItemLongClickListener(this);
 		search.addTextChangedListener(new TextWatcher() 
 		  {
@@ -136,9 +164,43 @@ public class ExerciseAdd extends Activity implements ExerciseSelectionDialogList
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle); 
         
-        // Implementierung Text Change Listener für Live Suche
         
-	}
+        // Create a ListView-specific touch listener. ListViews are given special treatment because
+        // by default they handle touches for their list items... i.e. they're in charge of drawing
+        // the pressed state (the list selector), handling list item clicks, etc.
+        SwipeDismissListViewTouchListener touchListener =
+                new SwipeDismissListViewTouchListener(
+                		exerciseListView,
+                        new SwipeDismissListViewTouchListener.DismissCallbacks() {
+                            @Override
+                            public boolean canDismiss(int position) {
+                                return true;
+                            }
+
+                            @Override
+                            public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+                                for (int position : reverseSortedPositions) {
+                                	Exercise e = (Exercise) exerciseListView.getItemAtPosition(position);
+                            		int i = e.getId();
+                                	em.delete(i);
+                                	a.remove(a.getItem(position));
+                                	toast.show();
+                                    
+                                    
+                                }
+                                a.notifyDataSetChanged();
+                            }
+                        });
+        exerciseListView.setOnTouchListener(touchListener);
+        // Setting this scroll listener is required to ensure that during ListView scrolling,
+        // we don't look for swipes.
+        exerciseListView.setOnScrollListener(touchListener.makeScrollListener());
+
+      
+    }
+
+  
+	
 	 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
