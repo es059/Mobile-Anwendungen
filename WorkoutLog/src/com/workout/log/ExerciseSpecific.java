@@ -11,6 +11,7 @@ import com.workout.log.bo.PerformanceTarget;
 import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.PerformanceActualMapper;
 import com.workout.log.db.PerformanceTargetMapper;
+import com.workout.log.fragment.ActionBarDatePickerFragment;
 import com.workout.log.listAdapter.PerformanceActualListAdapter;
 
 import android.app.Activity;
@@ -216,6 +217,7 @@ public class ExerciseSpecific extends Activity {
 	 */
 	public void savePerformanceActual(){ 
 		PerformanceActualMapper pMapper = new PerformanceActualMapper(this);
+		ActionBarDatePickerFragment dateFragment = (ActionBarDatePickerFragment) getFragmentManager().findFragmentById(R.id.specific_dateTimePicker);
 		for(PerformanceActual item : performanceActualList){
 			View v = exerciseView.getChildAt(item.getSet() -1);
 			repetition = (EditText) v.findViewById(R.id.specific_edit_repetition);
@@ -226,14 +228,23 @@ public class ExerciseSpecific extends Activity {
 			}
 			if (!weight.getText().toString().isEmpty()){
 				item.setWeight(Double.parseDouble(weight.getText().toString()));
-			}	
-			if (saveMode == true){
-				PerformanceActual pa = pMapper.savePerformanceActual(item);
-			}else if (item.getRepetition() != 0 || item.getWeight() != 0.0){
-				PerformanceActual pa = pMapper.savePerformanceActual(item);
-				saveMode = true;
-			}else{
-				saveMode = false;
+			}
+			/**
+			 * This block checks if the current Day is Today. 
+			 * Afterwards the Recordset it saved if either the repetition and weight 
+			 * TextView is filled. After this every Entry in the ListView is saved.
+			 * This ensures that if a user goes back to an old Entry and returns to the current
+			 * all of the sets are saved.
+			 */
+			if (dateFragment.isToday()){
+				if (saveMode == true){
+					PerformanceActual pa = pMapper.savePerformanceActual(item);
+				}else if (item.getRepetition() != 0 || item.getWeight() != 0.0){
+					PerformanceActual pa = pMapper.savePerformanceActual(item);
+					saveMode = true;
+				}else{
+					saveMode = false;
+				}
 			}
 		}
 	}

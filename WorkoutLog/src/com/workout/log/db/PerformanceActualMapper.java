@@ -76,7 +76,7 @@ public class PerformanceActualMapper {
 		return date;
 	}
 	/**
-	 *  Get the Max Weight of one Exercise per day
+	 *  Get all the Max Weight of one Exercise per day
 	 * 
 	 *  @param Exercise exercise
 	 *  @param String timestamp in SimpleDateFormat dd.MM.yyyy
@@ -90,7 +90,7 @@ public class PerformanceActualMapper {
 		ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 		for(String item : strings){
-			sql = "SELECT RepetitionActual, MAX(WeightActual) FROM PerformanceActual WHERE"
+			sql = "SELECT MAX(RepetitionActual), MAX(WeightActual) FROM PerformanceActual WHERE"
 					+ " TimestampActual = '" + item + "' AND"
 					+ " Exercise_Id = " + exercise.getId();
 			cursor = db.rawQuery(sql, null);

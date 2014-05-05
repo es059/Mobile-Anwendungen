@@ -10,7 +10,7 @@
         android:id="@+id/Previous"
         style="?android:attr/actionButtonStyle"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="bottom"
         android:layout_weight="1"
         android:src="@drawable/ic_action_navigation_previous_item" />
@@ -33,7 +33,7 @@
         style="?android:attr/actionButtonStyle"
       	android:layout_weight="1"
       	android:layout_gravity="bottom|right"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:src="@drawable/ic_action_navigation_next_item" />
 
 </LinearLayout>

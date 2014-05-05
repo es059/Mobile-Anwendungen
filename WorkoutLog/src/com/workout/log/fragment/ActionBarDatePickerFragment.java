@@ -53,7 +53,7 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 		
 		next.setOnClickListener(this);
 		previous.setOnClickListener(this);
-		getDate();
+		setDate();
 		return view;
 		
 	}
@@ -65,11 +65,10 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 		switch (v.getId()){
 		case R.id.Next:
 			performanceActualList = paMapper.getNextPerformanceActual(calendar, exerciseSpecific.getExercise());
-			System.out.println(sp.format(calendar.getTime()));
 			if (!performanceActualList.isEmpty()){
 				exerciseSpecific.updateListView(performanceActualList);
 				calendar.setTime(performanceActualList.get(0).getTimestamp());
-				getDate();
+				setDate();
 			}else{
 				/**
 				 * If the ArrayList is empty it means, that the next PerformanceActual is the current one today
@@ -77,12 +76,11 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 				performanceActualList = exerciseSpecific.prepareStandardListView();
 				exerciseSpecific.updateListView(performanceActualList);
 				calendar.setTime(new Date());
-				getDate();
+				setDate();
 			}
 			break;
 		case R.id.Previous:
 			performanceActualList = paMapper.getLastPerformanceActual(calendar, exerciseSpecific.getExercise());
-			System.out.println(sp.format(calendar.getTime()));
 			if (!performanceActualList.isEmpty()){
 				if (isCurrent){
 					exerciseSpecific.savePerformanceActual();
@@ -90,7 +88,7 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 				}
 				exerciseSpecific.updateListView(performanceActualList);
 				calendar.setTime(performanceActualList.get(0).getTimestamp());
-				getDate();
+				setDate();
 			}else{
 				Toast.makeText(getActivity(), "Keine letzte Übung gefunden", Toast.LENGTH_SHORT).show();
 			}
@@ -100,7 +98,12 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 		}
 	}
 	
-	private void getDate(){
+	/**
+	 * Set the View Elements to the formated current Date 
+	 * 
+	 * @author Eric Schmidt
+	 */
+	private void setDate(){
 		Calendar c = Calendar.getInstance();
 		if (String.valueOf(calendar.getTime().getDate()) == String.valueOf(c.getTime().getDate())){
 			date.setText("Heute");
@@ -113,4 +116,15 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 			isCurrent = false;
 		}
 	}
+	
+	/**
+	 * Check if the current Date is Today
+	 * 
+	 * @return Boolean false if not today
+	 * @author Eric Schmidt
+	 */
+	public Boolean isToday(){
+		return isCurrent;
+	}
+	
 }

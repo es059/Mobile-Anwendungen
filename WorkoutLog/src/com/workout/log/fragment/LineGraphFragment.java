@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class LineGraphFragment extends Fragment{
 	private LinearLayout mLayout;
@@ -33,10 +34,12 @@ public class LineGraphFragment extends Fragment{
 	public void updateGraph(Exercise exercise){
 		//Create the Graph
 		LineGraph line = new LineGraph();
-		View linearGraph = line.getView(getActivity(),eMapper.getExerciseById(exercise.getId()));
-		mLayout.removeAllViews();
-		mLayout.addView(linearGraph);
-		
-		
+		View linearGraph = line.getView(getActivity(),exercise);
+		if (linearGraph != null){
+			mLayout.removeAllViews();
+			mLayout.addView(linearGraph);
+		}else{
+			Toast.makeText(getActivity(), "Es ist leider noch kein Trainingstag verfügbar", Toast.LENGTH_SHORT).show();
+		}
 	}
 }

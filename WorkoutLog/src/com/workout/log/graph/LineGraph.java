@@ -58,103 +58,106 @@ public class LineGraph{
 	}
 
 	  public View getView(Context context,Exercise exericse) {
-		  
+		View mChart = null;
 		getPerformanceActualData(context, exericse);
-		XYSeries weightSeries =  new XYSeries("Gewicht",0);
-		XYSeries repetitionsSeries =  new XYSeries("Wiederholung",1);
-
-		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
-
-		XYSeriesRenderer weightRenderer = new XYSeriesRenderer();
-		weightRenderer.setColor(Color.parseColor("#FF9900"));
-		weightRenderer.setDisplayChartValues(true);
-		weightRenderer.setChartValuesTextAlign(Align.CENTER);
-		weightRenderer.setChartValuesTextSize(30);
-		weightRenderer.setPointStyle(PointStyle.CIRCLE);
-		weightRenderer.setLineWidth(5);
-		weightRenderer.setFillPoints(true);
-		weightRenderer.setShowLegendItem(true);
-		
-
-	    XYSeriesRenderer repetitionsRenderer = new XYSeriesRenderer();
-	    repetitionsRenderer.setColor(Color.GRAY);
-	    repetitionsRenderer.setDisplayChartValues(true);
-	    repetitionsRenderer.setChartValuesTextAlign(Align.CENTER);
-	    repetitionsRenderer.setChartValuesTextSize(30);
-	    repetitionsRenderer.setPointStyle(PointStyle.CIRCLE);
-	    repetitionsRenderer.setLineWidth(5);
-	    repetitionsRenderer.setFillPoints(true);
-	    repetitionsRenderer.setShowLegendItem(true);
-
-
-
-	    XYMultipleSeriesRenderer  mRenderer = new XYMultipleSeriesRenderer(2);
-	    mRenderer.setXLabels(0);
-
-	    for(int i=0; i<weight.size();i++){
-	    	weightSeries.add(i, weight.get(i));
-	    	repetitionsSeries.add(i, repetitions.get(i));
-	        Date dat = date.get(i);
-	        Format formatter = new SimpleDateFormat("dd-MM-yyyy");
-	        String date = formatter.format(dat);
-	        mRenderer.addXTextLabel(i, date);
-	    }
-	    dataset.addSeries(0, weightSeries);
-	    dataset.addSeries(1, repetitionsSeries);
-	    //Specify the Graph itself
-	  	mRenderer.setMargins(new int[]{60,80,100,60});
-	  	mRenderer.setAxisTitleTextSize(20);
-	  	mRenderer.setApplyBackgroundColor(true);
-	  	mRenderer.setMarginsColor(Color.argb(0x00, 0x01, 0x01, 0x01));
-	  	mRenderer.setBackgroundColor(Color.TRANSPARENT);
-	  	//Show Grid
-	  	mRenderer.setShowGridY(true);
-	  	mRenderer.setShowGridX(true);
-	  	//Legend and Axis
-	  	mRenderer.setShowAxes(true);
-	  	mRenderer.setXAxisMin(date.get(0).getTime());
-	  	mRenderer.setYLabels(0);
-	  	mRenderer.setXLabels(0);
-		mRenderer.setAntialiasing(true);
-		mRenderer.setYTitle("Wiederholungen / Gewicht");
-		mRenderer.setXTitle("Datum");
-		mRenderer.setAxisTitleTextSize(50);
-		mRenderer.setYLabelsAlign(Align.RIGHT);
-		mRenderer.setLegendTextSize(30);
-		mRenderer.setLabelsTextSize(30);
-		mRenderer.setFitLegend(true);
-		//Scrolling
-		double maxDate = date.get(date.size()-1).getTime() * (81300000*1);
-		double minDate = date.get(0).getTime();
-		
-		mRenderer.setPanEnabled(true, false);
-		double[] limits = new double[] {minDate,maxDate,0,0};
-		mRenderer.setPanLimits(limits);
-		//Diverse
-	  	mRenderer.setShowGrid(true);
-	  	mRenderer.setXLabelsAlign(Align.CENTER);
-	  	mRenderer.setYLabelsAlign(Align.RIGHT);
-	    mRenderer.addSeriesRenderer(weightRenderer);
-	    mRenderer.addSeriesRenderer(repetitionsRenderer);
-	    mRenderer.setBarSpacing(4);
-	    mRenderer.setApplyBackgroundColor(true);
-	    mRenderer.setBackgroundColor(Color.argb(0x00, 0x01, 0x01, 0x01));
-	    mRenderer.setMarginsColor(Color.argb(0x00, 0x01, 0x01, 0x01));
-	    mRenderer.setYLabelsColor(0, Color.BLACK);
-	    mRenderer.setXLabelsColor(Color.BLACK);
-	    mRenderer.setXTitle("Datum");
-	    mRenderer.setYTitle("Gewicht", 0);
-	    mRenderer.setYTitle("Wiederholungen", 1);
-	    mRenderer.setXAxisMin(-0.2);
-	    mRenderer.setXAxisMax(3.5);
-	    mRenderer.setYAxisMin(weightSeries.getMinY()-5,0);
-	    mRenderer.setYAxisMax(weightSeries.getMaxY()+3,0);
-	    mRenderer.setYAxisMin(repetitionsSeries.getMinY()-5,1);
-	    mRenderer.setYAxisMax(repetitionsSeries.getMaxY()+3,1);
-	    mRenderer.setYAxisAlign(Align.RIGHT, 0);
-	    
-	    View mChart = ChartFactory.getLineChartView(context, dataset, mRenderer);
-	    return mChart;
+		if (!date.isEmpty()){  
+			XYSeries weightSeries =  new XYSeries("Gewicht",0);
+			XYSeries repetitionsSeries =  new XYSeries("Wiederholung",1);
+	
+			XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
+	
+			XYSeriesRenderer weightRenderer = new XYSeriesRenderer();
+			weightRenderer.setColor(Color.parseColor("#FF9900"));
+			weightRenderer.setDisplayChartValues(true);
+			weightRenderer.setChartValuesTextAlign(Align.CENTER);
+			weightRenderer.setChartValuesTextSize(30);
+			weightRenderer.setPointStyle(PointStyle.CIRCLE);
+			weightRenderer.setLineWidth(5);
+			weightRenderer.setFillPoints(true);
+			weightRenderer.setShowLegendItem(true);
+			
+	
+		    XYSeriesRenderer repetitionsRenderer = new XYSeriesRenderer();
+		    repetitionsRenderer.setColor(Color.GRAY);
+		    repetitionsRenderer.setDisplayChartValues(true);
+		    repetitionsRenderer.setChartValuesTextAlign(Align.CENTER);
+		    repetitionsRenderer.setChartValuesTextSize(30);
+		    repetitionsRenderer.setPointStyle(PointStyle.CIRCLE);
+		    repetitionsRenderer.setLineWidth(5);
+		    repetitionsRenderer.setFillPoints(true);
+		    repetitionsRenderer.setShowLegendItem(true);
+	
+	
+	
+		    XYMultipleSeriesRenderer  mRenderer = new XYMultipleSeriesRenderer(2);
+		    mRenderer.setXLabels(0);
+	
+		    for(int i=0; i<weight.size();i++){
+		    	weightSeries.add(i, weight.get(i));
+		    	repetitionsSeries.add(i, repetitions.get(i));
+		        Date dat = date.get(i);
+		        Format formatter = null;
+		        if (i%2 == 0) { 
+		        	formatter = new SimpleDateFormat("dd.MM.yy");
+		        }else{
+		        	formatter = new SimpleDateFormat("\n\n\n\n\n\n dd.MM.yy");
+		    	}
+		        String date = formatter.format(dat);
+		        mRenderer.addXTextLabel(i, date);
+		    }
+		    dataset.addSeries(0, weightSeries);
+		    dataset.addSeries(1, repetitionsSeries);
+		    //Specify the Graph itself
+		    //(int) mRenderer.getLabelsTextSize() + 25
+		  	mRenderer.setMargins(new int[]{0,0,100,0});
+		  	mRenderer.setAxisTitleTextSize(20);
+		  	mRenderer.setApplyBackgroundColor(true);
+		  	mRenderer.setMarginsColor(Color.argb(0x00, 0x01, 0x01, 0x01));
+		  	mRenderer.setBackgroundColor(Color.TRANSPARENT);
+		  	//Show Grid
+		  	mRenderer.setShowGridY(true);
+		  	mRenderer.setShowGridX(true);
+		  	//Legend and Axis
+		  	mRenderer.setShowAxes(true);
+		  	//mRenderer.setXAxisMin(date.get(0).getTime());
+		  	mRenderer.setYLabels(0);
+		  	mRenderer.setXLabels(0);
+			mRenderer.setAntialiasing(true);
+			mRenderer.setAxisTitleTextSize(50);
+			mRenderer.setYLabelsAlign(Align.RIGHT);
+			mRenderer.setLegendTextSize(30);
+			mRenderer.setLabelsTextSize(30);
+			mRenderer.setFitLegend(true);
+			//Scrolling
+			double maxDate = date.get(date.size()-1).getTime() * (81300000*1);
+			double minDate = date.get(0).getTime();
+			
+			mRenderer.setPanEnabled(true, false);
+			//double[] limits = new double[] {minDate,maxDate,0,0};
+			//mRenderer.setPanLimits(limits);
+			//Diverse
+		  	mRenderer.setShowGrid(true);
+		  	mRenderer.setXLabelsAlign(Align.CENTER);
+		  	mRenderer.setYLabelsAlign(Align.RIGHT,0);
+		    mRenderer.addSeriesRenderer(weightRenderer);
+		    mRenderer.addSeriesRenderer(repetitionsRenderer);
+		    mRenderer.setApplyBackgroundColor(true);
+		    mRenderer.setBackgroundColor(Color.argb(0x00, 0x01, 0x01, 0x01));
+		    mRenderer.setMarginsColor(Color.argb(0x00, 0x01, 0x01, 0x01));
+		    mRenderer.setYLabelsColor(0, Color.BLACK);
+		    mRenderer.setXLabelsColor(Color.BLACK);
+		    mRenderer.setXAxisMin(-0.5,0);
+		    mRenderer.setXAxisMin(-0.5,1);
+		    //mRenderer.setXAxisMax(weightSeries.getMaxX()+3);
+		    mRenderer.setYAxisMin(weightSeries.getMinY()-5,0);
+		    mRenderer.setYAxisMax(weightSeries.getMaxY()+2,0);
+		    mRenderer.setYAxisMin(repetitionsSeries.getMinY()-5,1);
+		    mRenderer.setYAxisMax(repetitionsSeries.getMaxY()+5,1);
+		    mRenderer.setYAxisAlign(Align.RIGHT, 0);
+		    
+		    mChart = ChartFactory.getLineChartView(context, dataset, mRenderer);
+		}
+		return mChart;
 	}
 	
 }
