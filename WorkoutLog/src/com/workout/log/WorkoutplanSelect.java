@@ -198,8 +198,8 @@ public class WorkoutplanSelect extends Activity  implements OnItemLongClickListe
 	}
 	
 	public void showDialogLongClickFragment(){
-		DialogFragment dialogFragment = ExerciseLongClickDialogFragment.newInstance();
-		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
+	//	DialogFragment dialogFragment = ExerciseLongClickDialogFragment.newInstance();
+	//	dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
 	}
 	
 	@Override

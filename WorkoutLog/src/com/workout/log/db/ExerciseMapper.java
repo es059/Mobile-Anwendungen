@@ -18,6 +18,7 @@ public class ExerciseMapper {
 	
 	private DataBaseHelper myDBHelper;
 	private String sql;
+	private int mgID;
 	
 	public ExerciseMapper(Context context){
 		myDBHelper = new DataBaseHelper(context);
@@ -33,12 +34,19 @@ public class ExerciseMapper {
 	 	}
 	}
 	
-	public void add(String a){
+	public void add(String a, String b){
+
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "INSERT INTO Uebung (Bezeichung) VALUES ('" +a +"')";
-		db.execSQL(sql);
+		sql = "SELECT MuscleGroup_Id FROM MuscleGroup WHERE MuscleGroupName='" + b + "'";
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			mgID = Integer.parseInt(cursor.getString(0));
+		}
+		String sql1 = "INSERT INTO Exercise (ExerciseName, MuscleGroup_Id ) VALUES ('" +a +"', " + mgID + ")";
+		db.execSQL(sql1);
 		db.close();
 	}
+
 
 	public void add(Exercise e){
 		int id = 0;
@@ -46,7 +54,7 @@ public class ExerciseMapper {
 		sql = "SELECT MAX(Exercise_id) FROM Exercise";
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
-			id = Integer.parseInt(cursor.getString(0));
+			id = Integer.parseInt(cursor.getString(1));
 		}
 		sql = "INSERT INTO Exercise (Exercise_Id) VALUES (id)";
 		db.execSQL(sql);
@@ -54,15 +62,63 @@ public class ExerciseMapper {
 		db.close();
 	}
 	
-	public void delete(Exercise e){	
+	public void delete(int e){	
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "DELETE FROM Exercise WHERE *";
+		sql = "DELETE FROM Exercise WHERE Exercise_Id =" + e + "";
+		db.execSQL(sql);
 		db.close();
 	}
 	
-	public Exercise update(Exercise e){
+	public ArrayList<Exercise> getAll() {
+		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "SELECT * FROM Exercise";
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()) {
+            do {
+              Exercise e = new Exercise();
+              e.setID(Integer.parseInt(cursor.getString(1)));
+              e.setName(cursor.getString(2));
+              exerciseList.add(e);
+            	
+            } while (cursor.moveToNext());
+        }
+   
+        cursor.close();
+        
+
+    return exerciseList;
 		
-	return e;
+	}
+	public ArrayList<String> getAllbyString() {
+		ArrayList<String> exerciseList = new ArrayList<String>();
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "SELECT * FROM Exercise";
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()) {
+            do {
+            	String e = "";
+              
+              e= cursor.getString(2);
+              exerciseList.add(e);
+            	
+            } while (cursor.moveToNext());
+        }
+   
+        cursor.close();
+        
+
+    return exerciseList;
+		
+	}
+	
+	public void update(int ID, String bezeichnung){
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		String sql = "UPDATE Exercise SET ExerciseName='" + bezeichnung +  "' WHERE Exercise_Id=" + ID + "";
+		db.execSQL(sql);
+		db.close();
+		
+	
 	}
 	
 	/**
@@ -96,7 +152,7 @@ public class ExerciseMapper {
 
 	        // Alles Anfragen auswählen
 	     //   String selectQuery = "SELECT  * FROM Uebung WHERE Bezeichung="+"'+ key +'";
-	     String selectQuery =  "SELECT * FROM Uebung WHERE Bezeichung LIKE '%" + key + "%'";
+	     String selectQuery =  "SELECT * FROM Exercise WHERE ExerciseName LIKE '%" + key + "%'";
 	        Cursor cursor = db.rawQuery(selectQuery, null);
 	        // you can change it to
 	        // db.rawQuery("SELECT * FROM "+table+" WHERE KEY_KEY LIKE ?", new String[] {key+"%"});
@@ -106,8 +162,8 @@ public class ExerciseMapper {
 	        if (cursor.moveToFirst()) {
 	            do {
 	              Exercise e = new Exercise();
-	              e.setID(Integer.parseInt(cursor.getString(0)));
-	              e.setName(cursor.getString(1));
+	              e.setID(Integer.parseInt(cursor.getString(1)));
+	              e.setName(cursor.getString(2));
 	              exerciseList.add(e);
 	            	
 	            } while (cursor.moveToNext());
@@ -137,7 +193,9 @@ public class ExerciseMapper {
 		if (cursor.moveToFirst()){
 			do{
 				Exercise exercise = getExerciseById(Integer.parseInt(cursor.getString(0)));
+				exercise.setTrainingDayHasExerciseId(cursor.getInt(1));
 				exerciseList.add(exercise);
+				System.out.println(exercise.getId() + exercise.getName() + exercise.getTrainingDayHasExerciseId());
 			}while(cursor.moveToNext());
 		}
 		db.close();

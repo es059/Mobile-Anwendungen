@@ -10,6 +10,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.Editable;
 
 public class TrainingDayMapper {
 	
@@ -87,5 +88,40 @@ public class TrainingDayMapper {
 	    return d;
 
 	}
+	
+	public ArrayList<TrainingDay> getAllTrainingDay() {
+		ArrayList<TrainingDay> trainingdayList = new ArrayList<TrainingDay>();
+		
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		
+		sql = "SELECT * FROM TrainingDay";
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			do{
+				TrainingDay d = new TrainingDay();
+				d.setId(Integer.parseInt(cursor.getString(0)));
+				d.setName(cursor.getString(1));
+				trainingdayList.add(d);
+			}while(cursor.moveToNext());
+		}
+		db.close();
+		return trainingdayList;
+	}
+	public void ExerciseAddToTrainingDay(int trainingsDayId, int exerciseId, Editable ETW, Editable ETS) {
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		String sql = "INSERT INTO TrainingDayHasExercise (TrainingDay_Id, Exercise_Id) VALUES (" + trainingsDayId +","+exerciseId+")";
+		String sql2 = "INSERT INTO PerformanceTarget (TrainingDay_Id, Exercise_Id, RepetitionTarget, SetTarget) VALUES  (" + trainingsDayId +","+exerciseId+", " + ETW + ","+ETS+")";
+		db.execSQL(sql);
+		db.execSQL(sql2);
+		db.close();
+	}
+	public void exerciseDeleteFromTrainingDay(int trainingDayHasExerciseId) {
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql ="DELETE FROM TrainingDayHasExercise WHERE TrainingstagHatUebungId = " +trainingDayHasExerciseId + "";
+		db.execSQL(sql);
+		db.close();
+	}
+	
+	
 }
 

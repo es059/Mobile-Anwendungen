@@ -225,18 +225,13 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemClickLi
 				break;
 			case R.id.menu_workoutplan:
 				intent = new Intent();
-				intent.setClass(this, WorkoutplanAdd.class);
+				intent.setClass(this, ManageTrainingDays.class);
 				startActivity(intent);
 				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	/**
-	 * Overrides the onItemClick Methode to open the ExerciseSpecific Activity
-	 * 
-	 * @author Eric Schmidt
-	 */
+
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
@@ -262,11 +257,11 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemClickLi
 		startActivity(intent);
 	}
 	
-	public void showDialogLongClickFragment(){
+/*	public void showDialogLongClickFragment(){
 		DialogFragment dialogFragment = ExerciseLongClickDialogFragment.newInstance();
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
 	}
-
+*/
 	@Override
 	public void onExerciseSelectionItemLongClick(
 			ExerciseLongClickDialogFragment dialog) {

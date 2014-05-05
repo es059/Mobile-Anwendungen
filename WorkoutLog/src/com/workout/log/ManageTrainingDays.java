@@ -10,6 +10,7 @@ import com.workout.log.bo.Exercise;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.data.Default;
 import com.workout.log.data.MenueListe;
+import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.listAdapter.CustomDrawerAdapter;
 import com.workout.log.listAdapter.DefaultAddListAdapter;
 import com.workout.log.listAdapter.TrainingDayListAdapter;
@@ -25,42 +26,42 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.os.Build;
 
-public class WorkoutplanAdd extends Activity implements OnItemClickListener {
+public class ManageTrainingDays extends Activity implements OnItemClickListener, OnItemLongClickListener{
+	
+	ArrayList<TrainingDay> trainingDayList;
+	TrainingDayListAdapter trainingDayListAdapter;
+	TrainingDayMapper tdMapper;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.workoutplan_add);
+		setContentView(R.layout.training_day_add);
 		
-		//ListView defaultListView = (ListView) findViewById(R.id.workoutplan_add_list);
-		ListView trainingDayListView = (ListView) findViewById(R.id.workoutplan_trainingDay_list);
-		
-		/*
-		//Default ListAdapter mit Hinzufügen-Eintrag
-		ArrayList<Default> defaultAddList = new ArrayList<Default>();
-		Default defaultTrainingDay = new Default("Hinzufügen", "(füge einen neue Trainingstag hinzu)");
-		defaultAddList.add(defaultTrainingDay);
-		DefaultAddListAdapter adapter = new DefaultAddListAdapter(this,0,defaultAddList);
-		defaultListView.setAdapter(adapter);
-		defaultListView.setOnItemClickListener(this);
-		*/
-		
-	
+		tdMapper = new TrainingDayMapper(this);
+		ListView trainingDayListView = (ListView) findViewById(R.id.trainingDay_add_list);
+		trainingDayList = new ArrayList<TrainingDay>();
+		trainingDayList = tdMapper.getAllTrainingDay();
+		trainingDayListAdapter = new TrainingDayListAdapter(this, R.layout.listview_training_day, trainingDayList);
+		trainingDayListView.setAdapter(trainingDayListAdapter);
+		trainingDayListView.setOnItemClickListener(this);
+		trainingDayListView.setOnItemLongClickListener(this);
 		
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.exercise_overview_menu, menu);
+		getMenuInflater().inflate(R.menu.workoutplan_menu, menu);
+		
 		return true;
 	}
 
@@ -69,25 +70,33 @@ public class WorkoutplanAdd extends Activity implements OnItemClickListener {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		Intent intent= null;
-		switch (item.getItemId()){
-			case R.id.menu_add:
-				intent = new Intent();
-				intent.setClass(this, ManageTrainingDays.class);
-				startActivity(intent);
-				break;
-		}
+		int id = item.getItemId();
+
 		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		openTrainingDayAdd();	
+		TrainingDay td = (TrainingDay) arg0.getItemAtPosition(arg2);
+		int trainingDayId = td.getId();
+		String trainingDayName = td.getName();
+		openExerciseOverview(trainingDayId, trainingDayName);
+		
 	}
 	
-	public void openTrainingDayAdd(){
+	public void openExerciseOverview(int trainingDayId, String trainingDayName){
 		Intent intent = new Intent();
-		intent.setClass(this, ManageTrainingDays.class);
+		intent.putExtra("trainingDayId", trainingDayId);
+		intent.putExtra("trainingDayName", trainingDayName);
+		intent.setClass(this, TrainingDayExerciseOverview.class);
 		startActivity(intent);
 	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
+			long arg3) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

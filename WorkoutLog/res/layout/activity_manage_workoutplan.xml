@@ -1,0 +1,27 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.workout.log.ManageWorkoutplan"
+    tools:ignore="MergeRootFrame" >
+
+ <fragment
+        android:id="@+id/specific_dateTimePicker"
+        android:name="com.workout.log.fragment.ActionBarWorkoutPlanPickerFragment"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/actionbar_height"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        tools:layout="@layout/actionbar_training_day_picker_fragment" />
+ 
+ <ListView
+				        android:id="@+id/TrainingDayList"
+				        android:layout_width="match_parent"
+				        android:layout_height="wrap_content"
+				        android:layout_below="@+id/specific_dateTimePicker"
+				        android:layout_centerHorizontal="true"
+				        android:longClickable="true"
+				        />			  
+ 
+ </RelativeLayout>
