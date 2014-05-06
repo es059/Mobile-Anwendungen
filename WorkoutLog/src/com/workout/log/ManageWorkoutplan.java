@@ -106,7 +106,7 @@ public class ManageWorkoutplan extends Activity implements OnItemClickListener {
                            public void onDismiss(ListView listView, int[] reverseSortedPositions) {
                                for (int position : reverseSortedPositions) {
                                	TrainingDay td = (TrainingDay) listView.getItemAtPosition(position);
-                           		int i = td.getID();
+                           		int i = td.getId();
                            		int primarykey = td.getTrainingDayHasWorkoutplanId();
                            		tdMapper.deleteTrainingDayFromWorkoutplan(i, workoutplanId, primarykey);
                              
