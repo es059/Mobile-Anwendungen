@@ -150,10 +150,10 @@ public class LineGraph{
 		    mRenderer.setXAxisMin(-0.5,1);
 		    //mRenderer.setXAxisMax(weightSeries.getMaxX()+3);
 		    mRenderer.setYAxisMin(weightSeries.getMinY()-5,0);
-		    mRenderer.setYAxisMax(weightSeries.getMaxY()+2,0);
+		    mRenderer.setYAxisMax(weightSeries.getMaxY()+5,0);
 		    mRenderer.setYAxisMin(repetitionsSeries.getMinY()-5,1);
-		    mRenderer.setYAxisMax(repetitionsSeries.getMaxY()+5,1);
-		    mRenderer.setYAxisAlign(Align.RIGHT, 0);
+		    mRenderer.setYAxisMax(repetitionsSeries.getMaxY()+8,1);
+		    mRenderer.setYAxisAlign(Align.RIGHT, 0);   
 		    
 		    mChart = ChartFactory.getLineChartView(context, dataset, mRenderer);
 		}

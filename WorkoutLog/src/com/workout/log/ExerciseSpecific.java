@@ -198,17 +198,21 @@ public class ExerciseSpecific extends Activity {
 	 * 
 	 */
 	public void removePerformanceActualItem(){
-		PerformanceActual performanceActual = performanceActualList.get(performanceActualList.size()-1);
-		//Update Adapter + ListView
-		adapter.remove(performanceActual);
-		adapter.notifyDataSetChanged();
-		exerciseView.invalidateViews();
-		//Remove Entry from Database
-		paMapper = new PerformanceActualMapper(this);
-		paMapper.deletePerformanceActualById(performanceActual.getId());
-		//Set the ArrayList on the current value
-		performanceActualList = adapter.getPerformanceActualList();
-		Toast.makeText(this, "Letzten Satz entfernt!", Toast.LENGTH_SHORT).show();
+		if (!performanceActualList.isEmpty()){
+			PerformanceActual performanceActual = performanceActualList.get(performanceActualList.size()-1);
+			//Update Adapter + ListView
+			adapter.remove(performanceActual);
+			adapter.notifyDataSetChanged();
+			exerciseView.invalidateViews();
+			//Remove Entry from Database
+			paMapper = new PerformanceActualMapper(this);
+			paMapper.deletePerformanceActualById(performanceActual.getId());
+			//Set the ArrayList on the current value
+			performanceActualList = adapter.getPerformanceActualList();
+			Toast.makeText(this, "Letzten Satz entfernt!", Toast.LENGTH_SHORT).show();
+		}else{
+			Toast.makeText(this, "Keine weiteren Sätze verfügbar!", Toast.LENGTH_SHORT).show();
+		}
 	}
 	
 	/**

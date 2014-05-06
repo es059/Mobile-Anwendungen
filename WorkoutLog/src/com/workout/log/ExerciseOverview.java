@@ -64,8 +64,6 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemClickLi
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.exercise_overview);
 		
-		getActionBar().setDisplayShowTitleEnabled(false);
-		
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -221,11 +219,6 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemClickLi
 				intent.setClass(this, ExerciseAdd.class);
 				startActivity(intent);
 				WorkoutplanMapper m = new WorkoutplanMapper(this);
-				break;
-			case R.id.menu_workoutplan:
-				intent = new Intent();
-				intent.setClass(this, ManageTrainingDays.class);
-				startActivity(intent);
 				break;
 		}
 		return super.onOptionsItemSelected(item);
