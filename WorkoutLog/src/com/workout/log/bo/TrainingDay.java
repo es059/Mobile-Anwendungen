@@ -4,7 +4,16 @@ public class TrainingDay {
 
 	private String mName = "";
 	private  int mId = 0;
+	private int trainingDayHasWorkoutplanId = 0;
 	
+	public int getTrainingDayHasWorkoutplanId() {
+		return trainingDayHasWorkoutplanId;
+	}
+
+	public void setTrainingDayHasWorkoutplanId(int trainingDayHasWorkoutplanId) {
+		this.trainingDayHasWorkoutplanId = trainingDayHasWorkoutplanId;
+	}
+
 	public TrainingDay(){
 		
 	}
@@ -29,4 +38,8 @@ public class TrainingDay {
 	public void setID(int Id) {
 		mId = Id;
 	}
-}
+
+	
+		
+	}
+

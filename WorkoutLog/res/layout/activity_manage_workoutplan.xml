@@ -15,7 +15,7 @@
         android:layout_centerHorizontal="true"
         tools:layout="@layout/actionbar_training_day_picker_fragment" />
  
- <ListView
+ <com.workout.log.DynamicListView
 				        android:id="@+id/TrainingDayList"
 				        android:layout_width="match_parent"
 				        android:layout_height="wrap_content"

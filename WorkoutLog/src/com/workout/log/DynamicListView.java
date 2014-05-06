@@ -41,6 +41,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import com.workout.log.bo.Exercise;
+import com.workout.log.bo.TrainingDay;
 
 /**
  * The dynamic listview is an extension of listview that supports cell dragging
@@ -69,7 +70,7 @@ public class DynamicListView extends ListView {
     private final int MOVE_DURATION = 150;
     private final int LINE_THICKNESS = 15;
 
-    public ArrayList<Exercise> mCheeseList;
+    public ArrayList<TrainingDay> mCheeseList;
 
     private int mLastEventY = -1;
 
@@ -502,8 +503,8 @@ public class DynamicListView extends ListView {
         return false;
     }
 
-    public void setCheeseList(ArrayList<Exercise> cheeseList) {
-        mCheeseList = cheeseList;
+    public void setCheeseList(ArrayList<TrainingDay> trainingDayList) {
+        mCheeseList = trainingDayList;
     }
 
     /**

@@ -25,16 +25,18 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.workout.log.bo.Exercise;
+import com.workout.log.bo.TrainingDay;
 import com.workout.log.customLayout.ListViewExercise;
 import com.workout.log.customLayout.ListViewExerciseWithoutSetsReps;
+import com.workout.log.customLayout.ListViewTrainingDay;
 
-public class StableArrayAdapter extends ArrayAdapter<Exercise> {
+public class StableArrayAdapter extends ArrayAdapter<TrainingDay> {
 
     final int INVALID_ID = -1;
 
-    HashMap<Exercise, Integer> mIdMap = new HashMap<Exercise, Integer>();
+    HashMap<TrainingDay, Integer> mIdMap = new HashMap<TrainingDay, Integer>();
 
-    public StableArrayAdapter(Context context, int textViewResourceId, List<Exercise> objects) {
+    public StableArrayAdapter(Context context, int textViewResourceId, List<TrainingDay> objects) {
         super(context, textViewResourceId, objects);
        for (int i = 0; i < objects.size(); ++i) {
             mIdMap.put(objects.get(i), i);
@@ -47,7 +49,7 @@ public class StableArrayAdapter extends ArrayAdapter<Exercise> {
         if (position < 0 || position >= mIdMap.size()) {
             return INVALID_ID;
         }
-       Exercise item = getItem(position);
+       TrainingDay item = getItem(position);
         return mIdMap.get(item);
     }
 
@@ -57,18 +59,18 @@ public class StableArrayAdapter extends ArrayAdapter<Exercise> {
     }
     @Override
 	 public View getView(int position, View convertView, ViewGroup parent) {
-		 Exercise exercise = getItem(position);
-		 ListViewExerciseWithoutSetsReps listViewExercise = null;
+		 TrainingDay trainingDay = getItem(position);
+		 ListViewTrainingDay listViewTrainingDay = null;
 		 if(convertView != null){
-			 listViewExercise = (ListViewExerciseWithoutSetsReps) convertView;
+			 listViewTrainingDay = (ListViewTrainingDay) convertView;
 		 }
 		 else{
-			 listViewExercise = new ListViewExerciseWithoutSetsReps(getContext());
+			 listViewTrainingDay = new ListViewTrainingDay(getContext());
 		 }
 		 
-		 listViewExercise.setExercise(exercise);
+		 listViewTrainingDay.setTrainingDay(trainingDay);;
 
-		 return listViewExercise;
+		 return listViewTrainingDay;
 	 }
     @Override
     public int getViewTypeCount() {
