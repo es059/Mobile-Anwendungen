@@ -9,7 +9,7 @@ public class MenueListe {
 	public List<DrawerItem> dataList;
 	public MenueListe() {
 		 dataList = new ArrayList<DrawerItem>();
-		 dataList.add(new DrawerItem("Home", R.drawable.ic_action_email));
+		 dataList.add(new DrawerItem("Überblick", R.drawable.ic_action_email));
 		 dataList.add(new DrawerItem("Trainingspläne", R.drawable.ic_action_good));
 		 dataList.add(new DrawerItem("Trainingtage", R.drawable.ic_action_gamepad));
 		 dataList.add(new DrawerItem("Übungen", R.drawable.ic_action_labels));
