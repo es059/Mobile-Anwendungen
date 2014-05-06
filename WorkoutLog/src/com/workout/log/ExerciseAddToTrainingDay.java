@@ -61,7 +61,7 @@ public class ExerciseAddToTrainingDay extends Activity implements ExerciseSelect
 		intent = getIntent().getExtras();
 		trainingDayId = intent.getInt("trainingDayId");
 		
-		search = (EditText) findViewById(R.id.trainingDay_subject);
+		search = (EditText) findViewById(R.id.searchbar_text);
 		
 		exerciseListView = (ListView) findViewById(R.id.add_exerciseList);
 		List = new ArrayList<Exercise>();

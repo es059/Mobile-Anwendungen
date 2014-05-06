@@ -81,7 +81,7 @@ public class ExerciseAdd extends Activity implements ExerciseSelectionDialogList
 		
 		final Toast toast = Toast.makeText(this, "Übung wurde gelöscht!", Toast.LENGTH_SHORT );
 		
-		search = (EditText) findViewById(R.id.trainingDay_subject);
+		search = (EditText) findViewById(R.id.searchbar_text);
 		
 		exerciseListView = (ListView) findViewById(R.id.add_exerciseList);
 		

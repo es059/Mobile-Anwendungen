@@ -276,7 +276,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemClickLi
 				break;
 			case 1: 
 				intent = new Intent();
-				intent.setClass(this, WorkoutplanSelect.class);
+				intent.setClass(this, ManageWorkoutplan.class);
 				startActivity(intent);
 				break;
 			case 2: 

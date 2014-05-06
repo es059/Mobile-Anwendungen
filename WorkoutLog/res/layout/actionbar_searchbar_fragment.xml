@@ -7,12 +7,12 @@
 	    android:orientation="horizontal" >
 	
 	  	<EditText
-	        android:id="@+id/trainingDay_subject"
+	        android:id="@+id/searchbar_text"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_gravity="bottom"
 	        android:layout_weight="1"
-	        android:hint="Übungen Suchen"
+	        android:hint="Suchen"
 	        android:drawableRight="@android:drawable/ic_menu_search"
 	        android:ems="10" >
 			<requestFocus />
