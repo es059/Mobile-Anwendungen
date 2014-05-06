@@ -84,7 +84,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 			if(workoutplanList.size() <= tdId +1) {
 				
 				
-				DialogFragment dialogFragment = WorkoutplanAddDialogFragment.newInstance(getActivity(), workoutplanList);
+				DialogFragment dialogFragment = WorkoutplanAddDialogFragment.newInstance(getActivity(), workoutplanList, tdId);
 				dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
 				pre.setVisibility(View.VISIBLE);
 				
@@ -99,10 +99,17 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 			mW.setWorkoutplanId(workoutplanList.get(tdId +1).getId());
 			tdId += 1;
 			
+			if(workoutplanList.size() <= tdId +1) {
+				next.setImageDrawable(getResources().getDrawable(R.drawable.ic_content_new_event));
+				
+			}
+			
 			
 			}
 			break;
 		case R.id.Previous:
+			if(workoutplanList.size() <= tdId +1) {
+				next.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_navigation_next_item));}
 			trainingDay.setText(workoutplanList.get(tdId -1).getName());
 			mW.addtoList(tdMapper.getAll(workoutplanList.get(tdId -1).getId()));
 			mW.setWorkoutplanId(workoutplanList.get(tdId - 1).getId());

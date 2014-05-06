@@ -11,12 +11,15 @@ import com.workout.log.bo.TrainingDay;
 import com.workout.log.data.Default;
 import com.workout.log.data.MenueListe;
 import com.workout.log.db.TrainingDayMapper;
+import com.workout.log.dialog.TrainingDayAddDialogFragment;
+import com.workout.log.dialog.WorkoutplanAddDialogFragment;
 import com.workout.log.listAdapter.CustomDrawerAdapter;
 import com.workout.log.listAdapter.DefaultAddListAdapter;
 import com.workout.log.listAdapter.TrainingDayListAdapter;
 
 import android.app.Activity;
 import android.app.ActionBar;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -67,10 +70,14 @@ public class ManageTrainingDays extends Activity implements OnItemClickListener,
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
+	
+		switch (item.getItemId()){
+		case R.id.menu_add:
+			
+			DialogFragment dialogFragment = TrainingDayAddDialogFragment.newInstance(this);
+			dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
+			break;
+		}
 
 		return super.onOptionsItemSelected(item);
 	}

@@ -6,12 +6,14 @@ import com.example.workoutlog.R;
 import com.example.workoutlog.R.id;
 import com.example.workoutlog.R.layout;
 import com.example.workoutlog.R.menu;
+import com.workout.log.bo.Exercise;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.bo.Workoutplan;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.dialog.TrainingDayAddToWorkoutplanDialogFragment;
 import com.workout.log.fragment.ActionBarWorkoutPlanPickerFragment;
+import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
 import com.workout.log.listAdapter.TrainingDayListAdapter;
 import com.workout.log.listAdapter.WorkoutplanListAdapter;
 
@@ -38,12 +40,14 @@ public class ManageWorkoutplan extends Activity implements OnItemClickListener {
 	private ImageButton next;
 	private TextView trainingDay;
 	private ListView trainingDayListView;
+	private DynamicListView listView;
 	private ArrayList<Workoutplan> workoutplanList;
 	private ArrayList<TrainingDay> trainingDayList;
 	
 	private TrainingDayListAdapter trainingDayAdapter; 
-	
+	private StableArrayAdapter adapter12;
 	private WorkoutplanMapper wpMapper;
+	private TrainingDayMapper tdMapper;
 	private int workoutplanId =1;
 	Bundle intent;
 	int tdId = 0;
@@ -55,10 +59,12 @@ public class ManageWorkoutplan extends Activity implements OnItemClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_manage_workoutplan);
+		
+		
 		if( intent != null) { getIntent().getExtras();
 		workoutplanId = intent.getInt("WorkoutplanId");
 		actionBarWorkoutPlanPickerFragment.settdIdByWorkoutplanId(workoutplanId);}
-		trainingDayListView = (ListView) findViewById(R.id.TrainingDayList);
+		
 		
 		
 		workoutplanList = new ArrayList<Workoutplan>();
@@ -66,7 +72,7 @@ public class ManageWorkoutplan extends Activity implements OnItemClickListener {
 	
 
 		wpMapper = new WorkoutplanMapper(this);
-		TrainingDayMapper tdMapper = new TrainingDayMapper(this);
+		 tdMapper = new TrainingDayMapper(this);
 		workoutplanList = wpMapper.getAll();
 		for(int i = 0; i < workoutplanList.size(); i++) {
 			if(workoutplanList.get(i).getId() == workoutplanId) {
@@ -75,10 +81,52 @@ public class ManageWorkoutplan extends Activity implements OnItemClickListener {
 		trainingDayList = tdMapper.getAll(workoutplanList.get(tdId).getId());
 
 		
-		trainingDayAdapter = new TrainingDayListAdapter(this, R.id.TrainingDayList, trainingDayList);
-		trainingDayListView.setAdapter(trainingDayAdapter);
+	//	trainingDayAdapter = new TrainingDayListAdapter(this, R.id.TrainingDayList, trainingDayList);
+	//	trainingDayListView.setAdapter(trainingDayAdapter);
 		
-		
+		adapter12 = new StableArrayAdapter(this, R.layout.listview_training_day, trainingDayList);
+		listView = (DynamicListView) findViewById(R.id.TrainingDayList);
+		listView.setCheeseList(trainingDayList);
+       listView.setAdapter(adapter12);
+       listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); 
+	
+       // Create a ListView-specific touch listener. ListViews are given special treatment because
+       // by default they handle touches for their list items... i.e. they're in charge of drawing
+       // the pressed state (the list selector), handling list item clicks, etc.
+       SwipeDismissListViewTouchListener touchListener =
+               new SwipeDismissListViewTouchListener(
+               		listView,
+                       new SwipeDismissListViewTouchListener.DismissCallbacks() {
+                           @Override
+                           public boolean canDismiss(int position) {
+                               return true;
+                           }
+
+                           @Override
+                           public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+                               for (int position : reverseSortedPositions) {
+                               	TrainingDay td = (TrainingDay) listView.getItemAtPosition(position);
+                           		int i = td.getID();
+                           		int primarykey = td.getTrainingDayHasWorkoutplanId();
+                           		tdMapper.deleteTrainingDayFromWorkoutplan(i, workoutplanId, primarykey);
+                             
+                           	
+                           		trainingDayList.remove(position);
+                           		adapter12 = new StableArrayAdapter(getApplicationContext(), R.layout.listview_training_day, trainingDayList);
+                           		((DynamicListView) listView).setCheeseList(trainingDayList);
+                           		listView.setAdapter(adapter12);
+                           		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); 
+                               	
+                                   
+                                   
+                               }
+                           //    adapter12.notifyDataSetChanged();
+                           }
+                       });
+       listView.setOnTouchListener(touchListener);
+       // Setting this scroll listener is required to ensure that during ListView scrolling,
+       // we don't look for swipes.
+       listView.setOnScrollListener(touchListener.makeScrollListener());
 	}
 
 	@Override
@@ -113,12 +161,13 @@ public class ManageWorkoutplan extends Activity implements OnItemClickListener {
 		
 		
 	}
-	public void addtoList(ArrayList<TrainingDay> trainingdayList) {
+	public void addtoList(ArrayList<TrainingDay> trainingdayList1) {
 		
 		
-		trainingDayAdapter.clear();
-		trainingDayAdapter.addAll(trainingdayList);
-		trainingDayAdapter.notifyDataSetChanged();
+		adapter12 = new StableArrayAdapter(this, R.layout.listview_training_day, trainingdayList1);
+		listView.setCheeseList(trainingdayList1);
+	       listView.setAdapter(adapter12);
+	       listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); 
 	}
 
 	public void setWorkoutplanId(int id) {

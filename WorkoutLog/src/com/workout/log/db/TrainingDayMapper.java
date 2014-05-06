@@ -32,9 +32,11 @@ public class TrainingDayMapper {
 	}
 		
 	// Hinzufügen von Trainingstagen
-	public void add(TrainingDay d){
-		int id = 0;
+	public void add(Editable d){
+		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "INSERT INTO TrainingDay (TrainingDayName) VALUES ('"+ d + "')";
+		db.execSQL(sql);
 		db.close();
 	}
 	
@@ -50,11 +52,12 @@ public class TrainingDayMapper {
 		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		
-		sql = "SELECT TrainingDay_Id FROM WorkoutplanHasTrainingDay WHERE Workoutplan_Id = " + workoutplanId;
+		sql = "SELECT TrainingDay_Id, WorkoutplanHasTrainingDay_Id FROM WorkoutplanHasTrainingDay WHERE Workoutplan_Id = " + workoutplanId;
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
 			do{
 				TrainingDay d = getTrainingDayById(Integer.parseInt(cursor.getString(0)));
+				d.setTrainingDayHasWorkoutplanId(cursor.getInt(1));
 				trainingdayList.add(d);
 			}while(cursor.moveToNext());
 		}
@@ -122,6 +125,12 @@ public class TrainingDayMapper {
 		db.close();
 	}
 	
+	public void deleteTrainingDayFromWorkoutplan(int trainingDayId, int workoutplanId, int primarykey) {
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "DELETE FROM WorkoutplanHasTrainingDay WHERE TrainingDay_Id=" + trainingDayId + " AND Workoutplan_Id=" + workoutplanId + " AND WorkoutplanHasTrainingDay_Id=" + primarykey +"";
+		db.execSQL(sql);
+		db.close();
+	}
 	
 }
 
