@@ -39,15 +39,15 @@ public class WorkoutplanSelect extends Activity  implements OnItemLongClickListe
 	private ArrayList<Workoutplan> wList;
 	private WorkoutplanMapper wMapper;
 	private static final String PREF_FIRST_LAUNCH = "first";
-	//Attribute für Menü
+	//Variables for the NavigationDrawer
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
 
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
-	CustomDrawerAdapter adapter1;
-	MenueListe l = new MenueListe();
+	private CustomDrawerAdapter adapter1;
+	private MenueListe l = new MenueListe();
 	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,34 +94,17 @@ public class WorkoutplanSelect extends Activity  implements OnItemLongClickListe
 	@Override
 	protected void onResume(){
 		super.onResume();
-		int index = 0;
-		boolean found = false;
 		workoutplanListView = (ListView) findViewById(R.id.workoutplanList);
 		//Select the current Workoutplan
 		wMapper = new WorkoutplanMapper(this);
 		wList = wMapper.getAll();
-		Workoutplan current = wMapper.getCurrent();
 		
 		WorkoutplanListAdapter adapter = new WorkoutplanListAdapter(this,0,wList);
 		workoutplanListView.setAdapter(adapter);
 		
 		workoutplanListView.setOnItemClickListener(this);
 		workoutplanListView.setOnItemLongClickListener(this);
-		/*
-		//Set the Background Resource of the Current Workoutplan
-		for (Workoutplan w : wList){
-			if (current.equals(w)){
-				//Select Current Workoutplan
-				selectItem(index, workoutplanListView);
-				found = true;
-			}
-			index++;
-		}
-		if (found = false){
-			//If there is no Current Workoutplan then select the first Entry as Standard Value
-			selectItem(1, workoutplanListView);
-		}
-		*/
+
 		storeSharedPref(false);
 	}
 	/**

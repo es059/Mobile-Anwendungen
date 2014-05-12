@@ -19,7 +19,7 @@
 		    tools:context="com.workout.log.ExerciseOverview"
 		    tools:ignore="MergeRootFrame" >
 		
-		      <fragment
+		    <fragment
 				android:id="@+id/add_searchBar"
 				android:name="com.workout.log.fragment.ActionBarSearchBarFragment"
 				android:layout_width="match_parent"

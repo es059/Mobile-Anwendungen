@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class ExerciseAddDialogFragment extends DialogFragment {
@@ -54,12 +55,12 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View view = inflater.inflate(R.layout.dialogfragment_exercise_add, null);
 		
-		alert.setTitle("Übung hinzufügen");
-		alert.setMessage("Bitte geben sie den Namen Ihrer Übung hier ein und wählen Sie passende Muskelgruppe aus:");
-
+		alert.setTitle("Übung hinzufügen");	
+		// Set an TextView view to view the InformationText
+		TextView informationText = (TextView) view.findViewById(R.id.TextView_Information);
+		informationText.setText("Bitte geben sie den Namen Ihrer Übung hier ein \n und wählen Sie passende Muskelgruppe aus:");
 		// Set an EditText view to get user input 
 		exerciseName = (EditText) view.findViewById(R.id.EditText_ExerciseName);
-		//
 		// initialize Spinner to get muscleGroup
 		muscleGroup = (Spinner) view.findViewById(R.id.Spinner_MuscleGroup);
 		// Create an ArrayAdapter using the string array and a default spinner layout

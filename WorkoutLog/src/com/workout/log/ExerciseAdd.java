@@ -46,82 +46,54 @@ import android.widget.Toast;
 
 public class ExerciseAdd extends Activity implements ExerciseSelectionDialogListener, OnItemLongClickListener {
 	// Attribute für Menü 1
-		private DrawerLayout mDrawerLayout;
-	    private ListView mDrawerListe;
-	    private ActionBarDrawerToggle mDrawerToggle;
+	private DrawerLayout mDrawerLayout;
+	private ListView mDrawerListe;
+	private ActionBarDrawerToggle mDrawerToggle;
 
-	    private CharSequence mDrawerTitle;
-	    private CharSequence mTitle;
-	    private CustomDrawerAdapter adapter;
-	    private MenueListe l = new MenueListe();
-	    private EditText search;
-	    private ArrayList<Exercise> List;
-	    private ExerciseListWithoutSetsRepsAdapter a;
-	    private ListView exerciseListView;
-	    private DialogFragment dialogFragment;
-	    private Toast toast;
-	    private ArrayList<String> abc;
-	 //   private DynamicListView dlv = new DynamicListView(this);
-	//  int i;
-	    
-	  private  ExerciseMapper em = new ExerciseMapper(this);
-	
-	 private  WorkoutplanMapper m = new WorkoutplanMapper(this);
+	private CharSequence mDrawerTitle;
+	private CharSequence mTitle;
+	private CustomDrawerAdapter adapter;
+	private MenueListe l = new MenueListe();
+	private EditText search;
+	private ArrayList<Exercise> List;
+	private ExerciseListWithoutSetsRepsAdapter a;
+	private ListView exerciseListView;
+	private DialogFragment dialogFragment;
+	private Toast toast;
+	private ArrayList<String> abc;
+	//private DynamicListView dlv = new DynamicListView(this);  
+	private  ExerciseMapper em = new ExerciseMapper(this);
+	private  WorkoutplanMapper m = new WorkoutplanMapper(this);
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.exercise_add);
-		
-		 
-	abc = new ArrayList<String>();
-	abc = em.getAllbyString();
-	List = new ArrayList<Exercise>();
-	List = em.getAll();
-		
+
+		abc = new ArrayList<String>();
+		abc = em.getAllbyString();
+		List = new ArrayList<Exercise>();
+		List = em.getAll();
 		
 		final Toast toast = Toast.makeText(this, "Übung wurde gelöscht!", Toast.LENGTH_SHORT );
-		
 		search = (EditText) findViewById(R.id.searchbar_text);
-		
 		exerciseListView = (ListView) findViewById(R.id.add_exerciseList);
-		
 		a = new ExerciseListWithoutSetsRepsAdapter(this , R.layout.listview_exercise_without_repssets, List);
 		exerciseListView.setAdapter(a);
-		
 		exerciseListView.setOnItemLongClickListener(this);
-		search.addTextChangedListener(new TextWatcher() 
-		  {
-	          
-	          public void beforeTextChanged(CharSequence s, int start, int count, int after)
-	          {
-	                    
-	          }
-	 
-	          public void onTextChanged(CharSequence s, int start, int before, int count)
-	          {
-	        	 
-	          }
+		search.addTextChangedListener(new TextWatcher() {
+			public void beforeTextChanged(CharSequence s, int start, int count, int after){}
 
-	          public void afterTextChanged(Editable s)
-	          {
-	              
-	        	  a.clear();
-	        	  List =   em.searchKeyString(String.valueOf(s));
-	        	  
-	        	  
-	        	  a.addAll(List);
-	        	  a.notifyDataSetChanged();
-	        	  exerciseListView.invalidateViews();
-	        	  
-	          }
+	        public void onTextChanged(CharSequence s, int start, int before, int count){}
+
+	        public void afterTextChanged(Editable s){
+	        	a.clear();
+	        	List =   em.searchKeyString(String.valueOf(s));
+	        	a.addAll(List);
+	        	a.notifyDataSetChanged();
+	        	exerciseListView.invalidateViews(); 
+	        }
 	  });
-
-		
-	
-	//	ArrayList<Exercise> uebungList = new ArrayList<Exercise>();
-	//	ExerciseListAdapter ExerciseAdapter = new ExerciseListAdapter(null, 0, uebungList);
-	//	exerciseListView.setAdapter(ExerciseAdapter);
 		
 		// Initializing
 	       

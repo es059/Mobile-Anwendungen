@@ -197,7 +197,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemClickLi
 		OverviewAdapter adapter = new OverviewAdapter(this, listComplete);
 		exerciseView.setAdapter(adapter);
 	}
-		
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
