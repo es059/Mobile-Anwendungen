@@ -22,6 +22,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.app.ActivityOptions;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -240,13 +241,15 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemClickLi
 	 */
 	private void openExerciseSpecific (Exercise exercise){
 		Intent intent = new Intent();
+		Bundle bundleanimation = ActivityOptions.makeCustomAnimation(this, 
+				R.anim.slide_in_left,R.anim.slide_over_left).toBundle();	
 		ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = 
 				(ActionBarTrainingDayPickerFragment) getFragmentManager().findFragmentById(R.id.overview_trainingDayPicker);
 		intent.setClass(this, ExerciseSpecific.class);
 		intent.putExtra("ExerciseID", exercise.getId());
 		intent.putExtra("ExerciseName", exercise.getName());
 		intent.putExtra("TrainingDayId", actionBarTrainingDayPickerFragment.getCurrentTrainingDay().getId());
-		startActivity(intent);
+		startActivity(intent,bundleanimation);
 	}
 	
 /*	public void showDialogLongClickFragment(){

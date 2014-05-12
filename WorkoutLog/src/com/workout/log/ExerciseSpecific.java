@@ -15,6 +15,7 @@ import com.workout.log.fragment.ActionBarDatePickerFragment;
 import com.workout.log.listAdapter.PerformanceActualListAdapter;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -139,11 +140,20 @@ public class ExerciseSpecific extends Activity {
 	@Override
 	public Intent getParentActivityIntent() {
 		savePerformanceActual();
+		Bundle bundleanimation = ActivityOptions.makeCustomAnimation(this, 
+				R.anim.slide_in_left,R.anim.slide_over_left).toBundle();
 		Intent intent = new Intent();
 		intent.setClass(this, ExerciseOverview.class);
 		intent.putExtra("TrainingDayId", trainingDayId);
 		intent.putExtra("SaveMode", saveMode);
-		return intent;
+		startActivity(intent,bundleanimation);
+		
+		/**
+		 * tempIntent to "trick" the method
+		 */
+		Intent tempIntent = new Intent();
+		tempIntent = null;
+		return tempIntent;
 	}
 	
 	@Override
@@ -170,10 +180,12 @@ public class ExerciseSpecific extends Activity {
 	 */
 	public void openExerciseOverview(){
 		Intent intent = new Intent();
+		Bundle bundleanimation = ActivityOptions.makeCustomAnimation(this, 
+				R.anim.slide_in_left,R.anim.slide_over_left).toBundle();
 		intent.setClass(this, ExerciseOverview.class);
 		intent.putExtra("TrainingDayId", trainingDayId);
 		intent.putExtra("SaveMode", saveMode);
-		startActivity(intent);
+		startActivity(intent,bundleanimation);
 	}
 	
 	/**
