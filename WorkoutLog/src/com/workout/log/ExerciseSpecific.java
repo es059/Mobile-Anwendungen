@@ -12,19 +12,28 @@ import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.PerformanceActualMapper;
 import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.fragment.ActionBarDatePickerFragment;
+import com.workout.log.fragment.ActionBarTrainingDayPickerFragment;
 import com.workout.log.listAdapter.PerformanceActualListAdapter;
+import com.workout.log.navigation.OnBackPressedListener;
+import com.workout.log.navigation.OnHomePressedListener;
 
-import android.app.Activity;
-import android.app.ActivityOptions;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.View.OnKeyListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-public class ExerciseSpecific extends Activity {
+
+public class ExerciseSpecific extends Fragment {
   
 	private ListView exerciseView;
 	private Exercise exercise;
@@ -35,29 +44,63 @@ public class ExerciseSpecific extends Activity {
 	private Boolean saveMode = false;
 	
 	private PerformanceActualListAdapter adapter;
+	private ExerciseOverview exerciseOverview = new ExerciseOverview();
 	private PerformanceActualMapper paMapper;
 	private ArrayList<PerformanceActual> performanceActualList;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.exercise_specific);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.exercise_specific, container, false);
 		
-		getActionBar().setHomeButtonEnabled(true);
+		/**
+		 * Load the top navigation fragment into the current fragment
+		 */
+	    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.replace(R.id.specific_dateTimePicker, new ActionBarDatePickerFragment(), "DateTimePicker");
+        transaction.addToBackStack(null);
+        transaction.commit();
+        
+		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+		setHasOptionsMenu(true);
 		
-		exerciseView = (ListView) findViewById(R.id.exerciseSpecificList);
+		/**
+		 * Handles the behavior if the back button is pressed
+		 */
+		((HelperActivity)getActivity()).setOnBackPressedListener(new OnBackPressedListener(){
+			@Override
+			public void doBack() {
+				savePerformanceActual();
+				openExerciseOverview();	
+			}		
+		});
+		/**
+		 * Handles the behavior if the Home button in the actionbar is pressed
+		 */
+		((HelperActivity)getActivity()).setOnHomePressedListener(new OnHomePressedListener(){
+			@Override
+			public Intent doHome() {
+				savePerformanceActual();
+				openExerciseOverview();	
+				return null;
+			}		
+		});
+		
+		exerciseView = (ListView) view.findViewById(R.id.exerciseSpecificList);
 		
 		//Übergabe der Exercise ID und Name
-		final Bundle intentExtras = getIntent().getExtras();
-		if (intentExtras != null){	
+		final Bundle transferExtras = getArguments();
+		if (transferExtras != null){	
 			try{
-				trainingDayId = intentExtras.getInt("TrainingDayId");
-				exerciseId = intentExtras.getInt("ExerciseID");
-				getActionBar().setTitle(intentExtras.getString("ExerciseName"));
+				trainingDayId = transferExtras.getInt("TrainingDayId");
+				exerciseId = transferExtras.getInt("ExerciseID");
+				getActivity().getActionBar().setTitle(transferExtras.getString("ExerciseName"));
 			} catch (Exception e){
 				e.printStackTrace();
 			}
 		}
+		
+		return view;
 		
 	}
 	/**
@@ -65,13 +108,13 @@ public class ExerciseSpecific extends Activity {
 	 * 
 	 */
 	@Override
-	protected void onResume(){
+	public void onResume(){
 		super.onResume();
 		//Exercise Mapper + Object		
-		ExerciseMapper eMapper = new ExerciseMapper(this);
+		ExerciseMapper eMapper = new ExerciseMapper(getActivity());
 		exercise = eMapper.getExerciseById(exerciseId);
 		//PerformanceActual Mapper + Object Liste
-		paMapper = new PerformanceActualMapper(this);
+		paMapper = new PerformanceActualMapper(getActivity());
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		performanceActualList = paMapper.getCurrentPerformanceActual(exercise, sp.format(new Date()));
 		
@@ -89,7 +132,7 @@ public class ExerciseSpecific extends Activity {
 	 * 
 	 */
 	public ArrayList<PerformanceActual> prepareStandardListView(){
-		PerformanceTargetMapper ptMapper = new PerformanceTargetMapper(this);
+		PerformanceTargetMapper ptMapper = new PerformanceTargetMapper(getActivity());
 		PerformanceTarget performanceTarget = ptMapper.getPerformanceTargetByExerciseId(exercise);
 		
 		performanceActualList = new ArrayList<PerformanceActual>();
@@ -111,49 +154,14 @@ public class ExerciseSpecific extends Activity {
 	 * @author Eric Schmidt
 	 */
 	public void updateListView(ArrayList<PerformanceActual> pa){
-		adapter = new PerformanceActualListAdapter(this, 0, pa);
+		adapter = new PerformanceActualListAdapter(getActivity(), 0, pa);
 		exerciseView.setAdapter(adapter);
 	}
-	
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.exercise_specific_menu, menu);
-		return true;
-	}
-	/**
-	 * If the user press the Back Button, the content will be saved
-	 * 
-	 */
-	@Override 
-	public void onBackPressed(){
-		savePerformanceActual();
-		openExerciseOverview();
-	}
-	
-	/**
-	 * Overrides the functionality of the Menu Home Button
-	 * 
-	 */
-	@Override
-	public Intent getParentActivityIntent() {
-		savePerformanceActual();
-		Bundle bundleanimation = ActivityOptions.makeCustomAnimation(this, 
-				R.anim.slide_in_left,R.anim.slide_over_left).toBundle();
-		Intent intent = new Intent();
-		intent.setClass(this, ExerciseOverview.class);
-		intent.putExtra("TrainingDayId", trainingDayId);
-		intent.putExtra("SaveMode", saveMode);
-		startActivity(intent,bundleanimation);
 		
-		/**
-		 * tempIntent to "trick" the method
-		 */
-		Intent tempIntent = new Intent();
-		tempIntent = null;
-		return tempIntent;
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.exercise_specific_menu, menu);
 	}
 	
 	@Override
@@ -179,13 +187,19 @@ public class ExerciseSpecific extends Activity {
 	 * @author Eric Schmidt
 	 */
 	public void openExerciseOverview(){
-		Intent intent = new Intent();
-		Bundle bundleanimation = ActivityOptions.makeCustomAnimation(this, 
-				R.anim.slide_in_left,R.anim.slide_over_left).toBundle();
-		intent.setClass(this, ExerciseOverview.class);
-		intent.putExtra("TrainingDayId", trainingDayId);
-		intent.putExtra("SaveMode", saveMode);
-		startActivity(intent,bundleanimation);
+		Bundle data = new Bundle();
+		
+	    data.putInt("TrainingDayId",trainingDayId);
+	    data.putBoolean("SaveMode",saveMode);
+		
+	    exerciseOverview = new ExerciseOverview();
+	    exerciseOverview.setArguments(data);
+	    
+	    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.replace(R.id.fragment_container, exerciseOverview , "ExerciseOverview");
+        transaction.addToBackStack(null);
+        transaction.commit();
 	}
 	
 	/**
@@ -202,7 +216,7 @@ public class ExerciseSpecific extends Activity {
 		//Set the ArrayList on the current value
 		performanceActualList = adapter.getPerformanceActualList();
 		//Show the User a hint message
-		Toast.makeText(this, "Neuen Satz hinzugefügt!", Toast.LENGTH_SHORT).show();
+		Toast.makeText(getActivity(), "Neuen Satz hinzugefügt!", Toast.LENGTH_SHORT).show();
 	}
 
 	/**
@@ -217,13 +231,13 @@ public class ExerciseSpecific extends Activity {
 			adapter.notifyDataSetChanged();
 			exerciseView.invalidateViews();
 			//Remove Entry from Database
-			paMapper = new PerformanceActualMapper(this);
+			paMapper = new PerformanceActualMapper(getActivity());
 			paMapper.deletePerformanceActualById(performanceActual.getId());
 			//Set the ArrayList on the current value
 			performanceActualList = adapter.getPerformanceActualList();
-			Toast.makeText(this, "Letzten Satz entfernt!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), "Letzten Satz entfernt!", Toast.LENGTH_SHORT).show();
 		}else{
-			Toast.makeText(this, "Keine weiteren Sätze verfügbar!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), "Keine weiteren Sätze verfügbar!", Toast.LENGTH_SHORT).show();
 		}
 	}
 	
@@ -232,7 +246,7 @@ public class ExerciseSpecific extends Activity {
 	 * 
 	 */
 	public void savePerformanceActual(){ 
-		PerformanceActualMapper pMapper = new PerformanceActualMapper(this);
+		PerformanceActualMapper pMapper = new PerformanceActualMapper(getActivity());
 		ActionBarDatePickerFragment dateFragment = (ActionBarDatePickerFragment) getFragmentManager().findFragmentById(R.id.specific_dateTimePicker);
 		for(PerformanceActual item : performanceActualList){
 			View v = exerciseView.getChildAt(item.getSet() -1);

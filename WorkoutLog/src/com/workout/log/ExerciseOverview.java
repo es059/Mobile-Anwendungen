@@ -24,34 +24,35 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.app.ActivityOptions;
 import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnKeyListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 
-public class ExerciseOverview extends ActionBarActivity implements OnItemClickListener, ExerciseSelectionDialogListener  {
+public class ExerciseOverview extends Fragment implements OnItemClickListener, ExerciseSelectionDialogListener  {
 
 	private static ListView exerciseView; 
-	private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
-
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
-
-    private CustomDrawerAdapter adapter;
-    private MenueListe l = new MenueListe();
+    
+    private static ExerciseSpecific exerciseSpecific = new ExerciseSpecific();
+    public static ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = new ActionBarTrainingDayPickerFragment();
     
     /**
-     * Variabels for the UpdateListView methode
+     * Variables for the UpdateListView method
      */
 	private ArrayList<TrainingDay> tList;
 	private ArrayList<Exercise> eList;
@@ -61,41 +62,34 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemClickLi
 	private MuscleGroupMapper mMapper;
     
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.exercise_overview);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.exercise_overview, container, false);
+
+		/**
+		 * Add the top navigation fragment to the current fragment
+		 */
+	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.replace(R.id.overview_trainingDayPicker, new ActionBarTrainingDayPickerFragment(), "TrainingDayPicker");
+        transaction.addToBackStack(null);
+        transaction.commit();
 		
-        mTitle = mDrawerTitle = getTitle();
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-                    GravityCompat.START);
-        
-        // Add Drawer Item to dataList
-        adapter = new CustomDrawerAdapter(this, R.layout.custom_drawer_item, l.getDataList());
-        mDrawerList.setAdapter(adapter);
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-
-       mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                    R.drawable.ic_drawer, R.string.drawer_open,
-                    R.string.drawer_close) {
-              public void onDrawerClosed(View view) {
-                    getActionBar().setTitle(mTitle);
-                    invalidateOptionsMenu(); // creates call to
-                                                              // onPrepareOptionsMenu()
-              }
-              public void onDrawerOpened(View drawerView) {
-                    getActionBar().setTitle(mDrawerTitle);
-                    invalidateOptionsMenu(); // creates call to
-                    // onPrepareOptionsMenu()
-              }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);   	
-        mDrawerLayout.setDrawerListener(mDrawerToggle);      
+        /**
+         * This code block handles the behavior of the Back button
+         */
+        view.setFocusableInTouchMode(true);
+        view.setOnKeyListener( new OnKeyListener(){
+			@Override
+			public boolean onKey(View arg0, int arg1, KeyEvent arg2) {
+				  if( arg1 == KeyEvent.KEYCODE_BACK )
+	                {
+	                    return true;
+	                }
+	                return false;
+			}
+        } );
+               
+        return view;
 	}
     /**
      * If the Activity was called through a intent, 
@@ -105,17 +99,19 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemClickLi
      * @date 18.04.2014
      */  
 	@Override
-	protected void onResume(){
+	public void onResume(){
 		super.onResume();
-		final Bundle intentExtras = getIntent().getExtras();
-		exerciseView = (ListView) findViewById(R.id.exerciseOverviewList);
-		if (intentExtras != null){	
+		
+		final Bundle transferExtras = getArguments();
+		exerciseView = (ListView) getView().findViewById(R.id.exerciseOverviewList);
+		if (transferExtras != null){	
 			try{
-				if (intentExtras.getBoolean("SaveMode")){
-					Toast.makeText(this, "Daten wurden gespeichert", Toast.LENGTH_SHORT).show();
+				if (transferExtras.getBoolean("SaveMode")){
+					Toast.makeText(getActivity(), "Daten wurden gespeichert", Toast.LENGTH_SHORT).show();
 				}
-				int trainingDayId = intentExtras.getInt("TrainingDayId");
-				ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = (ActionBarTrainingDayPickerFragment) getFragmentManager().findFragmentById(R.id.overview_trainingDayPicker);
+				int trainingDayId = transferExtras.getInt("TrainingDayId");
+				actionBarTrainingDayPickerFragment = (ActionBarTrainingDayPickerFragment) getActivity().
+						getFragmentManager().findFragmentByTag("TrainingDayPicker");
 				actionBarTrainingDayPickerFragment.setCurrentTrainingDay(trainingDayId);
 			} catch (Exception e){
 				e.printStackTrace();
@@ -125,8 +121,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemClickLi
 		}
 		exerciseView.setOnItemClickListener(this);
 	}
-	
-	  
+	 
 	/**
 	 * Updates Exercise ListViews using the ExerciseListAdapter. 
 	 * Ensures that there are no unnecessary Database queries
@@ -137,23 +132,22 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemClickLi
 	 * @author Eric Schmidt
 	 */
 	public void ExerciseListViewUpdate(){
-		exerciseView = (ListView) findViewById(R.id.exerciseOverviewList);
 		if (tList == null){
 			//Select Current Workoutplan
-			WorkoutplanMapper wMapper = new WorkoutplanMapper(this);
+			WorkoutplanMapper wMapper = new WorkoutplanMapper(getActivity());
 			Workoutplan w = wMapper.getCurrent();
 			//Select all Trainingdays from the current Workoutplan
-			TrainingDayMapper tMapper = new TrainingDayMapper(this);
+			TrainingDayMapper tMapper = new TrainingDayMapper(getActivity());
 			tList = tMapper.getAll(w.getId());
 		}
 		if (!tList.isEmpty()){
 			if (mList == null){	
 				//Select all MuscleGroups
-				MuscleGroupMapper mMapper = new MuscleGroupMapper(this);
+				MuscleGroupMapper mMapper = new MuscleGroupMapper(getActivity());
 				mList = mMapper.getAll();
 			}
 			//Select Exercises from Selected Trainingday and MuscleGroup 
-			ExerciseMapper eMapper = new ExerciseMapper(this);
+			ExerciseMapper eMapper = new ExerciseMapper(getActivity());
 			eList = eMapper.getExerciseByTrainingDay(tList.get(0).getId());
 			listComplete = new ArrayList<ExerciseItem>();
 			for (MuscleGroup m : mList){
@@ -164,7 +158,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemClickLi
 				}
 			}
 			
-			OverviewAdapter adapter = new OverviewAdapter(this, listComplete);
+			OverviewAdapter adapter = new OverviewAdapter(getActivity(), listComplete);
 			exerciseView.setAdapter(adapter);
 		}
 	}
@@ -177,14 +171,13 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemClickLi
 	 * @author Eric Schmidt
 	 */
 	public void ExerciseListViewUpdate(int trainingDayId){
-		exerciseView = (ListView) findViewById(R.id.exerciseOverviewList);
 		if (mList == null){	
 			//Select all MuscleGroups
-			MuscleGroupMapper mMapper = new MuscleGroupMapper(this);
+			MuscleGroupMapper mMapper = new MuscleGroupMapper(getActivity());
 			mList = mMapper.getAll();
 		}
 		//Select Exercises from Selected Trainingday and MuscleGroup 
-		ExerciseMapper eMapper = new ExerciseMapper(this);
+		ExerciseMapper eMapper = new ExerciseMapper(getActivity());
 		eList = eMapper.getExerciseByTrainingDay(trainingDayId);
 		listComplete = new ArrayList<ExerciseItem>();
 		for (MuscleGroup m : mList){
@@ -195,31 +188,25 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemClickLi
 			}
 		}
 		
-		OverviewAdapter adapter = new OverviewAdapter(this, listComplete);
+		OverviewAdapter adapter = new OverviewAdapter(getActivity(), listComplete);
 		exerciseView.setAdapter(adapter);
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.exercise_overview_menu, menu);
-		return true;
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.exercise_overview_menu, menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		
-	     if (mDrawerToggle.onOptionsItemSelected(item)) {
-	            return true;
-	      }
 		Intent intent= null;
 		switch (item.getItemId()){
 			case R.id.menu_add:
 				intent = new Intent();
-				intent.setClass(this, ExerciseAdd.class);
+				intent.setClass(getActivity(), ExerciseAdd.class);
 				startActivity(intent);
-				WorkoutplanMapper m = new WorkoutplanMapper(this);
+				WorkoutplanMapper m = new WorkoutplanMapper(getActivity());
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -240,16 +227,23 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemClickLi
 	 * @author Eric Schmidt
 	 */
 	private void openExerciseSpecific (Exercise exercise){
-		Intent intent = new Intent();
-		Bundle bundleanimation = ActivityOptions.makeCustomAnimation(this, 
-				R.anim.slide_in_left,R.anim.slide_over_left).toBundle();	
+		
+		Bundle data = new Bundle();
 		ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = 
-				(ActionBarTrainingDayPickerFragment) getFragmentManager().findFragmentById(R.id.overview_trainingDayPicker);
-		intent.setClass(this, ExerciseSpecific.class);
-		intent.putExtra("ExerciseID", exercise.getId());
-		intent.putExtra("ExerciseName", exercise.getName());
-		intent.putExtra("TrainingDayId", actionBarTrainingDayPickerFragment.getCurrentTrainingDay().getId());
-		startActivity(intent,bundleanimation);
+				(ActionBarTrainingDayPickerFragment) getFragmentManager().findFragmentByTag("TrainingDayPicker");
+		
+        data.putInt("ExerciseID",exercise.getId());
+        data.putString("ExerciseName",exercise.getName());
+        data.putInt("TrainingDayId",actionBarTrainingDayPickerFragment.getCurrentTrainingDay().getId());
+        
+		exerciseSpecific = new ExerciseSpecific();
+        exerciseSpecific.setArguments(data);
+        
+	    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.replace(R.id.fragment_container, exerciseSpecific , "ExerciseSpecific");
+        transaction.addToBackStack(null);
+        transaction.commit();
 	}
 	
 /*	public void showDialogLongClickFragment(){
@@ -264,55 +258,4 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemClickLi
 		
 	}
 
-	/**
-	 * A placeholder fragment containing a simple view.
-	 * 
-	 *
-	 */
-	public void SelectItem(int possition) { 
-		Intent intent= null;
-		switch(possition) {
-			case 0:
-				intent = new Intent();
-				intent.setClass(this, ExerciseOverview.class);
-				startActivity(intent);
-				break;
-			case 1: 
-				intent = new Intent();
-				intent.setClass(this, ManageWorkoutplan.class);
-				startActivity(intent);
-				break;
-			case 2: 
-				intent = new Intent();
-				intent.setClass(this, ManageTrainingDays.class);
-				startActivity(intent);
-				break;
-			case 3: 
-				intent = new Intent();
-				intent.setClass(this, ExerciseAdd.class);
-				startActivity(intent);
-				break;
-			case 4: 
-				intent = new Intent();
-				intent.setClass(this, GraphActivity.class);
-				startActivity(intent);
-				break;
-		}
-	}
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-	      super.onConfigurationChanged(newConfig);
-	      // Pass any configuration change to the drawer toggles
-	      mDrawerToggle.onConfigurationChanged(newConfig);
-	}
-	private class DrawerItemClickListener implements
-    ListView.OnItemClickListener {
-			
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-		          long id) {
-		    SelectItem(position);
-		
-		}
-	}
 }

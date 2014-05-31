@@ -44,7 +44,7 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 			trainingDayPicker.setText(trainingDayList.get(index).getName());
 		}
 		
-		exerciseOverview = (ExerciseOverview) getActivity();
+		exerciseOverview = (ExerciseOverview) getActivity().getFragmentManager().findFragmentByTag("ExerciseOverview");
 		
 		next = (ImageButton) view.findViewById(R.id.Next);
 		previous = (ImageButton) view.findViewById(R.id.Previous);

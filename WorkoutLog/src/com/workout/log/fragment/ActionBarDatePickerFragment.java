@@ -46,7 +46,7 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 		dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 		
 		paMapper = new PerformanceActualMapper(getActivity());
-		exerciseSpecific = (ExerciseSpecific) getActivity();
+		exerciseSpecific = (ExerciseSpecific) getActivity().getFragmentManager().findFragmentByTag("ExerciseSpecific");
 		
 		next = (ImageButton) view.findViewById(R.id.Next);
 		previous = (ImageButton) view.findViewById(R.id.Previous);

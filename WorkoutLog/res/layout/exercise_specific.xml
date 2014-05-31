@@ -6,14 +6,12 @@
     tools:context="com.workout.log.ExerciseSpecific"
     tools:ignore="MergeRootFrame" >
 
-    <fragment
+    <FrameLayout
         android:id="@+id/specific_dateTimePicker"
-        android:name="com.workout.log.fragment.ActionBarDatePickerFragment"
         android:layout_width="match_parent"
         android:layout_height="@dimen/actionbar_height"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        tools:layout="@layout/actionbar_datepicker_fragment" />
+        android:layout_centerHorizontal="true" />
 
     <ListView
         android:id="@+id/exerciseSpecificList"
