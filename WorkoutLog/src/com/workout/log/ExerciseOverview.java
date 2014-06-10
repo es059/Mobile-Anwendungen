@@ -185,7 +185,7 @@ public class ExerciseOverview extends ActionBarActivity implements OnItemLongCli
 		case 1: 
 			Intent intent1= null;
 			intent1 = new Intent();
-			intent1.setClass(this, WorkoutplanSelect.class);
+			intent1.setClass(this, ManageWorkoutplan.class);
 			startActivity(intent1);
 			break;
 		case 2: 

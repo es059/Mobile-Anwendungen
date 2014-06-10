@@ -16,11 +16,7 @@
         <activity
             android:name="com.workout.log.ExerciseOverview"
             android:label="@string/app_name" >
-             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            
+               
         </activity>
         <activity
             android:name="com.workout.log.ExerciseSpecific"
@@ -32,9 +28,7 @@
         </activity>
         <activity
             android:name="com.workout.log.ExerciseAdd"
-            android:label="@string/title_activity_add"
-           >
-           
+            android:label="@string/title_activity_add" >
         </activity>
         <activity
             android:name="com.workout.log.WorkoutplanAdd"
@@ -45,14 +39,34 @@
                 android:value="com.workout.log.ExerciseOverview" />
         </activity>
         <activity
-            android:name="com.workout.log.TrainingDayAdd"
-            android:label="@string/title_activity_training_day_add"
-             >
-           
+            android:name="com.workout.log.ManageTrainingDays"
+            android:label="@string/title_activity_training_day_add" >
         </activity>
         <activity
             android:name="com.workout.log.WorkoutplanSelect"
             android:label="@string/title_activity_workout_select" >
+        </activity>
+        <activity
+            android:name="com.workout.log.ExerciseAddToTrainingDay"
+            android:label="@string/title_activity_exercise_add_to_training_day" >
+        </activity>
+        <activity
+            android:name="com.workout.log.TrainingDayExerciseOverview"
+            android:label="@string/title_activity_training_day_exercise_overview" >
+        </activity>
+        <activity
+            android:name="com.workout.log.ManageWorkoutplan"
+            android:label="@string/title_activity_manage_workoutplan" >
+         
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.workout.log.TrainingDayAddToWorkoutplan"
+            android:label="@string/title_activity_training_day_add_to_workoutplan" >
         </activity>
     </application>
 

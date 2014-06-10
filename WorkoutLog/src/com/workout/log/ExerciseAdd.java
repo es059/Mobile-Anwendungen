@@ -77,13 +77,13 @@ public class ExerciseAdd extends Activity implements ExerciseSelectionDialogList
 	abc = em.getAllbyString();
 	List = new ArrayList<Exercise>();
 	List = em.getAll();
-		StableArrayAdapter adapter12 = new StableArrayAdapter(this, R.layout.listview_exercise_without_repssets, List);
+	/*	StableArrayAdapter adapter12 = new StableArrayAdapter(this, R.layout.listview_exercise_without_repssets, List);
 	        DynamicListView listView = (DynamicListView) findViewById(R.id.listview);
 
 	       listView.setCheeseList(List);
 	      listView.setAdapter(adapter12);
 	       listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); 
-		
+		*/
 		final Toast toast = Toast.makeText(this, "Übung wurde gelöscht!", Toast.LENGTH_SHORT );
 		
 		search = (EditText) findViewById(R.id.trainingDay_subject);
@@ -147,9 +147,7 @@ public class ExerciseAdd extends Activity implements ExerciseSelectionDialogList
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                    R.drawable.ic_drawer, R.string.drawer_open,
-                    R.string.drawer_close) {
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
               public void onDrawerClosed(View view) {
                     getActionBar().setTitle(mTitle);
                     invalidateOptionsMenu(); // creates call to
