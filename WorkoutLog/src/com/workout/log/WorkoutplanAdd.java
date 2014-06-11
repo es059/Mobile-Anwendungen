@@ -10,6 +10,8 @@ import com.workout.log.bo.Exercise;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.data.Default;
 import com.workout.log.data.MenueListe;
+import com.workout.log.fragment.ActionBarSearchBarFragment;
+import com.workout.log.fragment.ActionBarWorkoutPlanSubjectFragment;
 import com.workout.log.listAdapter.CustomDrawerAdapter;
 import com.workout.log.listAdapter.DefaultAddListAdapter;
 import com.workout.log.listAdapter.TrainingDayListAdapter;
@@ -17,12 +19,14 @@ import com.workout.log.listAdapter.TrainingDayListAdapter;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,15 +36,17 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.os.Build;
 
-public class WorkoutplanAdd extends Activity implements OnItemClickListener {
+public class WorkoutplanAdd extends Fragment implements OnItemClickListener {
 	
+	private View view;
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.workoutplan_add);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+		super.onCreateView(inflater, container, savedInstanceState);
+		view = inflater.inflate(R.layout.workoutplan_add, container,false);	
 		
 		//ListView defaultListView = (ListView) findViewById(R.id.workoutplan_add_list);
-		ListView trainingDayListView = (ListView) findViewById(R.id.workoutplan_trainingDay_list);
+		ListView trainingDayListView = (ListView) view.findViewById(R.id.workoutplan_trainingDay_list);
 		
 		/*
 		//Default ListAdapter mit Hinzufügen-Eintrag
@@ -51,30 +57,39 @@ public class WorkoutplanAdd extends Activity implements OnItemClickListener {
 		defaultListView.setAdapter(adapter);
 		defaultListView.setOnItemClickListener(this);
 		*/
-		
+		/**
+		 * Add the searchBar fragment to the current fragment
+		 */
+	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.replace(R.id.workoutplan_fragment, new ActionBarWorkoutPlanSubjectFragment(), "ActionBarWorkoutPlanSubjectFragment");
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+		setHasOptionsMenu(true);
 	
-		
+		return view;
 	}
+
+	
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.exercise_overview_menu, menu);
-		return true;
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.exercise_overview_menu, menu);
+		super.onCreateOptionsMenu(menu, inflater);
 	}
+
+
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		Intent intent= null;
 		switch (item.getItemId()){
 			case R.id.menu_add:
-				intent = new Intent();
-				intent.setClass(this, ManageTrainingDays.class);
-				startActivity(intent);
+				FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		        transaction.replace(R.id.fragment_container, new ManageTrainingDays(), "ManageTrainingDays");
+		        transaction.addToBackStack(null);
+		        transaction.commit();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -86,8 +101,10 @@ public class WorkoutplanAdd extends Activity implements OnItemClickListener {
 	}
 	
 	public void openTrainingDayAdd(){
-		Intent intent = new Intent();
-		intent.setClass(this, ManageTrainingDays.class);
-		startActivity(intent);
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.replace(R.id.fragment_container, new ManageTrainingDays(), "ManageTrainingDays");
+        transaction.addToBackStack(null);
+        transaction.commit();
 	}
 }

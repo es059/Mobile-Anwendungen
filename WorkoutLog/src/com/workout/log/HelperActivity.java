@@ -1,6 +1,6 @@
 package com.workout.log;
 
-import java.util.Stack;
+
 
 import com.example.workoutlog.R;
 import com.workout.log.data.MenueListe;
@@ -9,9 +9,6 @@ import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -90,12 +87,17 @@ public class HelperActivity extends Activity  {
 		if (!firstTimeCheck()){
 		    FragmentTransaction transaction = getFragmentManager().beginTransaction();
 	        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-	        transaction.replace(R.id.fragment_container, new ExerciseOverview(), "ExerciseOverview");
+	        transaction.replace(R.id.fragment_container, new ExerciseAdd(), "ExerciseAdd");
 	        transaction.addToBackStack(null);
 	        transaction.commit();
 		}else{
-			startActivity(new Intent(this, WorkoutplanSelect.class));
-		    finish();
+			//startActivity(new Intent(this, WorkoutplanSelect.class));
+		    //finish();
+			 FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		        transaction.replace(R.id.fragment_container, new ExerciseAdd(), "ExerciseAdd");
+		        transaction.addToBackStack(null);
+		        transaction.commit();
 		}
 	}
 	/**
@@ -136,32 +138,42 @@ public class HelperActivity extends Activity  {
 	 *
 	 */
 	public void SelectItem(int possition) { 
-		Intent intent= null;
+		FragmentTransaction transaction;
 		switch(possition) {
 			case 0:
-				intent = new Intent();
-				intent.setClass(this, ExerciseOverview.class);
-				startActivity(intent);
+				transaction = getFragmentManager().beginTransaction();
+			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			    transaction.replace(R.id.fragment_container, new ExerciseOverview(), "ExerciseOverview");
+			    transaction.addToBackStack(null);
+			    transaction.commit();
 				break;
 			case 1: 
-				intent = new Intent();
-				intent.setClass(this, ManageWorkoutplan.class);
-				startActivity(intent);
+				transaction = getFragmentManager().beginTransaction();
+			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			    transaction.replace(R.id.fragment_container, new ManageWorkoutplan(), "ManageWorkoutplan");
+			    transaction.addToBackStack(null);
+			    transaction.commit();
 				break;
 			case 2: 
-				intent = new Intent();
-				intent.setClass(this, ManageTrainingDays.class);
-				startActivity(intent);
+				transaction = getFragmentManager().beginTransaction();
+			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			    transaction.replace(R.id.fragment_container, new ManageTrainingDays(), "ManageTrainingDays");
+			    transaction.addToBackStack(null);
+			    transaction.commit();
 				break;
 			case 3: 
-				intent = new Intent();
-				intent.setClass(this, ExerciseAdd.class);
-				startActivity(intent);
+				transaction = getFragmentManager().beginTransaction();
+			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			    transaction.replace(R.id.fragment_container, new ExerciseAdd(), "ExerciseAdd");
+			    transaction.addToBackStack(null);
+			    transaction.commit();
 				break;
 			case 4: 
-				intent = new Intent();
-				intent.setClass(this, GraphActivity.class);
-				startActivity(intent);
+				transaction = getFragmentManager().beginTransaction();
+			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			    transaction.replace(R.id.fragment_container, new GraphActivity(), "GraphActivity");
+			    transaction.addToBackStack(null);
+			    transaction.commit();
 				break;
 		}
 	}

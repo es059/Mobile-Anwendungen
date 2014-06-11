@@ -3,117 +3,45 @@ package com.workout.log;
 import java.util.ArrayList;
 
 import com.example.workoutlog.R;
-import com.example.workoutlog.R.id;
-import com.example.workoutlog.R.layout;
-import com.example.workoutlog.R.menu;
-import com.workout.log.bo.Exercise;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.bo.Workoutplan;
-import com.workout.log.data.MenueListe;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.db.WorkoutplanMapper;
-import com.workout.log.dialog.TrainingDayAddToWorkoutplanDialogFragment;
 import com.workout.log.fragment.ActionBarWorkoutPlanPickerFragment;
-import com.workout.log.listAdapter.CustomDrawerAdapter;
 import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
-import com.workout.log.listAdapter.TrainingDayListAdapter;
-import com.workout.log.listAdapter.WorkoutplanListAdapter;
-
-import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
-import android.content.Intent;
-import android.content.res.Configuration;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.os.Build;
 
-public class ManageWorkoutplan extends Activity implements OnItemClickListener {
+public class ManageWorkoutplan extends Fragment implements OnItemClickListener {
 	
-	private ImageButton pre;
-	private ImageButton next;
-	private TextView trainingDay;
-	private ListView trainingDayListView;
+	
 	private DynamicListView listView;
 	private ArrayList<Workoutplan> workoutplanList;
 	private ArrayList<TrainingDay> trainingDayList;
-	
-	private TrainingDayListAdapter trainingDayAdapter; 
 	private StableArrayAdapter adapter12;
 	private WorkoutplanMapper wpMapper;
 	private TrainingDayMapper tdMapper;
 	private int workoutplanId =1;
-	private Bundle intent;
-	private ActionBarWorkoutPlanPickerFragment actionBarWorkoutPlanPickerFragment;
 	int tdId = 0;
+	private View view;
 	
-	/**
-	 * Variable of the DrawerMenu
-	 */
-	private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
-
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
-
-    private CustomDrawerAdapter adapter;
-    private MenueListe l = new MenueListe();
 	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_manage_workoutplan);
+    @Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+		super.onCreateView(inflater, container, savedInstanceState);
+		view = inflater.inflate(R.layout.activity_manage_workoutplan, container,false);
 		
-		/**
-		 * Add the Drawer to the Activity
-		 * 
-		 * @author Remi Tessier
-		 */
-        mTitle = mDrawerTitle = getTitle();
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-                    GravityCompat.START);
-        
-        // Add Drawer Item to dataList
-        adapter = new CustomDrawerAdapter(this, R.layout.custom_drawer_item, l.getDataList());
-        mDrawerList.setAdapter(adapter);
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                    R.drawable.ic_drawer, R.string.drawer_open,
-                    R.string.drawer_close) {
-              public void onDrawerClosed(View view) {
-                    getActionBar().setTitle(mTitle);
-                    invalidateOptionsMenu(); // creates call to
-                                                              // onPrepareOptionsMenu()
-              }
-              public void onDrawerOpened(View drawerView) {
-                    getActionBar().setTitle(mDrawerTitle);
-                    invalidateOptionsMenu(); // creates call to
-                    // onPrepareOptionsMenu()
-              }
-         };
-         mDrawerLayout.setDrawerListener(mDrawerToggle);   	
-         mDrawerLayout.setDrawerListener(mDrawerToggle);		
-		
+		return view;
 	}
 	
 	/**
@@ -123,13 +51,13 @@ public class ManageWorkoutplan extends Activity implements OnItemClickListener {
 	 * @author Eric Schmidt
 	 */
 	@Override
-	protected void onResume(){
+	public void onResume(){
 		super.onResume();
 		workoutplanList = new ArrayList<Workoutplan>();
 		trainingDayList = new ArrayList<TrainingDay>();
 
-		wpMapper = new WorkoutplanMapper(this);
-		tdMapper = new TrainingDayMapper(this);
+		wpMapper = new WorkoutplanMapper(getActivity());
+		tdMapper = new TrainingDayMapper(getActivity());
 		workoutplanList = wpMapper.getAll();
 		for(int i = 0; i < workoutplanList.size(); i++) {
 			if(workoutplanList.get(i).getId() == workoutplanId) {
@@ -137,8 +65,8 @@ public class ManageWorkoutplan extends Activity implements OnItemClickListener {
 			}}
 		trainingDayList = tdMapper.getAll(workoutplanList.get(tdId).getId());
 		
-		adapter12 = new StableArrayAdapter(this, R.layout.listview_training_day, trainingDayList);
-		listView = (DynamicListView) findViewById(R.id.TrainingDayList);
+		adapter12 = new StableArrayAdapter(getActivity(), R.layout.listview_training_day, trainingDayList);
+		listView = (DynamicListView) view.findViewById(R.id.TrainingDayList);
 		listView.setCheeseList(trainingDayList);
 		listView.setAdapter(adapter12);
 		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); 
@@ -169,7 +97,7 @@ public class ManageWorkoutplan extends Activity implements OnItemClickListener {
                              
                            	
                            		trainingDayList.remove(position);
-                           		adapter12 = new StableArrayAdapter(getApplicationContext(), R.layout.listview_training_day, trainingDayList);
+                           		adapter12 = new StableArrayAdapter(getActivity(), R.layout.listview_training_day, trainingDayList);
                            		((DynamicListView) listView).setCheeseList(trainingDayList);
                            		listView.setAdapter(adapter12);
                            		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); 
@@ -184,26 +112,36 @@ public class ManageWorkoutplan extends Activity implements OnItemClickListener {
 		// Setting this scroll listener is required to ensure that during ListView scrolling,
 		// we don't look for swipes.
 		listView.setOnScrollListener(touchListener.makeScrollListener());
-	}
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+		
+		/**
+		 * Add the searchBar fragment to the current fragment
+		 */
+	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.replace(R.id.specific_dateTimePicker, new ActionBarWorkoutPlanPickerFragment(), "ActionBarWorkoutPlanPickerFragment");
+        transaction.addToBackStack(null);
+        transaction.commit();
 
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.workoutplan_menu, menu);
-		return true;
+		setHasOptionsMenu(true);
+	}
+	
+	
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.workoutplan_menu, menu);
+		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-	    }
 		switch (item.getItemId()){
 		case R.id.menu_add:
-			Intent intent = new Intent();
-			intent.putExtra("WorkoutplanId", workoutplanId);
-			intent.setClass(this, TrainingDayAddToWorkoutplan.class);
-			startActivity(intent);
+			 FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		     transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		     transaction.replace(R.id.fragment_container, new TrainingDayAddToWorkoutplan(), "TrainingDayAddToWorkoutplan");
+		     transaction.addToBackStack(null);
+		     transaction.commit();
 			break; 
 			}
 		return super.onOptionsItemSelected(item);
@@ -218,65 +156,23 @@ public class ManageWorkoutplan extends Activity implements OnItemClickListener {
 		
 	}
 	public void addtoList(ArrayList<TrainingDay> trainingdayList1) {
-		adapter12 = new StableArrayAdapter(this, R.layout.listview_training_day, trainingdayList1);
+		adapter12 = new StableArrayAdapter(getActivity(), R.layout.listview_training_day, trainingdayList1);
 		listView.setCheeseList(trainingdayList1);
-	       listView.setAdapter(adapter12);
-	       listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); 
+	    listView.setAdapter(adapter12);
+	    listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); 
 	}
 
 	public void setWorkoutplanId(int id) {
 	 workoutplanId = id;
 		}
+
+	public int getWorkoutplanId() {
+		return workoutplanId;
+	}
 	
-	/**
-	 * Following Block contains the code for the DrawerMenu
-	 */
-	public void SelectItem(int possition) { 
-		Intent intent= null;
-		switch(possition) {
-			case 0:
-				intent = new Intent();
-				intent.setClass(this, ExerciseOverview.class);
-				startActivity(intent);
-				break;
-			case 1: 
-				intent = new Intent();
-				intent.setClass(this, ManageWorkoutplan.class);
-				startActivity(intent);
-				break;
-			case 2: 
-				intent = new Intent();
-				intent.setClass(this, ManageTrainingDays.class);
-				startActivity(intent);
-				break;
-			case 3: 
-				intent = new Intent();
-				intent.setClass(this, ExerciseAdd.class);
-				startActivity(intent);
-				break;
-			case 4: 
-				intent = new Intent();
-				intent.setClass(this, GraphActivity.class);
-				startActivity(intent);
-				break;
-		}
-	}
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-	      super.onConfigurationChanged(newConfig);
-	      // Pass any configuration change to the drawer toggles
-	      mDrawerToggle.onConfigurationChanged(newConfig);
-	}
-	private class DrawerItemClickListener implements
-    ListView.OnItemClickListener {
-			
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-		          long id) {
-		    SelectItem(position);
-		
-		}
-	}
+	
+	
+	
 	
 	
 }

@@ -1,6 +1,7 @@
 package com.workout.log.dialog;
 
 import com.example.workoutlog.R;
+import com.workout.log.ExerciseAddToTrainingDay;
 import com.workout.log.TrainingDayExerciseOverview;
 import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.TrainingDayMapper;
@@ -9,6 +10,7 @@ import com.workout.log.listAdapter.ExerciseListAdapter;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -71,8 +73,8 @@ public class ExerciseClickDialogFragment extends DialogFragment {
 	//	alert.setMessage("Wollen Sie diese Übung dem ausgewählten Trainingstag hinzufügen?");
 		alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
-				String ETS = ETSatzanzahl.toString().trim();
-				String ETW = ETwdhAnzahl.toString().trim();
+				String ETS = ETSatzanzahl.getText().toString();
+				String ETW = ETwdhAnzahl.getText().toString();
 				
 				if(ETS.isEmpty() || ETW.isEmpty()) {
 					toast1.show();
@@ -80,9 +82,13 @@ public class ExerciseClickDialogFragment extends DialogFragment {
 				}else {
 				tdMapper.ExerciseAddToTrainingDay(trainingDayId, exerciseId, ETSatzanzahl.getText(), ETwdhAnzahl.getText() );
 				toast.show();
-				Intent intent = new Intent();
-				intent.setClass(getActivity(), TrainingDayExerciseOverview.class);
-				startActivity(intent);
+				
+				FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		        transaction.replace(R.id.fragment_container, new TrainingDayExerciseOverview(), "TrainingDayExerciseOverview");
+		        transaction.addToBackStack(null);
+		        transaction.commit();
+				
 				}
 					
 			  }

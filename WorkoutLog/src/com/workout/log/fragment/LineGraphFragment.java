@@ -2,7 +2,6 @@ package com.workout.log.fragment;
 
 import com.example.workoutlog.R;
 import com.workout.log.bo.Exercise;
-import com.workout.log.db.ExerciseMapper;
 import com.workout.log.graph.LineGraph;
 
 import android.app.Fragment;
@@ -14,14 +13,12 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class LineGraphFragment extends Fragment{
-	private LinearLayout mLayout;
-	private static ExerciseMapper eMapper;
+	private static LinearLayout mLayout = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState){
-		ViewGroup view = (ViewGroup) inflater.inflate(R.layout.line_graph_fragment, null);
-		mLayout = (LinearLayout) view.findViewById(R.id.graph);
-		eMapper = new ExerciseMapper(getActivity());
+		View view = (View) inflater.inflate(R.layout.line_graph_fragment, null);
+		if (mLayout == null) mLayout = (LinearLayout) view.findViewById(R.id.graph);
 		return view;
 	}
 	

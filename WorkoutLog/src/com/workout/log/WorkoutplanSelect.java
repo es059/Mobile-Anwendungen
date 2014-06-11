@@ -1,90 +1,49 @@
 package com.workout.log;
 
 import java.util.ArrayList;
-
 import com.example.workoutlog.R;
-import com.workout.log.bo.Exercise;
 import com.workout.log.bo.Workoutplan;
-import com.workout.log.data.MenueListe;
 import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment.ExerciseSelectionDialogListener;
-import com.workout.log.listAdapter.CustomDrawerAdapter;
 import com.workout.log.listAdapter.WorkoutplanListAdapter;
-
-import android.app.Activity;
-import android.app.DialogFragment;
-import android.app.ListActivity;
-import android.content.Intent;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
-public class WorkoutplanSelect extends Activity  implements OnItemLongClickListener, OnItemClickListener, ExerciseSelectionDialogListener{
+public class WorkoutplanSelect extends Fragment  implements OnItemLongClickListener, OnItemClickListener, ExerciseSelectionDialogListener{
+	
 	private ListView workoutplanListView;
-	private View lastView;
 	private ArrayList<Workoutplan> wList;
 	private WorkoutplanMapper wMapper;
 	private static final String PREF_FIRST_LAUNCH = "first";
-	//Variables for the NavigationDrawer
-	private DrawerLayout mDrawerLayout;
-	private ListView mDrawerList;
-	private ActionBarDrawerToggle mDrawerToggle;
+	
 
-	private CharSequence mDrawerTitle;
-	private CharSequence mTitle;
-	private CustomDrawerAdapter adapter1;
-	private MenueListe l = new MenueListe();
+	private int currentWorkoutplanId = 0;
+	private String currentWorkoutplanName = "";
+	
+	private View view;
 	 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.workoutplan_select);
-				
-		// Initializing 
-	    mTitle = mDrawerTitle = getTitle();
-	    mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-	    mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-	    mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-	                GravityCompat.START);
-	    
-	    // Add Drawer Item to dataList
-        adapter1 = new CustomDrawerAdapter(this, R.layout.custom_drawer_item, l.getDataList());
-        mDrawerList.setAdapter(adapter1);
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                    R.drawable.ic_drawer, R.string.drawer_open,
-                    R.string.drawer_close) {
-              public void onDrawerClosed(View view) {
-                    getActionBar().setTitle(mTitle);
-                    invalidateOptionsMenu(); // creates call to
-                    // onPrepareOptionsMenu()
-              }
-              public void onDrawerOpened(View drawerView) {
-                    getActionBar().setTitle(mDrawerTitle);
-                    invalidateOptionsMenu(); // creates call to
-                    // onPrepareOptionsMenu()
-              }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle); 
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+		super.onCreateView(inflater, container, savedInstanceState);
+		
+		view = inflater.inflate(R.layout.workoutplan_select, container,false);	
+		
+		setHasOptionsMenu(true);
+		return view;
 	}
 	/**
 	 * Initialize the ListView content
@@ -92,14 +51,14 @@ public class WorkoutplanSelect extends Activity  implements OnItemLongClickListe
 	 * @author Eric Schmidt
 	 */
 	@Override
-	protected void onResume(){
+	public void onResume(){
 		super.onResume();
-		workoutplanListView = (ListView) findViewById(R.id.workoutplanList);
+		workoutplanListView = (ListView) view.findViewById(R.id.workoutplanList);
 		//Select the current Workoutplan
-		wMapper = new WorkoutplanMapper(this);
+		wMapper = new WorkoutplanMapper(getActivity());
 		wList = wMapper.getAll();
 		
-		WorkoutplanListAdapter adapter = new WorkoutplanListAdapter(this,0,wList);
+		WorkoutplanListAdapter adapter = new WorkoutplanListAdapter(getActivity(),0,wList);
 		workoutplanListView.setAdapter(adapter);
 		
 		workoutplanListView.setOnItemClickListener(this);
@@ -125,28 +84,25 @@ public class WorkoutplanSelect extends Activity  implements OnItemLongClickListe
 	 * @param false if not first time
 	 */
 	protected void storeSharedPref(Boolean firstTime){
-		SharedPreferences isLogged = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences isLogged = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		SharedPreferences.Editor editor = isLogged.edit();
 		editor.putBoolean(PREF_FIRST_LAUNCH, firstTime);
 		editor.commit();
 	}
 	
+	
+
+	
+	
+	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.workoutplan_menu, menu);
-		return true;
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.workoutplan_menu, menu);
+		super.onCreateOptionsMenu(menu, inflater);
 	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-      }
+		
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -157,12 +113,12 @@ public class WorkoutplanSelect extends Activity  implements OnItemLongClickListe
 		//Alternative Lösung
 	    Workoutplan w = (Workoutplan) workoutplanListView.getItemAtPosition(position);
 	    wMapper.setCurrent(w.getId());
-	    
-	    Intent intent = new Intent();
-	    intent.setClass(this, TrainingDaySelect.class);
-	    intent.putExtra("WorkoutplanId", w.getId());
-	    intent.putExtra("WorkoutplanName", w.getName());
-	    startActivity(intent);
+	    currentWorkoutplanId = w.getId();
+	    currentWorkoutplanName = w.getName();
+	    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.replace(R.id.fragment_container, new TrainingDaySelect(), "TrainingDaySelect");
+      
 	    
 		/*
 	       if(lastView==null){
@@ -200,50 +156,21 @@ public class WorkoutplanSelect extends Activity  implements OnItemLongClickListe
 		
 	}
 	
-	public void SelectItem(int possition) { 
-		
-		switch(possition) {
-		case 0:
-			Intent intent= null;
-			intent = new Intent();
-			intent.setClass(this, ExerciseOverview.class);
-			startActivity(intent);
-			break;
-		case 1: 
-			Intent intent1= null;
-			intent1 = new Intent();
-			intent1.setClass(this, WorkoutplanSelect.class);
-			startActivity(intent1);
-			break;
-		case 2: 
-			break;
-		case 3: 
-			Intent intent2= null;
-			intent2 = new Intent();
-			intent2.setClass(this, ExerciseAdd.class);
-			startActivity(intent2);
-			break;
-		}
-		
-		/**
-		 * TODOO
-		 * 
-		 */
-	}
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-	      super.onConfigurationChanged(newConfig);
-	      // Pass any configuration change to the drawer toggles
-	      mDrawerToggle.onConfigurationChanged(newConfig);
-	}
-	private class DrawerItemClickListener implements
-    ListView.OnItemClickListener {
-		
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-	          long id) {
-	    SelectItem(position);
 	
+
+	public int getCurrentWorkoutplanId() {
+		return currentWorkoutplanId;
 	}
-}
+	public void setCurrentWorkoutplanId(int currentWorkoutplanId) {
+		this.currentWorkoutplanId = currentWorkoutplanId;
+	}
+	public String getCurrentWorkoutplanName() {
+		return currentWorkoutplanName;
+	}
+	public void setCurrentWorkoutplanName(String currentWorkoutplanName) {
+		this.currentWorkoutplanName = currentWorkoutplanName;
+	}
+	
+	
+	
 }

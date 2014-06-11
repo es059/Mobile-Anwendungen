@@ -5,15 +5,15 @@
     android:layout_height="match_parent"
     tools:context="com.workout.log.ExerciseOverview"
     tools:ignore="MergeRootFrame" >
-
-    <fragment
-        android:id="@+id/workoutplan_fragment"
-        android:name="com.workout.log.fragment.ActionBarWorkoutPlanSubjectFragment"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/actionbar_height"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        tools:layout="@layout/actionbar_workoutplan_subject_fragment"/>
+    
+     <FrameLayout
+		        android:id="@+id/workoutplan_fragment"
+		        android:layout_width="match_parent"
+		        android:layout_height="@dimen/actionbar_height"
+		        android:layout_alignParentTop="true"
+		        android:layout_centerHorizontal="true"
+		      
+		       />
     
     <ListView
         android:id="@+id/workoutplan_trainingDay_list"

@@ -3,66 +3,63 @@ package com.workout.log;
 import java.util.ArrayList;
 
 import com.example.workoutlog.R;
-import com.example.workoutlog.R.id;
-import com.example.workoutlog.R.layout;
-import com.example.workoutlog.R.menu;
 import com.workout.log.bo.Exercise;
 import com.workout.log.db.ExerciseMapper;
+import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.db.TrainingDayMapper;
+import com.workout.log.fragment.ActionBarSearchBarFragment;
+import com.workout.log.fragment.ActionBarTrainingDaySelectFragment;
 import com.workout.log.listAdapter.ExerciseListAdapter;
 import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
 
-import android.app.Activity;
-import android.app.ActionBar;
+
+
+
+
 import android.app.Fragment;
-import android.content.Intent;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.os.Build;
 
-public class TrainingDayExerciseOverview extends Activity {
+
+public class TrainingDayExerciseOverview extends Fragment {
 	private ListView exerciseListView;
 	private ArrayList<Exercise> exerciseList;
 	private ExerciseListAdapter exerciseListAdapter;
 	private ExerciseMapper eMapper;
 	private int trainingDayId;
-	private String trainingDayName;
-	private Bundle intent;
-	private TextView TvTrainingDayName;
 	private static TrainingDayMapper tdMapper;
+	private ManageTrainingDays manageTrainingDays;
+	private PerformanceTargetMapper ptMapper;
 	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.training_day_exercise_overview);
-		tdMapper = new TrainingDayMapper(this);
-		// Übergabe der Trainingtags-ID über das Intent 
-		intent = getIntent().getExtras();
-		trainingDayId = intent.getInt("trainingDayId");
-		trainingDayName = intent.getString("trainingDayName");
-		// Textview initialisierung 
-		TvTrainingDayName = (TextView) findViewById(R.id.aktuellerTrainingsplan);
-		// TextView den aktuellen TrainingsTag hinzufügen
-		TvTrainingDayName.setText(trainingDayName);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.training_day_exercise_overview, container, false);
 		
-		eMapper = new ExerciseMapper(this);
-		exerciseListView = (ListView) findViewById(R.id.ExerciseListView);
+		manageTrainingDays = (ManageTrainingDays) getActivity().getFragmentManager().findFragmentByTag("ManageTrainingDays");
+		tdMapper = new TrainingDayMapper(getActivity());
+		ptMapper = new PerformanceTargetMapper(getActivity());
+		// Übergabe der Trainingtags-ID über das Intent 
+		trainingDayId = manageTrainingDays.getActualTrainingDayId();
+		
+		
+		eMapper = new ExerciseMapper(getActivity());
+		exerciseListView = (ListView) view.findViewById(R.id.ExerciseListView);
 		exerciseList = new ArrayList<Exercise>();
 		exerciseList = eMapper.getExerciseByTrainingDay(trainingDayId);
-		exerciseListAdapter = new ExerciseListAdapter(this, R.layout.listview_exercise, exerciseList);
+		exerciseListAdapter = new ExerciseListAdapter(getActivity(), R.layout.listview_exercise, exerciseList);
 		exerciseListView.setAdapter(exerciseListAdapter);
 		
 		/**
 		 * Implementierung Swipe to dissmiss Funktion
 		 */
-		final Toast toast = Toast.makeText(this, "Übung wurde gelöscht!", Toast.LENGTH_SHORT );
+		final Toast toast = Toast.makeText(getActivity(), "Übung wurde gelöscht!", Toast.LENGTH_SHORT );
 		
 		SwipeDismissListViewTouchListener touchListener =
                 new SwipeDismissListViewTouchListener(
@@ -78,6 +75,7 @@ public class TrainingDayExerciseOverview extends Activity {
                                 for (int position : reverseSortedPositions) {
                                 	Exercise e = (Exercise) exerciseListView.getItemAtPosition(position);
                             		int i = e.getTrainingDayHasExerciseId();
+                            		ptMapper.deletePerformanceTarget(trainingDayId, e.getId());
                                 	tdMapper.exerciseDeleteFromTrainingDay(i);;
                                 	exerciseListAdapter.remove(exerciseListAdapter.getItem(position));
                                 	toast.show();
@@ -91,15 +89,30 @@ public class TrainingDayExerciseOverview extends Activity {
         // Setting this scroll listener is required to ensure that during ListView scrolling,
         // we don't look for swipes.
         exerciseListView.setOnScrollListener(touchListener.makeScrollListener());
+        
+        /**
+		 * Add the ActionBar fragment to the current fragment
+		 */
+	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.replace(R.id.training_day_select_fragment, new ActionBarTrainingDaySelectFragment(), "ActionBarTrainingDaySelectFragment");
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+		setHasOptionsMenu(true);
+        
+        return view;
 	}
+
+	
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.workoutplan_menu, menu);
-		return true;
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.workoutplan_menu, menu);
+		super.onCreateOptionsMenu(menu, inflater);
 	}
+
+
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -111,18 +124,18 @@ public class TrainingDayExerciseOverview extends Activity {
 			return true;
 		}
 		else if( id == R.id.menu_add){
-			openExerciseAddtoTrainingDay(trainingDayId);
+			FragmentTransaction transaction = getFragmentManager().beginTransaction();
+	        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+	        transaction.replace(R.id.fragment_container, new ExerciseAddToTrainingDay(), "ExerciseAddToTrainingDay");
+	        transaction.addToBackStack(null);
+	        transaction.commit();
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void openExerciseAddtoTrainingDay(int trainingDayId2) {
-		Intent intent = new Intent();
-		intent.putExtra("trainingDayId", trainingDayId);
-		intent.setClass(getApplicationContext(), ExerciseAddToTrainingDay.class);
-		startActivity(intent);
-		
-		
+	
+	public int getTrainingDayId() {
+		return trainingDayId;
 	}
 
 	

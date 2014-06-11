@@ -23,23 +23,20 @@
 		        tools:context="com.workout.log.ExerciseOverview"
 		        tools:ignore="MergeRootFrame" >
 		
-		        <fragment
+		        <FrameLayout
 		            android:id="@+id/overview_dateTimePicker"
-		            android:name="com.workout.log.fragment.ActionBarGraphFragment"
-		            android:layout_width="match_parent"
+				    android:layout_width="match_parent"
 		            android:layout_height="@dimen/actionbar_height"
 		            android:layout_alignParentTop="true"
-		            android:layout_centerHorizontal="true"
-		            tools:layout="@layout/actionbargraph_fragment" />
+		            android:layout_centerHorizontal="true" />
 		
-		        <fragment
+		        <FrameLayout
 		            android:id="@+id/lineGraph"
-		            android:name="com.workout.log.fragment.LineGraphFragment"
 		            android:layout_width="match_parent"
 		            android:layout_height="wrap_content"
 		            android:layout_below="@id/overview_dateTimePicker"
-		            android:layout_centerHorizontal="true"
-		            tools:layout="@layout/line_graph_fragment" />
+		            android:layout_centerHorizontal="true"/>
+		        
 		    </RelativeLayout>
 		</LinearLayout>
 	</FrameLayout>

@@ -3,99 +3,63 @@ package com.workout.log;
 import java.util.ArrayList;
 
 import com.example.workoutlog.R;
-import com.example.workoutlog.R.id;
-import com.example.workoutlog.R.layout;
-import com.example.workoutlog.R.menu;
 import com.workout.log.bo.Exercise;
 import com.workout.log.db.ExerciseMapper;
-import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.dialog.ExerciseAddDialogFragment;
 import com.workout.log.dialog.ExerciseClickDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment.ExerciseSelectionDialogListener;
-import com.workout.log.listAdapter.ExerciseListAdapter;
+import com.workout.log.fragment.ActionBarSearchBarFragment;
 import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
 import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
-
-import android.app.Activity;
-import android.app.ActionBar;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.os.Build;
 
-public class ExerciseAddToTrainingDay extends Activity implements ExerciseSelectionDialogListener, OnItemLongClickListener, OnItemClickListener {
-	private EditText search;
+public class ExerciseAddToTrainingDay extends Fragment implements ExerciseSelectionDialogListener, OnItemLongClickListener, OnItemClickListener {
+	
     private ArrayList<Exercise> List;
     private ExerciseListWithoutSetsRepsAdapter a;
     private ListView exerciseListView;
     private DialogFragment dialogFragment;
-    private  ExerciseMapper em = new ExerciseMapper(this);
-	private  WorkoutplanMapper m = new WorkoutplanMapper(this);
+    private  ExerciseMapper em;
 	private int trainingDayId;
 	private int exerciseId;
-	private Bundle intent;
-	private Toast toast;
+	
+	private TrainingDayExerciseOverview trainingDayExerciseOverview;
+	
+	
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.exercise_add);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.exercise_add, container, false);
 		
-		final Toast toast = Toast.makeText(this, "Übung wurde gelöscht!", Toast.LENGTH_SHORT );
+		em = new ExerciseMapper(getActivity());
+		final Toast toast = Toast.makeText(getActivity(), "Übung wurde gelöscht!", Toast.LENGTH_SHORT );
 		// Übergabe der Trainingtags-ID über das Intent 
-		intent = getIntent().getExtras();
-		trainingDayId = intent.getInt("trainingDayId");
+		trainingDayExerciseOverview = (TrainingDayExerciseOverview) getActivity().getFragmentManager().findFragmentByTag("TrainingDayExerciseOverview");
+		trainingDayId = trainingDayExerciseOverview.getTrainingDayId();
 		
-		search = (EditText) findViewById(R.id.searchbar_text);
-		
-		exerciseListView = (ListView) findViewById(R.id.add_exerciseList);
+		exerciseListView = (ListView) view.findViewById(R.id.add_exerciseList);
 		List = new ArrayList<Exercise>();
 		List = em.getAll();
-		a = new ExerciseListWithoutSetsRepsAdapter(this , R.layout.listview_exercise_without_repssets, List);
+		a = new ExerciseListWithoutSetsRepsAdapter(getActivity() , R.layout.listview_exercise_without_repssets, List);
 		exerciseListView.setAdapter(a);
 		exerciseListView.setOnItemLongClickListener(this);
 		exerciseListView.setOnItemClickListener(this);
-		search.addTextChangedListener(new TextWatcher() 
-		  {
-	          
-	          public void beforeTextChanged(CharSequence s, int start, int count, int after)
-	          {
-	                    
-	          }
-	 
-	          public void onTextChanged(CharSequence s, int start, int before, int count)
-	          {
-	        	 
-	          }
-
-	          public void afterTextChanged(Editable s)
-	          {
-	              
-	        	  a.clear();
-	        	  List =   em.searchKeyString(String.valueOf(s));
-	        	  
-	        	  
-	        	  a.addAll(List);
-	        	  a.notifyDataSetChanged();
-	        	  exerciseListView.invalidateViews();
-	        	  System.out.println(s);
-	          }
-	  });
 		
 		/**
 		 * Implementierung der Swipe to dissmiss-funktion 
@@ -130,16 +94,31 @@ public class ExerciseAddToTrainingDay extends Activity implements ExerciseSelect
         // Setting this scroll listener is required to ensure that during ListView scrolling,
         // we don't look for swipes.
         exerciseListView.setOnScrollListener(touchListener.makeScrollListener());
+        
+        /**
+		 * Add the searchBar fragment to the current fragment
+		 */
+	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.replace(R.id.add_searchBar, new ActionBarSearchBarFragment(), "ActionBarSearchBarFragment");
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+		setHasOptionsMenu(true);
+		
+		return view;
 
 	}
+
+	
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.workoutplan_menu, menu);
-		return true;
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.workoutplan_menu, menu);
+		super.onCreateOptionsMenu(menu, inflater);
 	}
+
+
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -155,7 +134,7 @@ public class ExerciseAddToTrainingDay extends Activity implements ExerciseSelect
 	}
 
 	public void showDialogAddFragment(){
-		DialogFragment dialogFragment = ExerciseAddDialogFragment.newInstance(this, a);
+		DialogFragment dialogFragment = ExerciseAddDialogFragment.newInstance(getActivity(), a);
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
 	}
 
@@ -195,13 +174,21 @@ public class ExerciseAddToTrainingDay extends Activity implements ExerciseSelect
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		Exercise e = (Exercise) arg0.getItemAtPosition(arg2);
 		exerciseId = e.getId();
-		showDialogClickFragment(this, trainingDayId, exerciseId);
+		showDialogClickFragment(getActivity(), trainingDayId, exerciseId);
 		
 	}
 	private void showDialogClickFragment(Context a, int  trainingDayId, int exerciseId) {
 		
 		dialogFragment = ExerciseClickDialogFragment.newInstance(a, trainingDayId, exerciseId);
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
+		
+	}
+	
+	public void updateAdapter(ArrayList<Exercise> List){
+		a.clear();
+    	a.addAll(List);
+    	a.notifyDataSetChanged();
+    	exerciseListView.invalidateViews(); 
 		
 	}
 

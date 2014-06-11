@@ -19,14 +19,17 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.Editable;
+import android.widget.Toast;
 
 public class WorkoutplanMapper   {
 
 	DataBaseHelper myDBHelper;
 	String sql;
+	Context context;
 	
 	
 	public WorkoutplanMapper(Context context){
+		this.context = context;
 		myDBHelper = new DataBaseHelper(context);
 		try {	 
 	       	myDBHelper.createDataBase();
@@ -68,6 +71,8 @@ public class WorkoutplanMapper   {
 		db.execSQL(sql);
 		sql = "Update Workoutplan SET Current = 1 WHERE Workoutplan_Id = " + workoutplanId;
 		db.execSQL(sql);
+		Toast toast = Toast.makeText(context, "Dieser Trainingsplan ist nun aktiv!", Toast.LENGTH_SHORT );
+		toast.show();
 		db.close();
 	}
 	public void  add(Workoutplan w) {

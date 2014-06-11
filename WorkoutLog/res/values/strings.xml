@@ -21,10 +21,13 @@
         <item>Ändern</item>
     </string-array>
     <string-array name="MuscleGroup">
-        <item>Beine</item>
         <item>Rücken</item>
+        <item>Bauch</item>
         <item>Brust</item>
-        <item>Arme</item>
+        <item>Beine</item>
+         <item>Trizpeps</item>
+          <item>Bizeps</item>
+           <item>Cardio</item>
     </string-array>
 
     <string name="title_activity_training_day_add">TrainingDayAdd</string>

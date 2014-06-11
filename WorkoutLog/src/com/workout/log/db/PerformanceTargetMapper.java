@@ -53,4 +53,11 @@ public class PerformanceTargetMapper {
 		return performanceTarget;
 	}
 	
+	public void deletePerformanceTarget(int trainingDayId, int exerciseId) {
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "DELETE FROM PerformanceTarget WHERE TrainingDay_Id=" + trainingDayId + " AND Exercise_Id=" + exerciseId + "";
+		db.execSQL(sql);
+		db.close();
+	}
+	
 }

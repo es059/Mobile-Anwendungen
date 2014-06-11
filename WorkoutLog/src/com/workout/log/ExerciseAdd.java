@@ -1,139 +1,68 @@
 package com.workout.log;
 
 import java.util.ArrayList;
-
-
-
-
-
-
-
-
-
 import com.example.workoutlog.R;
 import com.workout.log.listAdapter.*;
 import com.workout.log.bo.Exercise;
-import com.workout.log.data.MenueListe;
 import com.workout.log.db.ExerciseMapper;
-import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.dialog.ExerciseAddDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment;
 import com.workout.log.dialog.ExerciseLongClickDialogFragment.ExerciseSelectionDialogListener;
-import com.workout.log.listAdapter.CustomDrawerAdapter;
-import com.workout.log.listAdapter.ExerciseListAdapter;
+import com.workout.log.fragment.ActionBarSearchBarFragment;
 import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
-
-import android.app.Activity;
 import android.app.DialogFragment;
-import android.content.Intent;
-import android.content.res.Configuration;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class ExerciseAdd extends Activity implements ExerciseSelectionDialogListener, OnItemLongClickListener {
-	// Attribute für Menü 1
-	private DrawerLayout mDrawerLayout;
-	private ListView mDrawerListe;
-	private ActionBarDrawerToggle mDrawerToggle;
+/**
+ *  With this fragment the user can manage his exercises. You can delete, add, and update exercises. 
+ * @author remi
+ *
+ */
+public class ExerciseAdd extends Fragment implements ExerciseSelectionDialogListener, OnItemLongClickListener {
 
-	private CharSequence mDrawerTitle;
-	private CharSequence mTitle;
-	private CustomDrawerAdapter adapter;
-	private MenueListe l = new MenueListe();
-	private EditText search;
 	private ArrayList<Exercise> List;
-	private ExerciseListWithoutSetsRepsAdapter a;
+	private ExerciseListWithoutSetsRepsAdapter listAdapter;
 	private ListView exerciseListView;
 	private DialogFragment dialogFragment;
-	private Toast toast;
-	private ArrayList<String> abc;
-	//private DynamicListView dlv = new DynamicListView(this);  
-	private  ExerciseMapper em = new ExerciseMapper(this);
-	private  WorkoutplanMapper m = new WorkoutplanMapper(this);
+	
+	
+	private  ExerciseMapper em;
+	
+	
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.exercise_add);
-
-		abc = new ArrayList<String>();
-		abc = em.getAllbyString();
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.exercise_add, container, false);
+		// Iinitialize the exerciseMapper
+		em = new ExerciseMapper(getActivity());
+		// Initialize the ArrayList for the ListView Data
 		List = new ArrayList<Exercise>();
+		// Get All Exercises from the db and put them into the list
 		List = em.getAll();
 		
-		final Toast toast = Toast.makeText(this, "Übung wurde gelöscht!", Toast.LENGTH_SHORT );
-		search = (EditText) findViewById(R.id.searchbar_text);
-		exerciseListView = (ListView) findViewById(R.id.add_exerciseList);
-		a = new ExerciseListWithoutSetsRepsAdapter(this , R.layout.listview_exercise_without_repssets, List);
-		exerciseListView.setAdapter(a);
+		// initialize the ListView
+		exerciseListView = (ListView) view.findViewById(R.id.add_exerciseList);
+		// initialize the ListView Adapter
+		listAdapter = new ExerciseListWithoutSetsRepsAdapter(getActivity() , R.layout.listview_exercise_without_repssets, List);
+		// connect the ListView with the ListAdapter
+		exerciseListView.setAdapter(listAdapter);
+		
 		exerciseListView.setOnItemLongClickListener(this);
-		search.addTextChangedListener(new TextWatcher() {
-			public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-
-	        public void onTextChanged(CharSequence s, int start, int before, int count){}
-
-	        public void afterTextChanged(Editable s){
-	        	a.clear();
-	        	List =   em.searchKeyString(String.valueOf(s));
-	        	a.addAll(List);
-	        	a.notifyDataSetChanged();
-	        	exerciseListView.invalidateViews(); 
-	        }
-	  });
 		
-		// Initializing
-	       
-        mTitle = mDrawerTitle = getTitle();
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerListe= (ListView) findViewById(R.id.left_drawer);
-
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-                    GravityCompat.START);
-        
 		
-		// Add Drawer Item to dataList
-       
-		
-        adapter = new CustomDrawerAdapter(this, R.layout.custom_drawer_item, l.getDataList());
-        mDrawerListe.setAdapter(adapter);
-        mDrawerListe.setOnItemClickListener(new DrawerItemClickListener());
-        
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                    R.drawable.ic_drawer, R.string.drawer_open,
-                    R.string.drawer_close) {
-              public void onDrawerClosed(View view) {
-                    getActionBar().setTitle(mTitle);
-                    invalidateOptionsMenu(); // creates call to
-                                                              // onPrepareOptionsMenu()
-              }
-
-              public void onDrawerOpened(View drawerView) {
-                    getActionBar().setTitle(mDrawerTitle);
-                    invalidateOptionsMenu(); // creates call to
-                                                              // onPrepareOptionsMenu()
-              }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle); 
-        
-        
-        // Create a ListView-specific touch listener. ListViews are given special treatment because
+		// Create a ListView-specific touch listener. ListViews are given special treatment because
         // by default they handle touches for their list items... i.e. they're in charge of drawing
         // the pressed state (the list selector), handling list item clicks, etc.
         SwipeDismissListViewTouchListener touchListener =
@@ -151,41 +80,49 @@ public class ExerciseAdd extends Activity implements ExerciseSelectionDialogList
                                 	Exercise e = (Exercise) exerciseListView.getItemAtPosition(position);
                             		int i = e.getId();
                                 	em.delete(i);
-                                	a.remove(a.getItem(position));
+                                	listAdapter.remove(listAdapter.getItem(position));
+                                	final Toast toast = Toast.makeText(getActivity(), "Übung wurde gelöscht!", Toast.LENGTH_SHORT );
                                 	toast.show();
                                     
                                     
                                 }
-                                a.notifyDataSetChanged();
+                                listAdapter.notifyDataSetChanged();
                             }
                         });
         exerciseListView.setOnTouchListener(touchListener);
         // Setting this scroll listener is required to ensure that during ListView scrolling,
         // we don't look for swipes.
         exerciseListView.setOnScrollListener(touchListener.makeScrollListener());
+        
+        
+        /**
+		 * Add the searchBar fragment to the current fragment
+		 */
+	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.replace(R.id.add_searchBar, new ActionBarSearchBarFragment(), "ActionBarSearchBarFragment");
+        transaction.addToBackStack(null);
+        transaction.commit();
 
-      
-    }
-
-  
-	
-	 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-				getMenuInflater().inflate(R.menu.workoutplan_menu, menu);
-				return true;
+		setHasOptionsMenu(true);
+		return view;
 	}
+	
+	
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.workoutplan_menu, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+
+
+	
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-		}
+		
 		
 		switch (item.getItemId()){
 			case R.id.menu_add:
@@ -194,59 +131,12 @@ public class ExerciseAdd extends Activity implements ExerciseSelectionDialogList
 				}
 		return super.onOptionsItemSelected(item);
 	}
-	private class DrawerItemClickListener implements
-    ListView.OnItemClickListener {
-		
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-	          long id) {
-	    SelectItem(position);
 	
-	}
-}
-	public void SelectItem(int possition) { 
-		Intent intent= null;
-		switch(possition) {
-		case 0:
-			intent = new Intent();
-			intent.setClass(this, ExerciseOverview.class);
-			startActivity(intent);
-			break;
-		case 1: 
-			intent = new Intent();
-			intent.setClass(this, ManageWorkoutplan.class);
-			startActivity(intent);
-			break;
-		case 2: 
-			intent = new Intent();
-			intent.setClass(this, ManageTrainingDays.class);
-			startActivity(intent);
-			break;
-		case 3: 
-			intent = new Intent();
-			intent.setClass(this, ExerciseAdd.class);
-			startActivity(intent);
-			break;
-		case 4: 
-			intent = new Intent();
-			intent.setClass(this, GraphActivity.class);
-			startActivity(intent);
-			break;
-		}
-		
-		/**
-		 * TODOO
-		 * 
-		 */
-	}
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-	      super.onConfigurationChanged(newConfig);
-	      // Pass any configuration change to the drawer toggles
-	      mDrawerToggle.onConfigurationChanged(newConfig);
-	}
+	/**
+	 * Method which opens a DialogFragment to create a new exercise
+	 */
 	public void showDialogAddFragment(){
-		DialogFragment dialogFragment = ExerciseAddDialogFragment.newInstance(this, a);
+		DialogFragment dialogFragment = ExerciseAddDialogFragment.newInstance(getActivity(), listAdapter);
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
 	}
 
@@ -263,18 +153,26 @@ public class ExerciseAdd extends Activity implements ExerciseSelectionDialogList
 		
 		Exercise e = (Exercise) arg0.getItemAtPosition(arg2);
 		int i = e.getId();
-		showDialogLongClickFragment(i, a);
+		showDialogLongClickFragment(i, listAdapter);
 		
 		
 		
 		return false;
 	}
+	
+	
 public void listviewactual() {
-	 a.clear();
-	 a.addAll(em.getAll());
-	 a.notifyDataSetChanged();
+	listAdapter.clear();
+	listAdapter.addAll(em.getAll());
+	listAdapter.notifyDataSetChanged();
 	 exerciseListView.invalidateViews();
 }
+
+/**
+ * Method which opens a DialogFragment to update the selected item
+ * @param i is the ID of the Exercise 
+ * @param a is the Adapter
+ */
 	private void showDialogLongClickFragment(int i, ExerciseListWithoutSetsRepsAdapter a) {
 		
 		dialogFragment = ExerciseLongClickDialogFragment.newInstance(i, a);
@@ -282,6 +180,13 @@ public void listviewactual() {
 		
 	}
 
+	public void updateAdapter(ArrayList<Exercise> List){
+		listAdapter.clear();
+		listAdapter.addAll(List);
+		listAdapter.notifyDataSetChanged();
+    	exerciseListView.invalidateViews(); 
+		
+	}
 }
 
 

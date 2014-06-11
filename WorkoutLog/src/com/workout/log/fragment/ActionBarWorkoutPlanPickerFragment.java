@@ -2,7 +2,8 @@ package com.workout.log.fragment;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
+
+
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -10,10 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.workoutlog.R;
 import com.workout.log.ManageWorkoutplan;
@@ -21,7 +21,6 @@ import com.workout.log.bo.TrainingDay;
 import com.workout.log.bo.Workoutplan;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.db.WorkoutplanMapper;
-import com.workout.log.dialog.ExerciseAddDialogFragment;
 import com.workout.log.dialog.WorkoutplanAddDialogFragment;
 
 public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnClickListener  {
@@ -44,10 +43,8 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 		
 		//Reference ExerciseOverview Layout and set ListView 
 		View view = inflater.inflate(R.layout.actionbar_training_day_picker_fragment, container,false);
-		mW  = (ManageWorkoutplan) getActivity();
+		mW  = (ManageWorkoutplan) getActivity().getFragmentManager().findFragmentByTag("ManageWorkoutplan");
 		pre = (ImageButton) view.findViewById(R.id.Previous);
-		
-		
 		next = (ImageButton) view.findViewById(R.id.Next);
 		trainingDay = (TextView) view.findViewById(R.id.trainingDayPicker);
 		
@@ -97,10 +94,11 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 			trainingDay.setText(workoutplanList.get(tdId +1).getName());
 			mW.addtoList(tdMapper.getAll(workoutplanList.get(tdId +1).getId()));
 			mW.setWorkoutplanId(workoutplanList.get(tdId +1).getId());
+			wpMapper.setCurrent(workoutplanList.get(tdId +1).getId());
 			tdId += 1;
 			
 			if(workoutplanList.size() <= tdId +1) {
-				next.setImageDrawable(getResources().getDrawable(R.drawable.ic_content_new_event));
+				next.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_add));
 				
 			}
 			
@@ -113,6 +111,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 			trainingDay.setText(workoutplanList.get(tdId -1).getName());
 			mW.addtoList(tdMapper.getAll(workoutplanList.get(tdId -1).getId()));
 			mW.setWorkoutplanId(workoutplanList.get(tdId - 1).getId());
+			wpMapper.setCurrent(workoutplanList.get(tdId -1).getId());
 			tdId -= 1;
 			if(tdId == 0) {
 				pre.setVisibility(View.INVISIBLE);
