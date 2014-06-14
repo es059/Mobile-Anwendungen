@@ -6,11 +6,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.PerformanceActual;
-import com.workout.log.bo.PerformanceTarget;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -21,6 +19,7 @@ import android.database.sqlite.SQLiteDatabase;
  * 
  * @author Eric Schmidt
  */
+@SuppressLint("SimpleDateFormat") 
 public class PerformanceActualMapper {
 	private DataBaseHelper myDBHelper;
 	private String sql;
@@ -55,13 +54,25 @@ public class PerformanceActualMapper {
 	}
 	
 	/**
+	 * Delete all Entries in PerformanceActual where the given exercise occurs
+	 * 
+	 * @param e the exercise to be deleted
+	 * @author Eric Schmidt
+	 */
+	public void deleteExerciseFromPerfromanceActual(Exercise e){
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "DELETE FROM PerformanceActual WHERE Exercise_Id =" + e.getId() + "";
+		db.execSQL(sql);
+		db.close();
+	}
+	
+	/**
 	 * Select all the Dates which are present in the database
 	 * 
 	 * @param exercise
 	 * @return
 	 */
 	public ArrayList<String> getAllDates(Exercise exercise){
-		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		ArrayList<String> date = new ArrayList<String>();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 		sql = "SELECT DISTINCT TimestampActual FROM PerformanceActual WHERE Exercise_Id ="

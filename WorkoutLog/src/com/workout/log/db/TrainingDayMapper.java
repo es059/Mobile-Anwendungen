@@ -10,12 +10,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.Editable;
 
 public class TrainingDayMapper {
 	
-	DataBaseHelper myDBHelper;
-	String sql;
+	private DataBaseHelper myDBHelper;
+	private String sql;
 	
 	public TrainingDayMapper (Context context){
 		myDBHelper = new DataBaseHelper(context);
@@ -31,11 +30,23 @@ public class TrainingDayMapper {
 	 	}
 	}
 		
-	// Hinzufügen von Trainingstagen
-	public void add(Editable d){
-		
+	/**
+	 * Add a TrainingDay to the database
+	 * 
+	 * @param trainingDayName
+	 */
+	public void add(TrainingDay d){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "INSERT INTO TrainingDay (TrainingDayName) VALUES ('"+ d + "')";
+		int id = 1;
+		sql = "SELECT MAX(TrainingDay_Id) FROM TrainingDay";
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			if (!cursor.isNull(0)){
+				id = Integer.parseInt(cursor.getString(0));
+				id++;
+			}
+		}	
+		sql = "INSERT INTO TrainingDay (TrainingDay_Id, TrainingDayName) VALUES (" + id + ", '"+ d.getName() + "')";
 		db.execSQL(sql);
 		db.close();
 	}
@@ -67,9 +78,9 @@ public class TrainingDayMapper {
 	// Löschen von Trainingstagen
 	public void delete(TrainingDay d){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "DELETE * FROM TrainingDay WHERE *";
-		db.close();
-		
+		sql = "DELETE FROM TrainingDay WHERE TrainingDay_Id = " + d.getId();
+		db.execSQL(sql);
+		db.close();	
 	}
 	// Trainingstag updaten , z.B nach einer Änderung von einem Trainingstag
 	public TrainingDay update(TrainingDay d){
@@ -110,24 +121,49 @@ public class TrainingDayMapper {
 		db.close();
 		return trainingdayList;
 	}
-	public void ExerciseAddToTrainingDay(int trainingsDayId, int exerciseId, Editable ETW, Editable ETS) {
+	
+	public void ExerciseAddToTrainingDay(int trainingsDayId, int exerciseId, int eTargetSetCount,  int eTargetRepCount) {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		String sql = "INSERT INTO TrainingDayHasExercise (TrainingDay_Id, Exercise_Id) VALUES (" + trainingsDayId +","+exerciseId+")";
-		String sql2 = "INSERT INTO PerformanceTarget (TrainingDay_Id, Exercise_Id, RepetitionTarget, SetTarget) VALUES  (" + trainingsDayId +","+exerciseId+", " + ETW + ","+ETS+")";
+		sql = "INSERT INTO TrainingDayHasExercise (TrainingDay_Id, Exercise_Id) VALUES (" + trainingsDayId +","+exerciseId+")";
 		db.execSQL(sql);
-		db.execSQL(sql2);
-		db.close();
-	}
-	public void exerciseDeleteFromTrainingDay(int trainingDayHasExerciseId) {
-		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql ="DELETE FROM TrainingDayHasExercise WHERE TrainingstagHatUebungId = " +trainingDayHasExerciseId + "";
+		/**
+		 * Idee: Weiteres Attribut in TrainingDayHasExercise : PerformanceTarget Id um jede Übung einzeln anzusprechen
+		 */
+		sql= "INSERT INTO PerformanceTarget (TrainingDay_Id, Exercise_Id, RepetitionTarget, SetTarget) VALUES  (" + trainingsDayId +","+exerciseId+", " + eTargetRepCount + ","+eTargetSetCount+")";
 		db.execSQL(sql);
 		db.close();
 	}
 	
+	public void exerciseDeleteFromTrainingDay(int trainingDayId, Exercise e) {
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql ="DELETE FROM TrainingDayHasExercise WHERE TrainingDay_Id = " + trainingDayId + " AND Exercise_Id = " + e.getId();
+		db.execSQL(sql);
+		db.close();
+	}
+	
+	/**
+	 * Delete a trainingDay from one Workoutplan
+	 * 
+	 * @param trainingDayId
+	 * @param workoutplanId
+	 * @param primarykey
+	 */
 	public void deleteTrainingDayFromWorkoutplan(int trainingDayId, int workoutplanId, int primarykey) {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "DELETE FROM WorkoutplanHasTrainingDay WHERE TrainingDay_Id=" + trainingDayId + " AND Workoutplan_Id=" + workoutplanId + " AND WorkoutplanHasTrainingDay_Id=" + primarykey +"";
+		db.execSQL(sql);
+		db.close();
+	}
+	
+	/**
+	 * Delete a trainingDay from all workoutplans
+	 * 
+	 * @param trainingDayId
+	 * @author Eric Schmidt
+	 */
+	public void deleteTrainingDayFromAllWorkoutplan(int trainingDayId){
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "DELETE FROM WorkoutplanHasTrainingDay WHERE TrainingDay_Id=" + trainingDayId;
 		db.execSQL(sql);
 		db.close();
 	}

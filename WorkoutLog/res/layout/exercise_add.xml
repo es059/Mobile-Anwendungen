@@ -42,7 +42,7 @@
 		        android:layout_centerHorizontal="true"
 		        android:longClickable="true"
 		        />
-		    <com.workout.log.DynamicListView android:layout_height="wrap_content" 
+		 com.workout.log.gui.DynamicListViewView android:layout_height="wrap_content" 
 		        android:layout_width="match_parent"
 		        android:id="@+id/listview"
 		        android:background="#0000"

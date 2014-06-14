@@ -2,8 +2,6 @@ package com.workout.log.db;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
-import com.workout.log.bo.Exercise;
 import com.workout.log.bo.MuscleGroup;
 
 import android.content.Context;
@@ -64,6 +62,5 @@ public class MuscleGroupMapper {
 		}
 		db.close();
 		return muscleGroup;
-	}
-	
+	}	
 }

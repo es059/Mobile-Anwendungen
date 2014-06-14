@@ -1,6 +1,5 @@
 package com.workout.log.listAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.workout.log.bo.Exercise;
@@ -12,8 +11,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 public class ExerciseListAdapter extends ArrayAdapter<Exercise> {
-	public ExerciseListAdapter(Context context, int textViewResourceId, List<Exercise> objects) {
+	
+	private int trainingDayId;
+	
+	public ExerciseListAdapter(Context context, int textViewResourceId, List<Exercise> objects, int trainingDayId) {
 			super(context, textViewResourceId, objects);
+			this.trainingDayId = trainingDayId;
 		}
 		@Override
 		 public View getView(int position, View convertView, ViewGroup parent) {
@@ -26,7 +29,7 @@ public class ExerciseListAdapter extends ArrayAdapter<Exercise> {
 				 listViewExercise = new ListViewExercise(getContext());
 			 }
 			 
-			 listViewExercise.setExercise(exercise);
+			 listViewExercise.setExercise(exercise, trainingDayId);
 			 return listViewExercise;
 		 }
 

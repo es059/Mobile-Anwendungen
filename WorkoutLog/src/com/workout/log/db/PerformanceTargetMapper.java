@@ -40,10 +40,11 @@ public class PerformanceTargetMapper {
 	 *  @return Exercise
 	 *  @author Eric Schmidt
 	 */
-	public PerformanceTarget getPerformanceTargetByExerciseId(Exercise exercise){
+	public PerformanceTarget getPerformanceTargetByExerciseId(Exercise exercise, int trainingDayId){
 		PerformanceTarget performanceTarget = new PerformanceTarget();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
-		sql = "SELECT RepetitionTarget, SetTarget FROM PerformanceTarget WHERE Exercise_Id = " + exercise.getId();
+		sql = "SELECT RepetitionTarget, SetTarget FROM PerformanceTarget WHERE Exercise_Id = " + exercise.getId() + 
+				" AND TrainingDay_Id = " + trainingDayId;
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
 			performanceTarget.setRepetition(Integer.parseInt(cursor.getString(0)));
@@ -56,6 +57,32 @@ public class PerformanceTargetMapper {
 	public void deletePerformanceTarget(int trainingDayId, int exerciseId) {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "DELETE FROM PerformanceTarget WHERE TrainingDay_Id=" + trainingDayId + " AND Exercise_Id=" + exerciseId + "";
+		db.execSQL(sql);
+		db.close();
+	}
+	
+	/**
+	 * Delete all Entries in PerformanceTarget where the given exercise occurs
+	 * 
+	 * @param e the exercise to be deleted
+	 * @author Eric Schmidt
+	 */
+	public void deleteExerciseFromPerfromanceTarget(Exercise e){
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "DELETE FROM PerformanceTarget WHERE Exercise_Id =" + e.getId() + "";
+		db.execSQL(sql);
+		db.close();
+	}
+	
+	/**
+	 * Delete a TrainingDay from all performance targets
+	 * 
+	 * @param trainingDayId
+	 * @author Eric Schmidt
+	 */
+	public void deleteTrainingDayFromAllPerformanceTarget(int trainingDayId){
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "DELETE FROM PerformanceTarget WHERE TrainingDay_Id=" + trainingDayId;
 		db.execSQL(sql);
 		db.close();
 	}

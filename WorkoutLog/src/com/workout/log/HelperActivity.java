@@ -1,9 +1,7 @@
 package com.workout.log;
 
-
-
 import com.example.workoutlog.R;
-import com.workout.log.data.MenueListe;
+import com.workout.log.data.MenuList;
 import com.workout.log.listAdapter.CustomDrawerAdapter;
 import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;
@@ -13,19 +11,24 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
-public class HelperActivity extends Activity  {
+public class HelperActivity extends Activity{
 	private static final String PREF_FIRST_LAUNCH = "first";
 	protected OnBackPressedListener onBackPressedListener;
 	protected OnHomePressedListener onHomePressedListener;
+	
+	Boolean doubleBackToExitPressedOnce = false;
 	
 	/**
 	 * Variables for the Navigation Drawer
@@ -38,66 +41,33 @@ public class HelperActivity extends Activity  {
     private CharSequence mTitle;
 
     private CustomDrawerAdapter adapter;
-    private MenueListe l = new MenueListe();
+    private MenuList menuList = new MenuList();
     
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_helper);
 		
-		/**
-		 * Navigation Menu implementation
-		 */
-	    mTitle = mDrawerTitle = getTitle();
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-                   GravityCompat.START);
-        
-        // Add Drawer Item to dataList
-        adapter = new CustomDrawerAdapter(this, R.layout.custom_drawer_item, l.getDataList());
-        mDrawerList.setAdapter(adapter);
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+		loadNavigationDrawer();
         
         this.getActionBar().setDisplayHomeAsUpEnabled(true);
         this.getActionBar().setHomeButtonEnabled(true);
-
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                    R.drawable.ic_drawer, R.string.drawer_open,
-                    R.string.drawer_close) {
-              public void onDrawerClosed(View view) {
-            	  getActionBar().setTitle(mTitle);
-            	  invalidateOptionsMenu(); // creates call to
-                                                              // onPrepareOptionsMenu()
-              }
-              public void onDrawerOpened(View drawerView) {
-            	  getActionBar().setTitle(mDrawerTitle);
-            	  invalidateOptionsMenu(); // creates call to
-                    // onPrepareOptionsMenu()
-              }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);   	
-        mDrawerLayout.setDrawerListener(mDrawerToggle); 
 		
-        
         /**
-         * Handels the Fragment calls which are to be done first
+         * Handles the Fragment calls which are to be done first
          */
 		if (!firstTimeCheck()){
 		    FragmentTransaction transaction = getFragmentManager().beginTransaction();
 	        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-	        transaction.replace(R.id.fragment_container, new ExerciseAdd(), "ExerciseAdd");
+	        transaction.replace(R.id.fragment_container, new ExerciseOverview(), "ExerciseOverview");
 	        transaction.addToBackStack(null);
 	        transaction.commit();
 		}else{
-			//startActivity(new Intent(this, WorkoutplanSelect.class));
-		    //finish();
 			 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-		        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		        transaction.replace(R.id.fragment_container, new ExerciseAdd(), "ExerciseAdd");
-		        transaction.addToBackStack(null);
-		        transaction.commit();
+		     transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		     transaction.replace(R.id.fragment_container, new ManageWorkoutplan(), "ManageWorkoutplan");
+		     transaction.addToBackStack(null);
+		     transaction.commit();
 		}
 	}
 	/**
@@ -110,6 +80,11 @@ public class HelperActivity extends Activity  {
 		return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PREF_FIRST_LAUNCH, true);
 	}
 	
+	/**
+	 * Handles the behavior of the back buttons
+	 * 
+	 * @param onBackPressedListener
+	 */
 	public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {
 	    this.onBackPressedListener = onBackPressedListener;
 	}
@@ -120,24 +95,113 @@ public class HelperActivity extends Activity  {
 	
 	@Override
 	public void onBackPressed() {
-	    if (onBackPressedListener != null)
+	    if (onBackPressedListener != null){
 	        onBackPressedListener.doBack();
+	    }else{
+	    	if (getFragmentManager().getBackStackEntryCount() == 1) {
+	    		/**
+	    		 * Closes the application if the userer presses back twice
+	    		 */
+	    		 if (doubleBackToExitPressedOnce) {
+	    		        this.finish();
+	    		        return;
+	    		    }
+	    		    this.doubleBackToExitPressedOnce = true;
+	    		    Toast.makeText(this, "Erneut drücken um zu Beenden", Toast.LENGTH_SHORT).show();
+
+	    		    new Handler().postDelayed(new Runnable() {
+
+	    		        @Override
+	    		        public void run() {
+	    		            doubleBackToExitPressedOnce=false;                       
+	    		        }
+	    		    }, 2000);
+	    		
+	        } else {
+	            getFragmentManager().popBackStack();
+	        	/**
+				 * Set the visibility of the NavigationDrawer to Visible
+				 */
+			   setNavigationDrawerVisibility(true);
+	        }
+	    }
 	}
 	
 	@Override
 	public Intent getParentActivityIntent() {
-		if (onBackPressedListener != null)
+		if (onBackPressedListener != null){
 	        onHomePressedListener.doHome();
+		}else{
+		   if (getFragmentManager().getBackStackEntryCount() == 1) {
+		    		
+		   }else {
+			   getFragmentManager().popBackStack();
+				/**
+				 * Set the visibility of the NavigationDrawer to Visible
+				 */
+			   setNavigationDrawerVisibility(true);
+		   }
+        }
 		return null;
+		 
 	}
 	
 
+	
 	/**
-	 * Methods to handle the Navigation Drawer
+	 * Navigation Menu implementation
 	 * 
-	 *
+	 * @author Eric Schmidt
 	 */
-	public void SelectItem(int possition) { 
+	private void loadNavigationDrawer(){
+	    mTitle = mDrawerTitle = getTitle();
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
+                   GravityCompat.START);
+        
+        // Add Drawer Item to dataList
+        adapter = new CustomDrawerAdapter(this, R.layout.custom_drawer_item, menuList.getDataList());
+        mDrawerList.setAdapter(adapter);
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        
+        this.getActionBar().setDisplayHomeAsUpEnabled(true);
+        this.getActionBar().setHomeButtonEnabled(true);
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                    R.drawable.ic_drawer, R.string.drawer_open,
+                    R.string.drawer_close) {
+              public void onDrawerClosed(View view) {
+            	  getActionBar().setTitle(mTitle);
+            	  invalidateOptionsMenu(); 
+              }
+              public void onDrawerOpened(View drawerView) {
+            	  getActionBar().setTitle(mDrawerTitle);
+            	  invalidateOptionsMenu();
+              }
+        };
+       
+        mDrawerLayout.setDrawerListener(mDrawerToggle);   	
+	}
+	
+	/**
+	 * Set the visiblity of the NavigationDrawer
+	 * 
+	 * @param visible true if visible - false if not
+	 * @author Eric Schmidt
+	 */
+	public void setNavigationDrawerVisibility(Boolean visible){
+		if (visible) mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+		if (!visible)mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+	}
+	
+	/**
+	 * Decide which Fragment is to be called if the corresponding menu item is clicked 
+	 * 
+	 * @param int the position of the menu item
+	 */
+	private void SelectItem(int possition) { 
 		FragmentTransaction transaction;
 		switch(possition) {
 			case 0:
@@ -177,29 +241,30 @@ public class HelperActivity extends Activity  {
 				break;
 		}
 	}
+		
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 	      super.onConfigurationChanged(newConfig);
 	      // Pass any configuration change to the drawer toggles
 	      mDrawerToggle.onConfigurationChanged(newConfig);
 	}
-	private class DrawerItemClickListener implements
-    ListView.OnItemClickListener {
-			
+	
+	private class DrawerItemClickListener implements ListView.OnItemClickListener {	
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 		          long id) {
 		    SelectItem(position);
-		
+		    mDrawerLayout.closeDrawers();
 		}
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    if (mDrawerToggle.onOptionsItemSelected(item)) {
+		int lockMode = mDrawerLayout.getDrawerLockMode(Gravity.LEFT);
+	    if (lockMode == DrawerLayout.LOCK_MODE_UNLOCKED &&
+	    		mDrawerToggle.onOptionsItemSelected(item)) {
 	    	return true;
 	    }
 		return super.onOptionsItemSelected(item);
 	}
-	
 }

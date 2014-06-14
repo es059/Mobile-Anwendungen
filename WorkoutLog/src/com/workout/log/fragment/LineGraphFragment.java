@@ -13,12 +13,12 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class LineGraphFragment extends Fragment{
-	private static LinearLayout mLayout = null;
+	private LinearLayout mLayout = null;
+	private static View view = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState){
-		View view = (View) inflater.inflate(R.layout.line_graph_fragment, null);
-		if (mLayout == null) mLayout = (LinearLayout) view.findViewById(R.id.graph);
+		view = (View) inflater.inflate(R.layout.line_graph_fragment, null);
 		return view;
 	}
 	
@@ -29,6 +29,7 @@ public class LineGraphFragment extends Fragment{
 	 * @author Eric Schmidt
 	 */
 	public void updateGraph(Exercise exercise){
+		mLayout = (LinearLayout) view.findViewById(R.id.graph);
 		//Create the Graph
 		LineGraph line = new LineGraph();
 		View linearGraph = line.getView(getActivity(),exercise);

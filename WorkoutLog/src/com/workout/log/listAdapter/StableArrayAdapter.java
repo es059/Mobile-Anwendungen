@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.workout.log;
+package com.workout.log.listAdapter;
 
 import android.content.Context;
 import android.view.View;
@@ -24,10 +24,7 @@ import android.widget.ArrayAdapter;
 import java.util.HashMap;
 import java.util.List;
 
-import com.workout.log.bo.Exercise;
 import com.workout.log.bo.TrainingDay;
-import com.workout.log.customLayout.ListViewExercise;
-import com.workout.log.customLayout.ListViewExerciseWithoutSetsReps;
 import com.workout.log.customLayout.ListViewTrainingDay;
 
 public class StableArrayAdapter extends ArrayAdapter<TrainingDay> {
@@ -37,7 +34,7 @@ public class StableArrayAdapter extends ArrayAdapter<TrainingDay> {
     HashMap<TrainingDay, Integer> mIdMap = new HashMap<TrainingDay, Integer>();
 
     public StableArrayAdapter(Context context, int textViewResourceId, List<TrainingDay> objects) {
-        super(context, textViewResourceId, objects);
+       super(context, textViewResourceId, objects);
        for (int i = 0; i < objects.size(); ++i) {
             mIdMap.put(objects.get(i), i);
       }

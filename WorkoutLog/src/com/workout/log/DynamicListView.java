@@ -42,6 +42,7 @@ import java.util.ArrayList;
 
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.TrainingDay;
+import com.workout.log.listAdapter.StableArrayAdapter;
 
 /**
  * The dynamic listview is an extension of listview that supports cell dragging

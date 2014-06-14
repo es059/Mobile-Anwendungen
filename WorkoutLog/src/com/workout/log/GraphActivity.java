@@ -20,13 +20,11 @@ public class GraphActivity extends Fragment {
 		transaction = getFragmentManager().beginTransaction();
 	    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 	    transaction.replace(R.id.overview_dateTimePicker, new ActionBarGraphFragment(), "ActionBarGraphFragment");
-	    transaction.addToBackStack(null);
 	    transaction.commit();
 	    
 	    transaction = getFragmentManager().beginTransaction();
 	    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 	    transaction.replace(R.id.lineGraph, new LineGraphFragment(), "LineGraphFragment");
-	    transaction.addToBackStack(null);
 	    transaction.commit();
 	    
 	    return view;

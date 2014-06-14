@@ -12,7 +12,6 @@ import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.PerformanceActualMapper;
 import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.fragment.ActionBarDatePickerFragment;
-import com.workout.log.fragment.ActionBarTrainingDayPickerFragment;
 import com.workout.log.listAdapter.PerformanceActualListAdapter;
 import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;
@@ -21,14 +20,12 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnKeyListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -53,12 +50,16 @@ public class ExerciseSpecific extends Fragment {
 		View view = inflater.inflate(R.layout.exercise_specific, container, false);
 		
 		/**
+		 * Set the visibility of the NavigationDrawer to Invisible
+		 */
+		((HelperActivity) getActivity()).setNavigationDrawerVisibility(false);
+		
+		/**
 		 * Load the top navigation fragment into the current fragment
 		 */
 	    FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.replace(R.id.specific_dateTimePicker, new ActionBarDatePickerFragment(), "DateTimePicker");
-        transaction.addToBackStack(null);
         transaction.commit();
         
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -88,7 +89,9 @@ public class ExerciseSpecific extends Fragment {
 		
 		exerciseView = (ListView) view.findViewById(R.id.exerciseSpecificList);
 		
-		//Übergabe der Exercise ID und Name
+		/**
+		 * Receive the arguments set by ExerciseOverview
+		 */
 		final Bundle transferExtras = getArguments();
 		if (transferExtras != null){	
 			try{
@@ -113,7 +116,7 @@ public class ExerciseSpecific extends Fragment {
 		//Exercise Mapper + Object		
 		ExerciseMapper eMapper = new ExerciseMapper(getActivity());
 		exercise = eMapper.getExerciseById(exerciseId);
-		//PerformanceActual Mapper + Object Liste
+		//PerformanceActual Mapper + Object List
 		paMapper = new PerformanceActualMapper(getActivity());
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		performanceActualList = paMapper.getCurrentPerformanceActual(exercise, sp.format(new Date()));
@@ -133,7 +136,7 @@ public class ExerciseSpecific extends Fragment {
 	 */
 	public ArrayList<PerformanceActual> prepareStandardListView(){
 		PerformanceTargetMapper ptMapper = new PerformanceTargetMapper(getActivity());
-		PerformanceTarget performanceTarget = ptMapper.getPerformanceTargetByExerciseId(exercise);
+		PerformanceTarget performanceTarget = ptMapper.getPerformanceTargetByExerciseId(exercise, trainingDayId);
 		
 		performanceActualList = new ArrayList<PerformanceActual>();
 		
@@ -200,6 +203,11 @@ public class ExerciseSpecific extends Fragment {
         transaction.replace(R.id.fragment_container, exerciseOverview , "ExerciseOverview");
         transaction.addToBackStack(null);
         transaction.commit();
+        
+		/**
+		 * Set the visibility of the NavigationDrawer to Visible
+		 */
+		((HelperActivity) getActivity()).setNavigationDrawerVisibility(true);
 	}
 	
 	/**
@@ -259,6 +267,7 @@ public class ExerciseSpecific extends Fragment {
 			if (!weight.getText().toString().isEmpty()){
 				item.setWeight(Double.parseDouble(weight.getText().toString()));
 			}
+			
 			/**
 			 * This block checks if the current Day is Today. 
 			 * Afterwards the Recordset it saved if either the repetition and weight 

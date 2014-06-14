@@ -20,19 +20,15 @@ public class CustomDrawerAdapter extends ArrayAdapter<DrawerItem> {
       List<DrawerItem> drawerItemList;
       int layoutResID;
  
-      public CustomDrawerAdapter(Context context, int layoutResourceID,
-                  List<DrawerItem> listItems) {
+      public CustomDrawerAdapter(Context context, int layoutResourceID, List<DrawerItem> listItems) {
             super(context, layoutResourceID, listItems);
             this.context = context;
             this.drawerItemList = listItems;
             this.layoutResID = layoutResourceID;
- 
       }
  
       @Override
       public View getView(int position, View convertView, ViewGroup parent) {
-            // TODO Auto-generated method stub
- 
             DrawerItemHolder drawerHolder;
             View view = convertView;
  
@@ -53,11 +49,11 @@ public class CustomDrawerAdapter extends ArrayAdapter<DrawerItem> {
             }
  
             DrawerItem dItem = (DrawerItem) this.drawerItemList.get(position);
- 
-            drawerHolder.icon.setImageDrawable(view.getResources().getDrawable(
-                        dItem.getImgResID()));
+            if (dItem.getImgResID() != -1){
+	            drawerHolder.icon.setImageDrawable(view.getResources().getDrawable(
+	                        dItem.getImgResID()));
+            }
             drawerHolder.ItemName.setText(dItem.getItemName());
- 
             return view;
       }
  

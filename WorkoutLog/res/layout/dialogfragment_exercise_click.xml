@@ -1,29 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:gravity="top" >
 
-    <EditText
+    <TextView
+	    android:id="@+id/SetTitle"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@+id/Satzanzahl"
+	    android:layout_alignLeft="@+id/Satzanzahl"
+		android:layout_marginLeft="30dp"
+		android:layout_marginBottom="50dp"
+	    android:textStyle="bold"
+	    android:text="Sätze" />
+    
+    <NumberPicker
         android:id="@+id/Satzanzahl"
         android:layout_width="100dp"
-        android:layout_height="50dp"
+        android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="18dp"
-        android:ems="10" 
-        android:inputType="number"
-        android:hint="Sätze" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="50dp"
+        android:inputType="number"/>
 
-    <EditText
+  	<TextView
+	    android:id="@+id/RepTitle"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@+id/WdhAnzahl"
+	    android:layout_alignLeft="@+id/WdhAnzahl"
+	    android:layout_marginBottom="50dp"
+	    android:layout_marginLeft="30dp"
+	    android:textStyle="bold"
+	    android:text="Wdh" />
+    
+    <NumberPicker
         android:id="@+id/WdhAnzahl"
         android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_alignBaseline="@+id/Satzanzahl"
-        android:layout_alignBottom="@+id/Satzanzahl"
+        android:layout_height="100dp"
+        android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="35dp"
-        android:ems="10"
-        android:hint="Wdh"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="20dp"
         android:inputType="number" />
-    
 </RelativeLayout>

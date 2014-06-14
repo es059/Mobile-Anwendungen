@@ -12,23 +12,12 @@ import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.MuscleGroupMapper;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.db.WorkoutplanMapper;
-import com.workout.log.dialog.ExerciseLongClickDialogFragment;
-import com.workout.log.dialog.ExerciseLongClickDialogFragment.ExerciseSelectionDialogListener;
 import com.workout.log.fragment.ActionBarTrainingDayPickerFragment;
-import com.workout.log.listAdapter.CustomDrawerAdapter;
 import com.workout.log.listAdapter.OverviewAdapter;
 
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
-import android.app.ActivityOptions;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -39,12 +28,11 @@ import android.view.View;
 import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 
-public class ExerciseOverview extends Fragment implements OnItemClickListener, ExerciseSelectionDialogListener  {
+public class ExerciseOverview extends Fragment implements OnItemClickListener {
 
 	private static ListView exerciseView; 
     
@@ -59,7 +47,6 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener, E
 	private ArrayList<MuscleGroup> mList;
 	private ArrayList<ExerciseItem> listComplete;
 	private ArrayList<Exercise> eListMuscleGroup;
-	private MuscleGroupMapper mMapper;
     
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,7 +58,6 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener, E
 	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.replace(R.id.overview_trainingDayPicker, new ActionBarTrainingDayPickerFragment(), "TrainingDayPicker");
-        transaction.addToBackStack(null);
         transaction.commit();
 		
         /**
@@ -92,7 +78,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener, E
         return view;
 	}
     /**
-     * If the Activity was called through a intent, 
+     * If the Activity was called with a setExtra method, 
      * the ListView is filled by a method call in the fragment
      * 
      * @author Eric Schmidt
@@ -125,10 +111,10 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener, E
 	/**
 	 * Updates Exercise ListViews using the ExerciseListAdapter. 
 	 * Ensures that there are no unnecessary Database queries
-	 * if the ArrayList<TrainingDay> is already referenced 
-	 * 
-	 * @param context 
-	 * @param trainingDayId 
+	 * if the ArrayList<TrainingDay> is already referenced.
+	 * This methode uses the first trainingDay as the source of exercises.
+	 * If you know the current trainingDay use <code>ExerciseListViewUpdate(int TrainingDay)</code>
+	 *
 	 * @author Eric Schmidt
 	 */
 	public void ExerciseListViewUpdate(){
@@ -158,7 +144,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener, E
 				}
 			}
 			
-			OverviewAdapter adapter = new OverviewAdapter(getActivity(), listComplete);
+			OverviewAdapter adapter = new OverviewAdapter(getActivity(), listComplete, tList.get(0).getId());
 			exerciseView.setAdapter(adapter);
 		}
 	}
@@ -166,11 +152,10 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener, E
 	/**
 	 * If TrainingDayId is known use this method
 	 * 
-	 * @param context
 	 * @param trainingDayId
 	 * @author Eric Schmidt
 	 */
-	public void ExerciseListViewUpdate(int trainingDayId){
+	public void updateListView(int trainingDayId){
 		if (mList == null){	
 			//Select all MuscleGroups
 			MuscleGroupMapper mMapper = new MuscleGroupMapper(getActivity());
@@ -188,7 +173,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener, E
 			}
 		}
 		
-		OverviewAdapter adapter = new OverviewAdapter(getActivity(), listComplete);
+		OverviewAdapter adapter = new OverviewAdapter(getActivity(), listComplete, trainingDayId);
 		exerciseView.setAdapter(adapter);
 	}
 
@@ -206,7 +191,6 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener, E
 				intent = new Intent();
 				intent.setClass(getActivity(), ExerciseAdd.class);
 				startActivity(intent);
-				WorkoutplanMapper m = new WorkoutplanMapper(getActivity());
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -227,7 +211,6 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener, E
 	 * @author Eric Schmidt
 	 */
 	private void openExerciseSpecific (Exercise exercise){
-		
 		Bundle data = new Bundle();
 		ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = 
 				(ActionBarTrainingDayPickerFragment) getFragmentManager().findFragmentByTag("TrainingDayPicker");
@@ -245,17 +228,4 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener, E
         transaction.addToBackStack(null);
         transaction.commit();
 	}
-	
-/*	public void showDialogLongClickFragment(){
-		DialogFragment dialogFragment = ExerciseLongClickDialogFragment.newInstance();
-		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
-	}
-*/
-	@Override
-	public void onExerciseSelectionItemLongClick(
-			ExerciseLongClickDialogFragment dialog) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

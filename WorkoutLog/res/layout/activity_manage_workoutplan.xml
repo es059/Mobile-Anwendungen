@@ -11,16 +11,16 @@
 		    android:layout_height="match_parent"
 		    tools:context="com.workout.log.ManageWorkoutplan"
 		    tools:ignore="MergeRootFrame" >
-		    
+
 		    <FrameLayout
 		        android:id="@+id/specific_dateTimePicker"
 		        android:layout_width="match_parent"
 		        android:layout_height="@dimen/actionbar_height"
 		        android:layout_alignParentTop="true"
 		        android:layout_centerHorizontal="true"
-		      
+
 		       />
-		 
+
 		 	<com.workout.log.DynamicListView
 				android:id="@+id/TrainingDayList"
 				android:layout_width="match_parent"
@@ -30,4 +30,3 @@
 				android:longClickable="true"/>			  
  		</RelativeLayout>
   	</FrameLayout>
-	 

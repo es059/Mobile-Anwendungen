@@ -2,8 +2,6 @@ package com.workout.log.fragment;
 
 import java.util.ArrayList;
 
-
-
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -22,116 +20,135 @@ import com.workout.log.bo.Workoutplan;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.dialog.WorkoutplanAddDialogFragment;
+import com.workout.log.dialog.WorkoutplanUpdateDialogFragment;
 
 public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnClickListener  {
-	private ImageButton pre;
-	private ImageButton next;
-	private TextView trainingDay;
+	private ImageButton previousButton;
+	private ImageButton nextButton;
+	private TextView workoutplanTextView;
 	
 	private ArrayList<Workoutplan> workoutplanList;
 	private ArrayList<TrainingDay> trainingDayList;
 	
 	private WorkoutplanMapper wpMapper;
 	private TrainingDayMapper tdMapper;
-	private ManageWorkoutplan mW; 
+	private ManageWorkoutplan manageWorkoutplan; 
 	
-	private static int tdId = 0;
-	
+	private static int currentListId = 0;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		super.onCreateView(inflater, container, savedInstanceState);
-		
 		//Reference ExerciseOverview Layout and set ListView 
-		View view = inflater.inflate(R.layout.actionbar_training_day_picker_fragment, container,false);
-		mW  = (ManageWorkoutplan) getActivity().getFragmentManager().findFragmentByTag("ManageWorkoutplan");
-		pre = (ImageButton) view.findViewById(R.id.Previous);
-		next = (ImageButton) view.findViewById(R.id.Next);
-		trainingDay = (TextView) view.findViewById(R.id.trainingDayPicker);
+		View view = inflater.inflate(R.layout.actionbar_workout_plan_picker_fragment, container,false);
+		return view;
+	}
+
+	@Override
+	public void onResume(){
+		super.onResume();
+		
+		manageWorkoutplan  = (ManageWorkoutplan) getActivity().getFragmentManager().findFragmentByTag("ManageWorkoutplan");
+		previousButton = (ImageButton) getView().findViewById(R.id.Previous);
+		nextButton = (ImageButton) getView().findViewById(R.id.Next);
+		workoutplanTextView = (TextView) getView().findViewById(R.id.trainingDayPicker);
+		
 		
 		workoutplanList = new ArrayList<Workoutplan>();
 		trainingDayList = new ArrayList<TrainingDay>();
 		
 		wpMapper = new WorkoutplanMapper(getActivity());
 		tdMapper = new TrainingDayMapper(getActivity());
+		
 		workoutplanList = wpMapper.getAll();
-		trainingDayList = tdMapper.getAll(workoutplanList.get(0).getId());
+		if (workoutplanList.size() != 0){
+			setCurrentIdByWorkoutplanId(wpMapper.getCurrent().getId());
+			trainingDayList = tdMapper.getAll(workoutplanList.get(currentListId).getId());
+			workoutplanTextView.setText(workoutplanList.get(currentListId).getName());
+			manageWorkoutplan.setWorkoutplanId(workoutplanList.get(currentListId).getId());
+			/**
+			 * ClickListener handles the Update function of the workoutplan
+			 */
+			workoutplanTextView.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View arg0) {
+					DialogFragment dialogFragment = WorkoutplanUpdateDialogFragment.newInstance(getActivity(), workoutplanList.get(currentListId).getId());
+					dialogFragment.show(getActivity().getFragmentManager(), "Open Exercise Settings on Long Click");			
+				}	
+			});
+			
+		}else{
+			nextButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_add));
+			workoutplanTextView.setHint("Trainingspläne");
+		}
 		
-		trainingDay.setText(workoutplanList.get(tdId).getName());
-		mW.setWorkoutplanId(workoutplanList.get(tdId).getId());
+		previousButton.setOnClickListener(this);
+		nextButton.setOnClickListener(this);
 		
-		pre.setOnClickListener(this);
-		next.setOnClickListener(this);
-		
-	return view;
+		/**
+		 * Ensure that the previousButton is invisible, the add Button is showing if 
+		 * the currentId is the last index in the workoutplanList and that the 
+		 * current trainingDayList is added to the ListView
+		 */
+		if(currentListId == 0)previousButton.setVisibility(View.INVISIBLE); 
+		if(workoutplanList.size() <= currentListId + 1)nextButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_add));
+		manageWorkoutplan.updateListView(trainingDayList);
 	}
-
-	@Override
-	public void onResume(){
-		super.onResume();
-		if(tdId == 0) {
-		pre.setVisibility(View.INVISIBLE); }
-	}
 		
-
-
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()){
 		case R.id.Next:
-			if(workoutplanList.size() <= tdId +1) {
-				
-				
-				DialogFragment dialogFragment = WorkoutplanAddDialogFragment.newInstance(getActivity(), workoutplanList, tdId);
+			if(workoutplanList.size() <= currentListId +1) {
+				DialogFragment dialogFragment = WorkoutplanAddDialogFragment.newInstance(getActivity(), workoutplanList);
 				dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
-				pre.setVisibility(View.VISIBLE);
-				
+				if(workoutplanList.size()>1) previousButton.setVisibility(View.VISIBLE);	
 			}
-			else {
-				
-			if(tdId == 0) {
-				pre.setVisibility(View.VISIBLE);
-			}
-			trainingDay.setText(workoutplanList.get(tdId +1).getName());
-			mW.addtoList(tdMapper.getAll(workoutplanList.get(tdId +1).getId()));
-			mW.setWorkoutplanId(workoutplanList.get(tdId +1).getId());
-			wpMapper.setCurrent(workoutplanList.get(tdId +1).getId());
-			tdId += 1;
-			
-			if(workoutplanList.size() <= tdId +1) {
-				next.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_add));
-				
-			}
-			
-			
+			else {	
+				if(currentListId == 0) {
+					previousButton.setVisibility(View.VISIBLE);
+				}
+				workoutplanTextView.setText(workoutplanList.get(currentListId +1).getName());
+				manageWorkoutplan.updateListView(tdMapper.getAll(workoutplanList.get(currentListId +1).getId()));
+				manageWorkoutplan.setWorkoutplanId(workoutplanList.get(currentListId +1).getId());
+				wpMapper.setCurrent(workoutplanList.get(currentListId +1).getId());
+				Toast.makeText(getActivity(), workoutplanList.get(currentListId +1).getName() + " ist nun aktiv!", Toast.LENGTH_SHORT ).show();
+				currentListId += 1;
+				if(workoutplanList.size() <= currentListId +1) {
+					nextButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_add));
+				}
 			}
 			break;
 		case R.id.Previous:
-			if(workoutplanList.size() <= tdId +1) {
-				next.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_navigation_next_item));}
-			trainingDay.setText(workoutplanList.get(tdId -1).getName());
-			mW.addtoList(tdMapper.getAll(workoutplanList.get(tdId -1).getId()));
-			mW.setWorkoutplanId(workoutplanList.get(tdId - 1).getId());
-			wpMapper.setCurrent(workoutplanList.get(tdId -1).getId());
-			tdId -= 1;
-			if(tdId == 0) {
-				pre.setVisibility(View.INVISIBLE);
+			if(workoutplanList.size() <= currentListId +1) {
+				nextButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_navigation_next_item));}
+				workoutplanTextView.setText(workoutplanList.get(currentListId -1).getName());
+				manageWorkoutplan.updateListView(tdMapper.getAll(workoutplanList.get(currentListId -1).getId()));
+				manageWorkoutplan.setWorkoutplanId(workoutplanList.get(currentListId - 1).getId());
+				wpMapper.setCurrent(workoutplanList.get(currentListId -1).getId());
+				Toast.makeText(getActivity(), workoutplanList.get(currentListId -1).getName() + " ist nun aktiv!", Toast.LENGTH_SHORT ).show();
+				currentListId -= 1;
+			if(currentListId == 0) {
+				previousButton.setVisibility(View.INVISIBLE);
 			}
 			break;
 		
+		}	
 	}
-
 	
-	
-	
-	
-	}
-	public void settdIdByWorkoutplanId(int workoutplanId) {
-	  for(int i = 0; i <= workoutplanList.size(); i++) {
+	public void setCurrentIdByWorkoutplanId(int workoutplanId) {
+	  for(int i = 0; i <= workoutplanList.size() - 1; i++) {
 		if(workoutplanList.get(i).getId() == workoutplanId) {
-			tdId = i;
+			currentListId = i;
 		}
 	  }
 	}
 
+	public static void setCurrentListId(int currentListId) {
+		ActionBarWorkoutPlanPickerFragment.currentListId = currentListId;
+	}	
 	
+	public static int getCurrentListId() {
+		return currentListId;
+	}
 }

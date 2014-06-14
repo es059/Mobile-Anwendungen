@@ -30,11 +30,15 @@ public class ActionBarGraphFragment  extends Fragment implements OnItemSelectedL
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-		super.onCreateView(inflater, container, savedInstanceState);
 		View view = inflater.inflate(R.layout.actionbar_graph_fragment, container,false);
-		
-		exerciseSpinner = (Spinner) view.findViewById(R.id.graph_exercise);
-		lineGraphFragment = (LineGraphFragment) getActivity().getFragmentManager().findFragmentById(R.id.lineGraph);
+		return view;
+	}
+
+	@Override
+	public void onResume(){
+		super.onResume();
+		exerciseSpinner = (Spinner) getView().findViewById(R.id.graph_exercise);
+		lineGraphFragment = (LineGraphFragment) getActivity().getFragmentManager().findFragmentByTag("LineGraphFragment");
 		
 		ExerciseMapper eMapper = new ExerciseMapper(getActivity());
 		ArrayList<Exercise> exerciseList = eMapper.getAllExercise();
@@ -42,15 +46,12 @@ public class ActionBarGraphFragment  extends Fragment implements OnItemSelectedL
 		ExerciseSpinnerListAdapter adapter = new ExerciseSpinnerListAdapter(getActivity(),0, exerciseList);
 		exerciseSpinner.setAdapter(adapter);
 		exerciseSpinner.setOnItemSelectedListener(this);
-		
-		return view;
 	}
-
+	
 	@Override
-	public void onItemSelected(AdapterView<?> parent, View view, int pos,
-			long id) {
+	public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 		if (lineGraphFragment == null){
-			lineGraphFragment = (LineGraphFragment) getActivity().getFragmentManager().findFragmentById(R.id.lineGraph);
+			lineGraphFragment = (LineGraphFragment) getActivity().getFragmentManager().findFragmentByTag("LineGraphFragment");
 		}
 		lineGraphFragment.updateGraph((Exercise)parent.getItemAtPosition(pos));
 	}

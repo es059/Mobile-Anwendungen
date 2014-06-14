@@ -2,6 +2,15 @@ package com.workout.log.fragment;
 
 import java.util.ArrayList;
 
+import com.example.workoutlog.R;
+
+
+
+
+import com.workout.log.ExerciseAdd;
+import com.workout.log.bo.Exercise;
+import com.workout.log.db.ExerciseMapper;
+
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,22 +20,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.example.workoutlog.R;
-import com.workout.log.bo.TrainingDay;
-import com.workout.log.ManageTrainingDays;
-import com.workout.log.db.TrainingDayMapper;
-
-public class ManageTrainingDaysSearchBar extends Fragment {
+public class ExerciseBarSearchBarFragment extends Fragment{
 	
 	private EditText searchBar;
-	private ManageTrainingDays manageTrainingDays;
-	private  TrainingDayMapper tdMapper = new TrainingDayMapper(getActivity());
+	private ExerciseAdd exerciseAdd;
+	private ExerciseMapper eMapper;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		super.onCreateView(inflater, container, savedInstanceState);
 		View view = inflater.inflate(R.layout.actionbar_searchbar_fragment, container,false);
-		manageTrainingDays = (ManageTrainingDays) getActivity().getFragmentManager().findFragmentByTag("ManageTrainingDays");
+		
+		eMapper = new ExerciseMapper(getActivity());
+		exerciseAdd = (ExerciseAdd) getActivity().getFragmentManager().findFragmentByTag("ExerciseAdd");
 		searchBar = (EditText) view.findViewById(R.id.searchbar_text);
 		searchBar.addTextChangedListener(new TextWatcher() {
 			public void beforeTextChanged(CharSequence s, int start, int count, int after){}
@@ -34,16 +40,12 @@ public class ManageTrainingDaysSearchBar extends Fragment {
 	        public void onTextChanged(CharSequence s, int start, int before, int count){}
 
 	        public void afterTextChanged(Editable s){
-	        	
-	        	ArrayList<TrainingDay> trainingDayList = new ArrayList<TrainingDay>();
-	        	trainingDayList =   tdMapper.searchKeyString(String.valueOf(s));
-	        	
-	        	manageTrainingDays.updateAdapter(trainingDayList);
+	        	ArrayList<Exercise> List = new ArrayList<Exercise>();
+	        	List = eMapper.searchKeyString(String.valueOf(s));
+	        	exerciseAdd.updateAdapter(List);
 	        }
 	  });
 		return view;
 		
 	}
 }
-
-

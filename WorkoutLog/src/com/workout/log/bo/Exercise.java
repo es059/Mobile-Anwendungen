@@ -6,6 +6,7 @@ public class Exercise implements ExerciseItem {
 
 	private String mName = "";
 	private  int mId = 0;
+	private MuscleGroup mMuscleGroup = null;
 	private int trainingDayHasExerciseId = 0;
 	
 	public int getTrainingDayHasExerciseId() {
@@ -40,5 +41,13 @@ public class Exercise implements ExerciseItem {
 	public boolean isSection() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public MuscleGroup getMuscleGroup() {
+		return mMuscleGroup;
+	}
+
+	public void setMuscleGroup(MuscleGroup mMuscleGroup) {
+		this.mMuscleGroup = mMuscleGroup;
 	}
 }

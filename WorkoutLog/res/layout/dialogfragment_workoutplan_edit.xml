@@ -12,20 +12,11 @@
         android:layout_alignParentTop="true" />
 
     <EditText
-        android:id="@+id/EditText_ExerciseName"
-        android:layout_width="wrap_content"
+        android:id="@+id/EditText_WorkoutplanName"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/TextView_Information"
-        android:layout_marginTop="34dp"
-        android:ems="10"
-        android:hint="Übungsname" />
-
-    <Spinner
-        android:id="@+id/Spinner_MuscleGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/EditText_ExerciseName" />
-
+        android:singleLine="true"
+        android:hint="Trainingsplan Name" />
 </RelativeLayout>
