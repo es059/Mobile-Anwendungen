@@ -16,7 +16,7 @@ public class ExerciseSpinnerListAdapter extends ArrayAdapter<Exercise>{
 	}
 	@Override public View getDropDownView(int position, View convertView, ViewGroup parent) { 
 		
-		 Exercise exercise = (Exercise) getItem(position);
+		 Exercise exercise = getItem(position);
 		 SpinnerExercise spinnerExercise = null;
 		 if(convertView != null){
 			 spinnerExercise = (SpinnerExercise) convertView;
@@ -31,7 +31,7 @@ public class ExerciseSpinnerListAdapter extends ArrayAdapter<Exercise>{
 
 	@Override
 	 public View getView(int position, View convertView, ViewGroup parent) {
-		 Exercise exercise = (Exercise) getItem(position);
+		 Exercise exercise = getItem(position);
 		 SpinnerExercise spinnerExercise = null;
 		 if(convertView != null){
 			 spinnerExercise = (SpinnerExercise) convertView;

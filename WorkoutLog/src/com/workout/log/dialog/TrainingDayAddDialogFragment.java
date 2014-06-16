@@ -30,6 +30,7 @@ public class TrainingDayAddDialogFragment extends DialogFragment {
 		tdMapper = new TrainingDayMapper(context);
 	}
 
+	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState){
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 
@@ -42,6 +43,7 @@ public class TrainingDayAddDialogFragment extends DialogFragment {
 		alert.setView(input);
 
 		alert.setPositiveButton("Speichern", new DialogInterface.OnClickListener() {
+		@Override
 		public void onClick(DialogInterface dialog, int whichButton) {
 			/**
 			 * Create a TrainingDay Object with the given information by the user and 
@@ -63,7 +65,8 @@ public class TrainingDayAddDialogFragment extends DialogFragment {
 		});
 
 		alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
-		  public void onClick(DialogInterface dialog, int whichButton) {
+		  @Override
+		public void onClick(DialogInterface dialog, int whichButton) {
 		    // Canceled.
 		  }
 		});

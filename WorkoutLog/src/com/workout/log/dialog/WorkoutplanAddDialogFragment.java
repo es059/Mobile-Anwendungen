@@ -36,6 +36,7 @@ public class WorkoutplanAddDialogFragment extends DialogFragment {
 		wpMapper = new WorkoutplanMapper(a);
 	}
 
+	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState){
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 		LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -52,6 +53,7 @@ public class WorkoutplanAddDialogFragment extends DialogFragment {
 		alert.setView(view);
 
 		alert.setPositiveButton("Speichern", new DialogInterface.OnClickListener() {
+		@Override
 		public void onClick(DialogInterface dialog, int whichButton) {
 			Workoutplan w = new Workoutplan();
 			w.setName(workoutplanName.getText().toString());
@@ -68,7 +70,8 @@ public class WorkoutplanAddDialogFragment extends DialogFragment {
 		  }
 		});
 		alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
-		  public void onClick(DialogInterface dialog, int whichButton) {
+		  @Override
+		public void onClick(DialogInterface dialog, int whichButton) {
 		    // Canceled.
 		  }
 		});

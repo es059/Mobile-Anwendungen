@@ -20,7 +20,7 @@ public class ExerciseListAdapter extends ArrayAdapter<Exercise> {
 		}
 		@Override
 		 public View getView(int position, View convertView, ViewGroup parent) {
-			 Exercise exercise = (Exercise) getItem(position);
+			 Exercise exercise = getItem(position);
 			 ListViewExercise listViewExercise = null;
 			 if(convertView != null){
 				 listViewExercise = (ListViewExercise) convertView;

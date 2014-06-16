@@ -37,11 +37,14 @@ public class ExerciseBarSearchBarFragment extends Fragment{
 		eMapper = new ExerciseMapper(getActivity());
 		searchBar = (EditText) view.findViewById(R.id.searchbar_text);
 		searchBar.addTextChangedListener(new TextWatcher() {
+			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after){}
 
-	        public void onTextChanged(CharSequence s, int start, int before, int count){}
+	        @Override
+			public void onTextChanged(CharSequence s, int start, int before, int count){}
 
-	        public void afterTextChanged(Editable s){
+	        @Override
+			public void afterTextChanged(Editable s){
 	        	ArrayList<Exercise> List = new ArrayList<Exercise>();
 	        	List = eMapper.searchKeyString(String.valueOf(s));
 	        	if (fragment instanceof ExerciseAdd){

@@ -36,6 +36,7 @@ public class ExerciseClickDialogFragment extends DialogFragment {
 		this.exerciseId = exerciseId;	
 	}
 	
+	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState){
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 		LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -54,6 +55,7 @@ public class ExerciseClickDialogFragment extends DialogFragment {
 		
 		alert.setTitle("Bestätigung");
 		alert.setPositiveButton("Speichern", new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int whichButton) {
 				String eTargetSet = String.valueOf(eTargetSetCount.getValue());
 				String eTargetRep = String.valueOf(eTargetRepCount.getValue());
@@ -72,6 +74,7 @@ public class ExerciseClickDialogFragment extends DialogFragment {
 			  }
 			});
 			alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+				@Override
 				public void onClick(DialogInterface dialog, int whichButton) {}
 			});
 		return alert.show();

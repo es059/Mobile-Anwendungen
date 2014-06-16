@@ -30,12 +30,14 @@ private static WorkoutplanMapper wpMapper;
 		trainingDayId = a;
 	}
 	
+	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState){
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 		alert.setTitle("Trainingstag hinzufügen");
 		alert.setMessage("Wollen Sie diesen Trainingstag dem Trainingsplan hinzufügen?");
 	
 		alert.setPositiveButton("Bestätigen", new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int whichButton) {
 				/**
 				 * Save the trainingday to the current workoutplan
@@ -66,7 +68,8 @@ private static WorkoutplanMapper wpMapper;
 			});
 
 			alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
-			  public void onClick(DialogInterface dialog, int whichButton) {
+			  @Override
+			public void onClick(DialogInterface dialog, int whichButton) {
 			    // Canceled.
 			  }
 			});

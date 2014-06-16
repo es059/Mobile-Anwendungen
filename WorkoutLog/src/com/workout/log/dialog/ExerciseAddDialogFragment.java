@@ -83,6 +83,7 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 		alert.setView(view);
 
 		alert.setPositiveButton("Speichern", new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int whichButton) {
 				// String aus Textfeld holen  
 				String value = String.valueOf(exerciseName.getText());
@@ -101,7 +102,8 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 		});
 
 		alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
-		  public void onClick(DialogInterface dialog, int whichButton) {
+		  @Override
+		public void onClick(DialogInterface dialog, int whichButton) {
 		    // Canceled.
 		  }
 		});

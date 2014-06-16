@@ -49,6 +49,7 @@ public class ExerciseUpdateDialogFragment extends DialogFragment {
 		this.exerciseId = exerciseId;
 	}
 
+	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState){
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 		LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -93,6 +94,7 @@ public class ExerciseUpdateDialogFragment extends DialogFragment {
 		alert.setView(view);
 		
 		alert.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+		@Override
 		public void onClick(DialogInterface dialog, int whichButton) {
 			// String aus Textfeld holen  
 			String value = String.valueOf(exerciseName.getText());
@@ -110,7 +112,8 @@ public class ExerciseUpdateDialogFragment extends DialogFragment {
 		});
 
 		alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
-		  public void onClick(DialogInterface dialog, int whichButton) {
+		  @Override
+		public void onClick(DialogInterface dialog, int whichButton) {
 		    // Canceled.
 		  }
 		});

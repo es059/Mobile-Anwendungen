@@ -174,11 +174,13 @@ public class HelperActivity extends Activity{
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                     R.drawable.ic_drawer, R.string.drawer_open,
                     R.string.drawer_close) {
-              public void onDrawerClosed(View view) {
+              @Override
+			public void onDrawerClosed(View view) {
             	  getActionBar().setTitle(mTitle);
             	  invalidateOptionsMenu(); 
               }
-              public void onDrawerOpened(View drawerView) {
+              @Override
+			public void onDrawerOpened(View drawerView) {
             	  getActionBar().setTitle(mDrawerTitle);
             	  invalidateOptionsMenu();
               }

@@ -18,7 +18,7 @@ public class LineGraphFragment extends Fragment{
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState){
-		view = (View) inflater.inflate(R.layout.line_graph_fragment, null);
+		view = inflater.inflate(R.layout.line_graph_fragment, null);
 		return view;
 	}
 	

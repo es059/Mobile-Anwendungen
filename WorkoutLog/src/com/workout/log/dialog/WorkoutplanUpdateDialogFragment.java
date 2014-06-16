@@ -36,6 +36,7 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment {
 		this.workoutPlanId = exerciseId;
 	}
 
+	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState){
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 		LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -58,6 +59,7 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment {
 		alert.setView(view);
 		
 		alert.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+		@Override
 		public void onClick(DialogInterface dialog, int whichButton) {
 			// String aus Textfeld holen  
 			String value = String.valueOf(workoutplanName.getText());
@@ -112,7 +114,8 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment {
 		});
 		
 		alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
-		  public void onClick(DialogInterface dialog, int whichButton) {
+		  @Override
+		public void onClick(DialogInterface dialog, int whichButton) {
 		    // Canceled.
 		  }
 		});
@@ -122,10 +125,10 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment {
 	@SuppressWarnings("static-access")
 	public static void decreaseCurrenListId(Fragment fragment){
 		ActionBarWorkoutPlanPickerFragment actionBarWorkoutPlanPickerFragment = (ActionBarWorkoutPlanPickerFragment) fragment;
-		int currentListId = actionBarWorkoutPlanPickerFragment.getCurrentListId();
+		int currentListId = ActionBarWorkoutPlanPickerFragment.getCurrentListId();
 		/**
 		 * If the currentId is 0 then there is no need to decrease it further
 		 */
-		if(currentListId != 0) actionBarWorkoutPlanPickerFragment.setCurrentListId(currentListId-1);
+		if(currentListId != 0) ActionBarWorkoutPlanPickerFragment.setCurrentListId(currentListId-1);
 	}
 }

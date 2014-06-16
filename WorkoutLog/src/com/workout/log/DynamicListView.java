@@ -126,7 +126,8 @@ public class DynamicListView extends ListView {
      */
     private AdapterView.OnItemLongClickListener mOnItemLongClickListener =
             new AdapterView.OnItemLongClickListener() {
-                public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id) {
+                @Override
+				public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id) {
                     mTotalOffset = 0;
 
                     int position = pointToPosition(mDownX, mDownY);
@@ -350,7 +351,8 @@ public class DynamicListView extends ListView {
 
             final ViewTreeObserver observer = getViewTreeObserver();
             observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                public boolean onPreDraw() {
+                @Override
+				public boolean onPreDraw() {
                     observer.removeOnPreDrawListener(this);
 
                     View switchView = getViewForID(switchItemID);
@@ -457,7 +459,8 @@ public class DynamicListView extends ListView {
      * BitmapDrawable's bounds.
      */
     private final static TypeEvaluator<Rect> sBoundEvaluator = new TypeEvaluator<Rect>() {
-        public Rect evaluate(float fraction, Rect startValue, Rect endValue) {
+        @Override
+		public Rect evaluate(float fraction, Rect startValue, Rect endValue) {
             return new Rect(interpolate(startValue.left, endValue.left, fraction),
                     interpolate(startValue.top, endValue.top, fraction),
                     interpolate(startValue.right, endValue.right, fraction),
@@ -522,7 +525,8 @@ public class DynamicListView extends ListView {
         private int mCurrentVisibleItemCount;
         private int mCurrentScrollState;
 
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+        @Override
+		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
                              int totalItemCount) {
             mCurrentFirstVisibleItem = firstVisibleItem;
             mCurrentVisibleItemCount = visibleItemCount;

@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -63,7 +64,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener {
 		listView = (DynamicListView) view.findViewById(R.id.TrainingDayList);
 		
 		listView.setOnItemClickListener(this);
-		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); 
+		listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE); 
 		
 		updateListView(null);
 		loadSwipeToDimiss();
@@ -162,7 +163,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener {
                            		stableArrayAdapter = new StableArrayAdapter(getActivity(), R.layout.listview_training_day, trainingDayList);
                            		((DynamicListView) listView).setCheeseList(trainingDayList);
                            		listView.setAdapter(stableArrayAdapter);
-                           		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);                                                
+                           		listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);                                                
                                }
                            }
                        });

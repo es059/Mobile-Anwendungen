@@ -37,11 +37,14 @@ public class TrainingDaysSearchBarFragment extends Fragment {
 		tdMapper = new TrainingDayMapper(getActivity());
 		searchBar = (EditText) view.findViewById(R.id.searchbar_text);
 		searchBar.addTextChangedListener(new TextWatcher() {
+			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after){}
 
-	        public void onTextChanged(CharSequence s, int start, int before, int count){}
+	        @Override
+			public void onTextChanged(CharSequence s, int start, int before, int count){}
 
-	        public void afterTextChanged(Editable s){
+	        @Override
+			public void afterTextChanged(Editable s){
 	        	
 	        	ArrayList<TrainingDay> trainingDayList = new ArrayList<TrainingDay>();
 	        	trainingDayList =   tdMapper.searchKeyString(String.valueOf(s));

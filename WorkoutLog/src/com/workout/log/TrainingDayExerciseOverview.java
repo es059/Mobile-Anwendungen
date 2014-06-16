@@ -38,6 +38,7 @@ public class TrainingDayExerciseOverview extends Fragment {
 	private PerformanceTargetMapper ptMapper;
 	private OverviewAdapter adapter = null;
 		
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.training_day_exercise_overview, container, false);
         /**
