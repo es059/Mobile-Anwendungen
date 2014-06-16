@@ -198,6 +198,7 @@ public class ExerciseMapper {
 				System.out.println(exercise.getId() + exercise.getName() + exercise.getTrainingDayHasExerciseId());
 			}while(cursor.moveToNext());
 		}
+		cursor.close();
 		db.close();
 		return exerciseList;
 	}

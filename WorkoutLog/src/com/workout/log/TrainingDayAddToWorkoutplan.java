@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,10 +37,10 @@ import com.workout.log.navigation.OnHomePressedListener;
  * @author Eric Schmidt
  */
 public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClickListener{
-	private ArrayList<TrainingDay> trainingDayList;
 	private TrainingDayListAdapter trainingDayListAdapter;
 	private TrainingDayMapper tdMapper;
 	private ListView trainingDayListView; 
+	
 	private int workoutplanId;
 	private ManageWorkoutplan manageWorkoutplan;
 	private View view;
@@ -75,6 +76,14 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 				}		
 			});
 			
+		    /**
+			 * Add the searchBar fragment to the current fragment
+			 */
+		    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
+	        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+	        transaction.replace(R.id.add_searchBar, new TrainingDaysSearchBarFragment(this), "ManageTrainingDaysSearchBar");
+	        transaction.commit();
+			
 			setHasOptionsMenu(true);
 			return view;
 	}
@@ -91,29 +100,16 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 		
 		manageWorkoutplan = (ManageWorkoutplan) getActivity().getFragmentManager().findFragmentByTag("ManageWorkoutplan");
 		workoutplanId = manageWorkoutplan.getWorkoutplanId();
+		
 		tdMapper = new TrainingDayMapper(getActivity());
 		trainingDayListView = (ListView) view.findViewById(R.id.trainingDay_add_list);
-		trainingDayList = new ArrayList<TrainingDay>();
-		trainingDayList = tdMapper.getAllTrainingDay();
-		trainingDayListAdapter = new TrainingDayListAdapter(getActivity(), R.layout.listview_training_day, trainingDayList);
-		trainingDayListView.setAdapter(trainingDayListAdapter);
 		trainingDayListView.setOnItemClickListener(this);
-	   
-		loadSwipeToDismiss();
-		
-        /**
-		 * Add the searchBar fragment to the current fragment
-		 */
-	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        transaction.replace(R.id.add_searchBar, new TrainingDaysSearchBarFragment(this), "ManageTrainingDaysSearchBar");
-        transaction.commit();
+		updateListView(null);
 
+		loadSwipeToDismiss();
 		setHasOptionsMenu(true);
 	}
 	
-	
-
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.workoutplan_menu, menu);
@@ -140,10 +136,9 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 		
 	}
 	
-	public void updateAdapter(ArrayList<TrainingDay> trainingDayList) {
-		trainingDayListAdapter.clear();
-		trainingDayListAdapter = new TrainingDayListAdapter(getActivity(),0,trainingDayList);
-		trainingDayListView.setAdapter(trainingDayListAdapter);	
+	@SuppressWarnings("unchecked")
+	public void updateListView(ArrayList<TrainingDay> trainingDayList) {
+		new BackGroundTask().execute(trainingDayList);
 	}
 	
 	public void openManageWorkoutplan(){
@@ -197,4 +192,35 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 		trainingDayListView.setOnScrollListener(touchListener.makeScrollListener());
 	}
 	
+	/**
+	 * Handels the Database queries in an Async Task
+	 * 
+	 * @author Eric Schmidt
+	 */
+	public class BackGroundTask extends AsyncTask<ArrayList<TrainingDay>, Void, TrainingDayListAdapter> {
+		public BackGroundTask (){}
+
+	    @Override
+	    protected void onPreExecute() {
+	        super.onPreExecute();
+	        getActivity().setProgressBarIndeterminateVisibility(true);
+	    }
+
+	    @Override
+	    protected TrainingDayListAdapter doInBackground(ArrayList<TrainingDay>... params) {	
+			if(params[0] == null) params[0] = tdMapper.getAllTrainingDay();
+			trainingDayListAdapter = new TrainingDayListAdapter(getActivity(), R.layout.listview_training_day, params[0]);
+			
+			return trainingDayListAdapter;
+	    }
+
+	    @Override
+	    protected void onPostExecute(TrainingDayListAdapter result) {
+	        super.onPostExecute(result);
+	        
+	        if (result != null) trainingDayListView.setAdapter(result);
+	        
+	        getActivity().setProgressBarIndeterminateVisibility(false);
+	    }
+	}
 }

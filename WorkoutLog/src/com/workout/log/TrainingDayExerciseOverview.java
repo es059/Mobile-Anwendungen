@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,16 +36,8 @@ public class TrainingDayExerciseOverview extends Fragment {
 	private int trainingDayId;
 	private static TrainingDayMapper tdMapper;
 	private PerformanceTargetMapper ptMapper;
-	
-    /**
-     * Variables for the UpdateListView method
-     */
-	private ArrayList<MuscleGroup> mList;
-	private ArrayList<ExerciseItem> listComplete;
-	private ArrayList<Exercise> eListMuscleGroup;
 	private OverviewAdapter adapter = null;
-	
-	
+		
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.training_day_exercise_overview, container, false);
         /**
@@ -132,27 +125,7 @@ public class TrainingDayExerciseOverview extends Fragment {
 	 * @author Eric Schmidt
 	 */
 	public void updateListView(){
-		/**
-		 * Select all MuscleGroups
-		 */
-		MuscleGroupMapper mMapper = new MuscleGroupMapper(getActivity());
-		mList = mMapper.getAll();
-		/**
-		 * Select Exercises from selected Trainingday and MuscleGroup 
-		 */
-		ExerciseMapper eMapper = new ExerciseMapper(getActivity());
-		exerciseList = eMapper.getExerciseByTrainingDay(trainingDayId);
-		listComplete = new ArrayList<ExerciseItem>();
-		for (MuscleGroup m : mList){
-			eListMuscleGroup = eMapper.getExerciseByMuscleGroup(exerciseList, m.getId());
-			if (!eListMuscleGroup.isEmpty()){
-				listComplete.add(new MuscleGroupSectionItem(m.getName()));
-				listComplete.addAll(eListMuscleGroup);
-			}
-		}
-		
-		adapter = new OverviewAdapter(getActivity(), listComplete,trainingDayId);
-		exerciseListView.setAdapter(adapter);
+		new BackGroundTask(exerciseListView).execute();
 	}
 	
 	/**
@@ -185,6 +158,71 @@ public class TrainingDayExerciseOverview extends Fragment {
         // we don't look for swipes.
         exerciseListView.setOnScrollListener(touchListener.makeScrollListener());
 	}
+	
+	/**
+	 * Handels the Database queries in an Async Task
+	 * 
+	 * @author Eric Schmidt
+	 */
+	public class BackGroundTask extends AsyncTask<Void, Void, OverviewAdapter> {
+	    /**
+	     * Variables for the UpdateListView method
+	     */
+		private ArrayList<Exercise> eListMuscleGroup;
+		private ArrayList<MuscleGroup> mList = null;
+		private ArrayList<ExerciseItem> listComplete;
+
+		
+		private ListView exerciseListView;
+
+		public BackGroundTask (ListView exerciseListView){	
+			this.exerciseListView = exerciseListView;
+		}
+
+	    @Override
+	    protected void onPreExecute() {
+	        super.onPreExecute();
+	        getActivity().setProgressBarIndeterminateVisibility(true);
+	    }
+
+	    @Override
+	    protected OverviewAdapter doInBackground(Void... params) {
+			/**
+			 * Select all MuscleGroups
+			 */
+			MuscleGroupMapper mMapper = new MuscleGroupMapper(getActivity());
+			mList = mMapper.getAll();
+			/**
+			 * Select Exercises from selected Trainingday and MuscleGroup 
+			 */
+			ExerciseMapper eMapper = new ExerciseMapper(getActivity());
+			exerciseList = eMapper.getExerciseByTrainingDay(trainingDayId);
+			listComplete = new ArrayList<ExerciseItem>();
+			for (MuscleGroup m : mList){
+				eListMuscleGroup = eMapper.getExerciseByMuscleGroup(exerciseList, m.getId());
+				if (!eListMuscleGroup.isEmpty()){
+					listComplete.add(new MuscleGroupSectionItem(m.getName()));
+					listComplete.addAll(eListMuscleGroup);
+				}
+			}
+			
+			adapter = new OverviewAdapter(getActivity(), listComplete,trainingDayId);
+			
+			return adapter;
+	    }
+
+	    @Override
+	    protected void onPostExecute(OverviewAdapter result) {
+	        super.onPostExecute(result);
+
+	        if (result != null) exerciseListView.setAdapter(adapter);
+	        
+	        else exerciseListView.invalidateViews();
+	        
+	        getActivity().setProgressBarIndeterminateVisibility(false);
+	    }
+	}
 }
+
 
 

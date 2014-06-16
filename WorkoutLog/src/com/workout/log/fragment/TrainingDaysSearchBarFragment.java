@@ -46,8 +46,8 @@ public class TrainingDaysSearchBarFragment extends Fragment {
 	        	ArrayList<TrainingDay> trainingDayList = new ArrayList<TrainingDay>();
 	        	trainingDayList =   tdMapper.searchKeyString(String.valueOf(s));
 	        	
-	        	if (fragment instanceof ManageTrainingDays)((ManageTrainingDays) fragment).updateAdapter(trainingDayList);
-	        	if (fragment instanceof TrainingDayAddToWorkoutplan)((TrainingDayAddToWorkoutplan) fragment).updateAdapter(trainingDayList);
+	        	if (fragment instanceof ManageTrainingDays)((ManageTrainingDays) fragment).updateListView(trainingDayList);
+	        	if (fragment instanceof TrainingDayAddToWorkoutplan)((TrainingDayAddToWorkoutplan) fragment).updateListView(trainingDayList);
 	        }
 	  });
 		return view;

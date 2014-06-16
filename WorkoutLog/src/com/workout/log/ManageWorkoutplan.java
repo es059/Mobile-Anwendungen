@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -120,7 +118,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener {
 	 */
 	@SuppressWarnings("unchecked")
 	public void updateListView(ArrayList<TrainingDay> trainingdayList) {
-		new BackGroundTask(listView, getActivity()).execute(trainingdayList);
+		new BackGroundTask(listView).execute(trainingdayList);
 	}
 
 	public void setWorkoutplanId(int id) {
@@ -187,22 +185,15 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener {
 		private WorkoutplanMapper wpMapper;
 		
 		private DynamicListView trainingDayListView;
-		private ProgressDialog mDialog;
 
-		public BackGroundTask (DynamicListView trainingDayListView, Context context){	
+		public BackGroundTask (DynamicListView trainingDayListView){	
 			this.trainingDayListView = trainingDayListView;
-			
-		    mDialog = new ProgressDialog(getActivity());
-		    mDialog.setProgressStyle(ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT);
-		    mDialog.setMessage("Lade Übungen");
-		    mDialog.setCancelable(false);
-		    mDialog.setCanceledOnTouchOutside(false);
 		}
 
 	    @Override
 	    protected void onPreExecute() {
 	        super.onPreExecute();
-	        mDialog.show();
+	        getActivity().setProgressBarIndeterminateVisibility(true);
 	    }
 
 	    @Override
@@ -233,9 +224,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener {
 
 	        if (result != null) trainingDayListView.setAdapter(result);
 	       	        
-	        if (mDialog.isShowing()) {
-	        	mDialog.dismiss();
-	        }   
+	        getActivity().setProgressBarIndeterminateVisibility(false); 
 	    }
 	}
 }

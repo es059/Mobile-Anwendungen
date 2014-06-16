@@ -119,6 +119,7 @@ public class TrainingDayMapper {
 				trainingdayList.add(d);
 			}while(cursor.moveToNext());
 		}
+		cursor.close();
 		db.close();
 		return trainingdayList;
 	}

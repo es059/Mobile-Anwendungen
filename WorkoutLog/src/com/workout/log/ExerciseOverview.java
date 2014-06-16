@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -118,7 +116,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 	 * @author Eric Schmidt
 	 */
 	public void updateListView(int trainingDayId){
-		new BackGroundTask(exerciseView, getActivity()).execute(trainingDayId);
+		new BackGroundTask(exerciseView).execute(trainingDayId);
 	}
 
 	@Override
@@ -175,24 +173,17 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 		private ArrayList<Exercise> eListMuscleGroup;
 		
 		private ListView exerciseView;
-		private ProgressDialog mDialog;
 
-		public BackGroundTask (ListView exerciseView, Context context){	
+		public BackGroundTask (ListView exerciseView){	
 			this.exerciseView = exerciseView;
 
 			exerciseView.setAdapter(null);
-			
-		    mDialog = new ProgressDialog(getActivity());
-		    mDialog.setProgressStyle(ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT);
-		    mDialog.setMessage("Lade Übungen");
-		    mDialog.setCancelable(false);
-		    mDialog.setCanceledOnTouchOutside(false);
 		}
 
 	    @Override
 	    protected void onPreExecute() {
 	        super.onPreExecute();
-	        mDialog.show();
+	        getActivity().setProgressBarIndeterminateVisibility(true);
 	    }
 
 	    @Override
@@ -246,9 +237,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 
 	        if (result != null) exerciseView.setAdapter(result);
 	        
-	        if (mDialog.isShowing()) {
-	        	mDialog.dismiss();
-	        }   
+	        getActivity().setProgressBarIndeterminateVisibility(false);  
 	    }
 
 	}

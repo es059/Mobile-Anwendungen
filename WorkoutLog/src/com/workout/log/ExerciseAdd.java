@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -45,7 +43,6 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener{
 	private ListView exerciseListView;
 	private DialogFragment dialogFragment;
 	private ExerciseListWithoutSetsRepsAdapter listAdapter;
-	private boolean firstTime = true;
 	
 	private  ExerciseMapper eMapper;
 
@@ -58,7 +55,7 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener{
 		 */
 	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        transaction.replace(R.id.add_searchBar, new ExerciseBarSearchBarFragment(), "ActionBarSearchBarFragment");
+        transaction.replace(R.id.add_searchBar, new ExerciseBarSearchBarFragment(this), "ActionBarSearchBarFragment");
         transaction.commit();
 
 		setHasOptionsMenu(true);
@@ -77,7 +74,7 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener{
 		exerciseListView = (ListView) getView().findViewById(R.id.add_exerciseList);
 		exerciseListView.setOnItemLongClickListener(this);
 		
-		updateAdapter(eMapper.getAll());
+		updateListView(eMapper.getAll());
 		loadSwipeToDismiss();
 	}
 	
@@ -133,8 +130,8 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener{
 	 * @author Eric Schmidt
 	 */
 	@SuppressWarnings("unchecked")
-	public void updateAdapter(ArrayList<Exercise> List){
-		new BackGroundTask(exerciseListView, getActivity()).execute(List);
+	public void updateListView(ArrayList<Exercise> List){
+		new BackGroundTask(exerciseListView).execute(List);
 	}
 	
 	/**
@@ -194,22 +191,15 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener{
 		private MuscleGroupMapper mMapper = null;
 		
 		private ListView exerciseListView;
-		private ProgressDialog mDialog;
 
-		public BackGroundTask (ListView exerciseListView, Context context){	
+		public BackGroundTask (ListView exerciseListView){	
 			this.exerciseListView = exerciseListView;
-			
-		    mDialog = new ProgressDialog(getActivity());
-		    mDialog.setProgressStyle(ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT);
-		    mDialog.setMessage("Lade Übungen");
-		    mDialog.setCancelable(false);
-		    mDialog.setCanceledOnTouchOutside(false);
 		}
 
 	    @Override
 	    protected void onPreExecute() {
 	        super.onPreExecute();
-	        if (firstTime) mDialog.show();
+	        getActivity().setProgressBarIndeterminateVisibility(true);
 	    }
 
 	    @Override
@@ -240,17 +230,8 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener{
 	        if (result != null) exerciseListView.setAdapter(result);
 	        else exerciseListView.invalidateViews();
 	        
-	        if (mDialog.isShowing()) {
-	        	mDialog.dismiss();
-	        }   
-	        
-			/**
-			 * Set the boolean firstTime to false if the Fragment it paused for the
-			 * first time ensuring that the asyncTask is doing the right routine
-			 */
-			firstTime = false;
+	        getActivity().setProgressBarIndeterminateVisibility(false);
 	    }
-
 	}
 }
 	
