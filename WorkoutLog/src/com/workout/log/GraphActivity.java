@@ -1,15 +1,15 @@
 package com.workout.log;
 
-import com.example.workoutlog.R;
-import com.workout.log.fragment.ActionBarGraphFragment;
-import com.workout.log.fragment.LineGraphFragment;
-
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.workoutlog.R;
+import com.workout.log.fragment.ActionBarGraphFragment;
+import com.workout.log.fragment.LineGraphFragment;
 
 public class GraphActivity extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

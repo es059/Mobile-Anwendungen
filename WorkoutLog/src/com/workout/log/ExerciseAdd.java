@@ -2,24 +2,12 @@ package com.workout.log;
 
 import java.util.ArrayList;
 
-import com.example.workoutlog.R;
-import com.workout.log.listAdapter.*;
-import com.workout.log.bo.Exercise;
-import com.workout.log.bo.MuscleGroup;
-import com.workout.log.data.ExerciseItem;
-import com.workout.log.data.MuscleGroupSectionItem;
-import com.workout.log.db.ExerciseMapper;
-import com.workout.log.db.MuscleGroupMapper;
-import com.workout.log.db.PerformanceActualMapper;
-import com.workout.log.db.PerformanceTargetMapper;
-import com.workout.log.dialog.ExerciseAddDialogFragment;
-import com.workout.log.dialog.ExerciseUpdateDialogFragment;
-import com.workout.log.fragment.ExerciseBarSearchBarFragment;
-import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
-
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,23 +20,32 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.workoutlog.R;
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.MuscleGroup;
+import com.workout.log.data.ExerciseItem;
+import com.workout.log.data.MuscleGroupSectionItem;
+import com.workout.log.db.ExerciseMapper;
+import com.workout.log.db.MuscleGroupMapper;
+import com.workout.log.db.PerformanceActualMapper;
+import com.workout.log.db.PerformanceTargetMapper;
+import com.workout.log.dialog.ExerciseAddDialogFragment;
+import com.workout.log.dialog.ExerciseUpdateDialogFragment;
+import com.workout.log.fragment.ExerciseBarSearchBarFragment;
+import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
+import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
+
 /**
- *  With this fragment the user can manage his exercises. You can delete, add, and update exercises. 
- * @author Remi
+ * With this fragment the user can manage his exercises. You can delete, add, and update exercises. 
+ * 
+ * @author Remi & Eric Schmidt
  *
  */
 public class ExerciseAdd extends Fragment implements OnItemLongClickListener{
-	/**
-	 * Variables to implement header in the ListView
-	 */
-	private ArrayList<Exercise> eList;
-	private ArrayList<Exercise> eListMuscleGroup = null;
-	private ArrayList<MuscleGroup> mList = null;
-	private MuscleGroupMapper mMapper = null;
-	
-	private ExerciseListWithoutSetsRepsAdapter listAdapter;
 	private ListView exerciseListView;
 	private DialogFragment dialogFragment;
+	private ExerciseListWithoutSetsRepsAdapter listAdapter;
+	private boolean firstTime = true;
 	
 	private  ExerciseMapper eMapper;
 
@@ -68,35 +65,19 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener{
 		return view;
 	}
 	
+	/**
+	 * Load the methods to populate the ListView
+	 */
 	@Override
 	public void onResume(){
 		super.onResume();
 		
-		exerciseListView = (ListView) getView().findViewById(R.id.add_exerciseList);
-		mMapper = new MuscleGroupMapper(getActivity());
 		eMapper = new ExerciseMapper(getActivity());
 		
-		/**
-		 * Build a ArrayList containing the muscleGroup and exercises
-		 */
-		//Select all MuscleGroups
-		mList = mMapper.getAll();
-		//Select All Exercises from MuscleGroup 
-		eList = eMapper.getAll();
-		ArrayList<ExerciseItem> listComplete = new ArrayList<ExerciseItem>();
-		for (MuscleGroup m : mList){
-			eListMuscleGroup = eMapper.getExerciseByMuscleGroup(eList, m.getId());
-			if (!eListMuscleGroup.isEmpty()){
-				listComplete.add(new MuscleGroupSectionItem(m.getName()));
-				listComplete.addAll(eListMuscleGroup);
-			}
-		}
-		
-		listAdapter = new ExerciseListWithoutSetsRepsAdapter(getActivity(), listComplete);
-		exerciseListView.setAdapter(listAdapter);
-		
+		exerciseListView = (ListView) getView().findViewById(R.id.add_exerciseList);
 		exerciseListView.setOnItemLongClickListener(this);
 		
+		updateAdapter(eMapper.getAll());
 		loadSwipeToDismiss();
 	}
 	
@@ -151,27 +132,9 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener{
 	 * @param List the updated ArrayList
 	 * @author Eric Schmidt
 	 */
+	@SuppressWarnings("unchecked")
 	public void updateAdapter(ArrayList<Exercise> List){
-		listAdapter.clear();
-		/**
-		 * Build a ArrayList containing the muscleGroup and exercises
-		 */
-		//Select all MuscleGroups
-		mList = mMapper.getAll();
-		//Select All Exercises from MuscleGroup 
-		eMapper = new ExerciseMapper(getActivity());
-		ArrayList<ExerciseItem> listComplete = new ArrayList<ExerciseItem>();
-		for (MuscleGroup m : mList){
-			eListMuscleGroup = eMapper.getExerciseByMuscleGroup(List, m.getId());
-			if (!eListMuscleGroup.isEmpty()){
-				listComplete.add(new MuscleGroupSectionItem(m.getName()));
-				listComplete.addAll(eListMuscleGroup);
-			}
-		}
-		
-		listAdapter.addAll(listComplete);
-		listAdapter.notifyDataSetChanged();
-    	exerciseListView.invalidateViews(); 
+		new BackGroundTask(exerciseListView, getActivity()).execute(List);
 	}
 	
 	/**
@@ -216,7 +179,79 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener{
 		 // we don't look for swipes.
 		 exerciseListView.setOnScrollListener(touchListener.makeScrollListener());
 	}
+	
+	/**
+	 * Handels the Database queries in an Async Task
+	 * 
+	 * @author Eric Schmidt
+	 */
+	public class BackGroundTask extends AsyncTask<ArrayList<Exercise>, Void, ExerciseListWithoutSetsRepsAdapter> {
+	    /**
+	     * Variables for the UpdateListView method
+	     */
+		private ArrayList<Exercise> eListMuscleGroup;
+		private ArrayList<MuscleGroup> mList = null;
+		private MuscleGroupMapper mMapper = null;
+		
+		private ListView exerciseListView;
+		private ProgressDialog mDialog;
 
+		public BackGroundTask (ListView exerciseListView, Context context){	
+			this.exerciseListView = exerciseListView;
+			
+		    mDialog = new ProgressDialog(getActivity());
+		    mDialog.setProgressStyle(ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT);
+		    mDialog.setMessage("Lade Übungen");
+		    mDialog.setCancelable(false);
+		    mDialog.setCanceledOnTouchOutside(false);
+		}
+
+	    @Override
+	    protected void onPreExecute() {
+	        super.onPreExecute();
+	        if (firstTime) mDialog.show();
+	    }
+
+	    @Override
+	    protected ExerciseListWithoutSetsRepsAdapter doInBackground(ArrayList<Exercise>... params) {
+	    	/**
+			 * Build a ArrayList containing the muscleGroup and exercises
+			 */
+	    	
+			mMapper = new MuscleGroupMapper(getActivity());
+			//Select all MuscleGroups
+			mList = mMapper.getAll();
+			ArrayList<ExerciseItem> listComplete = new ArrayList<ExerciseItem>();
+			for (MuscleGroup m : mList){
+				eListMuscleGroup = eMapper.getExerciseByMuscleGroup(params[0], m.getId());
+				if (!eListMuscleGroup.isEmpty()){
+					listComplete.add(new MuscleGroupSectionItem(m.getName()));
+					listComplete.addAll(eListMuscleGroup);
+				}
+			}
+			listAdapter = new ExerciseListWithoutSetsRepsAdapter(getActivity(), listComplete);
+			return listAdapter;	
+	    }
+
+	    @Override
+	    protected void onPostExecute(ExerciseListWithoutSetsRepsAdapter result) {
+	        super.onPostExecute(result);
+
+	        if (result != null) exerciseListView.setAdapter(result);
+	        else exerciseListView.invalidateViews();
+	        
+	        if (mDialog.isShowing()) {
+	        	mDialog.dismiss();
+	        }   
+	        
+			/**
+			 * Set the boolean firstTime to false if the Fragment it paused for the
+			 * first time ensuring that the asyncTask is doing the right routine
+			 */
+			firstTime = false;
+	    }
+
+	}
 }
 	
 	

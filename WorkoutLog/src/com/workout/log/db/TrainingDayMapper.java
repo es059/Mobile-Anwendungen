@@ -3,13 +3,13 @@ package com.workout.log.db;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.workout.log.bo.Exercise;
-import com.workout.log.bo.TrainingDay;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.TrainingDay;
 
 public class TrainingDayMapper {
 	
@@ -73,6 +73,7 @@ public class TrainingDayMapper {
 			}while(cursor.moveToNext());
 		}
 		db.close();
+		cursor.close();
 		return trainingdayList;
 	}
 	// Löschen von Trainingstagen
@@ -122,6 +123,14 @@ public class TrainingDayMapper {
 		return trainingdayList;
 	}
 	
+	/**
+	 * Add a Exercise to a trainingDay
+	 * 
+	 * @param trainingsDayId
+	 * @param exerciseId
+	 * @param eTargetSetCount
+	 * @param eTargetRepCount
+	 */
 	public void ExerciseAddToTrainingDay(int trainingsDayId, int exerciseId, int eTargetSetCount,  int eTargetRepCount) {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "INSERT INTO TrainingDayHasExercise (TrainingDay_Id, Exercise_Id) VALUES (" + trainingsDayId +","+exerciseId+")";
@@ -132,6 +141,29 @@ public class TrainingDayMapper {
 		sql= "INSERT INTO PerformanceTarget (TrainingDay_Id, Exercise_Id, RepetitionTarget, SetTarget) VALUES  (" + trainingsDayId +","+exerciseId+", " + eTargetRepCount + ","+eTargetSetCount+")";
 		db.execSQL(sql);
 		db.close();
+	}
+	
+	/**
+	 * Check if a Exercise was already added to a trainingDay
+	 * 
+	 * @param trainingDayId
+	 * @param e
+	 */
+	public boolean checkIfExist(int trainingDayId, int exerciseId){
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		boolean exist = false;
+		
+		sql = "Select * FROM TrainingDayHasExercise WHERE TrainingDay_Id = " + trainingDayId +" AND Exercise_Id = "+ exerciseId;
+		Cursor cursor = db.rawQuery(sql, null);
+	    if (cursor.moveToFirst()) {
+	    	do {
+		              exist = true;	
+		              return exist;
+		        } while (cursor.moveToNext());
+	    }
+	    cursor.close();
+	    db.close();
+	    return exist;
 	}
 	
 	public void exerciseDeleteFromTrainingDay(int trainingDayId, Exercise e) {

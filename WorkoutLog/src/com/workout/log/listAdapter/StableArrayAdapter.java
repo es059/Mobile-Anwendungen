@@ -16,13 +16,13 @@
 
 package com.workout.log.listAdapter;
 
+import java.util.HashMap;
+import java.util.List;
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-
-import java.util.HashMap;
-import java.util.List;
 
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.customLayout.ListViewTrainingDay;

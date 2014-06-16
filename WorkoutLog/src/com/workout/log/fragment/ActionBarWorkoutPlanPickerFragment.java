@@ -67,7 +67,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 			workoutplanTextView.setText(workoutplanList.get(currentListId).getName());
 			manageWorkoutplan.setWorkoutplanId(workoutplanList.get(currentListId).getId());
 			/**
-			 * ClickListener handles the Update function of the workoutplan
+			 * ClickListener handles the Update/delete function of the workoutplan
 			 */
 			workoutplanTextView.setOnClickListener(new OnClickListener(){
 				@Override
@@ -150,5 +150,19 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 	
 	public static int getCurrentListId() {
 		return currentListId;
+	}
+	
+	/**
+	 * Returns the previous workoutplan to set the current workoutplan
+	 * if the one used now is deleted
+	 * 
+	 * @return
+	 */
+	public Workoutplan getPreviousWorkoutplan(){
+		if (workoutplanList.size() > 1){
+			if (currentListId != 0) return workoutplanList.get(currentListId -1);
+			else return workoutplanList.get(currentListId +1);
+		}
+		return null;
 	}
 }

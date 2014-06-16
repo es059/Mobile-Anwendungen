@@ -2,13 +2,13 @@ package com.workout.log.db;
 
 import java.io.IOException;
 
-import com.workout.log.bo.Exercise;
-import com.workout.log.bo.PerformanceTarget;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.PerformanceTarget;
 
 /**
  * Mapper Class of BusinessObject PerformanceTarget

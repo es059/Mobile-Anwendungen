@@ -1,6 +1,6 @@
 package com.workout.log.bo;
 
-import java.util.*;
+import java.util.Date;
 
 public class Workoutplan {
 

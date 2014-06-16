@@ -2,15 +2,6 @@ package com.workout.log.fragment;
 
 import java.util.ArrayList;
 
-import com.example.workoutlog.R;
-
-
-
-
-import com.workout.log.ExerciseAdd;
-import com.workout.log.bo.Exercise;
-import com.workout.log.db.ExerciseMapper;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -19,6 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+
+import com.example.workoutlog.R;
+import com.workout.log.ExerciseAdd;
+import com.workout.log.bo.Exercise;
+import com.workout.log.db.ExerciseMapper;
 
 public class ExerciseBarSearchBarFragment extends Fragment{
 	

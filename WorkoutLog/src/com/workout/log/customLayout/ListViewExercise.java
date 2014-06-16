@@ -1,15 +1,15 @@
 package com.workout.log.customLayout;
 
-import com.example.workoutlog.R;
-import com.workout.log.bo.Exercise;
-import com.workout.log.bo.PerformanceTarget;
-import com.workout.log.db.PerformanceTargetMapper;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.example.workoutlog.R;
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.PerformanceTarget;
+import com.workout.log.db.PerformanceTargetMapper;
 
 public class ListViewExercise extends RelativeLayout{
 	TextView exerciseView;

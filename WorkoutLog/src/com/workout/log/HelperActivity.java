@@ -1,11 +1,5 @@
 package com.workout.log;
 
-import com.example.workoutlog.R;
-import com.workout.log.data.MenuList;
-import com.workout.log.listAdapter.CustomDrawerAdapter;
-import com.workout.log.navigation.OnBackPressedListener;
-import com.workout.log.navigation.OnHomePressedListener;
-
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -22,6 +16,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.workoutlog.R;
+import com.workout.log.data.MenuList;
+import com.workout.log.listAdapter.CustomDrawerAdapter;
+import com.workout.log.navigation.OnBackPressedListener;
+import com.workout.log.navigation.OnHomePressedListener;
 
 public class HelperActivity extends Activity{
 	private static final String PREF_FIRST_LAUNCH = "first";

@@ -1,7 +1,5 @@
 package com.workout.log.dialog;
 
-import com.workout.log.db.WorkoutplanMapper;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.Toast;
+
+import com.workout.log.db.WorkoutplanMapper;
 
 @SuppressLint("ValidFragment")
 public class TrainingDayAddToWorkoutplanDialogFragment extends DialogFragment {

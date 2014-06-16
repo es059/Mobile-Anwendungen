@@ -2,10 +2,6 @@ package com.workout.log.dialog;
 
 import java.util.ArrayList;
 
-import com.example.workoutlog.R;
-import com.workout.log.bo.Workoutplan;
-import com.workout.log.db.WorkoutplanMapper;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -19,6 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.workoutlog.R;
+import com.workout.log.bo.Workoutplan;
+import com.workout.log.db.WorkoutplanMapper;
 
 @SuppressLint("ValidFragment")
 public class WorkoutplanAddDialogFragment extends DialogFragment {

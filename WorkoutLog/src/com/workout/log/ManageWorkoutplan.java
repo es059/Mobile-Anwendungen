@@ -2,17 +2,11 @@ package com.workout.log;
 
 import java.util.ArrayList;
 
-import com.example.workoutlog.R;
-import com.workout.log.bo.TrainingDay;
-import com.workout.log.bo.Workoutplan;
-import com.workout.log.db.TrainingDayMapper;
-import com.workout.log.db.WorkoutplanMapper;
-import com.workout.log.fragment.ActionBarWorkoutPlanPickerFragment;
-import com.workout.log.listAdapter.StableArrayAdapter;
-import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
-
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,14 +18,22 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.example.workoutlog.R;
+import com.workout.log.bo.TrainingDay;
+import com.workout.log.bo.Workoutplan;
+import com.workout.log.db.TrainingDayMapper;
+import com.workout.log.db.WorkoutplanMapper;
+import com.workout.log.fragment.ActionBarWorkoutPlanPickerFragment;
+import com.workout.log.listAdapter.StableArrayAdapter;
+import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
+
 public class ManageWorkoutplan extends Fragment implements OnItemClickListener {
 	private DynamicListView listView;
-	private ArrayList<Workoutplan> workoutplanList;
 	private ArrayList<TrainingDay> trainingDayList;
 	private StableArrayAdapter stableArrayAdapter;
-	private WorkoutplanMapper wpMapper;
 	private TrainingDayMapper tdMapper;
-	private int workoutplanId =1;
+	
+	private static int workoutplanId =1;
 	int currentListId = -1;
 	private View view;
 
@@ -39,6 +41,13 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		super.onCreateView(inflater, container, savedInstanceState);
 		view = inflater.inflate(R.layout.activity_manage_workoutplan, container,false);
+		/**
+		 * Add the WorkoutplanPicker fragment to the current fragment
+		 */
+	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.replace(R.id.specific_dateTimePicker, new ActionBarWorkoutPlanPickerFragment(), "ActionBarWorkoutPlanPickerFragment");
+        transaction.commit();
 		return view;
 	}
 
@@ -51,39 +60,15 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener {
 	@Override
 	public void onResume(){
 		super.onResume();
-		
-		workoutplanList = new ArrayList<Workoutplan>();
-		trainingDayList = new ArrayList<TrainingDay>();
 
+		tdMapper = new TrainingDayMapper(getActivity());
 		listView = (DynamicListView) view.findViewById(R.id.TrainingDayList);
 		
-		wpMapper = new WorkoutplanMapper(getActivity());
-		tdMapper = new TrainingDayMapper(getActivity());
-		workoutplanList = wpMapper.getAll();
-		if (workoutplanList.size() != 0){
-			for(int i = 0; i < workoutplanList.size(); i++) {
-				if(workoutplanList.get(i).getId() == workoutplanId) {
-					currentListId = i;
-				}
-			}
-			trainingDayList = tdMapper.getAll(workoutplanList.get(currentListId).getId());
-			stableArrayAdapter = new StableArrayAdapter(getActivity(), R.layout.listview_training_day, trainingDayList);
-			
-			listView.setCheeseList(trainingDayList);
-			listView.setAdapter(stableArrayAdapter);
-			listView.setOnItemClickListener(this);
-			listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); 
-			
-			loadSwipeToDimiss();
-		}
-				
-		/**
-		 * Add the WorkoutplanPicker fragment to the current fragment
-		 */
-	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        transaction.replace(R.id.specific_dateTimePicker, new ActionBarWorkoutPlanPickerFragment(), "ActionBarWorkoutPlanPickerFragment");
-        transaction.commit();
+		listView.setOnItemClickListener(this);
+		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); 
+		
+		updateListView(null);
+		loadSwipeToDimiss();
 
 		setHasOptionsMenu(true);
 	}
@@ -128,18 +113,14 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener {
         transaction.commit();
 	}
 	
+	/**
+	 * Update the listView with a given trainingDayList. Submit null if you want to
+	 * choose the current workoutplan and the corresponding trainingDayList
+	 * @param trainingdayList
+	 */
+	@SuppressWarnings("unchecked")
 	public void updateListView(ArrayList<TrainingDay> trainingdayList) {
-		/**
-		 * Referencing the ListView again to ensure that the it points
-		 * to the right view
-		 */
-		listView = (DynamicListView) view.findViewById(R.id.TrainingDayList);
-		
-		stableArrayAdapter = new StableArrayAdapter(getActivity(), R.layout.listview_training_day, trainingdayList);
-		listView.setCheeseList(trainingdayList);
-	    listView.setAdapter(stableArrayAdapter);
-	   
-	    listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); 
+		new BackGroundTask(listView, getActivity()).execute(trainingdayList);
 	}
 
 	public void setWorkoutplanId(int id) {
@@ -148,6 +129,10 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener {
 
 	public int getWorkoutplanId() {
 		return workoutplanId;
+	}
+	
+	public void setTrainingDayList(ArrayList<TrainingDay> trainingDayList) {
+		this.trainingDayList = trainingDayList;
 	}
 
 	/**
@@ -174,16 +159,12 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener {
                            		int i = td.getId();
                            		int primarykey = td.getTrainingDayHasWorkoutplanId();
                            		tdMapper.deleteTrainingDayFromWorkoutplan(i, workoutplanId, primarykey);
-                             
-                           	
+
                            		trainingDayList.remove(position);
                            		stableArrayAdapter = new StableArrayAdapter(getActivity(), R.layout.listview_training_day, trainingDayList);
                            		((DynamicListView) listView).setCheeseList(trainingDayList);
                            		listView.setAdapter(stableArrayAdapter);
-                           		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); 
-                               	
-                                   
-                                   
+                           		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);                                                
                                }
                            }
                        });
@@ -191,5 +172,70 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener {
 		// Setting this scroll listener is required to ensure that during ListView scrolling,
 		// we don't look for swipes.
 		listView.setOnScrollListener(touchListener.makeScrollListener());
+	}
+	
+	/**
+	 * Handels the Database queries in an Async Task
+	 * 
+	 * @author Eric Schmidt
+	 */
+	public class BackGroundTask extends AsyncTask<ArrayList<TrainingDay>, Void, StableArrayAdapter> {
+	    /**
+	     * Variables for the UpdateListView method
+	     */
+		private ArrayList<Workoutplan> workoutplanList;
+		private WorkoutplanMapper wpMapper;
+		
+		private DynamicListView trainingDayListView;
+		private ProgressDialog mDialog;
+
+		public BackGroundTask (DynamicListView trainingDayListView, Context context){	
+			this.trainingDayListView = trainingDayListView;
+			
+		    mDialog = new ProgressDialog(getActivity());
+		    mDialog.setProgressStyle(ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT);
+		    mDialog.setMessage("Lade Übungen");
+		    mDialog.setCancelable(false);
+		    mDialog.setCanceledOnTouchOutside(false);
+		}
+
+	    @Override
+	    protected void onPreExecute() {
+	        super.onPreExecute();
+	        mDialog.show();
+	    }
+
+	    @Override
+	    protected StableArrayAdapter doInBackground(ArrayList<TrainingDay>... params) {
+			wpMapper = new WorkoutplanMapper(getActivity());
+			
+			workoutplanList = new ArrayList<Workoutplan>();
+			
+			workoutplanList = wpMapper.getAll();
+
+			if (workoutplanList.size() != 0){
+				for(int i = 0; i < workoutplanList.size(); i++) {
+					if(workoutplanList.get(i).getId() == workoutplanId) {
+						currentListId = i;
+					}
+				}
+				if (params[0] == null)params[0] = tdMapper.getAll(workoutplanList.get(currentListId).getId());	
+				stableArrayAdapter = new StableArrayAdapter(getActivity(), R.layout.listview_training_day, params[0]);
+				setTrainingDayList(params[0]);
+			}
+						
+			return stableArrayAdapter;	
+	    }
+
+	    @Override
+	    protected void onPostExecute(StableArrayAdapter result) {
+	        super.onPostExecute(result);
+
+	        if (result != null) trainingDayListView.setAdapter(result);
+	       	        
+	        if (mDialog.isShowing()) {
+	        	mDialog.dismiss();
+	        }   
+	    }
 	}
 }

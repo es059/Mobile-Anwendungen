@@ -2,17 +2,16 @@ package com.workout.log.customLayout;
 
 import java.util.ArrayList;
 
-import com.example.workoutlog.R;
-import com.workout.log.bo.Exercise;
-import com.workout.log.bo.TrainingDay;
-import com.workout.log.db.ExerciseMapper;
-import com.workout.log.db.TrainingDayMapper;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.example.workoutlog.R;
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.TrainingDay;
+import com.workout.log.db.ExerciseMapper;
 
 public class ListViewTrainingDay extends RelativeLayout{
 	private TextView titel;

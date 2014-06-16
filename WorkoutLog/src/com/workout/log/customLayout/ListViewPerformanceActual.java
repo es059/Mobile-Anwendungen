@@ -1,14 +1,14 @@
 package com.workout.log.customLayout;
 
-import com.example.workoutlog.R;
-import com.workout.log.bo.PerformanceActual;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.example.workoutlog.R;
+import com.workout.log.bo.PerformanceActual;
 
 public class ListViewPerformanceActual extends RelativeLayout{
 	private TextView set;

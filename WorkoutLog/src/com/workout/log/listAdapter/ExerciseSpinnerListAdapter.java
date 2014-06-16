@@ -1,7 +1,6 @@
 package com.workout.log.listAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.content.Context;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.workout.log.bo.Exercise;
-import com.workout.log.customLayout.ListViewExercise;
 import com.workout.log.customLayout.SpinnerExercise;
 
 public class ExerciseSpinnerListAdapter extends ArrayAdapter<Exercise>{

@@ -2,19 +2,19 @@ package com.workout.log.listAdapter;
 
 import java.util.ArrayList;
 
-import com.example.workoutlog.R;
-import com.workout.log.bo.Exercise;
-import com.workout.log.bo.PerformanceTarget;
-import com.workout.log.data.ExerciseItem;
-import com.workout.log.data.MuscleGroupSectionItem;
-import com.workout.log.db.PerformanceTargetMapper;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.example.workoutlog.R;
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.PerformanceTarget;
+import com.workout.log.data.ExerciseItem;
+import com.workout.log.data.MuscleGroupSectionItem;
+import com.workout.log.db.PerformanceTargetMapper;
 
 public class OverviewAdapter  extends ArrayAdapter<ExerciseItem>{
 	private ArrayList<ExerciseItem> items;

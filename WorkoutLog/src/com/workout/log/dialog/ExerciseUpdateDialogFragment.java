@@ -2,15 +2,6 @@ package com.workout.log.dialog;
 
 import java.util.ArrayList;
 
-import com.example.workoutlog.R;
-import com.workout.log.bo.Exercise;
-import com.workout.log.bo.MuscleGroup;
-import com.workout.log.data.ExerciseItem;
-import com.workout.log.data.MuscleGroupSectionItem;
-import com.workout.log.db.ExerciseMapper;
-import com.workout.log.db.MuscleGroupMapper;
-import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -26,6 +17,15 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.workoutlog.R;
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.MuscleGroup;
+import com.workout.log.data.ExerciseItem;
+import com.workout.log.data.MuscleGroupSectionItem;
+import com.workout.log.db.ExerciseMapper;
+import com.workout.log.db.MuscleGroupMapper;
+import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
 
 @SuppressLint("ValidFragment")
 public class ExerciseUpdateDialogFragment extends DialogFragment {

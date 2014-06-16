@@ -2,17 +2,17 @@ package com.workout.log.listAdapter;
 
 import java.util.ArrayList;
 
-import com.example.workoutlog.R;
-import com.workout.log.bo.Exercise;
-import com.workout.log.data.ExerciseItem;
-import com.workout.log.data.MuscleGroupSectionItem;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.example.workoutlog.R;
+import com.workout.log.bo.Exercise;
+import com.workout.log.data.ExerciseItem;
+import com.workout.log.data.MuscleGroupSectionItem;
 
 public class ExerciseListWithoutSetsRepsAdapter extends ArrayAdapter<ExerciseItem>{
 	private ArrayList<ExerciseItem> items;

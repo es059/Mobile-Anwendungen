@@ -16,6 +16,8 @@
 
 package com.workout.log;
 
+import java.util.ArrayList;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
@@ -38,9 +40,6 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-
-import com.workout.log.bo.Exercise;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.listAdapter.StableArrayAdapter;
 

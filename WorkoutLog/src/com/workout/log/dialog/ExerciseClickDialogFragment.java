@@ -1,8 +1,5 @@
 package com.workout.log.dialog;
 
-import com.example.workoutlog.R;
-import com.workout.log.db.TrainingDayMapper;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.Toast;
+
+import com.example.workoutlog.R;
+import com.workout.log.db.TrainingDayMapper;
 
 @SuppressLint("ValidFragment")
 public class ExerciseClickDialogFragment extends DialogFragment {
@@ -28,16 +28,14 @@ public class ExerciseClickDialogFragment extends DialogFragment {
 		tdMapper = new TrainingDayMapper(a);
 		
 		return exerciseClickDialogFragment;
-		
 	}
 	
 	public ExerciseClickDialogFragment(int trainingDayId, int exerciseId ) {
 		super();
 		this.trainingDayId = trainingDayId;
-		this.exerciseId = exerciseId;
-		
-		
+		this.exerciseId = exerciseId;	
 	}
+	
 	public Dialog onCreateDialog(Bundle savedInstanceState){
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 		LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -63,8 +61,13 @@ public class ExerciseClickDialogFragment extends DialogFragment {
 				if(eTargetSet.isEmpty() || eTargetRep.isEmpty()) {
 					Toast.makeText(getActivity(), "Bitte alle Felder ausfüllen!", Toast.LENGTH_SHORT ).show();
 				}else {
-					tdMapper.ExerciseAddToTrainingDay(trainingDayId, exerciseId, eTargetSetCount.getValue(), eTargetRepCount.getValue());
-					Toast.makeText(getActivity(), "Übung wurde erfolgreich dem Trainingtag hinzugefügt!", Toast.LENGTH_SHORT ).show();
+					if (!tdMapper.checkIfExist(trainingDayId, exerciseId)){
+						tdMapper.ExerciseAddToTrainingDay(trainingDayId, exerciseId, eTargetSetCount.getValue(), eTargetRepCount.getValue());
+						Toast.makeText(getActivity(), "Übung wurde erfolgreich dem Trainingtag hinzugefügt!", Toast.LENGTH_SHORT ).show();
+					}else{
+						Toast.makeText(getActivity(), "Übung kann nicht doppelt hinzugefügt werden", Toast.LENGTH_SHORT ).show();
+					}
+					
 				}		
 			  }
 			});

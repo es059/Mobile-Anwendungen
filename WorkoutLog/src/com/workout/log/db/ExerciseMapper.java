@@ -3,12 +3,12 @@ package com.workout.log.db;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.workout.log.bo.Exercise;
-
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.workout.log.bo.Exercise;
 
 
 public class ExerciseMapper {

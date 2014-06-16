@@ -1,10 +1,5 @@
 package com.workout.log.dialog;
 
-import com.example.workoutlog.R;
-import com.workout.log.bo.Workoutplan;
-import com.workout.log.db.WorkoutplanMapper;
-import com.workout.log.fragment.ActionBarWorkoutPlanPickerFragment;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -19,6 +14,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.workoutlog.R;
+import com.workout.log.bo.Workoutplan;
+import com.workout.log.db.WorkoutplanMapper;
+import com.workout.log.fragment.ActionBarWorkoutPlanPickerFragment;
 
 @SuppressLint("ValidFragment")
 public class WorkoutplanUpdateDialogFragment extends DialogFragment {
@@ -87,6 +87,17 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment {
 			public void onClick(DialogInterface dialog, int which) {
 				wMapper.delete(w);
 				wMapper.deleteWorkoutPlanFromTrainingDay(w);
+				
+				Workoutplan w = ((ActionBarWorkoutPlanPickerFragment) getActivity().getFragmentManager().
+						findFragmentByTag("ActionBarWorkoutPlanPickerFragment")).getPreviousWorkoutplan();
+				
+				/**
+				 * if w equals null then the last workoutplan was deleted and there is no currentWorkoutplan 
+				 * to be set
+				 */
+				if(w != null){
+					wMapper.setCurrent(w.getId());
+				}
 				/**
 				 * Refresh the Fragment to show changes. Decrease the currentListId count by 1 to ensure that
 				 * no outOfIndex occurs
@@ -112,6 +123,9 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment {
 	public static void decreaseCurrenListId(Fragment fragment){
 		ActionBarWorkoutPlanPickerFragment actionBarWorkoutPlanPickerFragment = (ActionBarWorkoutPlanPickerFragment) fragment;
 		int currentListId = actionBarWorkoutPlanPickerFragment.getCurrentListId();
-		actionBarWorkoutPlanPickerFragment.setCurrentListId(currentListId-1);
+		/**
+		 * If the currentId is 0 then there is no need to decrease it further
+		 */
+		if(currentListId != 0) actionBarWorkoutPlanPickerFragment.setCurrentListId(currentListId-1);
 	}
 }

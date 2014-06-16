@@ -6,13 +6,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import com.workout.log.bo.Exercise;
-import com.workout.log.bo.PerformanceActual;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.PerformanceActual;
 
 /**
  * Mapper Class of BusinessObject PerformanceTarget

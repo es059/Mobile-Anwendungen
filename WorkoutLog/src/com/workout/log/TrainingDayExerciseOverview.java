@@ -2,6 +2,18 @@ package com.workout.log;
 
 import java.util.ArrayList;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.Toast;
+
 import com.example.workoutlog.R;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.MuscleGroup;
@@ -14,18 +26,6 @@ import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.fragment.ActionBarTrainingDaySelectFragment;
 import com.workout.log.listAdapter.OverviewAdapter;
 import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
-
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.Toast;
 
 
 public class TrainingDayExerciseOverview extends Fragment {

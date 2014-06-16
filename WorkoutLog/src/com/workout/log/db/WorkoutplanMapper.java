@@ -6,13 +6,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.workout.log.bo.Workoutplan;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.workout.log.bo.Workoutplan;
 
 @SuppressLint("SimpleDateFormat") 
 public class WorkoutplanMapper   {

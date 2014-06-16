@@ -4,18 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.example.workoutlog.R;
-import com.workout.log.bo.Exercise;
-import com.workout.log.bo.PerformanceActual;
-import com.workout.log.bo.PerformanceTarget;
-import com.workout.log.db.ExerciseMapper;
-import com.workout.log.db.PerformanceActualMapper;
-import com.workout.log.db.PerformanceTargetMapper;
-import com.workout.log.fragment.ActionBarDatePickerFragment;
-import com.workout.log.listAdapter.PerformanceActualListAdapter;
-import com.workout.log.navigation.OnBackPressedListener;
-import com.workout.log.navigation.OnHomePressedListener;
-
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -29,6 +17,18 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.workoutlog.R;
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.PerformanceActual;
+import com.workout.log.bo.PerformanceTarget;
+import com.workout.log.db.ExerciseMapper;
+import com.workout.log.db.PerformanceActualMapper;
+import com.workout.log.db.PerformanceTargetMapper;
+import com.workout.log.fragment.ActionBarDatePickerFragment;
+import com.workout.log.listAdapter.PerformanceActualListAdapter;
+import com.workout.log.navigation.OnBackPressedListener;
+import com.workout.log.navigation.OnHomePressedListener;
 
 public class ExerciseSpecific extends Fragment {
   

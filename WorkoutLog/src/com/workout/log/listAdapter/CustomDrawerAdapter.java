@@ -2,9 +2,6 @@ package com.workout.log.listAdapter;
 
 import java.util.List;
 
-import com.example.workoutlog.R;
-import com.workout.log.data.DrawerItem;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.workoutlog.R;
+import com.workout.log.data.DrawerItem;
  
 public class CustomDrawerAdapter extends ArrayAdapter<DrawerItem> {
  

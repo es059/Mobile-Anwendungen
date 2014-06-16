@@ -2,18 +2,6 @@ package com.workout.log;
 
 import java.util.ArrayList;
 
-import com.example.workoutlog.R;
-import com.workout.log.bo.TrainingDay;
-import com.workout.log.db.PerformanceTargetMapper;
-import com.workout.log.db.TrainingDayMapper;
-import com.workout.log.dialog.TrainingDayAddDialogFragment;
-import com.workout.log.dialog.TrainingDayAddToWorkoutplanDialogFragment;
-import com.workout.log.fragment.TrainingDaysSearchBarFragment;
-import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
-import com.workout.log.listAdapter.TrainingDayListAdapter;
-import com.workout.log.navigation.OnBackPressedListener;
-import com.workout.log.navigation.OnHomePressedListener;
-
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -26,9 +14,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+
+import com.example.workoutlog.R;
+import com.workout.log.bo.TrainingDay;
+import com.workout.log.db.PerformanceTargetMapper;
+import com.workout.log.db.TrainingDayMapper;
+import com.workout.log.dialog.TrainingDayAddDialogFragment;
+import com.workout.log.dialog.TrainingDayAddToWorkoutplanDialogFragment;
+import com.workout.log.fragment.TrainingDaysSearchBarFragment;
+import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
+import com.workout.log.listAdapter.TrainingDayListAdapter;
+import com.workout.log.navigation.OnBackPressedListener;
+import com.workout.log.navigation.OnHomePressedListener;
 
 /**
  * Same Layout as ManageTrainingDays but with a redirect to ManageWorkoutplan

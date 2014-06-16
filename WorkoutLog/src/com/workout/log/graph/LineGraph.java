@@ -5,29 +5,22 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.chart.PointStyle;
-import org.achartengine.chart.TimeChart;
-import org.achartengine.model.TimeSeries;
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
-import org.achartengine.renderer.BasicStroke;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
-import com.example.workoutlog.R;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint.Align;
+import android.view.View;
+
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.PerformanceActual;
 import com.workout.log.db.PerformanceActualMapper;
-
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Paint.Align;
-import android.graphics.Paint.Cap;
-import android.view.View;
 
 
 /**

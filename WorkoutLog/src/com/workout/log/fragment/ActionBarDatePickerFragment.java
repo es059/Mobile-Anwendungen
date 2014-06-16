@@ -5,12 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
-
-import com.example.workoutlog.R;
-import com.workout.log.ExerciseSpecific;
-import com.workout.log.bo.PerformanceActual;
-import com.workout.log.db.PerformanceActualMapper;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -18,11 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.workoutlog.R;
+import com.workout.log.ExerciseSpecific;
+import com.workout.log.bo.PerformanceActual;
+import com.workout.log.db.PerformanceActualMapper;
 
 public class ActionBarDatePickerFragment extends Fragment implements OnClickListener{
 	private TextView date;

@@ -3,13 +3,6 @@ package com.workout.log.fragment;
 
 import java.util.ArrayList;
 
-import com.example.workoutlog.R;
-import com.workout.log.ExerciseOverview;
-import com.workout.log.bo.TrainingDay;
-import com.workout.log.bo.Workoutplan;
-import com.workout.log.db.TrainingDayMapper;
-import com.workout.log.db.WorkoutplanMapper;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +11,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.example.workoutlog.R;
+import com.workout.log.ExerciseOverview;
+import com.workout.log.bo.TrainingDay;
+import com.workout.log.bo.Workoutplan;
+import com.workout.log.db.TrainingDayMapper;
+import com.workout.log.db.WorkoutplanMapper;
 
 /**
  * Handles the TrainingDay changes in the Fragment ExerciseOverview
