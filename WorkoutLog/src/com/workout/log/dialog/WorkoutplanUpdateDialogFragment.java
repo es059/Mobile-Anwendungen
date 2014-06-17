@@ -30,10 +30,10 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment {
 		return ExerciseUpdateDialogFragment;	
 	}
 	
-	public WorkoutplanUpdateDialogFragment(Context context, int exerciseId) {
+	public WorkoutplanUpdateDialogFragment(Context context, int workoutPlanId) {
 		super();
 		wMapper = new WorkoutplanMapper(context);
-		this.workoutPlanId = exerciseId;
+		this.workoutPlanId = workoutPlanId;
 	}
 
 	@Override
@@ -125,10 +125,10 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment {
 	@SuppressWarnings("static-access")
 	public static void decreaseCurrenListId(Fragment fragment){
 		ActionBarWorkoutPlanPickerFragment actionBarWorkoutPlanPickerFragment = (ActionBarWorkoutPlanPickerFragment) fragment;
-		int currentListId = ActionBarWorkoutPlanPickerFragment.getCurrentListId();
+		int currentListId = actionBarWorkoutPlanPickerFragment.getCurrentListId();
 		/**
 		 * If the currentId is 0 then there is no need to decrease it further
 		 */
-		if(currentListId != 0) ActionBarWorkoutPlanPickerFragment.setCurrentListId(currentListId-1);
+		if(currentListId != 0) actionBarWorkoutPlanPickerFragment.setCurrentListId(currentListId-1);
 	}
 }

@@ -2,6 +2,7 @@ package com.workout.log;
 
 import java.util.ArrayList;
 
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.AsyncTask;
@@ -12,8 +13,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.example.workoutlog.R;
 import com.workout.log.bo.Exercise;
@@ -24,12 +27,13 @@ import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.MuscleGroupMapper;
 import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.db.TrainingDayMapper;
+import com.workout.log.dialog.ExerciseSpecificUpdateDialogFragment;
 import com.workout.log.fragment.ActionBarTrainingDaySelectFragment;
 import com.workout.log.listAdapter.OverviewAdapter;
 import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
 
 
-public class TrainingDayExerciseOverview extends Fragment {
+public class TrainingDayExerciseOverview extends Fragment implements OnItemLongClickListener{
 	private ListView exerciseListView;
 	private ArrayList<Exercise> exerciseList;
 	private ExerciseMapper eMapper;
@@ -69,6 +73,7 @@ public class TrainingDayExerciseOverview extends Fragment {
 		 */
 		eMapper = new ExerciseMapper(getActivity());
 		exerciseListView = (ListView) getView().findViewById(R.id.ExerciseListView);
+		exerciseListView.setOnItemLongClickListener(this);
 		exerciseList = new ArrayList<Exercise>();
 		
 		/**
@@ -118,6 +123,28 @@ public class TrainingDayExerciseOverview extends Fragment {
 	public int getTrainingDayId() {
 		return trainingDayId;
 	}
+	
+	@Override
+	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
+			long arg3) {
+		Exercise e = (Exercise) arg0.getItemAtPosition(arg2);
+		int currentExerciseId = e.getId();
+		showDialogLongClickFragment(currentExerciseId);
+		
+		return true;
+	}
+	
+	/**
+	 * Method which opens a DialogFragment to update the selected item
+	 * 
+	 * @param i is the ID of the Exercise 
+	 * @param a is the Adapter
+	 */
+	private void showDialogLongClickFragment(int currentExerciseId) {	
+		DialogFragment dialogFragment = ExerciseSpecificUpdateDialogFragment.newInstance(this, trainingDayId, currentExerciseId);
+		dialogFragment.show(getActivity().getFragmentManager(), "Open Exercise Update Dialog on Long Click");
+	}
+
 	
 	/**
 	 * Update the ListView and provides for header for each

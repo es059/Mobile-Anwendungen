@@ -16,21 +16,21 @@ import com.example.workoutlog.R;
 import com.workout.log.db.TrainingDayMapper;
 
 @SuppressLint("ValidFragment")
-public class ExerciseClickDialogFragment extends DialogFragment {
+public class ExerciseSpecificAddDialogFragment extends DialogFragment {
 	private int trainingDayId;
 	private int exerciseId;
 	private static TrainingDayMapper tdMapper;
 	private NumberPicker eTargetSetCount;
 	private NumberPicker eTargetRepCount;
 	
-	public static ExerciseClickDialogFragment newInstance(Context a, int trainingDayId, int exerciseId) {
-		ExerciseClickDialogFragment exerciseClickDialogFragment = new ExerciseClickDialogFragment(trainingDayId, exerciseId);
+	public static ExerciseSpecificAddDialogFragment newInstance(Context a, int trainingDayId, int exerciseId) {
+		ExerciseSpecificAddDialogFragment exerciseClickDialogFragment = new ExerciseSpecificAddDialogFragment(trainingDayId, exerciseId);
 		tdMapper = new TrainingDayMapper(a);
 		
 		return exerciseClickDialogFragment;
 	}
 	
-	public ExerciseClickDialogFragment(int trainingDayId, int exerciseId ) {
+	public ExerciseSpecificAddDialogFragment(int trainingDayId, int exerciseId ) {
 		super();
 		this.trainingDayId = trainingDayId;
 		this.exerciseId = exerciseId;	
@@ -40,7 +40,9 @@ public class ExerciseClickDialogFragment extends DialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState){
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		View view = inflater.inflate(R.layout.dialogfragment_exercise_click, null);
+		View view = inflater.inflate(R.layout.dialogfragment_exercise_specific, null);
+		
+		alert.setTitle("Hinzufügen der Übung");
 		
 		eTargetSetCount = (NumberPicker) view.findViewById(R.id.Satzanzahl);
 		eTargetRepCount = (NumberPicker) view.findViewById(R.id.WdhAnzahl);
@@ -53,7 +55,7 @@ public class ExerciseClickDialogFragment extends DialogFragment {
 		
 		alert.setView(view);
 		
-		alert.setTitle("Bestätigung");
+		
 		alert.setPositiveButton("Speichern", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int whichButton) {

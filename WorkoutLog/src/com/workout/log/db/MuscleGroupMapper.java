@@ -47,6 +47,7 @@ public class MuscleGroupMapper {
 				muscleGroupList.add(muscleGroup);
 			}while(cursor.moveToNext());
 		}
+		cursor.close();
 		db.close();
 		return muscleGroupList;	
 	}
@@ -61,6 +62,7 @@ public class MuscleGroupMapper {
 			muscleGroup.setId(Integer.parseInt(cursor.getString(0)));
 			muscleGroup.setName(cursor.getString(1));
 		}
+		cursor.close();
 		db.close();
 		return muscleGroup;
 	}	

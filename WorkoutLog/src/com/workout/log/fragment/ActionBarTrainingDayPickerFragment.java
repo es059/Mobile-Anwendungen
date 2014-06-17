@@ -108,7 +108,7 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 		Workoutplan w = wMapper.getCurrent();
 		//Select all TrainingDays from currrent Workoutplan
 		TrainingDayMapper tMapper = new TrainingDayMapper(super.getActivity());
-		trainingDayList = tMapper.getAll(w.getId());
+		trainingDayList = tMapper.getAllTrainingDaysFromWorkoutplan(w.getId());
 	}
 	
 	public TrainingDay getCurrentTrainingDay(){

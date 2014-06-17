@@ -170,7 +170,7 @@ public class ExerciseMapper {
             	
             } while (cursor.moveToNext());
         }
-        
+        db.close();
 	    cursor.close();
 	    return exerciseList;
 	}
@@ -222,6 +222,7 @@ public class ExerciseMapper {
 				    exercise.setName(cursor.getString(1));
 				    exerciseList.add(exercise);
 				}
+			cursor.close();
 		}
 		db.close();
 		return exerciseList;

@@ -147,6 +147,7 @@ public class WorkoutplanMapper   {
 				workoutplanList.add(w);
 			}while(cursor.moveToNext());
 		}
+		cursor.close();
 		db.close();
 		return workoutplanList;
 	}

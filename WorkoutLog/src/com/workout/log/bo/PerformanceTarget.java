@@ -48,4 +48,12 @@ public class PerformanceTarget {
 	public void setTrainingDay(TrainingDay mTrainingDay) {
 		this.mTrainingDay = mTrainingDay;
 	}
+
+	public int getId() {
+		return mId;
+	}
+
+	public void setId(int mId) {
+		this.mId = mId;
+	}
 }

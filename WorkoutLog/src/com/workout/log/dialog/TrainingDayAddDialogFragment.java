@@ -7,9 +7,13 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.workoutlog.R;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.listAdapter.TrainingDayListAdapter;
@@ -33,14 +37,18 @@ public class TrainingDayAddDialogFragment extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState){
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-
-		alert.setTitle("Traniningstag hinzufügen");
-		alert.setMessage("Bitte geben sie den Namen des Trainingtags hier ein:");
-
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		View view = inflater.inflate(R.layout.dialogfragment_trainingday_edit, null);
+		
+		alert.setTitle("Traniningstag Hinzufügen");
+		// Set an TextView view to view the InformationText
+		TextView informationText = (TextView) view.findViewById(R.id.TextView_Information);
+		informationText.setText("Bitte geben sie den Namen des Trainingtags ein:");
+		
 		// Set an EditText view to get user input 
-		final EditText input = new EditText(getActivity());
-		input.setHint("Name");
-		alert.setView(input);
+		final EditText input = (EditText) view.findViewById(R.id.EditText_TrainingdayName);
+		
+		alert.setView(view);
 
 		alert.setPositiveButton("Speichern", new DialogInterface.OnClickListener() {
 		@Override

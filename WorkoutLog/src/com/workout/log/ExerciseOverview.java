@@ -198,7 +198,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 				Workoutplan w = wMapper.getCurrent();
 				//Select all Trainingdays from the current Workoutplan
 				TrainingDayMapper tMapper = new TrainingDayMapper(getActivity());
-				tList = tMapper.getAll(w.getId());
+				tList = tMapper.getAllTrainingDaysFromWorkoutplan(w.getId());
 			}
 			if (!tList.isEmpty()){
 		    	int trainingDayId;

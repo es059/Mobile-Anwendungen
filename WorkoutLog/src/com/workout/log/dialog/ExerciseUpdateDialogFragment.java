@@ -6,7 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,33 +19,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.workoutlog.R;
+import com.workout.log.ExerciseAdd;
+import com.workout.log.ExerciseAddToTrainingDay;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.MuscleGroup;
-import com.workout.log.data.ExerciseItem;
-import com.workout.log.data.MuscleGroupSectionItem;
 import com.workout.log.db.ExerciseMapper;
-import com.workout.log.db.MuscleGroupMapper;
-import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
 
 @SuppressLint("ValidFragment")
 public class ExerciseUpdateDialogFragment extends DialogFragment {
-	private ExerciseListWithoutSetsRepsAdapter exerciseListAdapter;
 	private static ExerciseMapper eMapper;
-	private Context context;
+	private Fragment fragment;
 	private int exerciseId;
 	private String selectedMuscleGroup = "";
 	
-	public static ExerciseUpdateDialogFragment newInstance(Context context, ExerciseListWithoutSetsRepsAdapter adapter, int exerciseId) {
-		ExerciseUpdateDialogFragment ExerciseUpdateDialogFragment = new ExerciseUpdateDialogFragment(context,adapter, exerciseId);
+	public static ExerciseUpdateDialogFragment newInstance(Fragment fragment, int exerciseId) {
+		ExerciseUpdateDialogFragment ExerciseUpdateDialogFragment = new ExerciseUpdateDialogFragment(fragment, exerciseId);
 		return ExerciseUpdateDialogFragment;	
 	}
 	
-	public ExerciseUpdateDialogFragment(Context context, 
-			ExerciseListWithoutSetsRepsAdapter adapter, int exerciseId) {
+	public ExerciseUpdateDialogFragment(Fragment fragment, int exerciseId) {
 		super();
-		eMapper = new ExerciseMapper(context);
-		this.context = context;
-		this.exerciseListAdapter = adapter;
+		eMapper = new ExerciseMapper(fragment.getActivity());
+		this.fragment = fragment;
 		this.exerciseId = exerciseId;
 	}
 
@@ -64,7 +59,7 @@ public class ExerciseUpdateDialogFragment extends DialogFragment {
 		// Set an TextView view to view the InformationText
 		informationText.setText("Nehmen Sie die Änderungen an Ihrer Übung hier vor:");
 		// Create an ArrayAdapter using the string array and a default spinner layout
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(fragment.getActivity(),
 		        R.array.MuscleGroup, android.R.layout.simple_spinner_item);
 		// Specify the layout to use when the list of choices appears
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -104,7 +99,7 @@ public class ExerciseUpdateDialogFragment extends DialogFragment {
 				// Toast einblenden 
 				Toast.makeText(getActivity(), "Übung wurde erfolgreich geändert!", Toast.LENGTH_SHORT ).show();
 				// ListView aktualisieren 
-				updateAdapter(eMapper.getAll());
+				updateListView(eMapper.getAll());
 			}else{
 				Toast.makeText(getActivity(), "Bitte sätmliche Felder ausfüllen", Toast.LENGTH_SHORT ).show();
 			}
@@ -127,35 +122,12 @@ public class ExerciseUpdateDialogFragment extends DialogFragment {
 	 * @param List the updated List
 	 * @author Eric Schmidt
 	 */
-	public void updateAdapter(ArrayList<Exercise> List){
-		/**
-		 * Variables to implement header in the ListView
-		 */
-		ArrayList<Exercise> eListMuscleGroup = null;
-		ArrayList<MuscleGroup> mList = null;
-		MuscleGroupMapper mMapper = new MuscleGroupMapper(getActivity());
-		
-		
-		exerciseListAdapter.clear();
-		
-		/**
-		 * Build a ArrayList containing the muscleGroup and exercises
-		 */
-		//Select all MuscleGroups
-		mList = mMapper.getAll();
-		//Select All Exercises from MuscleGroup 
-		eMapper = new ExerciseMapper(getActivity());
-		ArrayList<ExerciseItem> listComplete = new ArrayList<ExerciseItem>();
-		for (MuscleGroup m : mList){
-			eListMuscleGroup = eMapper.getExerciseByMuscleGroup(List, m.getId());
-			if (!eListMuscleGroup.isEmpty()){
-				listComplete.add(new MuscleGroupSectionItem(m.getName()));
-				listComplete.addAll(eListMuscleGroup);
-			}
+	public void updateListView(ArrayList<Exercise> List){
+		if (fragment instanceof ExerciseAdd){
+			((ExerciseAdd) fragment).updateListView(eMapper.getAll());
+		}else{
+			((ExerciseAddToTrainingDay) fragment).updateListView(eMapper.getAll());
 		}
-		
-		exerciseListAdapter.addAll(listComplete);
-		exerciseListAdapter.notifyDataSetChanged();
 	}
 
 

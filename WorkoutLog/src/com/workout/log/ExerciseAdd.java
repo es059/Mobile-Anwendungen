@@ -41,7 +41,6 @@ import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
  */
 public class ExerciseAdd extends Fragment implements OnItemLongClickListener{
 	private ListView exerciseListView;
-	private DialogFragment dialogFragment;
 	private ExerciseListWithoutSetsRepsAdapter listAdapter;
 	
 	private  ExerciseMapper eMapper;
@@ -106,10 +105,10 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener{
 	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
 			long arg3) {
 		Exercise e = (Exercise) arg0.getItemAtPosition(arg2);
-		int i = e.getId();
-		showDialogLongClickFragment(i, listAdapter);
+		int currentExerciseId = e.getId();
+		showDialogLongClickFragment(currentExerciseId);
 		
-		return false;
+		return true;
 	}
 	
 	/**
@@ -118,8 +117,8 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener{
 	 * @param i is the ID of the Exercise 
 	 * @param a is the Adapter
 	 */
-	private void showDialogLongClickFragment(int id, ExerciseListWithoutSetsRepsAdapter adapter) {	
-		dialogFragment = ExerciseUpdateDialogFragment.newInstance(getActivity(), adapter, id);
+	private void showDialogLongClickFragment(int currentExerciseId) {	
+		DialogFragment dialogFragment = ExerciseUpdateDialogFragment.newInstance(this,currentExerciseId);
 		dialogFragment.show(getActivity().getFragmentManager(), "Open Exercise Update Dialog on Long Click");
 	}
 

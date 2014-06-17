@@ -43,15 +43,26 @@ public class PerformanceTargetMapper {
 	public PerformanceTarget getPerformanceTargetByExerciseId(Exercise exercise, int trainingDayId){
 		PerformanceTarget performanceTarget = new PerformanceTarget();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
-		sql = "SELECT RepetitionTarget, SetTarget FROM PerformanceTarget WHERE Exercise_Id = " + exercise.getId() + 
+		sql = "SELECT RepetitionTarget, SetTarget, PerformanceTarget_Id FROM PerformanceTarget WHERE Exercise_Id = " + exercise.getId() + 
 				" AND TrainingDay_Id = " + trainingDayId;
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
 			performanceTarget.setRepetition(Integer.parseInt(cursor.getString(0)));
 			performanceTarget.setSet(Integer.parseInt(cursor.getString(1)));
+			performanceTarget.setId(Integer.parseInt(cursor.getString(2)));
 			performanceTarget.setExercise(exercise);
 		}
+		db.close();
+		cursor.close();
 		return performanceTarget;
+	}
+	
+	public void updatePerformanceTarget(PerformanceTarget pt){
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "UPDATE PerformanceTarget SET SetTarget = " + pt.getSet() + ", RepetitionTarget = " + pt.getRepetition()
+				+ " WHERE PerformanceTarget_Id = " + pt.getId();
+		db.execSQL(sql);
+		db.close();
 	}
 	
 	public void deletePerformanceTarget(int trainingDayId, int exerciseId) {

@@ -31,7 +31,7 @@ public class ListViewWorkoutplan extends RelativeLayout{
 		this.titel.setText(workoutplan.getName());
 		//Get the amount if trainingdays in the current workoutplan
 		TrainingDayMapper tMapper = new TrainingDayMapper(getContext());
-		ArrayList<TrainingDay> trainingDayList = tMapper.getAll(workoutplan.getId());
+		ArrayList<TrainingDay> trainingDayList = tMapper.getAllTrainingDaysFromWorkoutplan(workoutplan.getId());
 		this.traningday.setHint("(Trainingstage: " + String.valueOf(trainingDayList.size()) + ")");	
 	}
 }

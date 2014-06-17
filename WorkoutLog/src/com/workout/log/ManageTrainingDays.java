@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -23,11 +24,12 @@ import com.workout.log.bo.TrainingDay;
 import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.dialog.TrainingDayAddDialogFragment;
+import com.workout.log.dialog.TrainingDayUpdateDialogFragment;
 import com.workout.log.fragment.TrainingDaysSearchBarFragment;
 import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
 import com.workout.log.listAdapter.TrainingDayListAdapter;
 
-public class ManageTrainingDays extends Fragment implements OnItemClickListener{
+public class ManageTrainingDays extends Fragment implements OnItemClickListener, OnItemLongClickListener{
 
 	private TrainingDayListAdapter trainingDayListAdapter;
 	private ListView trainingDayListView; 
@@ -64,6 +66,8 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener{
 		tdMapper = new TrainingDayMapper(getActivity());
 		trainingDayListView = (ListView) view.findViewById(R.id.trainingDay_add_list);
 		trainingDayListView.setOnItemClickListener(this);
+		trainingDayListView.setOnItemLongClickListener(this);
+		
 		updateListView(null);
 
 		loadSwipeToDismiss();  
@@ -92,7 +96,10 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener{
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		TrainingDay td = (TrainingDay) parent.getItemAtPosition(position);
-		
+		openTrainingDayExerciseOverview(td);
+	}
+	
+	private void openTrainingDayExerciseOverview(TrainingDay td){
 		Bundle data = new Bundle();
 	    data.putInt("TrainingDayId", td.getId());
 		
@@ -104,7 +111,26 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener{
         transaction.replace(R.id.fragment_container, trainingDayExerciseOverview, "TrainingDayExerciseOverview");
         transaction.addToBackStack(null);
         transaction.commit();
+	}
 
+	@Override
+	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
+			long arg3) {
+		TrainingDay t = (TrainingDay) arg0.getItemAtPosition(arg2);
+		int trainingDayId = t.getId();
+		showDialogLongClickFragment(trainingDayId, trainingDayListAdapter);
+		return true;
+	}
+	
+	/**
+	 * Method which opens a DialogFragment to update the selected item
+	 * 
+	 * @param i is the ID of the Exercise 
+	 * @param a is the Adapter
+	 */
+	private void showDialogLongClickFragment(int trainingDayId, TrainingDayListAdapter adapter) {	
+		DialogFragment dialogFragment = TrainingDayUpdateDialogFragment.newInstance(this, trainingDayId);
+		dialogFragment.show(getActivity().getFragmentManager(), "Open Exercise Update Dialog on Long Click");
 	}
 
 	@SuppressWarnings("unchecked")

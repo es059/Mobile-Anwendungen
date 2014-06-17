@@ -63,7 +63,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 		workoutplanList = wpMapper.getAll();
 		if (workoutplanList.size() != 0){
 			setCurrentIdByWorkoutplanId(wpMapper.getCurrent().getId());
-			trainingDayList = tdMapper.getAll(workoutplanList.get(currentListId).getId());
+			trainingDayList = tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanList.get(currentListId).getId());
 			workoutplanTextView.setText(workoutplanList.get(currentListId).getName());
 			manageWorkoutplan.setWorkoutplanId(workoutplanList.get(currentListId).getId());
 			/**
@@ -109,7 +109,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 					previousButton.setVisibility(View.VISIBLE);
 				}
 				workoutplanTextView.setText(workoutplanList.get(currentListId +1).getName());
-				manageWorkoutplan.updateListView(tdMapper.getAll(workoutplanList.get(currentListId +1).getId()));
+				manageWorkoutplan.updateListView(tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanList.get(currentListId +1).getId()));
 				manageWorkoutplan.setWorkoutplanId(workoutplanList.get(currentListId +1).getId());
 				wpMapper.setCurrent(workoutplanList.get(currentListId +1).getId());
 				Toast.makeText(getActivity(), workoutplanList.get(currentListId +1).getName() + " ist nun aktiv!", Toast.LENGTH_SHORT ).show();
@@ -123,7 +123,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 			if(workoutplanList.size() <= currentListId +1) {
 				nextButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_navigation_next_item));}
 				workoutplanTextView.setText(workoutplanList.get(currentListId -1).getName());
-				manageWorkoutplan.updateListView(tdMapper.getAll(workoutplanList.get(currentListId -1).getId()));
+				manageWorkoutplan.updateListView(tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanList.get(currentListId -1).getId()));
 				manageWorkoutplan.setWorkoutplanId(workoutplanList.get(currentListId - 1).getId());
 				wpMapper.setCurrent(workoutplanList.get(currentListId -1).getId());
 				Toast.makeText(getActivity(), workoutplanList.get(currentListId -1).getName() + " ist nun aktiv!", Toast.LENGTH_SHORT ).show();

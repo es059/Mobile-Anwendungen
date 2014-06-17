@@ -27,6 +27,7 @@ import com.workout.log.db.PerformanceActualMapper;
 import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.fragment.ActionBarDatePickerFragment;
 import com.workout.log.listAdapter.PerformanceActualListAdapter;
+import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
 import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;
 
@@ -87,8 +88,6 @@ public class ExerciseSpecific extends Fragment {
 			}		
 		});
 		
-		exerciseView = (ListView) view.findViewById(R.id.exerciseSpecificList);
-		
 		/**
 		 * Receive the arguments set by ExerciseOverview
 		 */
@@ -120,6 +119,8 @@ public class ExerciseSpecific extends Fragment {
 		paMapper = new PerformanceActualMapper(getActivity());
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		performanceActualList = paMapper.getCurrentPerformanceActual(exercise, sp.format(new Date()));
+		
+		exerciseView = (ListView) getView().findViewById(R.id.exerciseSpecificList);
 		
 		if (performanceActualList.isEmpty()){
 			performanceActualList = prepareStandardListView();

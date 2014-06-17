@@ -85,6 +85,7 @@ public class PerformanceActualMapper {
 				date.add(cursor.getString(0));
 			}while(cursor.moveToNext());
 		}
+		cursor.close();
 		db.close();
 		return date;
 	}
@@ -118,8 +119,9 @@ public class PerformanceActualMapper {
 				}
 				performanceActualList.add(performanceActual);
 			}
+			cursor.close();
 		}
-	
+		
 		db.close();
 		return performanceActualList;
 	}
@@ -140,6 +142,7 @@ public class PerformanceActualMapper {
 		if (cursor.moveToFirst()){
 			trainingDays = cursor.getInt(0);
 		}
+		cursor.close();
 		db.close();
 		return trainingDays;
 	}
@@ -176,6 +179,7 @@ public class PerformanceActualMapper {
 				performanceActualList.add(performanceActual);
 			} while (cursor.moveToNext());
 		}
+		cursor.close();
 		db.close();
 		return performanceActualList;
 	}
@@ -226,6 +230,7 @@ public class PerformanceActualMapper {
 		}else if (dayCount == 100){
 			c.add(Calendar.DATE, 100);
 		}
+		cursor.close();
 		db.close();
 		return performanceActualList;
 		
@@ -275,6 +280,7 @@ public class PerformanceActualMapper {
 				performanceActualList.add(performanceActual);
 			}while(cursor.moveToNext());
 		}
+		cursor.close();
 		db.close();
 		return performanceActualList;
 		
@@ -299,7 +305,8 @@ public class PerformanceActualMapper {
 					id = Integer.parseInt(cursor.getString(0));
 					id++;
 				}
-			}	
+			}
+			cursor.close();
 		}else{
 			id = performanceActual.getId();
 		}

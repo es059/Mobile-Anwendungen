@@ -58,7 +58,7 @@ public class TrainingDayMapper {
 	 * @return ArrayList<TrainingDay>
 	 * @author Eric Schmidt & Florian Blessing
 	 */
-	public ArrayList<TrainingDay> getAll(int workoutplanId) {
+	public ArrayList<TrainingDay> getAllTrainingDaysFromWorkoutplan(int workoutplanId) {
 		ArrayList<TrainingDay> trainingdayList = new ArrayList<TrainingDay>();
 		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
@@ -84,11 +84,12 @@ public class TrainingDayMapper {
 		db.close();	
 	}
 	// Trainingstag updaten , z.B nach einer Änderung von einem Trainingstag
-	public TrainingDay update(TrainingDay d){
+	public TrainingDay update(TrainingDay t){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "UPDATE TrainingDay SET * WHERE *";
+		sql = "UPDATE TrainingDay SET TrainingDayName='" + t.getName() +  "' WHERE TrainingDay_Id=" + t.getId();
+		db.execSQL(sql);
 		db.close();
-		return d;
+		return t;
 	}
 	public TrainingDay getTrainingDayById(int id){
 		TrainingDay d = new TrainingDay();
@@ -99,6 +100,7 @@ public class TrainingDayMapper {
 		    d.setId(Integer.parseInt(cursor.getString(0)));
 		    d.setName(cursor.getString(1));
 	    }
+	    cursor.close();
 	    db.close();
 	    return d;
 
@@ -119,6 +121,7 @@ public class TrainingDayMapper {
 				trainingdayList.add(d);
 			}while(cursor.moveToNext());
 		}
+		
 		cursor.close();
 		db.close();
 		return trainingdayList;
@@ -217,9 +220,8 @@ public class TrainingDayMapper {
 	            } while (cursor.moveToNext());
 	        }
 	   
-	        cursor.close();
-	        
-
+	    cursor.close();
+	    db.close();
 	    return trainingDayList;
 	}
 }

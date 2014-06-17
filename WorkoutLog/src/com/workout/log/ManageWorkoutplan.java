@@ -211,7 +211,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener {
 						currentListId = i;
 					}
 				}
-				if (params[0] == null)params[0] = tdMapper.getAll(workoutplanList.get(currentListId).getId());	
+				if (params[0] == null)params[0] = tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanList.get(currentListId).getId());	
 				stableArrayAdapter = new StableArrayAdapter(getActivity(), R.layout.listview_training_day, params[0]);
 				setTrainingDayList(params[0]);
 			}

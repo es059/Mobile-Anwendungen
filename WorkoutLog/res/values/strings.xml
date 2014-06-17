@@ -23,11 +23,12 @@
     <string-array name="MuscleGroup">
         <item>Rücken</item>
         <item>Bauch</item>
+        <item>Schulter</item>
         <item>Brust</item>
         <item>Beine</item>
-         <item>Trizeps</item>
-          <item>Bizeps</item>
-           <item>Cardio</item>
+        <item>Trizeps</item>
+        <item>Bizeps</item>
+        <item>Cardio</item>
     </string-array>
 
     <string name="title_activity_training_day_add">TrainingDayAdd</string>
