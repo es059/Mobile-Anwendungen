@@ -1,5 +1,7 @@
 package com.workout.log;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -19,7 +21,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.workoutlog.R;
+import com.workout.log.bo.Workoutplan;
 import com.workout.log.data.MenuList;
+import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.listAdapter.CustomDrawerAdapter;
 import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;
@@ -49,7 +53,7 @@ public class HelperActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_helper);
-		
+
 		loadNavigationDrawer();
         
         this.getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -79,7 +83,10 @@ public class HelperActivity extends Activity{
 	 * @author Eric Schmidt
 	 */
 	private boolean firstTimeCheck(){
-		return PreferenceManager.getDefaultSharedPreferences(this).getBoolean(PREF_FIRST_LAUNCH, true);
+		WorkoutplanMapper wMapper = new WorkoutplanMapper(this);
+		ArrayList<Workoutplan> wList = wMapper.getAll();
+		if (wList.isEmpty())return true;
+		return false;
 	}
 	
 	/**
@@ -100,7 +107,7 @@ public class HelperActivity extends Activity{
 	    if (onBackPressedListener != null){
 	        onBackPressedListener.doBack();
 	    }else{
-	    	if (getFragmentManager().getBackStackEntryCount() == 1) {
+	    	if (getFragmentManager().getBackStackEntryCount() == 1 || getFragmentManager().findFragmentByTag("ExerciseOverview").isVisible()) {
 	    		/**
 	    		 * Closes the application if the userer presses back twice
 	    		 */

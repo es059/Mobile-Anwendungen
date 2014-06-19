@@ -7,11 +7,9 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -50,22 +48,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.replace(R.id.overview_trainingDayPicker, new ActionBarTrainingDayPickerFragment(), "TrainingDayPicker");
         transaction.commit();
-		
-        /**
-         * This code block handles the behavior of the Back button
-         */
-        view.setFocusableInTouchMode(true);
-        view.setOnKeyListener( new OnKeyListener(){
-			@Override
-			public boolean onKey(View arg0, int arg1, KeyEvent arg2) {
-				  if( arg1 == KeyEvent.KEYCODE_BACK )
-	                {
-	                    return true;
-	                }
-	                return false;
-			}
-        } );
-               
+
         return view;
 	}
     /**

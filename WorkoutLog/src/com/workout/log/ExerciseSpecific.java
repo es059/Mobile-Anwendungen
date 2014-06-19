@@ -27,7 +27,6 @@ import com.workout.log.db.PerformanceActualMapper;
 import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.fragment.ActionBarDatePickerFragment;
 import com.workout.log.listAdapter.PerformanceActualListAdapter;
-import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
 import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;
 
@@ -74,6 +73,7 @@ public class ExerciseSpecific extends Fragment {
 			public void doBack() {
 				savePerformanceActual();
 				openExerciseOverview();	
+				((HelperActivity)getActivity()).setOnBackPressedListener(null);
 			}		
 		});
 		/**
@@ -84,6 +84,7 @@ public class ExerciseSpecific extends Fragment {
 			public Intent doHome() {
 				savePerformanceActual();
 				openExerciseOverview();	
+				((HelperActivity)getActivity()).setOnBackPressedListener(null);
 				return null;
 			}		
 		});

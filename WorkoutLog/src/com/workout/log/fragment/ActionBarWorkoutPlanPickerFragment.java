@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -92,6 +93,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 		 */
 		if(currentListId == 0)previousButton.setVisibility(View.INVISIBLE); 
 		if(workoutplanList.size() <= currentListId + 1)nextButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_add));
+
 		manageWorkoutplan.updateListView(trainingDayList);
 	}
 		
