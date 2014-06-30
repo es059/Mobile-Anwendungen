@@ -1,6 +1,5 @@
 package com.workout.log.db;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,7 +8,6 @@ import java.util.Date;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.workout.log.bo.Workoutplan;
@@ -21,17 +19,7 @@ public class WorkoutplanMapper   {
 	private String sql;
 
 	public WorkoutplanMapper(Context context){
-		myDBHelper = new DataBaseHelper(context);
-		try {	 
-	       	myDBHelper.createDataBase();
-	 	} catch (IOException ioe) {
-	 		throw new Error("Unable to create database");
-	 	}
-	 	try {
-	 		myDBHelper.openDataBase();
-	 	}catch(SQLException sqle){
-	 		throw sqle;
-	 	}
+		myDBHelper = DataBaseHelper.getInstance(context);
 	}
 	
 	/**
@@ -58,7 +46,7 @@ public class WorkoutplanMapper   {
 			}
 	    }
 	    cursor.close();
-	    db.close();
+	    
 	    return workoutplan;
 	}
 	
@@ -81,7 +69,7 @@ public class WorkoutplanMapper   {
 			w.setTimeStamp(new Date(cursor.getLong(2)));
 		}
 		cursor.close();
-		db.close();
+		
 		return w;
 	}
 	
@@ -96,7 +84,7 @@ public class WorkoutplanMapper   {
 		db.execSQL(sql);
 		sql = "Update Workoutplan SET Current = 1 WHERE Workoutplan_Id = " + workoutplanId;
 		db.execSQL(sql);
-		db.close();
+		
 	}
 	
 	/**
@@ -122,7 +110,7 @@ public class WorkoutplanMapper   {
 		w.setTimeStamp(new Date());
 		
 		cursor.close();
-		db.close();
+		
 	}
 	
 	/**
@@ -148,7 +136,7 @@ public class WorkoutplanMapper   {
 			}while(cursor.moveToNext());
 		}
 		cursor.close();
-		db.close();
+		
 		return workoutplanList;
 	}
 	
@@ -162,7 +150,7 @@ public class WorkoutplanMapper   {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "DELETE FROM Workoutplan WHERE Workoutplan_Id =" + w.getId();
 		db.execSQL(sql);
-		db.close();
+		
 	}
 	
 	/**
@@ -175,7 +163,7 @@ public class WorkoutplanMapper   {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "DELETE FROM WorkoutplanHasTrainingDay WHERE Workoutplan_Id =" + w.getId();
 		db.execSQL(sql);
-		db.close();
+		
 	}
 	
 	/**
@@ -190,7 +178,7 @@ public class WorkoutplanMapper   {
 		sql = "UPDATE Workoutplan SET WorkoutplanName='" + w.getName() +  "' WHERE Workoutplan_Id=" + w.getId() + "";
 		db.execSQL(sql);
 		
-		db.close();
+		
 	}
 		
 	/**
@@ -204,7 +192,7 @@ public class WorkoutplanMapper   {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "INSERT INTO WorkoutplanHasTrainingDay (Workoutplan_Id, TrainingDay_Id) VALUES (" + workoutplanId + ", " + trainingDayId + ")";
 		db.execSQL(sql);
-		db.close();
+		
 	}
 	
 }

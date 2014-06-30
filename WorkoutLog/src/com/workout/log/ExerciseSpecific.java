@@ -4,8 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -30,25 +33,24 @@ import com.workout.log.listAdapter.PerformanceActualListAdapter;
 import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;
 
+@SuppressLint("SimpleDateFormat")
 public class ExerciseSpecific extends Fragment {
-  
-	private ListView exerciseView;
-	private Exercise exercise;
+	private ListView exerciseView = null;
+	private Exercise exercise = null;
 	private int exerciseId;
 	private int trainingDayId;
-	private EditText repetition;
-	private EditText weight;
+	private EditText repetition = null;
+	private EditText weight = null;
 	private Boolean saveMode = false;
 	
-	private PerformanceActualListAdapter adapter;
+	private PerformanceActualListAdapter adapter = null;
 	private ExerciseOverview exerciseOverview = new ExerciseOverview();
-	private PerformanceActualMapper paMapper;
+	private PerformanceActualMapper paMapper = null;
 	private ArrayList<PerformanceActual> performanceActualList;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.exercise_specific, container, false);
-		
 		/**
 		 * Set the visibility of the NavigationDrawer to Invisible
 		 */
@@ -106,6 +108,7 @@ public class ExerciseSpecific extends Fragment {
 		return view;
 		
 	}
+	
 	/**
 	 * Inzilation of the mapper classes
 	 * 
@@ -113,16 +116,21 @@ public class ExerciseSpecific extends Fragment {
 	@Override
 	public void onResume(){
 		super.onResume();
-		//Exercise Mapper + Object		
+		/**
+		 * Exercise Mapper + Object		
+		 */
 		ExerciseMapper eMapper = new ExerciseMapper(getActivity());
 		exercise = eMapper.getExerciseById(exerciseId);
-		//PerformanceActual Mapper + Object List
+		/**
+		 * PerformanceActual Mapper + Object List
+		 */
 		paMapper = new PerformanceActualMapper(getActivity());
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
+
 		performanceActualList = paMapper.getCurrentPerformanceActual(exercise, sp.format(new Date()));
 		
 		exerciseView = (ListView) getView().findViewById(R.id.exerciseSpecificList);
-		
+	
 		if (performanceActualList.isEmpty()){
 			performanceActualList = prepareStandardListView();
 			updateListView(performanceActualList);
@@ -206,6 +214,12 @@ public class ExerciseSpecific extends Fragment {
         transaction.addToBackStack(null);
         transaction.commit();
         
+        /**
+         * Close the Keyboard if still visible
+         */
+        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
+        	      Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(exerciseView.getWindowToken(), 0);
 		/**
 		 * Set the visibility of the NavigationDrawer to Visible
 		 */
@@ -255,33 +269,46 @@ public class ExerciseSpecific extends Fragment {
 	 * Save/Update all PerfromanceActual Objects in Database
 	 * 
 	 */
+	@SuppressWarnings("unused")
 	public void savePerformanceActual(){ 
+		/**
+		 * Use this variable to detected if a value was set. This is later use to 
+		 * decide what to write in the database
+		 */
+		boolean filledRep = false;
+		boolean filledWeight = false;
+		
 		PerformanceActualMapper pMapper = new PerformanceActualMapper(getActivity());
 		ActionBarDatePickerFragment dateFragment = (ActionBarDatePickerFragment) getFragmentManager().findFragmentById(R.id.specific_dateTimePicker);
 		for(PerformanceActual item : performanceActualList){
+			filledRep = false;
+			filledWeight = false;
+			
 			View v = exerciseView.getChildAt(item.getSet() -1);
 			repetition = (EditText) v.findViewById(R.id.specific_edit_repetition);
 			weight = (EditText) v.findViewById(R.id.specific_edit_weight);
 			
 			if (!repetition.getText().toString().isEmpty()){
+				filledRep = true;
 				item.setRepetition(Integer.parseInt(repetition.getText().toString()));
 			}
 			if (!weight.getText().toString().isEmpty()){
+				filledWeight = true;
 				item.setWeight(Double.parseDouble(weight.getText().toString()));
 			}
 			
 			/**
 			 * This block checks if the current Day is Today. 
-			 * Afterwards the Recordset it saved if either the repetition and weight 
+			 * Afterwards the Recordset is saved if either the repetition or weight 
 			 * TextView is filled. After this every Entry in the ListView is saved.
 			 * This ensures that if a user goes back to an old Entry and returns to the current
 			 * all of the sets are saved.
 			 */
 			if (dateFragment.isToday()){
 				if (saveMode == true){
-					PerformanceActual pa = pMapper.savePerformanceActual(item);
-				}else if (item.getRepetition() != 0 || item.getWeight() != 0.0){
-					PerformanceActual pa = pMapper.savePerformanceActual(item);
+					PerformanceActual pa = pMapper.savePerformanceActual(item, filledWeight, filledRep);
+				}else if (item.getRepetition() != -1 || item.getWeight() != -1){
+					PerformanceActual pa = pMapper.savePerformanceActual(item, filledWeight, filledRep);
 					saveMode = true;
 				}else{
 					saveMode = false;

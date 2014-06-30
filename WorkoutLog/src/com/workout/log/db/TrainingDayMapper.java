@@ -1,11 +1,9 @@
 package com.workout.log.db;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.workout.log.bo.Exercise;
@@ -17,17 +15,7 @@ public class TrainingDayMapper {
 	private String sql;
 	
 	public TrainingDayMapper (Context context){
-		myDBHelper = new DataBaseHelper(context);
-		try {	 
-	       	myDBHelper.createDataBase();
-	 	} catch (IOException ioe) {
-	 		throw new Error("Unable to create database");
-	 	}
-	 	try {
-	 		myDBHelper.openDataBase();
-	 	}catch(SQLException sqle){
-	 		throw sqle;
-	 	}
+		myDBHelper = DataBaseHelper.getInstance(context);
 	}
 		
 	/**
@@ -48,7 +36,7 @@ public class TrainingDayMapper {
 		}	
 		sql = "INSERT INTO TrainingDay (TrainingDay_Id, TrainingDayName) VALUES (" + id + ", '"+ d.getName() + "')";
 		db.execSQL(sql);
-		db.close();
+		
 	}
 	
 	/**
@@ -72,7 +60,7 @@ public class TrainingDayMapper {
 				trainingdayList.add(d);
 			}while(cursor.moveToNext());
 		}
-		db.close();
+		
 		cursor.close();
 		return trainingdayList;
 	}
@@ -81,14 +69,14 @@ public class TrainingDayMapper {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "DELETE FROM TrainingDay WHERE TrainingDay_Id = " + d.getId();
 		db.execSQL(sql);
-		db.close();	
+			
 	}
 	// Trainingstag updaten , z.B nach einer Änderung von einem Trainingstag
 	public TrainingDay update(TrainingDay t){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "UPDATE TrainingDay SET TrainingDayName='" + t.getName() +  "' WHERE TrainingDay_Id=" + t.getId();
 		db.execSQL(sql);
-		db.close();
+		
 		return t;
 	}
 	public TrainingDay getTrainingDayById(int id){
@@ -101,7 +89,7 @@ public class TrainingDayMapper {
 		    d.setName(cursor.getString(1));
 	    }
 	    cursor.close();
-	    db.close();
+	    
 	    return d;
 
 	}
@@ -123,7 +111,7 @@ public class TrainingDayMapper {
 		}
 		
 		cursor.close();
-		db.close();
+		
 		return trainingdayList;
 	}
 	
@@ -144,7 +132,7 @@ public class TrainingDayMapper {
 		 */
 		sql= "INSERT INTO PerformanceTarget (TrainingDay_Id, Exercise_Id, RepetitionTarget, SetTarget) VALUES  (" + trainingsDayId +","+exerciseId+", " + eTargetRepCount + ","+eTargetSetCount+")";
 		db.execSQL(sql);
-		db.close();
+		
 	}
 	
 	/**
@@ -166,7 +154,7 @@ public class TrainingDayMapper {
 		        } while (cursor.moveToNext());
 	    }
 	    cursor.close();
-	    db.close();
+	    
 	    return exist;
 	}
 	
@@ -174,7 +162,7 @@ public class TrainingDayMapper {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql ="DELETE FROM TrainingDayHasExercise WHERE TrainingDay_Id = " + trainingDayId + " AND Exercise_Id = " + e.getId();
 		db.execSQL(sql);
-		db.close();
+		
 	}
 	
 	/**
@@ -188,7 +176,7 @@ public class TrainingDayMapper {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "DELETE FROM WorkoutplanHasTrainingDay WHERE TrainingDay_Id=" + trainingDayId + " AND Workoutplan_Id=" + workoutplanId + " AND WorkoutplanHasTrainingDay_Id=" + primarykey +"";
 		db.execSQL(sql);
-		db.close();
+		
 	}
 	
 	/**
@@ -201,7 +189,7 @@ public class TrainingDayMapper {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "DELETE FROM WorkoutplanHasTrainingDay WHERE TrainingDay_Id=" + trainingDayId;
 		db.execSQL(sql);
-		db.close();
+		
 	}
 	
 	public ArrayList<TrainingDay> searchKeyString(String key){
@@ -221,7 +209,7 @@ public class TrainingDayMapper {
 	        }
 	   
 	    cursor.close();
-	    db.close();
+	    
 	    return trainingDayList;
 	}
 }

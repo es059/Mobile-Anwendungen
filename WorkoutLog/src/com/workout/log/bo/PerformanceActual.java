@@ -2,12 +2,12 @@ package com.workout.log.bo;
 
 import java.util.Date;
 
-public class PerformanceActual {
+public class PerformanceActual{
 	
 	private int mId;
-	private int mRepetition;
+	private int mRepetition = -1;
 	private int mSet;
-	private double mWeight;
+	private double mWeight = -1;
 	private Exercise mExercise;
 	private Date mTimestamp;
 	

@@ -1,36 +1,26 @@
 package com.workout.log.db;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.workout.log.bo.Exercise;
 
 
 public class ExerciseMapper {
-	
 	private DataBaseHelper myDBHelper;
 	private String sql;
 	private Context context;
 	private int muscleGroupID;
 	
+	private MuscleGroupMapper mMapper = null;
+	
 	public ExerciseMapper(Context context){
-		myDBHelper = new DataBaseHelper(context);
+		myDBHelper = DataBaseHelper.getInstance(context);
+	    mMapper = new MuscleGroupMapper(context);
 		this.context = context;
-		try {	 
-	       	myDBHelper.createDataBase();
-	 	} catch (IOException ioe) {
-	 		throw new Error("Unable to create database");
-	 	}
-	 	try {
-	 		myDBHelper.openDataBase();
-	 	}catch(SQLException sqle){
-	 		throw sqle;
-	 	}
 	}
 	
 	public void add(String exerciseName, String muscleGroup){
@@ -43,14 +33,14 @@ public class ExerciseMapper {
 		sql = "INSERT INTO Exercise (ExerciseName, MuscleGroup_Id ) VALUES ('" + exerciseName +"', " + muscleGroupID + ")";
 		db.execSQL(sql);
 		cursor.close();
-		db.close();
+		
 	}
 	
 	public void delete(Exercise e){	
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "DELETE FROM Exercise WHERE Exercise_Id =" + e.getId() + "";
 		db.execSQL(sql);
-		db.close();
+		
 	}
 	
 	/**
@@ -64,7 +54,7 @@ public class ExerciseMapper {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "DELETE FROM TrainingDayHasExercise WHERE Exercise_Id =" + e.getId() + "";
 		db.execSQL(sql);
-		db.close();
+		
 	}
 	
 	public ArrayList<Exercise> getAll() {
@@ -84,7 +74,7 @@ public class ExerciseMapper {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
+        
         return exerciseList;
 	}
 	public ArrayList<String> getAllbyString() {
@@ -102,7 +92,7 @@ public class ExerciseMapper {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
+        
         return exerciseList;	
 	}
 	
@@ -126,7 +116,7 @@ public class ExerciseMapper {
 				" WHERE Exercise_Id=" + exerciseId + "";
 		db.execSQL(sql);
 		
-		db.close();
+		
 		cursor.close();
 	}
 	
@@ -150,7 +140,7 @@ public class ExerciseMapper {
 	            exerciseList.add(e);
 	    	}while(cursor.moveToNext());
 	    }
-	    db.close();
+	    
 	    cursor.close();
 	    return exerciseList;
 	}
@@ -170,7 +160,7 @@ public class ExerciseMapper {
             	
             } while (cursor.moveToNext());
         }
-        db.close();
+        
 	    cursor.close();
 	    return exerciseList;
 	}
@@ -199,7 +189,7 @@ public class ExerciseMapper {
 			}while(cursor.moveToNext());
 		}
 		cursor.close();
-		db.close();
+		
 		return exerciseList;
 	}
 	/**
@@ -224,7 +214,7 @@ public class ExerciseMapper {
 				}
 			cursor.close();
 		}
-		db.close();
+		
 		return exerciseList;
 	}
 	
@@ -237,7 +227,7 @@ public class ExerciseMapper {
 	 */
 	 public Exercise getExerciseById(int exerciseId){
 		    Exercise exercise = new Exercise();
-		    MuscleGroupMapper mMapper = new MuscleGroupMapper(context);
+
 		    
 		    SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 		    sql = "SELECT * FROM Exercise WHERE Exercise_Id = " + exerciseId;
@@ -248,7 +238,7 @@ public class ExerciseMapper {
 		    	exercise.setName(cursor.getString(2));
 		    }
 		    cursor.close();
-		    db.close();
+		    
 		    return exercise;
 	}
 }

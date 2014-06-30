@@ -375,7 +375,8 @@ public class DynamicListView extends ListView {
         }
     }
 
-    private void swapElements(ArrayList arrayList, int indexOne, int indexTwo) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	private void swapElements(ArrayList arrayList, int indexOne, int indexTwo) {
         Object temp = arrayList.get(indexOne);
         arrayList.set(indexOne, arrayList.get(indexTwo));
         arrayList.set(indexTwo, temp);

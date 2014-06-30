@@ -19,12 +19,14 @@ import com.workout.log.db.PerformanceTargetMapper;
 public class OverviewAdapter  extends ArrayAdapter<ExerciseItem>{
 	private ArrayList<ExerciseItem> items;
 	private LayoutInflater layoutInflater;
+	private PerformanceTargetMapper pMapper = null;
 	private int trainingDayId;
 	
 	public OverviewAdapter(Context context, ArrayList<ExerciseItem> items, int trainingDayId){
 		super(context,0,items);
 		this.items = items;
 		this.trainingDayId = trainingDayId;
+		pMapper = new PerformanceTargetMapper(getContext());
 		layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 	
@@ -52,7 +54,6 @@ public class OverviewAdapter  extends ArrayAdapter<ExerciseItem>{
 				
 				exerciseView.setText(exercise.getName());
 				//Get target performance information (Set & Repetition)
-				PerformanceTargetMapper pMapper = new PerformanceTargetMapper(getContext());
 				PerformanceTarget performanceTarget = pMapper.getPerformanceTargetByExerciseId(exercise, trainingDayId);
 				setView.setHint("(Sätze: " + String.valueOf(performanceTarget.getSet()) + ")");
 				repetitionView.setHint("(Wdh: " + String.valueOf(performanceTarget.getRepetition())+ ")");

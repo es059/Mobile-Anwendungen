@@ -1,10 +1,7 @@
 package com.workout.log.db;
 
-import java.io.IOException;
-
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.workout.log.bo.Exercise;
@@ -21,17 +18,7 @@ public class PerformanceTargetMapper {
 	private String sql;
 	
 	public PerformanceTargetMapper(Context context){
-		myDBHelper = new DataBaseHelper(context);
-		try {	 
-	       	myDBHelper.createDataBase();
-	 	} catch (IOException ioe) {
-	 		throw new Error("Unable to create database");
-	 	}
-	 	try {
-	 		myDBHelper.openDataBase();
-	 	}catch(SQLException sqle){
-	 		throw sqle;
-	 	}
+		myDBHelper = DataBaseHelper.getInstance(context);
 	}
 	/**
 	 * Get one PerformanceTarget by an Exercise id
@@ -52,7 +39,7 @@ public class PerformanceTargetMapper {
 			performanceTarget.setId(Integer.parseInt(cursor.getString(2)));
 			performanceTarget.setExercise(exercise);
 		}
-		db.close();
+		
 		cursor.close();
 		return performanceTarget;
 	}
@@ -62,14 +49,14 @@ public class PerformanceTargetMapper {
 		sql = "UPDATE PerformanceTarget SET SetTarget = " + pt.getSet() + ", RepetitionTarget = " + pt.getRepetition()
 				+ " WHERE PerformanceTarget_Id = " + pt.getId();
 		db.execSQL(sql);
-		db.close();
+		
 	}
 	
 	public void deletePerformanceTarget(int trainingDayId, int exerciseId) {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "DELETE FROM PerformanceTarget WHERE TrainingDay_Id=" + trainingDayId + " AND Exercise_Id=" + exerciseId + "";
 		db.execSQL(sql);
-		db.close();
+		
 	}
 	
 	/**
@@ -82,7 +69,7 @@ public class PerformanceTargetMapper {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "DELETE FROM PerformanceTarget WHERE Exercise_Id =" + e.getId() + "";
 		db.execSQL(sql);
-		db.close();
+		
 	}
 	
 	/**
@@ -95,7 +82,7 @@ public class PerformanceTargetMapper {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "DELETE FROM PerformanceTarget WHERE TrainingDay_Id=" + trainingDayId;
 		db.execSQL(sql);
-		db.close();
+		
 	}
 	
 }

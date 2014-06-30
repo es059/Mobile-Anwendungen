@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -29,7 +28,6 @@ import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;
 
 public class HelperActivity extends Activity{
-	private static final String PREF_FIRST_LAUNCH = "first";
 	protected OnBackPressedListener onBackPressedListener;
 	protected OnHomePressedListener onHomePressedListener;
 	

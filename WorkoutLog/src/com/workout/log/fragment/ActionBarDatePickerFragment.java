@@ -1,11 +1,10 @@
 package com.workout.log.fragment;
 
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,12 +14,12 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.workoutlog.R;
 import com.workout.log.ExerciseSpecific;
 import com.workout.log.bo.PerformanceActual;
 import com.workout.log.db.PerformanceActualMapper;
 
+@SuppressLint("SimpleDateFormat")
 public class ActionBarDatePickerFragment extends Fragment implements OnClickListener{
 	private TextView date;
 	private ImageButton next;
@@ -55,6 +54,7 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 		
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -100,6 +100,7 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 	 * 
 	 * @author Eric Schmidt
 	 */
+	@SuppressWarnings("deprecation")
 	private void setDate(){
 		Calendar c = Calendar.getInstance();
 		if (String.valueOf(calendar.getTime().getDate()) == String.valueOf(c.getTime().getDate())){

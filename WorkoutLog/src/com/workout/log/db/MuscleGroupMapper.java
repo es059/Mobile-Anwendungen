@@ -1,11 +1,9 @@
 package com.workout.log.db;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.workout.log.bo.MuscleGroup;
@@ -20,17 +18,7 @@ public class MuscleGroupMapper {
 	private String sql;
 	
 	public MuscleGroupMapper(Context context){
-		myDBHelper = new DataBaseHelper(context);
-		try {	 
-	       	myDBHelper.createDataBase();
-	 	} catch (IOException ioe) {
-	 		throw new Error("Unable to create database");
-	 	}
-	 	try {
-	 		myDBHelper.openDataBase();
-	 	}catch(SQLException sqle){
-	 		throw sqle;
-	 	}
+		myDBHelper = DataBaseHelper.getInstance(context);
 	}
 	
 	public ArrayList<MuscleGroup> getAll(){	
@@ -48,7 +36,7 @@ public class MuscleGroupMapper {
 			}while(cursor.moveToNext());
 		}
 		cursor.close();
-		db.close();
+		
 		return muscleGroupList;	
 	}
 	
@@ -63,7 +51,7 @@ public class MuscleGroupMapper {
 			muscleGroup.setName(cursor.getString(1));
 		}
 		cursor.close();
-		db.close();
+		
 		return muscleGroup;
 	}	
 }

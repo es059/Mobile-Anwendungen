@@ -12,21 +12,53 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
+	private static DataBaseHelper mInstance = null;
+	private static SQLiteDatabase myDataBase = null;
 	
-	public DataBaseHelper(Context context) {
-		 
-    super(context, DB_NAME, null, 1);
-    this.myContext = context; }
-
 	private static String DB_PATH = "/data/data/com.example.workoutlog/databases/";
 	private static String DB_NAME = "WorkoutLog.db";
-	private SQLiteDatabase myDataBase;
+
 	private final Context myContext;
+	
+	/**
+	 * Use Singleton Design-Pattern to improve performance of the application
+	 * 
+	 * @author Eric Schmidt
+	 */
+	public static DataBaseHelper getInstance(Context context){
+		if (mInstance == null){
+			mInstance = new DataBaseHelper(context.getApplicationContext());
+		}
+		/**
+		 * Open the database only if the the connection is closed
+		 */
+		if (!myDataBase.isOpen()){
+			openDataBase();
+		}
+		return mInstance;
+	}
+	
+    /**
+     * constructor should be private to prevent direct instantiation.
+     * make call to static factory method "getInstance()" instead.
+     */
+	private DataBaseHelper(Context context) {
+	    super(context, DB_NAME, null, 1);
+	    this.myContext = context; 
+	    try {
+			this.createDataBase();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    openDataBase();
+    }
+
 	 
 	/**
 	* Creates a empty database on the system and rewrites it with your own database.
 	*/
-	public void createDataBase() throws IOException{
+	private void createDataBase() throws IOException{
 	    boolean dbExist = checkDataBase();
 	    if(dbExist){
 	    	//do nothing - database already exist
@@ -83,7 +115,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		myInput.close();
 	}
 	    
-	public void openDataBase() throws SQLException{ 
+	private static void openDataBase() throws SQLException{ 
 	    //Open the database
 	    String myPath = DB_PATH + DB_NAME;
 	    myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);

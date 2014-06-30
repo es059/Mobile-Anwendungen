@@ -29,10 +29,10 @@ public class ListViewPerformanceActual extends RelativeLayout{
 	}
 	public void setPerfromanceActual(PerformanceActual performanceActual){
 		this.set.setText(String.valueOf(performanceActual.getSet()));
-		if (performanceActual.getRepetition() != 0){
+		if (performanceActual.getRepetition() != -1){
 			this.repetition.setText(String.valueOf(performanceActual.getRepetition()));
 		}
-		if (performanceActual.getWeight() != 0.0){
+		if (performanceActual.getWeight() != -1){
 			this.weight.setText(String.valueOf(performanceActual.getWeight()));
 		}
 	}

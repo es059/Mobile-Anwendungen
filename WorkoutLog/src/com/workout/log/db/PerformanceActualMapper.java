@@ -1,6 +1,5 @@
 package com.workout.log.db;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.Date;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.workout.log.bo.Exercise;
@@ -27,17 +25,7 @@ public class PerformanceActualMapper {
 	private String sql;
 	
 	public PerformanceActualMapper(Context context){
-		myDBHelper = new DataBaseHelper(context);
-		try {	 
-	       	myDBHelper.createDataBase();
-	 	} catch (IOException ioe) {
-	 		throw new Error("Unable to create database");
-	 	}
-	 	try {
-	 		myDBHelper.openDataBase();
-	 	}catch(SQLException sqle){
-	 		throw sqle;
-	 	}
+		myDBHelper = DataBaseHelper.getInstance(context);
 	}
 	
 	/**
@@ -51,7 +39,7 @@ public class PerformanceActualMapper {
 			SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 			sql = "DELETE FROM PerformanceActual WHERE PerformanceActual_Id =" + performanceActualId;
 			db.execSQL(sql);
-			db.close();
+			
 		}
 	}
 	
@@ -65,7 +53,7 @@ public class PerformanceActualMapper {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "DELETE FROM PerformanceActual WHERE Exercise_Id =" + e.getId() + "";
 		db.execSQL(sql);
-		db.close();
+		
 	}
 	
 	/**
@@ -86,7 +74,7 @@ public class PerformanceActualMapper {
 			}while(cursor.moveToNext());
 		}
 		cursor.close();
-		db.close();
+		
 		return date;
 	}
 	/**
@@ -104,9 +92,10 @@ public class PerformanceActualMapper {
 		ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 		for(String item : strings){
-			sql = "SELECT MAX(RepetitionActual), MAX(WeightActual) FROM PerformanceActual WHERE"
+			sql = "SELECT RepetitionActual, WeightActual FROM PerformanceActual WHERE"
 					+ " TimestampActual = '" + item + "' AND"
-					+ " Exercise_Id = " + exercise.getId();
+					+ " Exercise_Id = " + exercise.getId()
+					+ " ORDER BY WeightActual DESC, RepetitionActual  DESC";
 			cursor = db.rawQuery(sql, null);
 			if (cursor.moveToFirst()){
 				PerformanceActual performanceActual = new PerformanceActual();
@@ -122,7 +111,7 @@ public class PerformanceActualMapper {
 			cursor.close();
 		}
 		
-		db.close();
+		
 		return performanceActualList;
 	}
 	
@@ -143,7 +132,7 @@ public class PerformanceActualMapper {
 			trainingDays = cursor.getInt(0);
 		}
 		cursor.close();
-		db.close();
+		
 		return trainingDays;
 	}
 	
@@ -167,9 +156,9 @@ public class PerformanceActualMapper {
 			do {
 				PerformanceActual performanceActual = new PerformanceActual();
 				performanceActual.setId(cursor.getInt(0));
-				performanceActual.setRepetition(cursor.getInt(1));
+				if (cursor.getString(1) != null) performanceActual.setRepetition(cursor.getInt(1));
 				performanceActual.setSet(cursor.getInt(2));
-				performanceActual.setWeight(cursor.getDouble(3));
+				if (cursor.getString(3) != null) performanceActual.setWeight(cursor.getDouble(3));
 				try {
 					performanceActual.setTimestamp(sp.parse(cursor.getString(4)));
 				} catch (ParseException e) {
@@ -180,7 +169,7 @@ public class PerformanceActualMapper {
 			} while (cursor.moveToNext());
 		}
 		cursor.close();
-		db.close();
+		
 		return performanceActualList;
 	}
 	
@@ -216,9 +205,9 @@ public class PerformanceActualMapper {
 			do{
 				PerformanceActual performanceActual = new PerformanceActual();
 				performanceActual.setId(cursor.getInt(0));
-				performanceActual.setRepetition(cursor.getInt(1));
+				if (cursor.getString(1) != null) performanceActual.setRepetition(cursor.getInt(1));
 				performanceActual.setSet(cursor.getInt(2));
-				performanceActual.setWeight(cursor.getDouble(3));
+				if (cursor.getString(3) != null) performanceActual.setWeight(cursor.getDouble(3));
 				try {
 					performanceActual.setTimestamp(sp.parse(cursor.getString(4)));
 				} catch (ParseException e) {
@@ -231,7 +220,7 @@ public class PerformanceActualMapper {
 			c.add(Calendar.DATE, 100);
 		}
 		cursor.close();
-		db.close();
+		
 		return performanceActualList;
 		
 	}
@@ -268,9 +257,9 @@ public class PerformanceActualMapper {
 			do{
 				PerformanceActual performanceActual = new PerformanceActual();
 				performanceActual.setId(cursor.getInt(0));
-				performanceActual.setRepetition(cursor.getInt(1));
+				if (cursor.getString(1) != null) performanceActual.setRepetition(cursor.getInt(1));
 				performanceActual.setSet(cursor.getInt(2));
-				performanceActual.setWeight(cursor.getDouble(3));
+				if (cursor.getString(3) != null) performanceActual.setWeight(cursor.getDouble(3));
 				try {
 					performanceActual.setTimestamp(sp.parse(cursor.getString(4)));
 				} catch (ParseException e) {
@@ -281,7 +270,7 @@ public class PerformanceActualMapper {
 			}while(cursor.moveToNext());
 		}
 		cursor.close();
-		db.close();
+		
 		return performanceActualList;
 		
 	}
@@ -293,7 +282,7 @@ public class PerformanceActualMapper {
 	 *  @return Exercise
 	 *  @author Eric Schmidt
 	 */
-	public PerformanceActual savePerformanceActual(PerformanceActual performanceActual){
+	public PerformanceActual savePerformanceActual(PerformanceActual performanceActual, Boolean filledWeight, Boolean filledRep){
 		int id = 1;
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
@@ -313,15 +302,16 @@ public class PerformanceActualMapper {
 		sql= "INSERT OR REPLACE INTO PerformanceActual "
 				+ "(PerformanceActual_Id, RepetitionActual, SetActual, "
 				+ "WeightActual, TimestampActual, Exercise_Id) "
-				+ "VALUES (" + id + "," + performanceActual.getRepetition() 
+				+ "VALUES (" + id + "," +((filledRep == false) ? null :  performanceActual.getRepetition()) 
 				+ "," + performanceActual.getSet()
-				+ "," + performanceActual.getWeight() + ",'" + sp.format(new Date())
+				+ "," + ((filledWeight == false) ? null : performanceActual.getWeight())
+				+ ",'" + sp.format(new Date())
 				+ "'," + performanceActual.getExercise().getId() + ")";
 				
 		db.execSQL(sql);
 		performanceActual.setId(id);
 		performanceActual.setTimestamp(new Date());
-		db.close();
+		
 		return performanceActual;
 		
 	}
