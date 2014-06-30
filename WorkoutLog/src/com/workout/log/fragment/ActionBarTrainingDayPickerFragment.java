@@ -67,6 +67,7 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 	 * @param View v
 	 * @author Eric Schmidt
 	 */
+	@SuppressWarnings("static-access")
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()){
@@ -78,6 +79,7 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 			}
 			if (!trainingDayList.isEmpty()){
 				trainingDayPicker.setText(trainingDayList.get(index).getName());
+				exerciseOverview.setTrainingDay(trainingDayList.get(index).getId());
 				exerciseOverview.updateListView(trainingDayList.get(index).getId());
 			}
 			break;
@@ -90,6 +92,7 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 			}
 			if (!trainingDayList.isEmpty()){
 				trainingDayPicker.setText(trainingDayList.get(index).getName());
+				exerciseOverview.setTrainingDay(trainingDayList.get(index).getId());
 				exerciseOverview.updateListView(trainingDayList.get(index).getId());
 			}
 			break;

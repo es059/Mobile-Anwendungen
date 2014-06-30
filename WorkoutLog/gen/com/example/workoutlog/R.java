@@ -1093,7 +1093,7 @@ containing a value of this type.
         public static final int list_item=0x7f050029;
         public static final int listview_exericse_header_text=0x7f05006c;
         public static final int menu_add=0x7f05007c;
-        public static final int menu_delete=0x7f05007d;
+        public static final int menu_save=0x7f05007d;
         public static final int middle=0x7f050012;
         public static final int never=0x7f050009;
         public static final int none=0x7f050010;
@@ -1293,8 +1293,8 @@ containing a value of this type.
         public static final int drawer_open=0x7f0a0019;
         public static final int hello_world=0x7f0a001c;
         public static final int menu_add=0x7f0a0011;
-        public static final int menu_delete=0x7f0a0012;
         public static final int menu_edit=0x7f0a0013;
+        public static final int menu_save=0x7f0a0012;
         public static final int menu_settings=0x7f0a0015;
         public static final int menu_workoutplan=0x7f0a0014;
         public static final int specific_repetition=0x7f0a0016;

@@ -282,7 +282,7 @@ public class PerformanceActualMapper {
 	 *  @return Exercise
 	 *  @author Eric Schmidt
 	 */
-	public PerformanceActual savePerformanceActual(PerformanceActual performanceActual, Boolean filledWeight, Boolean filledRep){
+	public PerformanceActual savePerformanceActual(PerformanceActual performanceActual){
 		int id = 1;
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
@@ -302,9 +302,9 @@ public class PerformanceActualMapper {
 		sql= "INSERT OR REPLACE INTO PerformanceActual "
 				+ "(PerformanceActual_Id, RepetitionActual, SetActual, "
 				+ "WeightActual, TimestampActual, Exercise_Id) "
-				+ "VALUES (" + id + "," +((filledRep == false) ? null :  performanceActual.getRepetition()) 
+				+ "VALUES (" + id + "," +((performanceActual.getRepetition() == -1) ? null :  performanceActual.getRepetition()) 
 				+ "," + performanceActual.getSet()
-				+ "," + ((filledWeight == false) ? null : performanceActual.getWeight())
+				+ "," + ((performanceActual.getWeight() == -1) ? null : performanceActual.getWeight())
 				+ ",'" + sp.format(new Date())
 				+ "'," + performanceActual.getExercise().getId() + ")";
 				

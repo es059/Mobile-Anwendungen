@@ -31,16 +31,16 @@ import com.workout.log.fragment.ActionBarTrainingDayPickerFragment;
 import com.workout.log.listAdapter.OverviewAdapter;
 
 public class ExerciseOverview extends Fragment implements OnItemClickListener {
-
 	private static ListView exerciseView; 
     
+	private static int trainingDayId = -1;
     private static ExerciseSpecific exerciseSpecific = new ExerciseSpecific();
     public static ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = new ActionBarTrainingDayPickerFragment();
     
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.exercise_overview, container, false);
-
+		
 		/**
 		 * Add the top navigation fragment to the current fragment
 		 */
@@ -69,7 +69,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 				if (transferExtras.getBoolean("SaveMode")){
 					Toast.makeText(getActivity(), "Daten wurden gespeichert", Toast.LENGTH_SHORT).show();
 				}
-				int trainingDayId = transferExtras.getInt("TrainingDayId");
+				trainingDayId = transferExtras.getInt("TrainingDayId");
 				actionBarTrainingDayPickerFragment = (ActionBarTrainingDayPickerFragment) getActivity().
 						getFragmentManager().findFragmentByTag("TrainingDayPicker");
 				actionBarTrainingDayPickerFragment.setCurrentTrainingDay(trainingDayId);
@@ -77,7 +77,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 				e.printStackTrace();
 			}
 		}else{	
-			updateListView(-1);
+			updateListView(trainingDayId);
 		}
 		exerciseView.setOnItemClickListener(this);
 	}
@@ -88,6 +88,10 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 		Exercise exercise;
 		exercise = (Exercise) exerciseView.getItemAtPosition(position);
 		openExerciseSpecific(exercise);
+	}
+	
+	public static void setTrainingDay(int id){
+		trainingDayId = id;
 	}
 	
 	/**

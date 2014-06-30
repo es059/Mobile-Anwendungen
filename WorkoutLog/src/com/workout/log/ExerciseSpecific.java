@@ -30,27 +30,30 @@ import com.workout.log.db.PerformanceActualMapper;
 import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.fragment.ActionBarDatePickerFragment;
 import com.workout.log.listAdapter.PerformanceActualListAdapter;
+import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
 import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;
 
 @SuppressLint("SimpleDateFormat")
 public class ExerciseSpecific extends Fragment {
-	private ListView exerciseView = null;
+	private ListView exerciseListView = null;
 	private Exercise exercise = null;
 	private int exerciseId;
 	private int trainingDayId;
 	private EditText repetition = null;
 	private EditText weight = null;
 	private Boolean saveMode = false;
-	
+		
 	private PerformanceActualListAdapter adapter = null;
 	private ExerciseOverview exerciseOverview = new ExerciseOverview();
 	private PerformanceActualMapper paMapper = null;
-	private ArrayList<PerformanceActual> performanceActualList;
+	private static ArrayList<PerformanceActual> performanceActualList = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.exercise_specific, container, false);
+		
+		performanceActualList = new ArrayList<PerformanceActual>(); 
 		/**
 		 * Set the visibility of the NavigationDrawer to Invisible
 		 */
@@ -103,42 +106,68 @@ public class ExerciseSpecific extends Fragment {
 			} catch (Exception e){
 				e.printStackTrace();
 			}
-		}
-		
+		}	
 		return view;
-		
 	}
 	
 	/**
-	 * Inzilation of the mapper classes
+	 * Initialization of the mapper classes and retrieve of 
+	 * the saved values of the list view
 	 * 
 	 */
 	@Override
 	public void onResume(){
 		super.onResume();
-		/**
-		 * Exercise Mapper + Object		
-		 */
 		ExerciseMapper eMapper = new ExerciseMapper(getActivity());
 		exercise = eMapper.getExerciseById(exerciseId);
-		/**
-		 * PerformanceActual Mapper + Object List
-		 */
+
 		paMapper = new PerformanceActualMapper(getActivity());
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 
-		performanceActualList = paMapper.getCurrentPerformanceActual(exercise, sp.format(new Date()));
+		exerciseListView = (ListView) getView().findViewById(R.id.exerciseSpecificList);
+		loadSwipeToDismiss();
 		
-		exerciseView = (ListView) getView().findViewById(R.id.exerciseSpecificList);
-	
 		if (performanceActualList.isEmpty()){
-			performanceActualList = prepareStandardListView();
-			updateListView(performanceActualList);
+			performanceActualList = paMapper.getCurrentPerformanceActual(exercise, sp.format(new Date()));
+		
+			/**
+			 * If the ArrayList is empty it means, that there where are no training data for today
+			 * the ListView is then generated with the information of the database table 
+			 * performanceTarget
+			 */
+			if (performanceActualList.isEmpty()){
+				performanceActualList = prepareStandardListView();
+				updateListView(performanceActualList);
+			}else{
+				updateListView(performanceActualList);
+			}
 		}else{
 			updateListView(performanceActualList);
 		}
 	}
 	
+	/**
+	 * Save the data which is currently in the rows of the listview
+	 */
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		for(PerformanceActual item : performanceActualList){
+			View v = exerciseListView.getChildAt(item.getSet() -1);
+			
+			repetition = (EditText) v.findViewById(R.id.specific_edit_repetition);
+			weight = (EditText) v.findViewById(R.id.specific_edit_weight);
+			
+			if (!repetition.getText().toString().isEmpty()){
+				item.setRepetition(Integer.parseInt(repetition.getText().toString()));
+			}
+			if (!weight.getText().toString().isEmpty()){
+				item.setWeight(Double.parseDouble(weight.getText().toString()));
+			}
+
+		}
+	}
+
 	/**
 	 * Prepares the ListView for the case that there was no current PerformanceActual Object
 	 * Mainly for the external call from <@see ActionBarDatePickerFragment>
@@ -168,7 +197,7 @@ public class ExerciseSpecific extends Fragment {
 	 */
 	public void updateListView(ArrayList<PerformanceActual> pa){
 		adapter = new PerformanceActualListAdapter(getActivity(), 0, pa);
-		exerciseView.setAdapter(adapter);
+		exerciseListView.setAdapter(adapter);
 	}
 		
 	@Override
@@ -179,16 +208,13 @@ public class ExerciseSpecific extends Fragment {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		switch (id){
 			case R.id.menu_add:
 				addPerformanceActualItem();
 				break;
-			case R.id.menu_delete:
-				removePerformanceActualItem();
+			case R.id.menu_save:
+				savePerformanceActual();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -219,7 +245,7 @@ public class ExerciseSpecific extends Fragment {
          */
         InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
         	      Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(exerciseView.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(exerciseListView.getWindowToken(), 0);
 		/**
 		 * Set the visibility of the NavigationDrawer to Visible
 		 */
@@ -242,28 +268,6 @@ public class ExerciseSpecific extends Fragment {
 		//Show the User a hint message
 		Toast.makeText(getActivity(), "Neuen Satz hinzugefügt!", Toast.LENGTH_SHORT).show();
 	}
-
-	/**
-	 * Remove the last PerformanceActual Object from the ListView and the Database
-	 * 
-	 */
-	public void removePerformanceActualItem(){
-		if (!performanceActualList.isEmpty()){
-			PerformanceActual performanceActual = performanceActualList.get(performanceActualList.size()-1);
-			//Update Adapter + ListView
-			adapter.remove(performanceActual);
-			adapter.notifyDataSetChanged();
-			exerciseView.invalidateViews();
-			//Remove Entry from Database
-			paMapper = new PerformanceActualMapper(getActivity());
-			paMapper.deletePerformanceActualById(performanceActual.getId());
-			//Set the ArrayList on the current value
-			performanceActualList = adapter.getPerformanceActualList();
-			Toast.makeText(getActivity(), "Letzten Satz entfernt!", Toast.LENGTH_SHORT).show();
-		}else{
-			Toast.makeText(getActivity(), "Keine weiteren Sätze verfügbar!", Toast.LENGTH_SHORT).show();
-		}
-	}
 	
 	/**
 	 * Save/Update all PerfromanceActual Objects in Database
@@ -271,29 +275,18 @@ public class ExerciseSpecific extends Fragment {
 	 */
 	@SuppressWarnings("unused")
 	public void savePerformanceActual(){ 
-		/**
-		 * Use this variable to detected if a value was set. This is later use to 
-		 * decide what to write in the database
-		 */
-		boolean filledRep = false;
-		boolean filledWeight = false;
-		
 		PerformanceActualMapper pMapper = new PerformanceActualMapper(getActivity());
 		ActionBarDatePickerFragment dateFragment = (ActionBarDatePickerFragment) getFragmentManager().findFragmentById(R.id.specific_dateTimePicker);
-		for(PerformanceActual item : performanceActualList){
-			filledRep = false;
-			filledWeight = false;
-			
-			View v = exerciseView.getChildAt(item.getSet() -1);
+		
+		for(PerformanceActual item : performanceActualList){			
+			View v = exerciseListView.getChildAt(item.getSet() -1);
 			repetition = (EditText) v.findViewById(R.id.specific_edit_repetition);
 			weight = (EditText) v.findViewById(R.id.specific_edit_weight);
 			
 			if (!repetition.getText().toString().isEmpty()){
-				filledRep = true;
 				item.setRepetition(Integer.parseInt(repetition.getText().toString()));
 			}
 			if (!weight.getText().toString().isEmpty()){
-				filledWeight = true;
 				item.setWeight(Double.parseDouble(weight.getText().toString()));
 			}
 			
@@ -306,9 +299,9 @@ public class ExerciseSpecific extends Fragment {
 			 */
 			if (dateFragment.isToday()){
 				if (saveMode == true){
-					PerformanceActual pa = pMapper.savePerformanceActual(item, filledWeight, filledRep);
+					PerformanceActual pa = pMapper.savePerformanceActual(item);
 				}else if (item.getRepetition() != -1 || item.getWeight() != -1){
-					PerformanceActual pa = pMapper.savePerformanceActual(item, filledWeight, filledRep);
+					PerformanceActual pa = pMapper.savePerformanceActual(item);
 					saveMode = true;
 				}else{
 					saveMode = false;
@@ -325,6 +318,56 @@ public class ExerciseSpecific extends Fragment {
 	 */
 	public Exercise getExercise(){
 		return exercise;
+	}
+	
+	/**
+	 * Create a ListView-specific touch listener. ListViews are given special treatment because
+	 * by default they handle touches for their list items... i.e. they're in charge of drawing
+	 * the pressed state (the list selector), handling list item clicks, etc.
+	 * 
+	 * @author Remi Tessier
+	 */
+	private void loadSwipeToDismiss(){ 
+		 SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(exerciseListView,
+		    new SwipeDismissListViewTouchListener.DismissCallbacks() {
+		        @Override
+		        public boolean canDismiss(int position) {
+		            return true;
+		        }
+		        @Override
+		        public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+		            for (int position : reverseSortedPositions) {
+		            	PerformanceActual performanceActual = (PerformanceActual) exerciseListView.getItemAtPosition(position);
+                    	/**
+                    	 * Delete from performanceActual
+                    	 */
+		            	paMapper = new PerformanceActualMapper(getActivity());   
+		            	if(performanceActual.getId()!= 0) paMapper.deletePerformanceActualById(performanceActual.getId());
+		        		
+		        		/**
+		        		 * Fix the set numbers from the other performanceActual items
+		        		 */
+		            	for (PerformanceActual pa : performanceActualList){
+		            		if(pa.getSet() > performanceActual.getSet()){
+		            			pa.setSet(pa.getSet()-1);
+		            			paMapper.savePerformanceActual(pa);
+		            		}
+		            	}
+		            	adapter.remove(adapter.getItem(position));
+		       
+		            	/**
+		            	 * Set the ArrayList on the current value
+		            	 */
+		    			performanceActualList = adapter.getPerformanceActualList();
+		            	Toast.makeText(getActivity(), "Satz wurde gelöscht!", Toast.LENGTH_SHORT).show();;  
+		            }
+		            adapter.notifyDataSetChanged();
+		        }
+		    });
+		 exerciseListView.setOnTouchListener(touchListener);
+		 // Setting this scroll listener is required to ensure that during ListView scrolling,
+		 // we don't look for swipes.
+		 exerciseListView.setOnScrollListener(touchListener.makeScrollListener());
 	}
 }
 
