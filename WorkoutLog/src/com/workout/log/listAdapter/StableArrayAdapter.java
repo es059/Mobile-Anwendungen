@@ -16,8 +16,8 @@
 
 package com.workout.log.listAdapter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import android.content.Context;
 import android.view.View;
@@ -30,11 +30,13 @@ import com.workout.log.customLayout.ListViewTrainingDay;
 public class StableArrayAdapter extends ArrayAdapter<TrainingDay> {
 
     final int INVALID_ID = -1;
+    private ArrayList<TrainingDay> trainingDayList = null;
 
     HashMap<TrainingDay, Integer> mIdMap = new HashMap<TrainingDay, Integer>();
 
-    public StableArrayAdapter(Context context, int textViewResourceId, List<TrainingDay> objects) {
+    public StableArrayAdapter(Context context, int textViewResourceId, ArrayList<TrainingDay> objects) {
        super(context, textViewResourceId, objects);
+       trainingDayList = objects;
        for (int i = 0; i < objects.size(); ++i) {
             mIdMap.put(objects.get(i), i);
       }
@@ -77,5 +79,15 @@ public class StableArrayAdapter extends ArrayAdapter<TrainingDay> {
 	@Override
 	public int getItemViewType(int position) {
 		return 0;
+	}
+	
+	/**
+	 * Returns the current List<PerformanceActual>
+	 * 
+	 * @return the current List Object
+	 * @author Eric Schmidt
+	 */
+	public ArrayList<TrainingDay> getTrainingDayList(){
+		return trainingDayList;
 	}
 }

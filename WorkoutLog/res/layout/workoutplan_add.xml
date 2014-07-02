@@ -7,18 +7,16 @@
     tools:ignore="MergeRootFrame" >
     
      <FrameLayout
-		        android:id="@+id/workoutplan_fragment"
-		        android:layout_width="match_parent"
-		        android:layout_height="@dimen/actionbar_height"
-		        android:layout_alignParentTop="true"
-		        android:layout_centerHorizontal="true"
-		      
-		       />
+        android:id="@+id/workoutplan_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/actionbar_height"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
     
     <ListView
         android:id="@+id/workoutplan_trainingDay_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_below="@+id/workoutplan_fragment"
         android:layout_centerHorizontal="true"
         android:longClickable="true" >

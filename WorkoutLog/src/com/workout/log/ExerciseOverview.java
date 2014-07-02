@@ -2,6 +2,7 @@ package com.workout.log;
 
 import java.util.ArrayList;
 
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -10,9 +11,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -40,7 +44,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.exercise_overview, container, false);
-		
+		//showOverlay(R.drawable.overlay_overview);
 		/**
 		 * Add the top navigation fragment to the current fragment
 		 */
@@ -61,10 +65,11 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 	@Override
 	public void onResume(){
 		super.onResume();
+		exerciseSpecific = new ExerciseSpecific();
 		
 		final Bundle transferExtras = getArguments();
 		exerciseView = (ListView) getView().findViewById(R.id.exerciseOverviewList);
-		if (transferExtras != null){	
+		if (transferExtras != null){				
 			try{
 				if (transferExtras.getBoolean("SaveMode")){
 					Toast.makeText(getActivity(), "Daten wurden gespeichert", Toast.LENGTH_SHORT).show();
@@ -134,13 +139,12 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
         data.putString("ExerciseName",exercise.getName());
         data.putInt("TrainingDayId",actionBarTrainingDayPickerFragment.getCurrentTrainingDay().getId());
         
-		exerciseSpecific = new ExerciseSpecific();
         exerciseSpecific.setArguments(data);
         
 	    FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.replace(R.id.fragment_container, exerciseSpecific , "ExerciseSpecific");
-        transaction.addToBackStack(null);
+        //transaction.addToBackStack(null);
         transaction.commit();
 	}
 	
@@ -226,6 +230,22 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 	        
 	        getActivity().setProgressBarIndeterminateVisibility(false);  
 	    }
-
+	}
+	
+    private void showOverlay(int resId){
+		final Dialog dialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
+		dialog.setContentView(R.layout.overlay_helper_view);
+		LinearLayout layout = (LinearLayout) dialog.findViewById(R.id.overlayLayout);
+		
+		ImageView imageView = (ImageView) dialog.findViewById(R.id.helperView);
+		imageView.setImageResource(resId);
+		
+		layout.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				dialog.dismiss();
+			}
+		});
+		dialog.show();
 	}
 }

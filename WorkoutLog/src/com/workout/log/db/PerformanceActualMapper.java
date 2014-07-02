@@ -182,7 +182,7 @@ public class PerformanceActualMapper {
 	 * @return ArrayList<PerformanceActual> a List of PerformanceActual Objects from the last Workout
 	 * @author Eric Schmidt
 	 */
-	public ArrayList<PerformanceActual> getLastPerformanceActual(Calendar currentDate, Exercise currentExercise){
+	public ArrayList<PerformanceActual> getPreviousPerformanceActual(Calendar currentDate, Exercise currentExercise){
 		ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 		Cursor cursor;
@@ -282,7 +282,7 @@ public class PerformanceActualMapper {
 	 *  @return Exercise
 	 *  @author Eric Schmidt
 	 */
-	public PerformanceActual savePerformanceActual(PerformanceActual performanceActual){
+	public void savePerformanceActual(PerformanceActual performanceActual, Date date){
 		int id = 1;
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
@@ -305,15 +305,11 @@ public class PerformanceActualMapper {
 				+ "VALUES (" + id + "," +((performanceActual.getRepetition() == -1) ? null :  performanceActual.getRepetition()) 
 				+ "," + performanceActual.getSet()
 				+ "," + ((performanceActual.getWeight() == -1) ? null : performanceActual.getWeight())
-				+ ",'" + sp.format(new Date())
+				+ ",'" + sp.format(date)
 				+ "'," + performanceActual.getExercise().getId() + ")";
 				
 		db.execSQL(sql);
-		performanceActual.setId(id);
-		performanceActual.setTimestamp(new Date());
-		
-		return performanceActual;
-		
+		db.close();		
 	}
 	
 }

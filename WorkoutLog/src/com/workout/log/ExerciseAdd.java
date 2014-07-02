@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.workoutlog.R;
+import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.MuscleGroup;
 import com.workout.log.data.ExerciseItem;
@@ -31,7 +32,6 @@ import com.workout.log.dialog.ExerciseAddDialogFragment;
 import com.workout.log.dialog.ExerciseUpdateDialogFragment;
 import com.workout.log.fragment.ExerciseBarSearchBarFragment;
 import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
-import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
 
 /**
  * With this fragment the user can manage his exercises. You can delete, add, and update exercises. 

@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,24 +15,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.example.workoutlog.R;
+import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
+import com.workout.log.SwipeToDelete.UndoBarController;
+import com.workout.log.SwipeToDelete.UndoItem;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.bo.Workoutplan;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.fragment.ActionBarWorkoutPlanPickerFragment;
 import com.workout.log.listAdapter.StableArrayAdapter;
-import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
 
-public class ManageWorkoutplan extends Fragment implements OnItemClickListener {
-	private DynamicListView listView;
+public class ManageWorkoutplan extends Fragment implements OnItemClickListener, UndoBarController.UndoListener {
+	private ListView listView;
 	private ArrayList<TrainingDay> trainingDayList;
 	private StableArrayAdapter stableArrayAdapter;
 	private TrainingDayMapper tdMapper;
+	private WorkoutplanMapper wpMapper;
 	
+	private UndoBarController mUndoBarController = null;
 	private static int workoutplanId =1;
 	int currentListId = -1;
 	private View view;
@@ -60,8 +66,10 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener {
 	public void onResume(){
 		super.onResume();
 
+		wpMapper = new WorkoutplanMapper(getActivity());
+		
 		tdMapper = new TrainingDayMapper(getActivity());
-		listView = (DynamicListView) view.findViewById(R.id.TrainingDayList);
+		listView = (ListView) view.findViewById(R.id.TrainingDayList);
 		
 		listView.setOnItemClickListener(this);
 		listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE); 
@@ -142,35 +150,114 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener {
 	 * @author Remi Tessier
 	 */
 	private void loadSwipeToDimiss(){
-		SwipeDismissListViewTouchListener touchListener =
-               new SwipeDismissListViewTouchListener(
-               		listView,
-                       new SwipeDismissListViewTouchListener.DismissCallbacks() {
-                           @Override
-                           public boolean canDismiss(int position) {
-                               return true;
-                           }
+		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(listView,
+           new SwipeDismissListViewTouchListener.DismissCallbacks() {
+			TrainingDay[] items= null;
+			int[] itemPositions = null;
+			int arrayCount = 0;
+			 
+               @Override
+               public boolean canDismiss(int position) {
+                   return true;
+               }
 
-                           @Override
-                           public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-                               for (int position : reverseSortedPositions) {
-                               	TrainingDay td = (TrainingDay) listView.getItemAtPosition(position);
-                           		int i = td.getId();
-                           		int primarykey = td.getTrainingDayHasWorkoutplanId();
-                           		tdMapper.deleteTrainingDayFromWorkoutplan(i, workoutplanId, primarykey);
-
-                           		trainingDayList.remove(position);
-                           		stableArrayAdapter = new StableArrayAdapter(getActivity(), R.layout.listview_training_day, trainingDayList);
-                           		((DynamicListView) listView).setCheeseList(trainingDayList);
-                           		listView.setAdapter(stableArrayAdapter);
-                           		listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);                                                
-                               }
-                           }
-                       });
+               @Override
+               public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+            	 	/**
+		         	 * Used for the undo actions
+		         	 */
+		        	if(mUndoBarController.getUndoBar().getVisibility() == View.GONE){
+			         	items=new TrainingDay[trainingDayList.size()];
+			            itemPositions =new int[trainingDayList.size()];
+			            arrayCount=0;
+		        	}
+		        	
+                   for (int position : reverseSortedPositions) {
+	                   	TrainingDay td = (TrainingDay) listView.getItemAtPosition(position);
+	                   	
+	               		int i = td.getId();
+	               		int primarykey = td.getTrainingDayHasWorkoutplanId();
+	               		
+	               		tdMapper.deleteTrainingDayFromWorkoutplan(i, workoutplanId, primarykey);
+	               		
+	               		TrainingDay item= stableArrayAdapter.getItem(position);
+	               		stableArrayAdapter.remove(stableArrayAdapter.getItem(position));
+		            	
+	                    items[arrayCount]=item;
+	 	               	itemPositions[arrayCount]=position;
+	 	               	arrayCount++;
+	               		
+	               		/**
+		            	 * Set the ArrayList on the current value
+		            	 */
+	               		trainingDayList = stableArrayAdapter.getTrainingDayList();
+		            	Toast.makeText(getActivity(), "Trainingstag wurde dem Trainingsplan entfernt!", Toast.LENGTH_SHORT).show();; 	                                               
+                   }      
+                   stableArrayAdapter.notifyDataSetChanged();
+                   
+                   /**
+		             * Show UndoBar
+		             */
+		             UndoItem itemUndo=new UndoItem(items,itemPositions);
+		   
+		             /**
+		              * Undobar message
+		              */
+		             int count = 0;
+		             for (TrainingDay pa : items){
+		            	 if (pa != null){
+		            		 count++;
+		            	 }
+		             }
+		             String messageUndoBar = count + " Item(s) gelöscht";
+		            		 
+		             mUndoBarController.showUndoBar(false,messageUndoBar,itemUndo);
+               }
+           });
 		listView.setOnTouchListener(touchListener);
-		// Setting this scroll listener is required to ensure that during ListView scrolling,
-		// we don't look for swipes.
+		/** Setting this scroll listener is required to ensure that during ListView scrolling,
+		 *  we don't look for swipes.
+		 */
 		listView.setOnScrollListener(touchListener.makeScrollListener());
+		
+		/**
+		 * UndoController
+		 */
+	    if (mUndoBarController==null)mUndoBarController = new UndoBarController(getView().findViewById(R.id.undobar), this);
+	}
+	
+	@Override
+	public void onUndo(Parcelable token) {
+		/**
+		 * Restore items in lists (use reverseSortedOrder)
+		 */
+		if (token != null) {
+			/**
+			 * Retrieve data from token
+			 */
+			UndoItem itemRetrieve = (UndoItem) token;
+			TrainingDay[] items = (TrainingDay[]) itemRetrieve.items;
+			int[] itemPositions = itemRetrieve.itemPosition;
+
+			if (items != null && itemPositions != null) {
+				int end= 0;
+			    for (TrainingDay pa : items){
+	            	 if (pa != null){
+	            		 end++;
+	            	 }
+	             }
+			    
+				for (int i = end - 1; i >= 0; i--) {
+					TrainingDay item = items[i];
+					int itemPosition = itemPositions[i];
+
+					wpMapper.addTrainingDayToWorkoutplan(item.getId(), workoutplanId);
+					stableArrayAdapter.insert(item, itemPosition);
+					stableArrayAdapter.notifyDataSetChanged();
+				}
+				Toast.makeText(getActivity(), end + " Item(s) wiederhergestellt", Toast.LENGTH_SHORT).show();
+			}
+		}
 	}
 	
 	/**
@@ -183,11 +270,10 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener {
 	     * Variables for the UpdateListView method
 	     */
 		private ArrayList<Workoutplan> workoutplanList;
-		private WorkoutplanMapper wpMapper;
 		
-		private DynamicListView trainingDayListView;
+		private ListView trainingDayListView;
 
-		public BackGroundTask (DynamicListView trainingDayListView){	
+		public BackGroundTask (ListView trainingDayListView){	
 			this.trainingDayListView = trainingDayListView;
 		}
 

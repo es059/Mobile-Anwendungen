@@ -20,6 +20,7 @@
         <item>Löschen</item>
         <item>Ändern</item>
     </string-array>
+    
     <string-array name="MuscleGroup">
         <item>Rücken</item>
         <item>Bauch</item>
@@ -47,14 +48,10 @@
     <string name="title_activity_exercise_add_to_training_day">ExerciseAddToTrainingDay</string>
     <string name="title_activity_training_day_exercise_overview">TrainingDayExerciseOverview</string>
 
-    <string-array name="MuscleGroups">
-        <item>Beine</item>
-        <item>Rücken</item>
-        <item>Brust</item>
-        <item>Trizeps</item>
-        <item>Bizeps</item>
-        <item>Bauch</item>
-    </string-array>
+    <plurals name="items">
+        <item quantity="one">1 item removed</item>
+        <item quantity="other">%d items removed</item>
+    </plurals>
 
     <string name="title_activity_manage_workoutplan">ManageWorkoutplan</string>
     <string name="title_activity_training_day_add_to_workoutplan">TrainingDayAddToWorkoutplan</string>

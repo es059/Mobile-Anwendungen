@@ -13,19 +13,17 @@
 		    tools:context="com.workout.log.ExerciseOverview"
 		    tools:ignore="MergeRootFrame" >
 		
-		     <FrameLayout
+		    <FrameLayout
 		        android:id="@+id/add_searchBar"
 		        android:layout_width="match_parent"
 		        android:layout_height="@dimen/actionbar_height"
 		        android:layout_alignParentTop="true"
-		        android:layout_centerHorizontal="true"
-		      
-		       />
+		        android:layout_centerHorizontal="true"/>
 		
 		    <ListView
 		        android:id="@+id/trainingDay_add_list"
 		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
+		        android:layout_height="fill_parent"
 		        android:layout_below="@+id/add_searchBar"
 		        android:layout_centerHorizontal="true"
 		        android:longClickable="true" >

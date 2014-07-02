@@ -1,32 +1,48 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-    <FrameLayout
-        android:id="@+id/content_frame"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-    	xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-		<RelativeLayout 
-		    android:id="@+id/container"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    tools:context="com.workout.log.ManageWorkoutplan"
-		    tools:ignore="MergeRootFrame" >
+        android:layout_height="match_parent"
+        tools:context="com.workout.log.ManageWorkoutplan"
+        tools:ignore="MergeRootFrame" >
 
-		    <FrameLayout
-		        android:id="@+id/specific_dateTimePicker"
-		        android:layout_width="match_parent"
-		        android:layout_height="@dimen/actionbar_height"
-		        android:layout_alignParentTop="true"
-		        android:layout_centerHorizontal="true"
+        <FrameLayout
+            android:id="@+id/specific_dateTimePicker"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/actionbar_height"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
 
-		       />
+        <ListView
+            android:id="@+id/TrainingDayList"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/specific_dateTimePicker"
+            android:layout_centerHorizontal="true" />
 
-		 	<com.workout.log.DynamicListView
-				android:id="@+id/TrainingDayList"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_below="@+id/specific_dateTimePicker"
-				android:layout_centerHorizontal="true"
-				android:longClickable="true"/>			  
- 		</RelativeLayout>
-  	</FrameLayout>
+        <!-- Used for the Undo TextField -->
+        <LinearLayout
+            android:id="@+id/undobar"
+            style="@style/UndoBar"
+            android:layout_centerInParent="@+id/exerciseSpecificList"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/undobar_message"
+                style="@style/UndoBarMessage" >
+            </TextView>
+
+            <Button
+                android:id="@+id/undobar_button"
+                style="@style/UndoBarButton" >
+            </Button>
+        </LinearLayout>
+        
+    </RelativeLayout>
+
+</FrameLayout>

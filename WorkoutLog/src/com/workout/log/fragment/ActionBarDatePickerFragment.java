@@ -63,7 +63,10 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 		case R.id.Next:
 			performanceActualList = paMapper.getNextPerformanceActual(calendar, exerciseSpecific.getExercise());
 			if (!performanceActualList.isEmpty()){
+				exerciseSpecific.savePerformanceActual();
 				exerciseSpecific.updateListView(performanceActualList);
+				exerciseSpecific.closeKeyboard();
+				
 				calendar.setTime(performanceActualList.get(0).getTimestamp());
 				setDate();
 			}else{
@@ -77,13 +80,12 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 			}
 			break;
 		case R.id.Previous:
-			performanceActualList = paMapper.getLastPerformanceActual(calendar, exerciseSpecific.getExercise());
-			if (!performanceActualList.isEmpty()){
-				if (isCurrent){
-					exerciseSpecific.savePerformanceActual();
-					Toast.makeText(getActivity(), "Inhalte wurden gespeichert", Toast.LENGTH_SHORT).show();
-				}
+			performanceActualList = paMapper.getPreviousPerformanceActual(calendar, exerciseSpecific.getExercise());
+			if (!performanceActualList.isEmpty()){	
+				exerciseSpecific.savePerformanceActual();
 				exerciseSpecific.updateListView(performanceActualList);
+				exerciseSpecific.closeKeyboard();
+				
 				calendar.setTime(performanceActualList.get(0).getTimestamp());
 				setDate();
 			}else{
@@ -113,6 +115,16 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 			next.setVisibility(View.VISIBLE);
 			isCurrent = false;
 		}
+	}
+	
+	/**
+	 * Returns the current Date
+	 * 
+	 * @return Date the current Date
+	 * @author Eric Schmidt
+	 */
+	public Date getDate(){
+		return calendar.getTime();
 	}
 	
 	/**

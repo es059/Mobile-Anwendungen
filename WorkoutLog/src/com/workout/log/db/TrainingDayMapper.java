@@ -23,20 +23,23 @@ public class TrainingDayMapper {
 	 * 
 	 * @param trainingDayName
 	 */
-	public void add(TrainingDay d){
+	public void add(TrainingDay trainingDay){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		int id = 1;
-		sql = "SELECT MAX(TrainingDay_Id) FROM TrainingDay";
-		Cursor cursor = db.rawQuery(sql, null);
-		if (cursor.moveToFirst()){
-			if (!cursor.isNull(0)){
-				id = Integer.parseInt(cursor.getString(0));
-				id++;
-			}
-		}	
-		sql = "INSERT INTO TrainingDay (TrainingDay_Id, TrainingDayName) VALUES (" + id + ", '"+ d.getName() + "')";
-		db.execSQL(sql);
-		
+		if (trainingDay.getId() == 0){
+			sql = "SELECT MAX(TrainingDay_Id) FROM TrainingDay";
+			Cursor cursor = db.rawQuery(sql, null);
+			if (cursor.moveToFirst()){
+				if (!cursor.isNull(0)){
+					id = Integer.parseInt(cursor.getString(0));
+					id++;
+				}
+			}	
+		}else{
+			id = trainingDay.getId();
+		}
+		sql = "INSERT INTO TrainingDay (TrainingDay_Id, TrainingDayName) VALUES (" + id + ", '"+ trainingDay.getName() + "')";
+		db.execSQL(sql);	
 	}
 	
 	/**

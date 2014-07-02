@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.workoutlog.R;
+import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.MuscleGroup;
 import com.workout.log.data.ExerciseItem;
@@ -34,7 +35,6 @@ import com.workout.log.dialog.ExerciseSpecificAddDialogFragment;
 import com.workout.log.dialog.ExerciseUpdateDialogFragment;
 import com.workout.log.fragment.ExerciseBarSearchBarFragment;
 import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
-import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
 
 public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickListener, OnItemLongClickListener{
     private ExerciseListWithoutSetsRepsAdapter listAdapter;

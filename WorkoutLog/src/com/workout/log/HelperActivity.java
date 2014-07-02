@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -53,6 +54,7 @@ public class HelperActivity extends Activity{
 		setContentView(R.layout.activity_helper);
 
 		loadNavigationDrawer();
+		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         
         this.getActionBar().setDisplayHomeAsUpEnabled(true);
         this.getActionBar().setHomeButtonEnabled(true);

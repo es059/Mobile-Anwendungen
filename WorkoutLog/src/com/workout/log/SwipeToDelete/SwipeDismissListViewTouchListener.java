@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.workout.log.listAdapter;
+package com.workout.log.SwipeToDelete;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -249,6 +249,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
                 float absVelocityY = Math.abs(mVelocityTracker.getYVelocity());
                 boolean dismiss = false;
                 boolean dismissRight = false;
+                
                 if (Math.abs(deltaX) > mViewWidth / 2 && mSwiping) {
                     dismiss = true;
                     dismissRight = deltaX > 0;
@@ -258,6 +259,7 @@ public class SwipeDismissListViewTouchListener implements View.OnTouchListener {
                     dismiss = (velocityX < 0) == (deltaX < 0);
                     dismissRight = mVelocityTracker.getXVelocity() > 0;
                 }
+                
                 if (dismiss && mDownPosition != AdapterView.INVALID_POSITION) {
                     // dismiss
                     final View downView = mDownView; // mDownView gets null'd before animation ends

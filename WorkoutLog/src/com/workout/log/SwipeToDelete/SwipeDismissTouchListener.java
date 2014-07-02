@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.workout.log.listAdapter;
+package com.workout.log.SwipeToDelete;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

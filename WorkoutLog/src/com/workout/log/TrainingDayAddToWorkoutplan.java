@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.workoutlog.R;
+import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.db.TrainingDayMapper;
@@ -28,7 +29,6 @@ import com.workout.log.dialog.TrainingDayAddDialogFragment;
 import com.workout.log.dialog.TrainingDayAddToWorkoutplanDialogFragment;
 import com.workout.log.dialog.TrainingDayUpdateDialogFragment;
 import com.workout.log.fragment.TrainingDaysSearchBarFragment;
-import com.workout.log.listAdapter.SwipeDismissListViewTouchListener;
 import com.workout.log.listAdapter.TrainingDayListAdapter;
 import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;

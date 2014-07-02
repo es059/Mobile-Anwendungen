@@ -14,7 +14,7 @@
 	    <ListView
 	        android:id="@+id/exerciseOverviewList"
 	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
+	        android:layout_height="fill_parent"
 	        android:layout_below="@+id/overview_trainingDayPicker"
 	        android:layout_centerHorizontal="true"
 	        android:longClickable="true"/>			  
