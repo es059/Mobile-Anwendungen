@@ -19,13 +19,13 @@ import com.workout.log.bo.Exercise;
 import com.workout.log.db.ExerciseMapper;
 
 @SuppressLint("ValidFragment")
-public class ExerciseBarSearchBarFragment extends Fragment{
+public class ExerciseSearchBarFragment extends Fragment{
 	
 	private EditText searchBar;
 	private Fragment fragment;
 	private ExerciseMapper eMapper;
 	
-	public ExerciseBarSearchBarFragment(Fragment fragment){
+	public ExerciseSearchBarFragment(Fragment fragment){
 		this.fragment = fragment;
 	}
 	

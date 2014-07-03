@@ -25,7 +25,7 @@
     <LinearLayout
         android:id="@+id/undobar"
         style="@style/UndoBar"
-        android:layout_centerInParent="@+id/exerciseSpecificList"
+        android:layout_alignParentBottom="true"
         android:orientation="horizontal" >
         <TextView
             android:id="@+id/undobar_message"

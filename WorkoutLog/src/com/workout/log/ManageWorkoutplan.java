@@ -190,8 +190,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	               		/**
 		            	 * Set the ArrayList on the current value
 		            	 */
-	               		trainingDayList = stableArrayAdapter.getTrainingDayList();
-		            	Toast.makeText(getActivity(), "Trainingstag wurde dem Trainingsplan entfernt!", Toast.LENGTH_SHORT).show();; 	                                               
+	               		trainingDayList = stableArrayAdapter.getTrainingDayList();		    
                    }      
                    stableArrayAdapter.notifyDataSetChanged();
                    
@@ -255,7 +254,6 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 					stableArrayAdapter.insert(item, itemPosition);
 					stableArrayAdapter.notifyDataSetChanged();
 				}
-				Toast.makeText(getActivity(), end + " Item(s) wiederhergestellt", Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

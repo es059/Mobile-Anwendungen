@@ -33,7 +33,7 @@ import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.dialog.ExerciseAddDialogFragment;
 import com.workout.log.dialog.ExerciseSpecificAddDialogFragment;
 import com.workout.log.dialog.ExerciseUpdateDialogFragment;
-import com.workout.log.fragment.ExerciseBarSearchBarFragment;
+import com.workout.log.fragment.ExerciseSearchBarFragment;
 import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
 
 public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickListener, OnItemLongClickListener{
@@ -59,7 +59,7 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 		 */
 	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        transaction.replace(R.id.add_searchBar, new ExerciseBarSearchBarFragment(this), "ActionBarSearchBarFragment");
+        transaction.replace(R.id.add_searchBar, new ExerciseSearchBarFragment(this), "ActionBarSearchBarFragment");
         transaction.commit();
 
 		setHasOptionsMenu(true);

@@ -246,7 +246,7 @@ public class HelperActivity extends Activity{
 			case 4: 
 				transaction = getFragmentManager().beginTransaction();
 			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-			    transaction.replace(R.id.fragment_container, new GraphActivity(), "GraphActivity");
+			    transaction.replace(R.id.fragment_container, new Graph(), "GraphActivity");
 			    transaction.addToBackStack(null);
 			    transaction.commit();
 				break;

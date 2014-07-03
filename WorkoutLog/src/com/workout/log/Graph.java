@@ -11,7 +11,7 @@ import com.example.workoutlog.R;
 import com.workout.log.fragment.ActionBarGraphFragment;
 import com.workout.log.fragment.LineGraphFragment;
 
-public class GraphActivity extends Fragment {
+public class Graph extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.activity_graph, container, false);

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -18,11 +17,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -64,7 +60,6 @@ public class ExerciseSpecific extends Fragment implements
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.exercise_specific, container,
 				false);
-		// showOverlay(R.drawable.overlay_specific);
 		performanceActualList = new ArrayList<PerformanceActual>();
 		/**
 		 * Set the visibility of the NavigationDrawer to Invisible
@@ -466,7 +461,6 @@ public class ExerciseSpecific extends Fragment implements
 		            	 * Set the ArrayList on the current value
 		            	 */
 		    			performanceActualList = adapter.getPerformanceActualList();
-		            	Toast.makeText(getActivity(), "Satz wurde gelöscht!", Toast.LENGTH_SHORT).show();; 	
 		            }
 		            adapter.notifyDataSetChanged();
 		            
@@ -558,27 +552,7 @@ public class ExerciseSpecific extends Fragment implements
 					adapter.insert(item, itemPosition);
 					adapter.notifyDataSetChanged();
 				}
-				Toast.makeText(getActivity(), end + " Item(s) wiederhergestellt", Toast.LENGTH_SHORT).show();
 			}
 		}
-	}
-
-	private void showOverlay(int resId) {
-		final Dialog dialog = new Dialog(getActivity(),
-				android.R.style.Theme_Translucent_NoTitleBar);
-		dialog.setContentView(R.layout.overlay_helper_view);
-		LinearLayout layout = (LinearLayout) dialog
-				.findViewById(R.id.overlayLayout);
-
-		ImageView imageView = (ImageView) dialog.findViewById(R.id.helperView);
-		imageView.setImageResource(resId);
-
-		layout.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				dialog.dismiss();
-			}
-		});
-		dialog.show();
 	}
 }
