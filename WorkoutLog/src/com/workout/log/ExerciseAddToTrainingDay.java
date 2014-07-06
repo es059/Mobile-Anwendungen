@@ -8,6 +8,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,39 +19,56 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.workoutlog.R;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
+import com.workout.log.SwipeToDelete.UndoBarController;
+import com.workout.log.SwipeToDelete.UndoItem;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.MuscleGroup;
+import com.workout.log.bo.PerformanceActual;
+import com.workout.log.bo.PerformanceTarget;
 import com.workout.log.data.ExerciseItem;
 import com.workout.log.data.MuscleGroupSectionItem;
 import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.MuscleGroupMapper;
 import com.workout.log.db.PerformanceActualMapper;
 import com.workout.log.db.PerformanceTargetMapper;
+import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.dialog.ExerciseAddDialogFragment;
 import com.workout.log.dialog.ExerciseSpecificAddDialogFragment;
 import com.workout.log.dialog.ExerciseUpdateDialogFragment;
 import com.workout.log.fragment.ExerciseSearchBarFragment;
 import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
 
-public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickListener, OnItemLongClickListener{
+public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickListener, OnItemLongClickListener, UndoBarController.UndoListener{
     private ExerciseListWithoutSetsRepsAdapter listAdapter;
     private ListView exerciseListView;
-    private  ExerciseMapper eMapper;
+    
+    private PerformanceActualMapper paMapper = null;
+	private PerformanceTargetMapper ptMapper = null;
+    private ExerciseMapper eMapper = null;
+    private TrainingDayMapper tMapper = null;
+    
 	private int trainingDayId;
 	
 	private TrainingDayExerciseOverview trainingDayExerciseOverview;
+	
+	private ArrayList<Exercise> exerciseList = null;
+	private UndoBarController mUndoBarController = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.exercise_add, container, false);
 		
 		eMapper = new ExerciseMapper(getActivity());
+		paMapper = new PerformanceActualMapper(getActivity());
+		ptMapper = new PerformanceTargetMapper(getActivity());
+		tMapper = new TrainingDayMapper(getActivity());
 		
-		// Übergabe der Trainingtags-ID über das Intent 
+		/**
+		 * Get TrainingDayId from ExerciseOverview
+		 */
 		trainingDayExerciseOverview = (TrainingDayExerciseOverview) getActivity().getFragmentManager().findFragmentByTag("TrainingDayExerciseOverview");
 		trainingDayId = trainingDayExerciseOverview.getTrainingDayId();
         
@@ -74,6 +92,12 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 	@Override
 	public void onResume(){
 		super.onResume();
+		
+		/**
+		 * If more than one xml layout file uses the Layout for the UndoBar than 
+		 * use this line to ensure that the reference is always correct
+		 */
+		mUndoBarController = null;
 		
 		eMapper = new ExerciseMapper(getActivity());
 		
@@ -157,8 +181,9 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 	 * @author Eric Schmidt
 	 */
 	@SuppressWarnings("unchecked")
-	public void updateListView(ArrayList<Exercise> List){
-		new BackGroundTask(exerciseListView).execute(List); 
+	public void updateListView(ArrayList<Exercise> list){
+		exerciseList = list;
+		new BackGroundTask(exerciseListView).execute(list); 
 	}
 
 	/**
@@ -173,39 +198,130 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
         // by default they handle touches for their list items... i.e. they're in charge of drawing
         // the pressed state (the list selector), handling list item clicks, etc.
         SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(
-    		exerciseListView,
-            new SwipeDismissListViewTouchListener.DismissCallbacks() {
+    		exerciseListView, new SwipeDismissListViewTouchListener.DismissCallbacks() {
+    			Exercise[] items= null;
+	 			int[] itemPositions = null;
+	 			int arrayCount = 0;
+	 			
                 @Override
                 public boolean canDismiss(int position) {
                     return true;
                 }
 
                 @Override
-                public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+                public void onDismiss(ListView listView, int[] reverseSortedPositions){
+                	/**
+		         	 * Used for the undo actions
+		         	 */
+		        	if(mUndoBarController.getUndoBar().getVisibility() == View.GONE){
+			         	items=new Exercise[exerciseList.size()];
+			            itemPositions =new int[exerciseList.size()];
+			            arrayCount=0;
+		        	}
+		        	
                     for (int position : reverseSortedPositions) {
                     	Exercise e = (Exercise) exerciseListView.getItemAtPosition(position);
- 
-                    	PerformanceActualMapper paMapper = new PerformanceActualMapper(getActivity());
-                    	PerformanceTargetMapper ptMapper = new PerformanceTargetMapper(getActivity());
+                    	
+                    	/**
+		            	 * Fill the exercise Object with additional data to ensure that 
+		            	 * the undo method is working
+		            	 */
+		            	e = eMapper.addAdditionalInfo(e);
+                    	
                     	/**
                     	 * Delete from TrainingDayHasExercise, PerformanceActual
                     	 * and PerformanceTarget
                     	 */
                     	eMapper.deleteExerciseFromAllTrainingDays(e);
                     	eMapper.delete(e);
+                    	
                     	ptMapper.deleteExerciseFromPerfromanceTarget(e);
                     	paMapper.deleteExerciseFromPerfromanceActual(e);
                     	
-                    	listAdapter.remove(listAdapter.getItem(position));
-                    	Toast.makeText(getActivity(), "Übung wurde gelöscht!", Toast.LENGTH_SHORT ).show();          
+                    	Exercise item= (Exercise) listAdapter.getItem(position);
+		            	listAdapter.remove(item);
+		            	
+		                items[arrayCount]=item;
+	 	               	itemPositions[arrayCount]=position;
+	 	               	arrayCount++;         
                     }
                     listAdapter.notifyDataSetChanged();
+                    
+                    UndoItem itemUndo=new UndoItem(items,itemPositions);
+ 		  		   
+ 		            /**
+ 		             * Undobar message
+ 		             */
+ 		            int count = 0;
+ 		            for (Exercise e : items){
+ 		            	if (e != null){
+ 		            		count++;
+ 		            	}
+ 		            }
+ 		            String messageUndoBar = count + " Item(s) gelöscht";
+ 		            		 
+ 		            mUndoBarController.showUndoBar(false,messageUndoBar,itemUndo);	
                 }
             });
         exerciseListView.setOnTouchListener(touchListener);
-        // Setting this scroll listener is required to ensure that during ListView scrolling,
-        // we don't look for swipes.
+        /** Setting this scroll listener is required to ensure that during ListView scrolling,
+         * we don't look for swipes.
+         */
         exerciseListView.setOnScrollListener(touchListener.makeScrollListener());
+        
+        /**
+		 * UndoController
+		 */
+	    if (mUndoBarController==null) mUndoBarController = new UndoBarController(getView().findViewById(R.id.undobar), this);
+	}
+	
+	/**
+	 * Handels the click on the Undo Button. Revive the Data that was deletet in the
+	 * onDismiss function
+	 * 
+	 * @author Eric Schmidt
+	 */
+	@Override
+	public void onUndo(Parcelable token) {
+		/**
+		 * Restore items in lists (use reverseSortedOrder)
+		 */
+		if (token != null) {
+			/**
+			 * Retrieve data from token
+			 */
+			UndoItem itemRetrieve = (UndoItem) token;
+			Exercise[] items = (Exercise[]) itemRetrieve.items;
+			int[] itemPositions = itemRetrieve.itemPosition;
+
+			if (items != null && itemPositions != null) {
+				int end= 0;
+			    for (Exercise e : items){
+	            	 if (e != null){
+	            		 end++;
+	            	 }
+	             }
+			    
+				for (int i = end - 1; i >= 0; i--) {
+					Exercise item = items[i];
+					int itemPosition = itemPositions[i];
+					
+					eMapper.add(item.getName(), item.getMuscleGroup().getName());
+					for (Integer trainingDayId : item.getTrainingDayIdList()){
+						tMapper.addExerciseToTrainingDay(trainingDayId, item.getId());
+					}
+                	for (PerformanceTarget pt : item.getPerformanceTargetList()){
+                		ptMapper.addPerformanceTarget(pt);
+                	}
+                	for (PerformanceActual pt : item.getPerformanceActualList()){
+                		paMapper.addPerformanceActual(pt, pt.getTimestamp());
+                	}
+					
+					listAdapter.insert(item, itemPosition);
+					listAdapter.notifyDataSetChanged();
+				}
+			}
+		}
 	}
 	
 	/**

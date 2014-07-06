@@ -41,10 +41,24 @@ public class LineGraph{
 		PerformanceActualMapper paMapper = new PerformanceActualMapper(context);
 		ArrayList<PerformanceActual> performanceActualList = paMapper.getAllPerformanceActual(exercise);
 		
+		boolean sameDate = false;
+		Date lastDate = null;
+		
 		for (PerformanceActual item : performanceActualList){
-			repetitions.add((double) item.getRepetition());
-			weight.add(item.getWeight());
-			date.add(item.getTimestamp());
+			if (lastDate != null){
+				if (lastDate.equals(item.getTimestamp())){
+					sameDate = true;
+				}else{
+					sameDate = false;
+				}
+			}
+			
+			if (sameDate != true){
+				repetitions.add((double) item.getRepetition());
+				weight.add(item.getWeight());
+				date.add(item.getTimestamp());
+				lastDate = item.getTimestamp();
+			}
 		}
 	}
 

@@ -20,6 +20,23 @@
         android:layout_height="fill_parent"
         android:layout_below="@id/training_day_select_fragment"  >
     </ListView>
+    
+    <!-- Used for the Undo TextField -->
+    <LinearLayout
+        android:id="@+id/undobar"
+        style="@style/UndoBar"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
 
+        <TextView
+            android:id="@+id/undobar_message"
+            style="@style/UndoBarMessage" >
+        </TextView>
+
+        <Button
+            android:id="@+id/undobar_button"
+            style="@style/UndoBarButton" >
+        </Button>
+    </LinearLayout>
 </RelativeLayout>
 

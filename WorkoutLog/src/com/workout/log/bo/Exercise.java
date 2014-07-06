@@ -1,5 +1,7 @@
 package com.workout.log.bo;
 
+import java.util.ArrayList;
+
 import com.workout.log.data.ExerciseItem;
 
 public class Exercise implements ExerciseItem {
@@ -7,20 +9,18 @@ public class Exercise implements ExerciseItem {
 	private String mName = "";
 	private  int mId = 0;
 	private MuscleGroup mMuscleGroup = null;
-	private int trainingDayHasExerciseId = 0;
+	private ArrayList<Integer> mTrainingDayIdList = null;
+	private ArrayList<PerformanceTarget> mPerformanceTargetList = null;
+	private ArrayList<PerformanceActual> mPerformanceActualList = null;
 	
-	public int getTrainingDayHasExerciseId() {
-		return trainingDayHasExerciseId;
+	public ArrayList<Integer> getTrainingDayIdList() {
+		return mTrainingDayIdList;
 	}
 
-	public void setTrainingDayHasExerciseId(int trainingDayHasExerciseId) {
-		this.trainingDayHasExerciseId = trainingDayHasExerciseId;
+	public void setTrainingDayIdList(ArrayList<Integer> trainingDayIdList) {
+		this.mTrainingDayIdList = trainingDayIdList;
 	}
 
-	public Exercise(){
-		
-	}
-	
 	public String getName() {
 		return mName;
 	}
@@ -49,5 +49,21 @@ public class Exercise implements ExerciseItem {
 
 	public void setMuscleGroup(MuscleGroup mMuscleGroup) {
 		this.mMuscleGroup = mMuscleGroup;
+	}
+
+	public ArrayList<PerformanceTarget> getPerformanceTargetList() {
+		return mPerformanceTargetList;
+	}
+
+	public void setPerformanceTargetList(ArrayList<PerformanceTarget> mPerformanceTargetList) {
+		this.mPerformanceTargetList = mPerformanceTargetList;
+	}
+
+	public ArrayList<PerformanceActual> getPerformanceActualList() {
+		return mPerformanceActualList;
+	}
+
+	public void setPerformanceActualList(ArrayList<PerformanceActual> mPerformanceActualList) {
+		this.mPerformanceActualList = mPerformanceActualList;
 	}
 }

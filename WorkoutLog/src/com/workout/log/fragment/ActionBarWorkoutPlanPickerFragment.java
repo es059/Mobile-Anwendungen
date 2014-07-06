@@ -39,8 +39,14 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		super.onCreateView(inflater, container, savedInstanceState);
-		//Reference ExerciseOverview Layout and set ListView 
+		/**
+		 * Reference ExerciseOverview Layout and set ListView 
+		 */
 		View view = inflater.inflate(R.layout.actionbar_workout_plan_picker_fragment, container,false);
+		
+		wpMapper = new WorkoutplanMapper(getActivity());
+		tdMapper = new TrainingDayMapper(getActivity());
+		
 		return view;
 	}
 
@@ -56,9 +62,6 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 		
 		workoutplanList = new ArrayList<Workoutplan>();
 		trainingDayList = new ArrayList<TrainingDay>();
-		
-		wpMapper = new WorkoutplanMapper(getActivity());
-		tdMapper = new TrainingDayMapper(getActivity());
 		
 		workoutplanList = wpMapper.getAll();
 		if (workoutplanList.size() != 0){

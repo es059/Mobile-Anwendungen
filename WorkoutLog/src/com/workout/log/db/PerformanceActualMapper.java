@@ -92,21 +92,25 @@ public class PerformanceActualMapper {
 		ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 		for(String item : strings){
-			sql = "SELECT RepetitionActual, WeightActual FROM PerformanceActual WHERE"
+			sql = "SELECT RepetitionActual, WeightActual, SetActual FROM PerformanceActual WHERE"
 					+ " TimestampActual = '" + item + "' AND"
 					+ " Exercise_Id = " + exercise.getId()
-					+ " ORDER BY WeightActual DESC, RepetitionActual  DESC";
+					+ " ORDER BY WeightActual DESC, RepetitionActual DESC";
 			cursor = db.rawQuery(sql, null);
 			if (cursor.moveToFirst()){
-				PerformanceActual performanceActual = new PerformanceActual();
-				performanceActual.setRepetition(cursor.getInt(0));
-				performanceActual.setWeight(cursor.getDouble(1));
-				try {
-					performanceActual.setTimestamp(sp.parse(item));
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-				performanceActualList.add(performanceActual);
+				do{
+					PerformanceActual performanceActual = new PerformanceActual();
+					performanceActual.setExercise(exercise);
+					if (cursor.getString(0) != null) performanceActual.setRepetition(cursor.getInt(0));
+					if (cursor.getString(1) != null) performanceActual.setWeight(cursor.getDouble(1));
+					performanceActual.setSet(cursor.getInt(2));
+					try {
+						performanceActual.setTimestamp(sp.parse(item));
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					performanceActualList.add(performanceActual);
+				}while(cursor.moveToNext());
 			}
 			cursor.close();
 		}
@@ -282,7 +286,7 @@ public class PerformanceActualMapper {
 	 *  @return Exercise
 	 *  @author Eric Schmidt
 	 */
-	public void savePerformanceActual(PerformanceActual performanceActual, Date date){
+	public void addPerformanceActual(PerformanceActual performanceActual, Date date){
 		int id = 1;
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();

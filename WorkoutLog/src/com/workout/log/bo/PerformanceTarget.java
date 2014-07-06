@@ -11,7 +11,7 @@ public class PerformanceTarget {
 	private int mRepetition;
 	private int mSet;
 	private Exercise mExercise;
-	private TrainingDay mTrainingDay;
+	private int mTrainingDayId;
 	
 	public PerformanceTarget(){
 		
@@ -41,12 +41,12 @@ public class PerformanceTarget {
 		this.mRepetition = mRepetition;
 	}
 
-	public TrainingDay getTrainingDay() {
-		return mTrainingDay;
+	public int getTrainingDayId() {
+		return mTrainingDayId;
 	}
 
-	public void setTrainingDay(TrainingDay mTrainingDay) {
-		this.mTrainingDay = mTrainingDay;
+	public void setTrainingDayId(int mTrainingDayId) {
+		this.mTrainingDayId = mTrainingDayId;
 	}
 
 	public int getId() {

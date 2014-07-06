@@ -39,13 +39,25 @@
 		        android:layout_height="fill_parent"
 		        android:layout_below="@+id/add_searchBar"
 		        android:layout_centerHorizontal="true"
-		        android:longClickable="true"
-		        />
-		 com.workout.log.gui.DynamicListViewView android:layout_height="wrap_content" 
-		        android:layout_width="match_parent"
-		        android:id="@+id/listview"
-		        android:background="#0000"
-		        android:layout_below="@id/add_exerciseList"/>
+		        android:longClickable="true"/><!-- Used for the Undo TextField -->
+
+	        <LinearLayout
+	            android:id="@+id/undobar"
+	            style="@style/UndoBar"
+	            android:layout_alignParentBottom="true"
+	            android:orientation="horizontal" >
+	
+	            <TextView
+	                android:id="@+id/undobar_message"
+	                style="@style/UndoBarMessage" >
+	            </TextView>
+	
+	            <Button
+	                android:id="@+id/undobar_button"
+	                style="@style/UndoBarButton" >
+	            </Button>
+	
+	    	</LinearLayout>
 
 
 	</RelativeLayout>

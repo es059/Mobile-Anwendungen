@@ -8,19 +8,22 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.workout.log.bo.Exercise;
 
-
 public class ExerciseMapper {
 	private DataBaseHelper myDBHelper;
 	private String sql;
-	private Context context;
 	private int muscleGroupID;
 	
-	private MuscleGroupMapper mMapper = null;
+	private static MuscleGroupMapper mMapper = null;
+	private static TrainingDayMapper tMapper = null;
+	private static PerformanceActualMapper paMapper = null;
+	private static PerformanceTargetMapper ptMapper = null;
 	
 	public ExerciseMapper(Context context){
 		myDBHelper = DataBaseHelper.getInstance(context);
-	    mMapper = new MuscleGroupMapper(context);
-		this.context = context;
+	    if (mMapper == null) mMapper = new MuscleGroupMapper(context);
+	    if (tMapper == null) tMapper = new TrainingDayMapper(context);
+	    if (paMapper == null) paMapper = new PerformanceActualMapper(context);
+	    if (ptMapper == null) ptMapper= new PerformanceTargetMapper(context);
 	}
 	
 	public void add(String exerciseName, String muscleGroup){
@@ -59,18 +62,13 @@ public class ExerciseMapper {
 	
 	public ArrayList<Exercise> getAll() {
 		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
-		MuscleGroupMapper mMapper = new MuscleGroupMapper(context);
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "SELECT * FROM Exercise";
+		
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()) {
             do {
-              Exercise e = new Exercise();
-              e.setMuscleGroup(mMapper.getMuscleGroupById(cursor.getInt(0)));
-              e.setID(Integer.parseInt(cursor.getString(1)));
-              e.setName(cursor.getString(2));
-              exerciseList.add(e);
-            	
+            	exerciseList.add(getExerciseById(cursor.getInt(1)));
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -134,10 +132,7 @@ public class ExerciseMapper {
 	    Cursor cursor = db.rawQuery(sql, null);
 	    if ( cursor.moveToFirst()){
 	    	do{
-	            Exercise e = new Exercise();
-	            e.setID(cursor.getInt(0));
-	            e.setName(cursor.getString(1));
-	            exerciseList.add(e);
+	    		exerciseList.add(getExerciseById(cursor.getInt(0)));
 	    	}while(cursor.moveToNext());
 	    }
 	    
@@ -153,11 +148,7 @@ public class ExerciseMapper {
 	    
         if (cursor.moveToFirst()) {
             do {
-              Exercise e = new Exercise();
-              e.setID(Integer.parseInt(cursor.getString(1)));
-              e.setName(cursor.getString(2));
-              exerciseList.add(e);
-            	
+            	exerciseList.add(getExerciseById(cursor.getInt(1)));	
             } while (cursor.moveToNext());
         }
         
@@ -182,10 +173,7 @@ public class ExerciseMapper {
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
 			do{
-				Exercise exercise = getExerciseById(Integer.parseInt(cursor.getString(0)));
-				exercise.setTrainingDayHasExerciseId(cursor.getInt(1));
-				exerciseList.add(exercise);
-				System.out.println(exercise.getId() + exercise.getName() + exercise.getTrainingDayHasExerciseId());
+				exerciseList.add(getExerciseById(cursor.getInt(0)));
 			}while(cursor.moveToNext());
 		}
 		cursor.close();
@@ -207,14 +195,10 @@ public class ExerciseMapper {
 			sql = "SELECT Exercise_Id, ExerciseName FROM Exercise WHERE Exercise_Id = " + e.getId() + " AND MuscleGroup_Id = " + muscleGroupId;
 			Cursor cursor = db.rawQuery(sql, null);
 				if (cursor.moveToFirst()){
-					Exercise exercise = new Exercise();
-				    exercise.setID(Integer.parseInt(cursor.getString(0)));
-				    exercise.setName(cursor.getString(1));
-				    exerciseList.add(exercise);
+					exerciseList.add(getExerciseById(cursor.getInt(0)));
 				}
 			cursor.close();
 		}
-		
 		return exerciseList;
 	}
 	
@@ -228,7 +212,6 @@ public class ExerciseMapper {
 	 public Exercise getExerciseById(int exerciseId){
 		    Exercise exercise = new Exercise();
 
-		    
 		    SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 		    sql = "SELECT * FROM Exercise WHERE Exercise_Id = " + exerciseId;
 		    Cursor cursor = db.rawQuery(sql, null);
@@ -241,4 +224,17 @@ public class ExerciseMapper {
 		    
 		    return exercise;
 	}
+	 
+	/**
+	 * To get better performance call this method only if you need 
+	 * the trainingDays, performanceActualList and PerforamnceTargetList of a Exercise.
+	 * This is only needed if you want to undo a exercise 
+	 */
+	 public Exercise addAdditionalInfo(Exercise exercise){
+		 exercise.setTrainingDayIdList(tMapper.getTrainingDayIdsByExercise(exercise.getId()));
+	     exercise.setPerformanceActualList(paMapper.getAllPerformanceActual(exercise));
+	     exercise.setPerformanceTargetList(ptMapper.getAllPerformanceTargetByExercise(exercise));
+	     
+	     return exercise;
+	 }
 }

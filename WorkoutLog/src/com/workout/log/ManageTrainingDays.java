@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,24 +18,36 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.workoutlog.R;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
+import com.workout.log.SwipeToDelete.UndoBarController;
+import com.workout.log.SwipeToDelete.UndoItem;
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.PerformanceTarget;
 import com.workout.log.bo.TrainingDay;
+import com.workout.log.bo.Workoutplan;
 import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.db.TrainingDayMapper;
+import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.dialog.TrainingDayAddDialogFragment;
 import com.workout.log.dialog.TrainingDayUpdateDialogFragment;
 import com.workout.log.fragment.TrainingDaysSearchBarFragment;
 import com.workout.log.listAdapter.TrainingDayListAdapter;
 
-public class ManageTrainingDays extends Fragment implements OnItemClickListener, OnItemLongClickListener{
+public class ManageTrainingDays extends Fragment implements OnItemClickListener, OnItemLongClickListener, UndoBarController.UndoListener{
 
-	private TrainingDayListAdapter trainingDayListAdapter;
-	private ListView trainingDayListView; 
-	private TrainingDayMapper tdMapper;
-	private View view;
+	private TrainingDayListAdapter trainingDayListAdapter = null;
+	private ListView trainingDayListView = null; 
+	private TrainingDayMapper tdMapper = null;
+	private View view = null;
+	
+	private TrainingDayMapper tMapper = null;
+	private WorkoutplanMapper wMapper = null;
+	private PerformanceTargetMapper pMapper = null;
+	
+	private ArrayList<TrainingDay> trainingDayList = null;
+	private UndoBarController mUndoBarController = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -63,15 +76,23 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener,
 	public void onResume(){
 		super.onResume();
 		
+		tMapper = new TrainingDayMapper(getActivity());
+		wMapper = new WorkoutplanMapper(getActivity());
+		pMapper = new PerformanceTargetMapper(getActivity());
+		
+		/**
+		 * If more than one xml layout file uses the Layout for the UndoBar than 
+		 * use this line to ensure that the reference is always correct
+		 */
+		mUndoBarController = null;
+		
 		tdMapper = new TrainingDayMapper(getActivity());
 		trainingDayListView = (ListView) view.findViewById(R.id.trainingDay_add_list);
 		trainingDayListView.setOnItemClickListener(this);
 		trainingDayListView.setOnItemLongClickListener(this);
 		
 		updateListView(null);
-
 		loadSwipeToDismiss();  
-		
 		setHasOptionsMenu(true);
 	}
 
@@ -143,37 +164,131 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener,
 	 */
 	private void loadSwipeToDismiss(){
 		SwipeDismissListViewTouchListener touchListener =
-            new SwipeDismissListViewTouchListener(trainingDayListView,
-                new SwipeDismissListViewTouchListener.DismissCallbacks() {
-                    @Override
-                    public boolean canDismiss(int position) {
-                        return true;
+            new SwipeDismissListViewTouchListener(trainingDayListView,new SwipeDismissListViewTouchListener.DismissCallbacks() {
+            	TrainingDay[] items= null;
+    			int[] itemPositions = null;
+    			int arrayCount = 0;
+    			
+                @Override
+                public boolean canDismiss(int position) {
+                    return true;
+                }
+                @Override
+                public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+            	 	/**
+		         	 * Used for the undo actions
+		         	 */
+		        	if(mUndoBarController.getUndoBar().getVisibility() == View.GONE){
+			         	items=new TrainingDay[trainingDayList.size()];
+			            itemPositions =new int[trainingDayList.size()];
+			            arrayCount=0;
+		        	}
+		        	
+                    for (int position : reverseSortedPositions) {
+                    	TrainingDay trainingDay = (TrainingDay) trainingDayListView.getItemAtPosition(position);                  		
+                		/**
+                		 * So ensure referential integrity the data is to be deleted from the tables
+                		 * TrainingDay, WorkoutplanhasTrainingDay, TrainingDayhasExercise, PerformanceTarget
+                		 */
+                		TrainingDayMapper tMapper = new TrainingDayMapper(getActivity());
+                		PerformanceTargetMapper pMapper = new PerformanceTargetMapper(getActivity());
+                		
+                		tMapper.delete(trainingDay);
+                		for (Exercise e : trainingDay.getExerciseList()){
+                			tMapper.deleteExerciseFromTrainingDay(trainingDay.getId(), e);
+                		}
+                		tMapper.deleteTrainingDayFromAllWorkoutplan(trainingDay.getId());
+                		pMapper.deleteTrainingDayFromAllPerformanceTarget(trainingDay.getId());
+                		
+                		TrainingDay item= trainingDayListAdapter.getItem(position);
+                		trainingDayListAdapter.remove(item);
+                		
+                        items[arrayCount]=item;
+	 	               	itemPositions[arrayCount]=position;
+	 	               	arrayCount++;
+	 	               	
+	 	        		/**
+		            	 * Set the ArrayList on the current value
+		            	 */
+	               		trainingDayList = trainingDayListAdapter.getTrainingDayList();	
                     }
-                    @Override
-                    public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-                        for (int position : reverseSortedPositions) {
-                        	TrainingDay trainingDay = (TrainingDay) trainingDayListView.getItemAtPosition(position);                  		
-                    		/**
-                    		 * So ensure referential integrity the data is to be deleted from the tables
-                    		 * TrainingDay, WorkoutplanhasTrainingDay, TrainingDayhasExercise, PerformanceTarget
-                    		 */
-                    		TrainingDayMapper tMapper = new TrainingDayMapper(getActivity());
-                    		PerformanceTargetMapper pMapper = new PerformanceTargetMapper(getActivity());
-                    		
-                    		tMapper.delete(trainingDay);
-                    		tMapper.deleteTrainingDayFromAllWorkoutplan(trainingDay.getId());
-                    		pMapper.deleteTrainingDayFromAllPerformanceTarget(trainingDay.getId());
-                    		
-                    		trainingDayListAdapter.remove(trainingDayListAdapter.getItem(position));
-                        	Toast.makeText(getActivity(), "Trainingstag wurde gelöscht!", Toast.LENGTH_SHORT ).show();
-                        }
-                        trainingDayListAdapter.notifyDataSetChanged();
-                    }
-        		});
+                    trainingDayListAdapter.notifyDataSetChanged();
+                    
+ 		            UndoItem itemUndo=new UndoItem(items,itemPositions);
+ 		   
+ 		            /**
+ 		             * Undobar message
+ 		             */
+ 		            int count = 0;
+ 		            for (TrainingDay t : items){
+ 		            	if (t != null){
+ 		            		count++;
+ 		            	}
+ 		            }
+ 		            String messageUndoBar = count + " Item(s) gelöscht";
+ 		            		 
+ 		            mUndoBarController.showUndoBar(false,messageUndoBar,itemUndo);	         
+                }
+    		});
 		trainingDayListView.setOnTouchListener(touchListener);
-        // Setting this scroll listener is required to ensure that during ListView scrolling,
-        // we don't look for swipes.
+		
+        /** Setting this scroll listener is required to ensure that during ListView scrolling,
+         * we don't look for swipes.
+         */
 		trainingDayListView.setOnScrollListener(touchListener.makeScrollListener());
+		
+		/**
+		 * UndoController
+		 */
+	    if (mUndoBarController==null) mUndoBarController = new UndoBarController(getView().findViewById(R.id.undobar), this);
+	}
+	
+	/**
+	 * Handels the click on the Undo Button. Revive the Data that was deletet in the
+	 * onDismiss function
+	 * 
+	 * @author Eric Schmidt
+	 */
+	@Override
+	public void onUndo(Parcelable token) {
+		/**
+		 * Restore items in lists (use reverseSortedOrder)
+		 */
+		if (token != null) {
+			/**
+			 * Retrieve data from token
+			 */
+			UndoItem itemRetrieve = (UndoItem) token;
+			TrainingDay[] items = (TrainingDay[]) itemRetrieve.items;
+			int[] itemPositions = itemRetrieve.itemPosition;
+
+			if (items != null && itemPositions != null) {
+				int end= 0;
+			    for (TrainingDay t : items){
+	            	 if (t != null){
+	            		 end++;
+	            	 }
+	             }
+			    
+				for (int i = end - 1; i >= 0; i--) {
+					TrainingDay item = items[i];
+					int itemPosition = itemPositions[i];
+
+					tMapper.add(item);
+					for (Workoutplan w : item.getWorkoutplanList()){
+						wMapper.addTrainingDayToWorkoutplan(item.getId(), w.getId());
+					}
+					for (PerformanceTarget p : item.getPerformanceTargetList()){
+						pMapper.addPerformanceTarget(p);
+					}
+					for (Exercise e : item.getExerciseList()){
+						tMapper.addExerciseToTrainingDay(item.getId(), e.getId());
+					}
+					trainingDayListAdapter.insert(item, itemPosition);
+					trainingDayListAdapter.notifyDataSetChanged();
+				}
+			}
+		}
 	}
 	
 	/**
@@ -182,12 +297,6 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener,
 	 * @author Eric Schmidt
 	 */
 	public class BackGroundTask extends AsyncTask<ArrayList<TrainingDay>, Void, TrainingDayListAdapter> {
-	    /**
-	     * Variables for the UpdateListView method
-	     */		
-
-		public BackGroundTask (){}
-
 	    @Override
 	    protected void onPreExecute() {
 	        super.onPreExecute();
@@ -197,6 +306,7 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener,
 	    @Override
 	    protected TrainingDayListAdapter doInBackground(ArrayList<TrainingDay>... params) {	
 			if(params[0] == null) params[0] = tdMapper.getAllTrainingDay();
+			trainingDayList = params[0];
 			trainingDayListAdapter = new TrainingDayListAdapter(getActivity(), R.layout.listview_training_day, params[0]);
 			
 			return trainingDayListAdapter;

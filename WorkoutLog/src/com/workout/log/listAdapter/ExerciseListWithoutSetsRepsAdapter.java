@@ -15,12 +15,12 @@ import com.workout.log.data.ExerciseItem;
 import com.workout.log.data.MuscleGroupSectionItem;
 
 public class ExerciseListWithoutSetsRepsAdapter extends ArrayAdapter<ExerciseItem>{
-	private ArrayList<ExerciseItem> items;
+	private ArrayList<ExerciseItem> exerciseList;
 	private LayoutInflater layoutInflater;
 	
 	public ExerciseListWithoutSetsRepsAdapter(Context context, ArrayList<ExerciseItem> items){
 		super(context,0,items);
-		this.items = items;
+		this.exerciseList = items;
 		layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 	
@@ -28,7 +28,7 @@ public class ExerciseListWithoutSetsRepsAdapter extends ArrayAdapter<ExerciseIte
 	public View getView(int position, View convertView, ViewGroup parent){
 		View v = convertView;
 		
-		final ExerciseItem i = items.get(position);
+		final ExerciseItem i = exerciseList.get(position);
 		if (i != null){
 			if (i.isSection()){
 				MuscleGroupSectionItem si = (MuscleGroupSectionItem) i;
@@ -48,6 +48,16 @@ public class ExerciseListWithoutSetsRepsAdapter extends ArrayAdapter<ExerciseIte
 			}
 		}
 		return v;
+	}
+	
+	/**
+	 * Returns the current List<TrainingDay>
+	 * 
+	 * @return the current List Object
+	 * @author Eric Schmidt
+	 */
+	public ArrayList<ExerciseItem> getTrainingDayList(){
+		return exerciseList;
 	}
 }
 

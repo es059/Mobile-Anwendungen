@@ -356,16 +356,16 @@ public class ExerciseSpecific extends Fragment implements
 			 */
 			if (dateFragment.isToday()) {
 				if (saveMode == true) {
-					pMapper.savePerformanceActual(item, new Date());
+					pMapper.addPerformanceActual(item, new Date());
 				} else if (item.getRepetition() != -1 || item.getWeight() != -1) {
-					pMapper.savePerformanceActual(item, new Date());
+					pMapper.addPerformanceActual(item, new Date());
 					saveMode = true;
 				} else {
 					saveMode = false;
 				}
 			} else {
 				if (!sameWeight || !sameRep) {
-					pMapper.savePerformanceActual(item, item.getTimestamp());
+					pMapper.addPerformanceActual(item, item.getTimestamp());
 					saveMode = true;
 				}
 			}
@@ -409,7 +409,7 @@ public class ExerciseSpecific extends Fragment implements
 		    new SwipeDismissListViewTouchListener.DismissCallbacks() {
 			 PerformanceActual[] items= null;
 			 int[] itemPositions = null;
-			 int i = 0;
+			 int arrayCount = 0;
 			 	
 			 
 			   @Override
@@ -425,7 +425,7 @@ public class ExerciseSpecific extends Fragment implements
 		        	if(mUndoBarController.getUndoBar().getVisibility() == View.GONE){
 			         	items=new PerformanceActual[performanceActualList.size()];
 			            itemPositions =new int[performanceActualList.size()];
-			            i=0;
+			            arrayCount=0;
 		        	}
 		            
 		            for (int position : reverseSortedPositions) {
@@ -446,16 +446,16 @@ public class ExerciseSpecific extends Fragment implements
 		            			 * If the id is 0, the current performanceActual was not saved into the database and therefore
 		            			 * should not be updated or rather inserted into the database
 		            			 */
-		            			if (pa.getId() != 0) paMapper.savePerformanceActual(pa, pa.getTimestamp());
+		            			if (pa.getId() != 0) paMapper.addPerformanceActual(pa, pa.getTimestamp());
 		            		}
 		            	}
 		            	
 		            	PerformanceActual item=adapter.getItem(position);
-		            	adapter.remove(adapter.getItem(position));
+		            	adapter.remove(item);
 		            	
-		            	items[i]=item;
-		                itemPositions[i]=position;
-		                i++;
+		            	items[arrayCount]=item;
+		                itemPositions[arrayCount]=position;
+		                arrayCount++;
 		                
 		            	/**
 		            	 * Set the ArrayList on the current value
@@ -499,6 +499,12 @@ public class ExerciseSpecific extends Fragment implements
 	    if (mUndoBarController==null)mUndoBarController = new UndoBarController(getView().findViewById(R.id.undobar), this);
 	}
 
+	/**
+	 * Handels the click on the Undo Button. Revive the Data that was deletet in the
+	 * onDismiss function
+	 * 
+	 * @author Eric Schmidt
+	 */
 	@Override
 	public void onUndo(Parcelable token) {
 		/**
@@ -541,13 +547,13 @@ public class ExerciseSpecific extends Fragment implements
 							 * database
 							 */
 							if (pa.getId() != 0)
-								paMapper.savePerformanceActual(pa,
+								paMapper.addPerformanceActual(pa,
 										pa.getTimestamp());
 						}
 					}
 
 					if (item.getId() != 0)
-						paMapper.savePerformanceActual(item,
+						paMapper.addPerformanceActual(item,
 								item.getTimestamp());
 					adapter.insert(item, itemPosition);
 					adapter.notifyDataSetChanged();

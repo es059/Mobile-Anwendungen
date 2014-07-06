@@ -23,9 +23,9 @@ public class ExerciseSpecificAddDialogFragment extends DialogFragment {
 	private NumberPicker eTargetSetCount;
 	private NumberPicker eTargetRepCount;
 	
-	public static ExerciseSpecificAddDialogFragment newInstance(Context a, int trainingDayId, int exerciseId) {
+	public static ExerciseSpecificAddDialogFragment newInstance(Context context, int trainingDayId, int exerciseId) {
 		ExerciseSpecificAddDialogFragment exerciseClickDialogFragment = new ExerciseSpecificAddDialogFragment(trainingDayId, exerciseId);
-		tdMapper = new TrainingDayMapper(a);
+		tdMapper = new TrainingDayMapper(context);
 		
 		return exerciseClickDialogFragment;
 	}
@@ -66,7 +66,7 @@ public class ExerciseSpecificAddDialogFragment extends DialogFragment {
 					Toast.makeText(getActivity(), "Bitte alle Felder ausfüllen!", Toast.LENGTH_SHORT ).show();
 				}else {
 					if (!tdMapper.checkIfExist(trainingDayId, exerciseId)){
-						tdMapper.ExerciseAddToTrainingDay(trainingDayId, exerciseId, eTargetSetCount.getValue(), eTargetRepCount.getValue());
+						tdMapper.addExerciseToTrainingDayAndPerformanceTarget(trainingDayId, exerciseId, eTargetSetCount.getValue(), eTargetRepCount.getValue());
 						Toast.makeText(getActivity(), "Übung wurde erfolgreich dem Trainingtag hinzugefügt!", Toast.LENGTH_SHORT ).show();
 					}else{
 						Toast.makeText(getActivity(), "Übung kann nicht doppelt hinzugefügt werden", Toast.LENGTH_SHORT ).show();

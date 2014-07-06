@@ -124,7 +124,7 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 	 * @param trainingDayId
 	 */
 	public void setCurrentTrainingDay(int trainingDayId){
-		tMapper = new TrainingDayMapper(super.getActivity());
+		tMapper = new TrainingDayMapper(getActivity());
 		int index;
 		index = indexOfArrayList(tMapper.getTrainingDayById(trainingDayId));
 		if (index != -1){

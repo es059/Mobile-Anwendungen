@@ -167,6 +167,29 @@ public class WorkoutplanMapper   {
 	}
 	
 	/**
+	 * Fill the TrainingDayIdList from the Workoutplan Object. This is only
+	 * needed if you want to undo a delete
+	 * 
+	 * @author Eric Schmidt
+	 */
+	public Workoutplan addAdditionalInformation(Workoutplan workoutplan){
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		ArrayList<Integer> trainingDayIdList = new ArrayList<Integer>();
+		sql = "SELECT TrainingDay_Id FROM WorkoutplanHasTrainingDay WHERE Workoutplan_Id =" + workoutplan.getId();
+		
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			do{
+				trainingDayIdList.add(cursor.getInt(0));
+			}while(cursor.moveToNext());
+		}
+		workoutplan.setTrainingDayIdList(trainingDayIdList);
+		cursor.close();
+		
+		return workoutplan;
+	}
+	
+	/**
 	 * Update a WorkoutPlan with the given Information
 	 * 
 	 * @param w the updated WorkoutPlan
@@ -174,11 +197,8 @@ public class WorkoutplanMapper   {
 	 */
 	public void update(Workoutplan w){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-
 		sql = "UPDATE Workoutplan SET WorkoutplanName='" + w.getName() +  "' WHERE Workoutplan_Id=" + w.getId() + "";
-		db.execSQL(sql);
-		
-		
+		db.execSQL(sql);	
 	}
 		
 	/**
@@ -191,8 +211,7 @@ public class WorkoutplanMapper   {
 	public void addTrainingDayToWorkoutplan(int trainingDayId, int workoutplanId) {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		sql = "INSERT INTO WorkoutplanHasTrainingDay (Workoutplan_Id, TrainingDay_Id) VALUES (" + workoutplanId + ", " + trainingDayId + ")";
-		db.execSQL(sql);
-		
+		db.execSQL(sql);	
 	}
 	
 }

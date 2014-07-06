@@ -82,7 +82,7 @@ public class StableArrayAdapter extends ArrayAdapter<TrainingDay> {
 	}
 	
 	/**
-	 * Returns the current List<PerformanceActual>
+	 * Returns the current List<TrainingDay>
 	 * 
 	 * @return the current List Object
 	 * @author Eric Schmidt

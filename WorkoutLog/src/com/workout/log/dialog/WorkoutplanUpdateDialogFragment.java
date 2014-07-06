@@ -5,10 +5,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -16,14 +18,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.workoutlog.R;
+import com.workout.log.SwipeToDelete.UndoBarController;
+import com.workout.log.SwipeToDelete.UndoItem;
 import com.workout.log.bo.Workoutplan;
 import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.fragment.ActionBarWorkoutPlanPickerFragment;
 
 @SuppressLint("ValidFragment")
-public class WorkoutplanUpdateDialogFragment extends DialogFragment {
+public class WorkoutplanUpdateDialogFragment extends DialogFragment{
 	private static WorkoutplanMapper wMapper;
 	private int workoutPlanId;
+	private UndoBarController mUndoBarController = null;
+	
+	private Fragment fragment = null;
+	private FragmentTransaction ft = null;
+	private FragmentManager fm = null;
+	private View manageWorkoutplanView = null;
 	
 	public static WorkoutplanUpdateDialogFragment newInstance(Context context, int workoutPlanId) {
 		WorkoutplanUpdateDialogFragment ExerciseUpdateDialogFragment = new WorkoutplanUpdateDialogFragment(context, workoutPlanId);
@@ -38,6 +48,10 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment {
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState){
+		fm = getActivity().getFragmentManager();
+		fragment = fm.findFragmentByTag("ActionBarWorkoutPlanPickerFragment");
+		manageWorkoutplanView = fm.findFragmentByTag("ManageWorkoutplan").getView();
+		
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View view = inflater.inflate(R.layout.dialogfragment_workoutplan_edit, null);
@@ -45,7 +59,7 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment {
 		alert.setTitle("Trainingsplan ändern");
 		// Set an TextView view to view the InformationText
 		TextView informationText = (TextView) view.findViewById(R.id.TextView_Information);
-		informationText.setText("Bitte geben Sie einen neuen Namen des Trainingsplans ein:");
+		informationText.setText("Bitte geben Sie den neuen Namen des Trainingsplans ein:");
 		
 		// Set an EditText view to get user input 
 		final EditText workoutplanName = (EditText) view.findViewById(R.id.EditText_WorkoutplanName);
@@ -61,23 +75,19 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment {
 		alert.setPositiveButton("Update", new DialogInterface.OnClickListener() {
 		@Override
 		public void onClick(DialogInterface dialog, int whichButton) {
-			// String aus Textfeld holen  
+			/**
+			 *  Get String from textfield
+			 */
 			String value = String.valueOf(workoutplanName.getText());
 			if(!value.isEmpty()){
 				w.setName(value);
-				// Mapper-Methode aufrufen zum Hinzufügen einer neuen Übung
+				/**
+				 * Update Workoutplan
+				 */
 				wMapper.update(w);
-				// Toast einblenden 
 				Toast.makeText(getActivity(), "Trainingstag wurde erfolgreich geändert!", Toast.LENGTH_SHORT ).show();
 
-				/**
-				 * Refresh the Fragment to show changes
-				 */
-				Fragment fragment = getActivity().getFragmentManager().findFragmentByTag("ActionBarWorkoutPlanPickerFragment");
-				FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
-				ft.detach(fragment);
-				ft.attach(fragment);
-				ft.commit();				
+				updateFragment();			
 			}else{
 				Toast.makeText(getActivity(), "Bitte einen Namen angeben", Toast.LENGTH_SHORT ).show();
 			}
@@ -87,8 +97,52 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment {
 		alert.setNeutralButton("Löschen", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				wMapper.delete(w);
-				wMapper.deleteWorkoutPlanFromTrainingDay(w);
+				/**
+				 * Add Additional attributes to the workoutplan object to ensure that the
+				 * undo method is working
+				 */
+				Workoutplan workoutplan = w;
+				workoutplan = wMapper.addAdditionalInformation(workoutplan);
+				
+				wMapper.delete(workoutplan);
+				wMapper.deleteWorkoutPlanFromTrainingDay(workoutplan);
+				
+				Workoutplan[] items= new Workoutplan[1];;
+				items[0]=workoutplan;
+
+				if (mUndoBarController==null) mUndoBarController = new UndoBarController(manageWorkoutplanView.findViewById(R.id.undobar), new UndoBarController.UndoListener(){
+					/**
+					 * Handels the click on the Undo Button. Revive the Data that was deleted in the
+					 * onDismiss function
+					 * 
+					 * @author Eric Schmidt
+					 */
+					@Override
+					public void onUndo(Parcelable token) {
+						/**
+						 * Restore items in lists (use reverseSortedOrder)
+						 */
+						if (token != null) {
+							/**
+							 * Retrieve data from token
+							 */
+							UndoItem itemRetrieve = (UndoItem) token;
+							Workoutplan[] items = (Workoutplan[]) itemRetrieve.items;
+
+							if (items != null) {
+								for (int i = 0; i >= 0; i--) {
+									Workoutplan item = items[i];
+									
+									wMapper.add(item);
+									for (Integer trainingDayId : item.getTrainingDayIdList()){
+										wMapper.addTrainingDayToWorkoutplan(trainingDayId, item.getId());
+									}
+								}
+							}
+							updateFragment();
+						}
+					}
+				});
 				
 				Workoutplan w = ((ActionBarWorkoutPlanPickerFragment) getActivity().getFragmentManager().
 						findFragmentByTag("ActionBarWorkoutPlanPickerFragment")).getPreviousWorkoutplan();
@@ -104,12 +158,16 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment {
 				 * Refresh the Fragment to show changes. Decrease the currentListId count by 1 to ensure that
 				 * no outOfIndex occurs
 				 */
-				Fragment fragment = getActivity().getFragmentManager().findFragmentByTag("ActionBarWorkoutPlanPickerFragment");
 				decreaseCurrenListId(fragment);
-				FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
-				ft.detach(fragment);
-				ft.attach(fragment);
-				ft.commit();
+				updateFragment();
+				
+				/**
+				 * Show the Undo Layout
+				 */
+				UndoItem itemUndo=new UndoItem(items,null);
+				String messageUndoBar = "Item gelöscht";
+        		 
+		        mUndoBarController.showUndoBar(false,messageUndoBar,itemUndo);
 			}
 		});
 		
@@ -130,5 +188,16 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment {
 		 * If the currentId is 0 then there is no need to decrease it further
 		 */
 		if(currentListId != 0) actionBarWorkoutPlanPickerFragment.setCurrentListId(currentListId-1);
+	}
+	
+	/**
+	 * Refresh the Fragment to show changes
+	 */
+	public void updateFragment(){
+		ft = fm.beginTransaction();
+		
+		ft.detach(fragment);
+		ft.attach(fragment);
+		ft.commit();
 	}
 }

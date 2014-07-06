@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
@@ -173,15 +172,12 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 		        	}
 		        	
                    for (int position : reverseSortedPositions) {
-	                   	TrainingDay td = (TrainingDay) listView.getItemAtPosition(position);
-	                   	
-	               		int i = td.getId();
-	               		int primarykey = td.getTrainingDayHasWorkoutplanId();
-	               		
-	               		tdMapper.deleteTrainingDayFromWorkoutplan(i, workoutplanId, primarykey);
+	                   	TrainingDay trainingDay = (TrainingDay) listView.getItemAtPosition(position);
+	                   	               		
+	               		tdMapper.deleteTrainingDayFromWorkoutplan(trainingDay, workoutplanId);
 	               		
 	               		TrainingDay item= stableArrayAdapter.getItem(position);
-	               		stableArrayAdapter.remove(stableArrayAdapter.getItem(position));
+	               		stableArrayAdapter.remove(item);
 		            	
 	                    items[arrayCount]=item;
 	 	               	itemPositions[arrayCount]=position;
@@ -194,26 +190,24 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
                    }      
                    stableArrayAdapter.notifyDataSetChanged();
                    
-                   /**
-		             * Show UndoBar
-		             */
-		             UndoItem itemUndo=new UndoItem(items,itemPositions);
+		           UndoItem itemUndo=new UndoItem(items,itemPositions);
 		   
-		             /**
-		              * Undobar message
-		              */
-		             int count = 0;
-		             for (TrainingDay pa : items){
-		            	 if (pa != null){
-		            		 count++;
-		            	 }
-		             }
-		             String messageUndoBar = count + " Item(s) gelöscht";
+		            /**
+		             * Undobar message
+		             */
+		            int count = 0;
+		            for (TrainingDay pa : items){
+		            	if (pa != null){
+		            		count++;
+		            	}
+		            }
+		            String messageUndoBar = count + " Item(s) gelöscht";
 		            		 
-		             mUndoBarController.showUndoBar(false,messageUndoBar,itemUndo);
+		            mUndoBarController.showUndoBar(false,messageUndoBar,itemUndo);
                }
            });
 		listView.setOnTouchListener(touchListener);
+		
 		/** Setting this scroll listener is required to ensure that during ListView scrolling,
 		 *  we don't look for swipes.
 		 */
@@ -222,9 +216,16 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 		/**
 		 * UndoController
 		 */
-	    if (mUndoBarController==null)mUndoBarController = new UndoBarController(getView().findViewById(R.id.undobar), this);
+	    if (mUndoBarController==null) mUndoBarController = new UndoBarController(getView().findViewById(R.id.undobar), this);
 	}
 	
+	
+	/**
+	 * Handels the click on the Undo Button. Revive the Data that was deletet in the
+	 * onDismiss function
+	 * 
+	 * @author Eric Schmidt
+	 */
 	@Override
 	public void onUndo(Parcelable token) {
 		/**
