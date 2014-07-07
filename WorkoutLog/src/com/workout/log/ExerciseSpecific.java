@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,8 +38,7 @@ import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;
 
 @SuppressLint("SimpleDateFormat")
-public class ExerciseSpecific extends Fragment implements
-		UndoBarController.UndoListener {
+public class ExerciseSpecific extends Fragment implements UndoBarController.UndoListener {
 	private ListView exerciseListView = null;
 	private Exercise exercise = null;
 	private int exerciseId;
@@ -69,8 +68,7 @@ public class ExerciseSpecific extends Fragment implements
 		/**
 		 * Load the top navigation fragment into the current fragment
 		 */
-		FragmentTransaction transaction = getFragmentManager()
-				.beginTransaction();
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		transaction.replace(R.id.specific_dateTimePicker,
 				new ActionBarDatePickerFragment(), "DateTimePicker");
@@ -242,9 +240,6 @@ public class ExerciseSpecific extends Fragment implements
 		case R.id.menu_add:
 			addPerformanceActualItem();
 			break;
-		case R.id.menu_save:
-			savePerformanceActual();
-			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -285,6 +280,8 @@ public class ExerciseSpecific extends Fragment implements
 	 * 
 	 */
 	public void addPerformanceActualItem() {
+		if (dateFragment == null) dateFragment = (ActionBarDatePickerFragment) getFragmentManager()
+				.findFragmentByTag("DateTimePicker");
 		// New PerformanceActual Object
 		PerformanceActual pa = new PerformanceActual();
 		pa.setExercise(exercise);

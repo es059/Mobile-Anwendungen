@@ -1051,7 +1051,7 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f050081;
+        public static final int action_settings=0x7f050080;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int add_exerciseList=0x7f050046;
         public static final int add_searchBar=0x7f050045;
@@ -1098,7 +1098,6 @@ containing a value of this type.
         public static final int list_item=0x7f050029;
         public static final int listview_exericse_header_text=0x7f05006f;
         public static final int menu_add=0x7f05007f;
-        public static final int menu_save=0x7f050080;
         public static final int middle=0x7f050012;
         public static final int never=0x7f050009;
         public static final int none=0x7f050010;

@@ -2,8 +2,8 @@ package com.workout.log.fragment;
 
 import java.util.ArrayList;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +38,7 @@ public class ActionBarGraphFragment  extends Fragment implements OnItemSelectedL
 	public void onResume(){
 		super.onResume();
 		exerciseSpinner = (Spinner) getView().findViewById(R.id.graph_exercise);
-		lineGraphFragment = (LineGraphFragment) getActivity().getFragmentManager().findFragmentByTag("LineGraphFragment");
+		lineGraphFragment = (LineGraphFragment) getActivity().getSupportFragmentManager().findFragmentByTag("LineGraphFragment");
 		
 		ExerciseMapper eMapper = new ExerciseMapper(getActivity());
 		ArrayList<Exercise> exerciseList = eMapper.getAllExercise();
@@ -51,7 +51,7 @@ public class ActionBarGraphFragment  extends Fragment implements OnItemSelectedL
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 		if (lineGraphFragment == null){
-			lineGraphFragment = (LineGraphFragment) getActivity().getFragmentManager().findFragmentByTag("LineGraphFragment");
+			lineGraphFragment = (LineGraphFragment) getActivity().getSupportFragmentManager().findFragmentByTag("LineGraphFragment");
 		}
 		lineGraphFragment.updateGraph((Exercise)parent.getItemAtPosition(pos));
 	}

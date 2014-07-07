@@ -3,11 +3,11 @@ package com.workout.log;
 import java.util.ArrayList;
 
 import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -106,7 +106,7 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener,
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()){
 		case R.id.menu_add:
-			DialogFragment dialogFragment = TrainingDayAddDialogFragment.newInstance(getActivity(), trainingDayListAdapter);
+			TrainingDayAddDialogFragment dialogFragment = TrainingDayAddDialogFragment.newInstance(getActivity(), trainingDayListAdapter);
 			dialogFragment.show(this.getFragmentManager(), "Open Exercise Add Dialog on Click");
 			break;
 		}

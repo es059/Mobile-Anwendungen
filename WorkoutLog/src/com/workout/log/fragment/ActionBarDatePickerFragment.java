@@ -4,9 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
 import android.annotation.SuppressLint;
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.workoutlog.R;
 import com.workout.log.ExerciseSpecific;
 import com.workout.log.bo.PerformanceActual;
@@ -42,7 +44,7 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 		dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 		
 		paMapper = new PerformanceActualMapper(getActivity());
-		exerciseSpecific = (ExerciseSpecific) getActivity().getFragmentManager().findFragmentByTag("ExerciseSpecific");
+		exerciseSpecific = (ExerciseSpecific) getActivity().getSupportFragmentManager().findFragmentByTag("ExerciseSpecific");
 		
 		next = (ImageButton) view.findViewById(R.id.Next);
 		previous = (ImageButton) view.findViewById(R.id.Previous);

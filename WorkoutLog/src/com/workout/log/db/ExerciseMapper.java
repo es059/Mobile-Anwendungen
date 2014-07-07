@@ -60,21 +60,6 @@ public class ExerciseMapper {
 		
 	}
 	
-	public ArrayList<Exercise> getAll() {
-		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
-		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "SELECT * FROM Exercise";
-		
-		Cursor cursor = db.rawQuery(sql, null);
-		if (cursor.moveToFirst()) {
-            do {
-            	exerciseList.add(getExerciseById(cursor.getInt(1)));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        
-        return exerciseList;
-	}
 	public ArrayList<String> getAllbyString() {
 		ArrayList<String> exerciseList = new ArrayList<String>();
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
@@ -128,7 +113,7 @@ public class ExerciseMapper {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 	    ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
 	    
-	    sql= "SELECT Exercise_Id, ExerciseName FROM Exercise";
+	    sql= "SELECT Exercise_Id FROM Exercise";
 	    Cursor cursor = db.rawQuery(sql, null);
 	    if ( cursor.moveToFirst()){
 	    	do{

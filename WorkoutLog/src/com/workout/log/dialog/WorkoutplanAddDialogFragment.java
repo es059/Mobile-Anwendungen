@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -62,8 +62,8 @@ public class WorkoutplanAddDialogFragment extends DialogFragment {
 			/**
 			 * Refresh the Fragment to show changes
 			 */
-			Fragment fragment = getActivity().getFragmentManager().findFragmentByTag("ActionBarWorkoutPlanPickerFragment");
-			FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+			Fragment fragment = getActivity().getSupportFragmentManager().findFragmentByTag("ActionBarWorkoutPlanPickerFragment");
+			FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
 			ft.detach(fragment);
 			ft.attach(fragment);
 			ft.commit();

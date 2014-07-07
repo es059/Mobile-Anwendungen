@@ -2,14 +2,14 @@ package com.workout.log;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
@@ -28,7 +28,7 @@ import com.workout.log.listAdapter.CustomDrawerAdapter;
 import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;
 
-public class HelperActivity extends Activity{
+public class HelperActivity extends FragmentActivity{
 	protected OnBackPressedListener onBackPressedListener;
 	protected OnHomePressedListener onHomePressedListener;
 	
@@ -63,13 +63,13 @@ public class HelperActivity extends Activity{
          * Handles the Fragment calls which are to be done first
          */
 		if (!firstTimeCheck()){
-		    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 	        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 	        transaction.replace(R.id.fragment_container, new ExerciseOverview(), "ExerciseOverview");
 	        transaction.addToBackStack(null);
 	        transaction.commit();
 		}else{
-			 FragmentTransaction transaction = getFragmentManager().beginTransaction();
+			 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		     transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		     transaction.replace(R.id.fragment_container, new ManageWorkoutplan(), "ManageWorkoutplan");
 		     transaction.addToBackStack(null);
@@ -216,35 +216,35 @@ public class HelperActivity extends Activity{
 		FragmentTransaction transaction;
 		switch(possition) {
 			case 0:
-				transaction = getFragmentManager().beginTransaction();
+				transaction = getSupportFragmentManager().beginTransaction();
 			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 			    transaction.replace(R.id.fragment_container, new ExerciseOverview(), "ExerciseOverview");
 			    transaction.addToBackStack(null);
 			    transaction.commit();
 				break;
 			case 1: 
-				transaction = getFragmentManager().beginTransaction();
+				transaction = getSupportFragmentManager().beginTransaction();
 			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 			    transaction.replace(R.id.fragment_container, new ManageWorkoutplan(), "ManageWorkoutplan");
 			    transaction.addToBackStack(null);
 			    transaction.commit();
 				break;
 			case 2: 
-				transaction = getFragmentManager().beginTransaction();
+				transaction = getSupportFragmentManager().beginTransaction();
 			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 			    transaction.replace(R.id.fragment_container, new ManageTrainingDays(), "ManageTrainingDays");
 			    transaction.addToBackStack(null);
 			    transaction.commit();
 				break;
 			case 3: 
-				transaction = getFragmentManager().beginTransaction();
+				transaction = getSupportFragmentManager().beginTransaction();
 			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 			    transaction.replace(R.id.fragment_container, new ExerciseAdd(), "ExerciseAdd");
 			    transaction.addToBackStack(null);
 			    transaction.commit();
 				break;
 			case 4: 
-				transaction = getFragmentManager().beginTransaction();
+				transaction = getSupportFragmentManager().beginTransaction();
 			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 			    transaction.replace(R.id.fragment_container, new Graph(), "GraphActivity");
 			    transaction.addToBackStack(null);

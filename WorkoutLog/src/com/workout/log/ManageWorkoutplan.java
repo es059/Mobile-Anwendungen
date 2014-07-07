@@ -2,11 +2,11 @@ package com.workout.log;
 
 import java.util.ArrayList;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -65,6 +65,12 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	public void onResume(){
 		super.onResume();
 
+		/**
+		 * If more than one xml layout file uses the Layout for the UndoBar than 
+		 * use this line to ensure that the reference is always correct
+		 */
+		mUndoBarController = null;
+		
 		wpMapper = new WorkoutplanMapper(getActivity());
 		
 		tdMapper = new TrainingDayMapper(getActivity());

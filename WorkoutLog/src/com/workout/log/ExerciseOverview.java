@@ -2,11 +2,11 @@ package com.workout.log;
 
 import java.util.ArrayList;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -71,7 +71,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 				}
 				trainingDayId = transferExtras.getInt("TrainingDayId");
 				actionBarTrainingDayPickerFragment = (ActionBarTrainingDayPickerFragment) getActivity().
-						getFragmentManager().findFragmentByTag("TrainingDayPicker");
+						getSupportFragmentManager().findFragmentByTag("TrainingDayPicker");
 				actionBarTrainingDayPickerFragment.setCurrentTrainingDay(trainingDayId);
 			} catch (Exception e){
 				e.printStackTrace();
@@ -139,7 +139,6 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 	    FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.replace(R.id.fragment_container, exerciseSpecific , "ExerciseSpecific");
-        //transaction.addToBackStack(null);
         transaction.commit();
 	}
 	

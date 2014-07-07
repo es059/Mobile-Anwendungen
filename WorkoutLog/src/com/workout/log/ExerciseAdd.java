@@ -2,12 +2,11 @@ package com.workout.log;
 
 import java.util.ArrayList;
 
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -94,7 +93,7 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 		exerciseListView = (ListView) getView().findViewById(R.id.add_exerciseList);
 		exerciseListView.setOnItemLongClickListener(this);
 		
-		updateListView(eMapper.getAll());
+		updateListView(eMapper.getAllExercise());
 		loadSwipeToDismiss();
 	}
 	
@@ -118,7 +117,7 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 	 * Method which opens a DialogFragment to create a new exercise
 	 */
 	public void showDialogAddFragment(){
-		DialogFragment dialogFragment = ExerciseAddDialogFragment.newInstance(getActivity(), listAdapter);
+		ExerciseAddDialogFragment dialogFragment = ExerciseAddDialogFragment.newInstance(getActivity(), listAdapter);
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
 	}
 
@@ -139,7 +138,7 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 	 * @param a is the Adapter
 	 */
 	private void showDialogLongClickFragment(int currentExerciseId) {	
-		DialogFragment dialogFragment = ExerciseUpdateDialogFragment.newInstance(this,currentExerciseId);
+		ExerciseUpdateDialogFragment dialogFragment = ExerciseUpdateDialogFragment.newInstance(this,currentExerciseId);
 		dialogFragment.show(getActivity().getFragmentManager(), "Open Exercise Update Dialog on Long Click");
 	}
 

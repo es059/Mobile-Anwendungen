@@ -2,9 +2,8 @@ package com.workout.log.fragment;
 
 import java.util.ArrayList;
 
-import android.app.DialogFragment;
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -54,7 +53,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 	public void onResume(){
 		super.onResume();
 		
-		manageWorkoutplan  = (ManageWorkoutplan) getActivity().getFragmentManager().findFragmentByTag("ManageWorkoutplan");
+		manageWorkoutplan  = (ManageWorkoutplan) getActivity().getSupportFragmentManager().findFragmentByTag("ManageWorkoutplan");
 		previousButton = (ImageButton) getView().findViewById(R.id.Previous);
 		nextButton = (ImageButton) getView().findViewById(R.id.Next);
 		workoutplanTextView = (TextView) getView().findViewById(R.id.trainingDayPicker);
@@ -75,8 +74,8 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 			workoutplanTextView.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View arg0) {
-					DialogFragment dialogFragment = WorkoutplanUpdateDialogFragment.newInstance(getActivity(), workoutplanList.get(currentListId).getId());
-					dialogFragment.show(getActivity().getFragmentManager(), "Open Exercise Settings on Long Click");			
+					WorkoutplanUpdateDialogFragment dialogFragment = WorkoutplanUpdateDialogFragment.newInstance(getActivity(), workoutplanList.get(currentListId).getId());
+					dialogFragment.show(getActivity().getSupportFragmentManager(), "Open Exercise Settings on Long Click");			
 				}	
 			});
 			
@@ -104,7 +103,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 		switch (v.getId()){
 		case R.id.Next:
 			if(workoutplanList.size() <= currentListId +1) {
-				DialogFragment dialogFragment = WorkoutplanAddDialogFragment.newInstance(getActivity(), workoutplanList);
+				WorkoutplanAddDialogFragment dialogFragment = WorkoutplanAddDialogFragment.newInstance(getActivity(), workoutplanList);
 				dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
 				if(workoutplanList.size()>1) previousButton.setVisibility(View.VISIBLE);	
 			}

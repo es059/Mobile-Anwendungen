@@ -1,10 +1,9 @@
 package com.workout.log.fragment;
 
-
 import java.util.ArrayList;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,7 +48,7 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 			trainingDayPicker.setHint("Trainingstage");
 		}
 		
-		exerciseOverview = (ExerciseOverview) getActivity().getFragmentManager().findFragmentByTag("ExerciseOverview");
+		exerciseOverview = (ExerciseOverview) getActivity().getSupportFragmentManager().findFragmentByTag("ExerciseOverview");
 		
 		next = (ImageButton) view.findViewById(R.id.Next);
 		previous = (ImageButton) view.findViewById(R.id.Previous);

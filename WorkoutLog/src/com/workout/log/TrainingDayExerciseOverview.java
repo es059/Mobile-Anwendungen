@@ -2,12 +2,11 @@ package com.workout.log;
 
 import java.util.ArrayList;
 
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -153,8 +152,8 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 	 * @param a is the Adapter
 	 */
 	private void showDialogLongClickFragment(int currentExerciseId) {	
-		DialogFragment dialogFragment = ExerciseSpecificUpdateDialogFragment.newInstance(this, trainingDayId, currentExerciseId);
-		dialogFragment.show(getActivity().getFragmentManager(), "Open Exercise Update Dialog on Long Click");
+		ExerciseSpecificUpdateDialogFragment dialogFragment = ExerciseSpecificUpdateDialogFragment.newInstance(this, trainingDayId, currentExerciseId);
+		dialogFragment.show(getActivity().getSupportFragmentManager(), "Open Exercise Update Dialog on Long Click");
 	}
 
 	

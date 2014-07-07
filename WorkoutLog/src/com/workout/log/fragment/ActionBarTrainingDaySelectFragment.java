@@ -1,7 +1,7 @@
 package com.workout.log.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +21,7 @@ private TrainingDayExerciseOverview trainingDayExerciseOverview;
 		super.onCreateView(inflater, container, savedInstanceState);
 		View view = inflater.inflate(R.layout.actionbar_training_day_select, container,false);
 		
-		trainingDayExerciseOverview = (TrainingDayExerciseOverview) getActivity().getFragmentManager().findFragmentByTag("TrainingDayExerciseOverview");
+		trainingDayExerciseOverview = (TrainingDayExerciseOverview) getActivity().getSupportFragmentManager().findFragmentByTag("TrainingDayExerciseOverview");
 		subject = (TextView) view.findViewById(R.id.aktuellerTrainingsplan);
 		
 		/**

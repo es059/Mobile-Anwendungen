@@ -2,13 +2,12 @@ package com.workout.log;
 
 import java.util.ArrayList;
 
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -123,7 +122,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 		 */
 		mUndoBarController = null;
 		
-		manageWorkoutplan = (ManageWorkoutplan) getActivity().getFragmentManager().findFragmentByTag("ManageWorkoutplan");
+		manageWorkoutplan = (ManageWorkoutplan) getActivity().getSupportFragmentManager().findFragmentByTag("ManageWorkoutplan");
 		workoutplanId = manageWorkoutplan.getWorkoutplanId();
 		
 		tdMapper = new TrainingDayMapper(getActivity());
@@ -146,7 +145,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()){
 		case R.id.menu_add:
-			DialogFragment dialogFragment = TrainingDayAddDialogFragment.newInstance(getActivity(), trainingDayListAdapter);
+			TrainingDayAddDialogFragment dialogFragment = TrainingDayAddDialogFragment.newInstance(getActivity(), trainingDayListAdapter);
 			dialogFragment.show(this.getFragmentManager(), "Open Exercise Add Dialog on Click");
 			break;
 		}
@@ -157,7 +156,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		TrainingDay t = (TrainingDay) arg0.getItemAtPosition(arg2);
 		int trainingDayID = t.getId();
-		DialogFragment dialogFragment = TrainingDayAddToWorkoutplanDialogFragment.newInstance(getActivity(), trainingDayID, workoutplanId);
+		TrainingDayAddToWorkoutplanDialogFragment dialogFragment = TrainingDayAddToWorkoutplanDialogFragment.newInstance(getActivity(), trainingDayID, workoutplanId);
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
 		
 	}
@@ -178,7 +177,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 	 * @param a is the Adapter
 	 */
 	private void showDialogLongClickFragment(int trainingDayId, TrainingDayListAdapter adapter) {	
-		DialogFragment dialogFragment = TrainingDayUpdateDialogFragment.newInstance(this, trainingDayId);
+		TrainingDayUpdateDialogFragment dialogFragment = TrainingDayUpdateDialogFragment.newInstance(this, trainingDayId);
 		dialogFragment.show(getActivity().getFragmentManager(), "Open Exercise Update Dialog on Long Click");
 	}
 

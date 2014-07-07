@@ -3,12 +3,12 @@ package com.workout.log;
 import java.util.ArrayList;
 
 import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -69,7 +69,7 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 		/**
 		 * Get TrainingDayId from ExerciseOverview
 		 */
-		trainingDayExerciseOverview = (TrainingDayExerciseOverview) getActivity().getFragmentManager().findFragmentByTag("TrainingDayExerciseOverview");
+		trainingDayExerciseOverview = (TrainingDayExerciseOverview) getActivity().getSupportFragmentManager().findFragmentByTag("TrainingDayExerciseOverview");
 		trainingDayId = trainingDayExerciseOverview.getTrainingDayId();
         
         /**
@@ -105,7 +105,7 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 		exerciseListView.setOnItemClickListener(this);
 		exerciseListView.setOnItemLongClickListener(this);
 		
-		updateListView(eMapper.getAll());
+		updateListView(eMapper.getAllExercise());
 		loadSwipeToDismiss();
 	}
 
@@ -129,15 +129,8 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 	}
 
 	public void showDialogAddFragment(){
-		DialogFragment dialogFragment = ExerciseAddDialogFragment.newInstance(getActivity(), listAdapter);
+		ExerciseAddDialogFragment dialogFragment = ExerciseAddDialogFragment.newInstance(getActivity(), listAdapter);
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
-	}
-
-	public void listViewActual() {
-		 listAdapter.clear();
-		 listAdapter.addAll(eMapper.getAll());
-		 listAdapter.notifyDataSetChanged();
-		 exerciseListView.invalidateViews();
 	}
 
 	@Override
@@ -170,7 +163,7 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 
 	
 	private void showDialogClickFragment(Context context, int  trainingDayId, int exerciseId) {
-		DialogFragment dialogFragment = ExerciseSpecificAddDialogFragment.newInstance(context, trainingDayId, exerciseId);
+		ExerciseSpecificAddDialogFragment dialogFragment = ExerciseSpecificAddDialogFragment.newInstance(context, trainingDayId, exerciseId);
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");	
 	}
 	

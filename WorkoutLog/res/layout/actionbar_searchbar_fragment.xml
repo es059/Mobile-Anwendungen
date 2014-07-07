@@ -6,15 +6,15 @@
 	    android:gravity="right"
 	    android:orientation="horizontal" >
 	
-	  	<EditText
+	  <EditText
 	        android:id="@+id/searchbar_text"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_gravity="bottom"
 	        android:layout_weight="1"
 	        android:hint="Suchen"
+	        android:textStyle="bold"
 	        android:drawableRight="@android:drawable/ic_menu_search"
 	        android:ems="10" >
-			<requestFocus />
 	    </EditText>
 </LinearLayout>

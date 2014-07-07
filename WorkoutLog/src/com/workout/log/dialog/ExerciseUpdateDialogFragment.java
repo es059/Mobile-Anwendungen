@@ -6,9 +6,9 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -99,7 +99,7 @@ public class ExerciseUpdateDialogFragment extends DialogFragment {
 				// Toast einblenden 
 				Toast.makeText(getActivity(), "Übung wurde erfolgreich geändert!", Toast.LENGTH_SHORT ).show();
 				// ListView aktualisieren 
-				updateListView(eMapper.getAll());
+				updateListView(eMapper.getAllExercise());
 			}else{
 				Toast.makeText(getActivity(), "Bitte sätmliche Felder ausfüllen", Toast.LENGTH_SHORT ).show();
 			}
@@ -124,9 +124,9 @@ public class ExerciseUpdateDialogFragment extends DialogFragment {
 	 */
 	public void updateListView(ArrayList<Exercise> List){
 		if (fragment instanceof ExerciseAdd){
-			((ExerciseAdd) fragment).updateListView(eMapper.getAll());
+			((ExerciseAdd) fragment).updateListView(eMapper.getAllExercise());
 		}else{
-			((ExerciseAddToTrainingDay) fragment).updateListView(eMapper.getAll());
+			((ExerciseAddToTrainingDay) fragment).updateListView(eMapper.getAllExercise());
 		}
 	}
 
