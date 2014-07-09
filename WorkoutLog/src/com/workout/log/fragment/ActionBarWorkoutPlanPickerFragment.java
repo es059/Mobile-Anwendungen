@@ -58,6 +58,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 		nextButton = (ImageButton) getView().findViewById(R.id.Next);
 		workoutplanTextView = (TextView) getView().findViewById(R.id.trainingDayPicker);
 		
+		manageWorkoutplan.updateListView(null);
 		
 		workoutplanList = new ArrayList<Workoutplan>();
 		trainingDayList = new ArrayList<TrainingDay>();

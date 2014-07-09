@@ -13,6 +13,7 @@ public class MenuList {
 		 dataList.add(new DrawerItem("Trainingtage"));
 		 dataList.add(new DrawerItem("Übungen"));
 		 dataList.add(new DrawerItem("Statisitik"));
+		 dataList.add(new DrawerItem("Import/Export"));
 	}
 	public List<DrawerItem> getDataList() {
 		return dataList;

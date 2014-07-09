@@ -271,7 +271,7 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 					Exercise item = items[i];
 					int itemPosition = itemPositions[i];
 					
-					eMapper.add(item.getName(), item.getMuscleGroup().getName());
+					eMapper.add(item);
 					for (Integer trainingDayId : item.getTrainingDayIdList()){
 						tMapper.addExerciseToTrainingDay(trainingDayId, item.getId());
 					}

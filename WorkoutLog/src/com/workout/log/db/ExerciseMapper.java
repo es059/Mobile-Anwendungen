@@ -36,6 +36,18 @@ public class ExerciseMapper {
 		sql = "INSERT INTO Exercise (ExerciseName, MuscleGroup_Id ) VALUES ('" + exerciseName +"', " + muscleGroupID + ")";
 		db.execSQL(sql);
 		cursor.close();
+	}
+	
+	public void add(Exercise exercise){
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "SELECT MuscleGroup_Id FROM MuscleGroup WHERE MuscleGroupName='" + exercise.getMuscleGroup().getName() + "'";
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			muscleGroupID = Integer.parseInt(cursor.getString(0));
+		}
+		sql = "INSERT INTO Exercise (Exercise_Id, ExerciseName, MuscleGroup_Id ) VALUES ("+ exercise.getId() + ", '" + exercise.getName() +"', " + muscleGroupID + ")";
+		db.execSQL(sql);
+		cursor.close();
 		
 	}
 	

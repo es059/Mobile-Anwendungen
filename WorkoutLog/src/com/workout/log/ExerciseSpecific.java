@@ -319,10 +319,8 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 			weight = (EditText) v.findViewById(R.id.specific_edit_weight);
 
 			if (!repetition.getText().toString().isEmpty()) {
-				if (Integer.parseInt(repetition.getText().toString()) != item
-						.getRepetition()) {
-					item.setRepetition(Integer.parseInt(repetition.getText()
-							.toString()));
+				if (Integer.parseInt(repetition.getText().toString()) != item.getRepetition()) {
+					item.setRepetition(Integer.parseInt(repetition.getText().toString()));
 					sameRep = false;
 				} else {
 					sameRep = true;
@@ -332,10 +330,8 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 			}
 
 			if (!weight.getText().toString().isEmpty()) {
-				if (Double.parseDouble(weight.getText().toString()) != item
-						.getWeight()) {
-					item.setWeight(Double.parseDouble(weight.getText()
-							.toString()));
+				if (Double.parseDouble(weight.getText().toString()) != item.getWeight()) {
+					item.setWeight(Double.parseDouble(weight.getText().toString()));
 					sameWeight = false;
 				} else {
 					sameWeight = true;

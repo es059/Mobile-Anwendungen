@@ -92,7 +92,7 @@ public class PerformanceActualMapper {
 		ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 		for(String item : strings){
-			sql = "SELECT RepetitionActual, WeightActual, SetActual FROM PerformanceActual WHERE"
+			sql = "SELECT RepetitionActual, WeightActual, SetActual, PerformanceActual_Id FROM PerformanceActual WHERE"
 					+ " TimestampActual = '" + item + "' AND"
 					+ " Exercise_Id = " + exercise.getId()
 					+ " ORDER BY WeightActual DESC, RepetitionActual DESC";
@@ -104,6 +104,7 @@ public class PerformanceActualMapper {
 					if (cursor.getString(0) != null) performanceActual.setRepetition(cursor.getInt(0));
 					if (cursor.getString(1) != null) performanceActual.setWeight(cursor.getDouble(1));
 					performanceActual.setSet(cursor.getInt(2));
+					performanceActual.setId(cursor.getInt(3));
 					try {
 						performanceActual.setTimestamp(sp.parse(item));
 					} catch (ParseException e) {

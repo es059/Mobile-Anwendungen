@@ -1,5 +1,9 @@
 package com.workout.log;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import android.content.Intent;
@@ -23,7 +27,9 @@ import android.widget.Toast;
 import com.example.workoutlog.R;
 import com.workout.log.bo.Workoutplan;
 import com.workout.log.data.MenuList;
+import com.workout.log.db.DataBaseHelper;
 import com.workout.log.db.WorkoutplanMapper;
+import com.workout.log.dialog.FileDialog;
 import com.workout.log.listAdapter.CustomDrawerAdapter;
 import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;
@@ -249,6 +255,60 @@ public class HelperActivity extends FragmentActivity{
 			    transaction.replace(R.id.fragment_container, new Graph(), "GraphActivity");
 			    transaction.addToBackStack(null);
 			    transaction.commit();
+				break;
+			case 5: 
+				/**
+				 * Export current database to selected file path
+				 */
+				FileDialog fileDialog = new FileDialog(this);
+				fileDialog.setSelectDirectoryOption(true);
+				fileDialog.setFileEndsWith(".db");
+				fileDialog.showDialog();
+				
+				/**
+				 * Fired if a directory for the export is chosen
+				 */
+				fileDialog.addDirectoryListener(new FileDialog.DirectorySelectedListener(){
+
+					@Override
+					public void directorySelected(File directory) {
+						/**
+						 * Export
+						 */
+						DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(HelperActivity.this);
+						dataBaseHelper.close();
+						FileOutputStream newDb = null;
+						try {
+							newDb = new FileOutputStream(directory.toString() + "/WorkoutLog.db");
+							dataBaseHelper.copyDatabase(null, newDb);
+							Toast.makeText(HelperActivity.this, "Export in Verzeichnis " + directory.toString(), Toast.LENGTH_SHORT).show();
+						} catch (FileNotFoundException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}		
+				});
+				fileDialog.addFileListener(new FileDialog.FileSelectedListener(){
+
+					@Override
+					public void fileSelected(File file) {
+						/**
+						 * Import
+						 */
+						DataBaseHelper dataBaseHelper = DataBaseHelper.getInstance(HelperActivity.this);
+						dataBaseHelper.close();
+						File dbPath = file;
+						try {
+							dataBaseHelper.importDatabase(dbPath.getAbsolutePath());
+							Toast.makeText(HelperActivity.this, "Import der Daten abgeschlossen", Toast.LENGTH_SHORT).show();
+						} catch (FileNotFoundException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}	
+				});
 				break;
 		}
 	}

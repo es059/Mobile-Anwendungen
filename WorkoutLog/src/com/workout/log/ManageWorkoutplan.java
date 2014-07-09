@@ -290,6 +290,8 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 
 	    @Override
 	    protected StableArrayAdapter doInBackground(ArrayList<TrainingDay>... params) {
+	    	stableArrayAdapter = null;
+	    	
 			wpMapper = new WorkoutplanMapper(getActivity());
 			
 			workoutplanList = new ArrayList<Workoutplan>();
@@ -313,7 +315,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	    @Override
 	    protected void onPostExecute(StableArrayAdapter result) {
 	        super.onPostExecute(result);
-
+	        trainingDayListView.setAdapter(null);
 	        if (result != null) trainingDayListView.setAdapter(result);
 	       	        
 	        getActivity().setProgressBarIndeterminateVisibility(false); 
