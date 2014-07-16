@@ -296,6 +296,29 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 				Toast.LENGTH_SHORT).show();
 	}
 
+	
+	/**
+	 * Helps to determine the view of the current item in the listview.
+	 * Even if it is out of sight
+	 * 
+	 * @param position
+	 * @param listView
+	 * @return the view of the item
+	 * 
+	 * @author Eric Schmidt
+	 */
+	public View getViewByPosition(int position, ListView listView) {
+	    final int firstListItemPosition = listView.getFirstVisiblePosition();
+	    final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+	    if (position < firstListItemPosition || position > lastListItemPosition ) {
+	        return listView.getAdapter().getView(position, listView.getChildAt(position), listView);
+	    } else {
+	        final int childIndex = position - firstListItemPosition;
+	        return listView.getChildAt(childIndex);
+	    }
+	}
+	
 	/**
 	 * Save/Update all PerfromanceActual Objects in Database
 	 * 
@@ -313,7 +336,8 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		boolean sameWeight = true;
 
 		for (PerformanceActual item : performanceActualList) {
-			View v = exerciseListView.getChildAt(item.getSet() - 1);
+			View v = getViewByPosition(item.getSet() - 1, exerciseListView);			
+			
 			repetition = (EditText) v
 					.findViewById(R.id.specific_edit_repetition);
 			weight = (EditText) v.findViewById(R.id.specific_edit_weight);

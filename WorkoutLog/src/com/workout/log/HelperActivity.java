@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -113,7 +114,8 @@ public class HelperActivity extends FragmentActivity{
 	    if (onBackPressedListener != null){
 	        onBackPressedListener.doBack();
 	    }else{
-	    	if (getFragmentManager().getBackStackEntryCount() == 1 || getFragmentManager().findFragmentByTag("ExerciseOverview").isVisible()) {
+	    	if (getSupportFragmentManager().getBackStackEntryCount() == 1 || getSupportFragmentManager().findFragmentByTag("ExerciseOverview") != null ||
+	    		getSupportFragmentManager().findFragmentByTag("ExerciseOverview").isVisible()) {
 	    		/**
 	    		 * Closes the application if the userer presses back twice
 	    		 */
@@ -131,9 +133,8 @@ public class HelperActivity extends FragmentActivity{
 	    		            doubleBackToExitPressedOnce=false;                       
 	    		        }
 	    		    }, 2000);
-	    		
 	        } else {
-	            getFragmentManager().popBackStack();
+	        	getSupportFragmentManager().popBackStack();
 	        	/**
 				 * Set the visibility of the NavigationDrawer to Visible
 				 */
@@ -300,8 +301,13 @@ public class HelperActivity extends FragmentActivity{
 						dataBaseHelper.close();
 						File dbPath = file;
 						try {
-							dataBaseHelper.importDatabase(dbPath.getAbsolutePath());
-							Toast.makeText(HelperActivity.this, "Import der Daten abgeschlossen", Toast.LENGTH_SHORT).show();
+							if (dbPath.getName().endsWith(".db")){
+								dataBaseHelper.importDatabase(dbPath.getAbsolutePath());								
+								Toast.makeText(HelperActivity.this, "Import der Daten abgeschlossen", Toast.LENGTH_SHORT).show();
+								mDrawerList.performItemClick(mDrawerList.getAdapter().getView(0, null, null), 0, mDrawerList.getAdapter().getItemId(0));
+							}else{
+								Toast.makeText(HelperActivity.this, "Bitte wählen Sie eine DB-Datei aus", Toast.LENGTH_SHORT).show();
+							}
 						} catch (FileNotFoundException e) {
 							e.printStackTrace();
 						} catch (IOException e) {

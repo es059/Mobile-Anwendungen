@@ -30,7 +30,7 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment{
 	private int workoutPlanId;
 	private UndoBarController mUndoBarController = null;
 	
-	private Fragment fragment = null;
+	private Fragment wokoutplanPicker = null;
 	private FragmentTransaction ft = null;
 	private FragmentManager fm = null;
 	private View manageWorkoutplanView = null;
@@ -49,7 +49,7 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment{
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState){
 		fm = getActivity().getSupportFragmentManager();
-		fragment = fm.findFragmentByTag("ActionBarWorkoutPlanPickerFragment");
+		wokoutplanPicker = fm.findFragmentByTag("ActionBarWorkoutPlanPickerFragment");
 		manageWorkoutplanView = fm.findFragmentByTag("ManageWorkoutplan").getView();
 		
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
@@ -158,7 +158,7 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment{
 				 * Refresh the Fragment to show changes. Decrease the currentListId count by 1 to ensure that
 				 * no outOfIndex occurs
 				 */
-				decreaseCurrenListId(fragment);
+				decreaseCurrenListId(wokoutplanPicker);
 				updateFragment();
 				
 				/**
@@ -196,8 +196,8 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment{
 	public void updateFragment(){
 		ft = fm.beginTransaction();
 		
-		ft.detach(fragment);
-		ft.attach(fragment);
+		ft.detach(wokoutplanPicker);
+		ft.attach(wokoutplanPicker);
 		ft.commit();
 	}
 }

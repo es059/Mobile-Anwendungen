@@ -64,14 +64,11 @@ public class FileDialog {
         View view = (LinearLayout) inflater.inflate(R.layout.file_dialog, null);
         Switch toggleButton = (Switch) view.findViewById(R.id.switch_import_export);
         TextView textView = (TextView) view.findViewById(R.id.switch_header);
+                
+        String currentPathString = currentPath.getPath();
+        currentPathString = shortenString(currentPathString);
         
-        if (!currentPath.toString().equals(rootPath.toString())){
-        	toggleButton.setVisibility(View.GONE);
-        }else{
-        	toggleButton.setVisibility(View.VISIBLE);
-        }
-        
-        textView.setText(currentPath.getPath());
+        textView.setText(currentPathString);
         toggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener(){
 			@Override
 			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
@@ -132,6 +129,25 @@ public class FileDialog {
         return dialog;
     }
 
+    public String shortenString(String value){
+	 if (value.length() > 20) {
+     	String[] splitString = value.split("/");
+     	ArrayList<String> stringList = new ArrayList<String>();
+     	for (String s : splitString){
+     		stringList.add(s);
+     	}
+     	stringList.remove(0);
+     	stringList.remove(1);
+     	value = "/.../";
+     	for (String s : stringList){
+     		if (!s.equals("...")) value += s + "/";
+     	}
+     	return shortenString(value);
+     }else{
+    	return value; 
+     }
+    }
+    
     public void setPositiveButtonEnable(boolean value){
     	((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(value);
     }

@@ -57,11 +57,11 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 		previousButton = (ImageButton) getView().findViewById(R.id.Previous);
 		nextButton = (ImageButton) getView().findViewById(R.id.Next);
 		workoutplanTextView = (TextView) getView().findViewById(R.id.trainingDayPicker);
-		
-		manageWorkoutplan.updateListView(null);
-		
+
 		workoutplanList = new ArrayList<Workoutplan>();
 		trainingDayList = new ArrayList<TrainingDay>();
+		
+		manageWorkoutplan.updateListView(null);
 		
 		workoutplanList = wpMapper.getAll();
 		if (workoutplanList.size() != 0){
@@ -95,7 +95,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 		 */
 		if(currentListId == 0)previousButton.setVisibility(View.INVISIBLE); 
 		if(workoutplanList.size() <= currentListId + 1)nextButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_add));
-
+	
 		manageWorkoutplan.updateListView(trainingDayList);
 	}
 		

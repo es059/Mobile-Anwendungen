@@ -10,11 +10,14 @@
         android:layout_height="wrap_content"
         android:textColor="#FF9900"
         android:textStyle="bold"
+        android:ellipsize="none"
+		android:singleLine="true"
         android:text="" />
 
     <Switch
         android:id="@+id/switch_import_export"
         android:layout_width="fill_parent"
+        android:paddingLeft="5dp"
         android:layout_height="wrap_content"
         android:textOn="Import"
         android:textOff="Export" />

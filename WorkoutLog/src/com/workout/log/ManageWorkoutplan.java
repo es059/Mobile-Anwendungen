@@ -291,20 +291,34 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	    @Override
 	    protected StableArrayAdapter doInBackground(ArrayList<TrainingDay>... params) {
 	    	stableArrayAdapter = null;
+	    	currentListId = -1;
 	    	
 			wpMapper = new WorkoutplanMapper(getActivity());
 			
 			workoutplanList = new ArrayList<Workoutplan>();
 			
 			workoutplanList = wpMapper.getAll();
-
+			
+			/**
+			 * Device is working to fast. To avoid crashes the application waits
+			 * for 100 ms.
+			 */
+			try {
+				synchronized (this){
+					this.wait(100);
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			if (workoutplanList.size() != 0){
 				for(int i = 0; i < workoutplanList.size(); i++) {
 					if(workoutplanList.get(i).getId() == workoutplanId) {
 						currentListId = i;
 					}
 				}
-				if (params[0] == null)params[0] = tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanList.get(currentListId).getId());	
+				if (params[0] == null) params[0] = tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanList.get(currentListId).getId());	
 				stableArrayAdapter = new StableArrayAdapter(getActivity(), R.layout.listview_training_day, params[0]);
 				setTrainingDayList(params[0]);
 			}
