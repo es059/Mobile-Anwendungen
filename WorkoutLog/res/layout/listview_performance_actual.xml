@@ -34,6 +34,7 @@
 		            android:layout_marginLeft="10dp"
 		            android:layout_height="wrap_content"
 					android:hint="Gewicht"
+					android:digits="0123456789."
 					android:inputType="phone"
 		            android:ems="10" />
 		       
@@ -45,6 +46,7 @@
 		            android:gravity="center"
 		            android:layout_height="wrap_content"
 					android:hint="Wdh"
+					android:digits="0123456789."
 					android:inputType="phone"
 		            android:ems="10" />
         	</TableRow>
