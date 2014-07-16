@@ -3,12 +3,17 @@ package com.workout.log.data;
 public class DrawerItem {
 	 
     String ItemName;
-    int imgResID;
+    int imgResID = -1;
 
     public DrawerItem(String itemName, int imgResID) {
           super();
           ItemName = itemName;
           this.imgResID = imgResID;
+    }
+  
+    public DrawerItem(String itemName) {
+        super();
+        ItemName = itemName;
     }
 
     public String getItemName() {

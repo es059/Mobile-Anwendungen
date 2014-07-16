@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.example.workoutlog.R;
 import com.workout.log.bo.Exercise;
-import com.workout.log.bo.Workoutplan;
 import com.workout.log.db.PerformanceActualMapper;
 
 public class SpinnerExercise extends RelativeLayout {

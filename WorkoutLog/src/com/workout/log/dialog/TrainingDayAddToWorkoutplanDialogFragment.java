@@ -1,71 +1,75 @@
 package com.workout.log.dialog;
 
-import com.example.workoutlog.R;
-import com.workout.log.ManageWorkoutplan;
-import com.workout.log.TrainingDayExerciseOverview;
-import com.workout.log.db.TrainingDayMapper;
-import com.workout.log.db.WorkoutplanMapper;
-
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Spinner;
+import android.support.v4.app.DialogFragment;
 import android.widget.Toast;
 
+import com.workout.log.db.WorkoutplanMapper;
+
+@SuppressLint("ValidFragment")
 public class TrainingDayAddToWorkoutplanDialogFragment extends DialogFragment {
 	
 private int workoutPlanId;
 private int trainingDayId;
 private static WorkoutplanMapper wpMapper;
+
 	public static TrainingDayAddToWorkoutplanDialogFragment newInstance(Context a, int trainingDayId, int workoutPlanId) {
 		TrainingDayAddToWorkoutplanDialogFragment trainingDayAddToWorkoutplan = new TrainingDayAddToWorkoutplanDialogFragment(a, trainingDayId, workoutPlanId );
-	
-	
 		return trainingDayAddToWorkoutplan;
-		
-
-}
+	}
 
 	public TrainingDayAddToWorkoutplanDialogFragment(Context c, int a, int b) {
 		super();
 		wpMapper = new WorkoutplanMapper(c);
 		workoutPlanId = b;
 		trainingDayId = a;
-		// TODO Auto-generated constructor stub
 	}
 	
+	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState){
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-	
-
-		final Toast toast = Toast.makeText(getActivity(), "Trainingstag wurde erfolgreich dem Trainingsplan hinzugefügt!", Toast.LENGTH_SHORT );
-		
 		alert.setTitle("Trainingstag hinzufügen");
 		alert.setMessage("Wollen Sie diesen Trainingstag dem Trainingsplan hinzufügen?");
 	
-		alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+		alert.setPositiveButton("Bestätigen", new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int whichButton) {
-			
+				/**
+				 * Save the trainingday to the current workoutplan
+				 */
 				wpMapper.addTrainingDayToWorkoutplan(trainingDayId, workoutPlanId);
-				toast.show();
-				Intent intent = new Intent();
-				intent.setClass(getActivity(), ManageWorkoutplan.class);
-				intent.putExtra("WorkoutplanId", workoutPlanId);
-				startActivity(intent);
 				
-					
+			/*	*//**
+				 * Prepare the transaction and submit the workoutPlanId 
+				 *//*
+				Bundle data = new Bundle();
+				
+			    data.putInt("WorkoutplanId",workoutPlanId);
+				
+			    ManageWorkoutplan manageWorkoutPlan = new ManageWorkoutplan();
+			    manageWorkoutPlan.setArguments(data);
+			    
+			    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		        transaction.replace(R.id.fragment_container, manageWorkoutPlan , "ExerciseOverview");
+		        transaction.addToBackStack(null);
+		        transaction.commit();*/
+				
+		        /**
+		         * Show a Message that the trainingday was added to the workoutplan
+		         */
+		        Toast.makeText(getActivity(), "Trainingstag wurde erfolgreich dem Trainingsplan hinzugefügt!", Toast.LENGTH_SHORT ).show();
 			  }
 			});
 
-			alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			  public void onClick(DialogInterface dialog, int whichButton) {
+			alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+			  @Override
+			public void onClick(DialogInterface dialog, int whichButton) {
 			    // Canceled.
 			  }
 			});

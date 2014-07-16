@@ -1,78 +1,133 @@
 package com.workout.log.dialog;
 
-import com.workout.log.db.ExerciseMapper;
-import com.workout.log.listAdapter.ExerciseListAdapter;
-import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
+import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.workoutlog.R;
+import com.workout.log.ExerciseAdd;
+import com.workout.log.ExerciseAddToTrainingDay;
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.MuscleGroup;
+import com.workout.log.db.ExerciseMapper;
+
+@SuppressLint("ValidFragment")
 public class ExerciseUpdateDialogFragment extends DialogFragment {
-	private ExerciseListWithoutSetsRepsAdapter exerciseListAdapter;
-	private static ExerciseMapper em;
-	private Toast toast;
-	private int b;
-	// Konstruktor 
-	public static ExerciseUpdateDialogFragment newInstance(Context a, ExerciseListWithoutSetsRepsAdapter c, int i) {
-		ExerciseUpdateDialogFragment ExerciseUpdateDialogFragment = new ExerciseUpdateDialogFragment(c, i);
-		em = new ExerciseMapper(a);
-		
-		return ExerciseUpdateDialogFragment;
-		
+	private static ExerciseMapper eMapper;
+	private Fragment fragment;
+	private int exerciseId;
+	private String selectedMuscleGroup = "";
+	
+	public static ExerciseUpdateDialogFragment newInstance(Fragment fragment, int exerciseId) {
+		ExerciseUpdateDialogFragment ExerciseUpdateDialogFragment = new ExerciseUpdateDialogFragment(fragment, exerciseId);
+		return ExerciseUpdateDialogFragment;	
 	}
 	
-	public ExerciseUpdateDialogFragment(ExerciseListWithoutSetsRepsAdapter c, int i) {
+	public ExerciseUpdateDialogFragment(Fragment fragment, int exerciseId) {
 		super();
-		exerciseListAdapter = c;
-		b = i;
+		eMapper = new ExerciseMapper(fragment.getActivity());
+		this.fragment = fragment;
+		this.exerciseId = exerciseId;
 	}
 
+	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState){
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		View view = inflater.inflate(R.layout.dialogfragment_exercise_edit, null);
+		
+		final EditText exerciseName = (EditText) view.findViewById(R.id.EditText_ExerciseName);
+		final Spinner muscleGroup = (Spinner) view.findViewById(R.id.Spinner_MuscleGroup);
+		TextView informationText = (TextView) view.findViewById(R.id.TextView_Information);
+		
 
 		alert.setTitle("Übung bearbeiten");
-		alert.setMessage("Bitte geben sie den verbesserten Namen Ihrer Übung hier ein:");
-
-		// Set an EditText view to get user input 
-		final EditText input = new EditText(getActivity());
-		alert.setView(input);
+		// Set an TextView view to view the InformationText
+		informationText.setText("Nehmen Sie die Änderungen an Ihrer Übung hier vor:");
+		// Create an ArrayAdapter using the string array and a default spinner layout
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(fragment.getActivity(),
+		        R.array.MuscleGroup, android.R.layout.simple_spinner_item);
+		// Specify the layout to use when the list of choices appears
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		muscleGroup.setAdapter(adapter);
+		muscleGroup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+		    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+		    	selectedMuscleGroup = (String) parent.getItemAtPosition(pos);
+		    }
+			@Override
+		    public void onNothingSelected(AdapterView<?> parent) {}
+		});
 		
-		toast = Toast.makeText(getActivity(), "Übung wurde erfolgreich geändert!", Toast.LENGTH_SHORT );
+		/**
+		 * Load current Exercise and set the value as default
+		 */
+		Exercise e = eMapper.getExerciseById(exerciseId);
+		MuscleGroup m = e.getMuscleGroup();
+		exerciseName.setText(e.getName());
+		for (int i = 0; i <= muscleGroup.getCount() -1; i++){
+			if(m.getName().toString().contentEquals(muscleGroup.getItemAtPosition(i).toString())){
+				muscleGroup.setSelection(i);
+			}
+		}
 		
+		alert.setView(view);
 		
-	//	final Spinner muskelgruppe = new Spinner(getActivity());
-	//	alert.setView(muskelgruppe);
-	//	ArrayAdapter<String> a = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.MuscleGroup));
-	//	muskelgruppe.setAdapter(a);
-
-		alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+		alert.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+		@Override
 		public void onClick(DialogInterface dialog, int whichButton) {
 			// String aus Textfeld holen  
-				String value = String.valueOf(input.getText());
-			// Mapper-Methode aufrufen zum Hinzufügen einer neuen Übung
-				em.update(b, value);
-			// Toast einblenden 
-				toast.show();
-			// ListView aktualisieren 
-				exerciseListAdapter.clear();
-				exerciseListAdapter.addAll(em.getAll());
-				exerciseListAdapter.notifyDataSetChanged();
+			String value = String.valueOf(exerciseName.getText());
+			if(!value.isEmpty() && !selectedMuscleGroup.isEmpty()){
+				// Mapper-Methode aufrufen zum Hinzufügen einer neuen Übung
+				eMapper.update(exerciseId, value, selectedMuscleGroup);
+				// Toast einblenden 
+				Toast.makeText(getActivity(), "Übung wurde erfolgreich geändert!", Toast.LENGTH_SHORT ).show();
+				// ListView aktualisieren 
+				updateListView(eMapper.getAllExercise());
+			}else{
+				Toast.makeText(getActivity(), "Bitte sätmliche Felder ausfüllen", Toast.LENGTH_SHORT ).show();
+			}
 		  }
 		});
 
-		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		  public void onClick(DialogInterface dialog, int whichButton) {
+		alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+		  @Override
+		public void onClick(DialogInterface dialog, int whichButton) {
 		    // Canceled.
 		  }
 		});
 
 		return alert.show();
+	}
+	
+	/**
+	 * Update the ListView after the exercise was updated
+	 * 
+	 * @param List the updated List
+	 * @author Eric Schmidt
+	 */
+	public void updateListView(ArrayList<Exercise> List){
+		if (fragment instanceof ExerciseAdd){
+			((ExerciseAdd) fragment).updateListView(eMapper.getAllExercise());
+		}else{
+			((ExerciseAddToTrainingDay) fragment).updateListView(eMapper.getAllExercise());
+		}
 	}
 
 

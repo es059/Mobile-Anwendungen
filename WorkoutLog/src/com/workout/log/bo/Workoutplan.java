@@ -1,12 +1,14 @@
 package com.workout.log.bo;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class Workoutplan {
 
 	private int mId;
 	private String mName;
 	private Date timeStamp;
+	private ArrayList<Integer> mTrainingDayIdList = null;
 	
 	
 	public int getId() {
@@ -38,6 +40,12 @@ public class Workoutplan {
 		}
 		return false;
 		
+	}
+	public ArrayList<Integer> getTrainingDayIdList() {
+		return mTrainingDayIdList;
+	}
+	public void setTrainingDayIdList(ArrayList<Integer> mTrainingDayIdList) {
+		this.mTrainingDayIdList = mTrainingDayIdList;
 	}
 	
 	

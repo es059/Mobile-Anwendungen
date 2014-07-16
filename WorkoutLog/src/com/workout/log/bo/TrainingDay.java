@@ -1,21 +1,25 @@
 package com.workout.log.bo;
 
+import java.util.ArrayList;
+
 public class TrainingDay {
 
 	private String mName = "";
-	private  int mId = 0;
-	private int trainingDayHasWorkoutplanId = 0;
+	private int mId = 0;
 	
-	public int getTrainingDayHasWorkoutplanId() {
-		return trainingDayHasWorkoutplanId;
+	/**
+	 * Needed to Undo removal 
+	 */
+	private ArrayList<Workoutplan> mWorkoutplanList = null;
+	private ArrayList<PerformanceTarget> mPerformanceTargetList = null;
+	private ArrayList<Exercise> mExerciseList = null;
+	
+	public  ArrayList<Workoutplan> getWorkoutplanList() {
+		return mWorkoutplanList;
 	}
 
-	public void setTrainingDayHasWorkoutplanId(int trainingDayHasWorkoutplanId) {
-		this.trainingDayHasWorkoutplanId = trainingDayHasWorkoutplanId;
-	}
-
-	public TrainingDay(){
-		
+	public void setWorkoutplanList( ArrayList<Workoutplan> workoutplanList) {
+		this.mWorkoutplanList = workoutplanList;
 	}
 
 	public String getName() {
@@ -34,7 +38,21 @@ public class TrainingDay {
 		mId = Id;
 	}
 
-	
-		
+	public ArrayList<PerformanceTarget> getPerformanceTargetList() {
+		return mPerformanceTargetList;
 	}
+
+	public void setPerformanceTargetList(ArrayList<PerformanceTarget> performanceTargetList) {
+		this.mPerformanceTargetList = performanceTargetList;
+	}
+
+	public ArrayList<Exercise> getExerciseList() {
+		return mExerciseList;
+	}
+
+	public void setExerciseList(ArrayList<Exercise> mExerciseList) {
+		this.mExerciseList = mExerciseList;
+	}
+	
+}
 

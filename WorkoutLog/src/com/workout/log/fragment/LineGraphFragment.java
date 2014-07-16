@@ -1,27 +1,24 @@
 package com.workout.log.fragment;
 
-import com.example.workoutlog.R;
-import com.workout.log.bo.Exercise;
-import com.workout.log.db.ExerciseMapper;
-import com.workout.log.graph.LineGraph;
-
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.workoutlog.R;
+import com.workout.log.bo.Exercise;
+import com.workout.log.graph.LineGraph;
+
 public class LineGraphFragment extends Fragment{
-	private LinearLayout mLayout;
-	private static ExerciseMapper eMapper;
+	private LinearLayout mLayout = null;
+	private static View view = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState){
-		ViewGroup view = (ViewGroup) inflater.inflate(R.layout.line_graph_fragment, null);
-		mLayout = (LinearLayout) view.findViewById(R.id.graph);
-		eMapper = new ExerciseMapper(getActivity());
+		view = inflater.inflate(R.layout.line_graph_fragment, null);
 		return view;
 	}
 	
@@ -32,6 +29,7 @@ public class LineGraphFragment extends Fragment{
 	 * @author Eric Schmidt
 	 */
 	public void updateGraph(Exercise exercise){
+		mLayout = (LinearLayout) view.findViewById(R.id.graph);
 		//Create the Graph
 		LineGraph line = new LineGraph();
 		View linearGraph = line.getView(getActivity(),exercise);

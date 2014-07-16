@@ -1,43 +1,87 @@
 package com.workout.log.db;
 
-import java.io.IOException;
 import java.util.ArrayList;
-
-import com.workout.log.bo.Exercise;
-import com.workout.log.bo.TrainingDay;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.Editable;
+
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.TrainingDay;
+import com.workout.log.bo.Workoutplan;
 
 public class TrainingDayMapper {
 	
-	DataBaseHelper myDBHelper;
-	String sql;
+	private DataBaseHelper myDBHelper;
+	private String sql;
 	
+	private Context context = null;
+	private static WorkoutplanMapper wMapper= null;
+	private static PerformanceTargetMapper pMapper = null;
+	private static ExerciseMapper eMapper = null;
+		
 	public TrainingDayMapper (Context context){
-		myDBHelper = new DataBaseHelper(context);
-		try {	 
-	       	myDBHelper.createDataBase();
-	 	} catch (IOException ioe) {
-	 		throw new Error("Unable to create database");
-	 	}
-	 	try {
-	 		myDBHelper.openDataBase();
-	 	}catch(SQLException sqle){
-	 		throw sqle;
-	 	}
+		myDBHelper = DataBaseHelper.getInstance(context);
+		
+		this.context = context;
+		if (wMapper == null) wMapper= new WorkoutplanMapper(context);
 	}
 		
-	// Hinzufügen von Trainingstagen
-	public void add(Editable d){
+	/**
+	 * Add a TrainingDay to the database
+	 * 
+	 * @param trainingDayName
+	 */
+	public void add(TrainingDay trainingDay){
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		int id = 1;
+		if (trainingDay.getId() == 0){
+			sql = "SELECT MAX(TrainingDay_Id) FROM TrainingDay";
+			Cursor cursor = db.rawQuery(sql, null);
+			if (cursor.moveToFirst()){
+				if (!cursor.isNull(0)){
+					id = Integer.parseInt(cursor.getString(0));
+					id++;
+				}
+			}	
+		}else{
+			id = trainingDay.getId();
+		}
+		sql = "INSERT INTO TrainingDay (TrainingDay_Id, TrainingDayName) VALUES (" + id + ", '"+ trainingDay.getName() + "')";
+		db.execSQL(sql);	
+	}
+	
+	public ArrayList<Workoutplan> getWorkoutplansFromTrainingDays(int trainingDayId){
+		ArrayList<Workoutplan> workoutplanList = new  ArrayList<Workoutplan>();
 		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "INSERT INTO TrainingDay (TrainingDayName) VALUES ('"+ d + "')";
-		db.execSQL(sql);
-		db.close();
+		sql = "SELECT Workoutplan_Id FROM WorkoutplanHasTrainingDay WHERE TrainingDay_Id = " + String.valueOf(trainingDayId);
+		
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			do{
+				workoutplanList.add(wMapper.getWorkoutPlanById(cursor.getInt(0)));
+			}while(cursor.moveToNext());
+		}
+		cursor.close();
+		return workoutplanList;
+	}
+	
+	public ArrayList<Exercise> getExercisesFromTrainingDay(int trainingDayId){
+		ArrayList<Exercise> workoutplanList = new  ArrayList<Exercise>();
+		if (eMapper == null) eMapper = new ExerciseMapper(context);
+		
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "SELECT Exercise_Id FROM TrainingDayHasExercise  WHERE TrainingDay_Id = " + trainingDayId;
+		
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			do{
+				workoutplanList.add(eMapper.getExerciseById(cursor.getInt(0)));
+			}while(cursor.moveToNext());
+		}
+		cursor.close();
+		return workoutplanList;
 	}
 	
 	/**
@@ -47,7 +91,7 @@ public class TrainingDayMapper {
 	 * @return ArrayList<TrainingDay>
 	 * @author Eric Schmidt & Florian Blessing
 	 */
-	public ArrayList<TrainingDay> getAll(int workoutplanId) {
+	public ArrayList<TrainingDay> getAllTrainingDaysFromWorkoutplan(int workoutplanId) {
 		ArrayList<TrainingDay> trainingdayList = new ArrayList<TrainingDay>();
 		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
@@ -56,40 +100,55 @@ public class TrainingDayMapper {
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
 			do{
-				TrainingDay d = getTrainingDayById(Integer.parseInt(cursor.getString(0)));
-				d.setTrainingDayHasWorkoutplanId(cursor.getInt(1));
-				trainingdayList.add(d);
+				TrainingDay trainingDay = getTrainingDayById(cursor.getInt(0));
+				trainingdayList.add(trainingDay);
 			}while(cursor.moveToNext());
 		}
-		db.close();
+		
+		cursor.close();
 		return trainingdayList;
 	}
-	// Löschen von Trainingstagen
+	
+	/**
+	 * Löschen von Trainingstagen
+	 * @param d
+	 */
 	public void delete(TrainingDay d){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "DELETE * FROM TrainingDay WHERE *";
-		db.close();
-		
+		sql = "DELETE FROM TrainingDay WHERE TrainingDay_Id = " + d.getId();
+		db.execSQL(sql);
+			
 	}
-	// Trainingstag updaten , z.B nach einer Änderung von einem Trainingstag
-	public TrainingDay update(TrainingDay d){
+	
+	/**
+	 * Trainingstag updaten , z.B nach einer Änderung von einem Trainingstag
+	 * @param t
+	 * @return
+	 */
+	public TrainingDay update(TrainingDay t){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "UPDATE TrainingDay SET * WHERE *";
-		db.close();
-		return d;
+		sql = "UPDATE TrainingDay SET TrainingDayName='" + t.getName() +  "' WHERE TrainingDay_Id=" + t.getId();
+		db.execSQL(sql);
+		
+		return t;
 	}
+	
 	public TrainingDay getTrainingDayById(int id){
-		TrainingDay d = new TrainingDay();
+		TrainingDay trainingDay = new TrainingDay();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
+		if (pMapper == null) pMapper = new PerformanceTargetMapper(context);
+		
 	    sql = "SELECT TrainingDay_Id, TrainingDayName FROM TrainingDay WHERE TrainingDay_Id = " + id;
 	    Cursor cursor = db.rawQuery(sql, null);
 	    if (cursor.moveToFirst()){
-		    d.setId(Integer.parseInt(cursor.getString(0)));
-		    d.setName(cursor.getString(1));
+		    trainingDay.setId(Integer.parseInt(cursor.getString(0)));
+		    trainingDay.setWorkoutplanList(getWorkoutplansFromTrainingDays(trainingDay.getId()));
+		    trainingDay.setName(cursor.getString(1));
+		    trainingDay.setExerciseList(getExercisesFromTrainingDay(trainingDay.getId()));
+		    trainingDay.setPerformanceTargetList(pMapper.getPerformanceTargetByTrainingDay(trainingDay));
 	    }
-	    db.close();
-	    return d;
-
+	    cursor.close();
+	    return trainingDay;
 	}
 	
 	public ArrayList<TrainingDay> getAllTrainingDay() {
@@ -101,35 +160,119 @@ public class TrainingDayMapper {
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
 			do{
-				TrainingDay d = new TrainingDay();
-				d.setId(Integer.parseInt(cursor.getString(0)));
-				d.setName(cursor.getString(1));
-				trainingdayList.add(d);
+				trainingdayList.add(getTrainingDayById(cursor.getInt(0)));
 			}while(cursor.moveToNext());
 		}
-		db.close();
+		
+		cursor.close();
 		return trainingdayList;
 	}
-	public void ExerciseAddToTrainingDay(int trainingsDayId, int exerciseId, Editable ETW, Editable ETS) {
+	
+	public ArrayList<Integer> getTrainingDayIdsByExercise(int exerciseId){
+		ArrayList<Integer> trainingdayList = new ArrayList<Integer>();
+		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		String sql = "INSERT INTO TrainingDayHasExercise (TrainingDay_Id, Exercise_Id) VALUES (" + trainingsDayId +","+exerciseId+")";
-		String sql2 = "INSERT INTO PerformanceTarget (TrainingDay_Id, Exercise_Id, RepetitionTarget, SetTarget) VALUES  (" + trainingsDayId +","+exerciseId+", " + ETW + ","+ETS+")";
-		db.execSQL(sql);
-		db.execSQL(sql2);
-		db.close();
-	}
-	public void exerciseDeleteFromTrainingDay(int trainingDayHasExerciseId) {
-		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql ="DELETE FROM TrainingDayHasExercise WHERE TrainingstagHatUebungId = " +trainingDayHasExerciseId + "";
-		db.execSQL(sql);
-		db.close();
+		sql = "SELECT TrainingDay_Id FROM TrainingDayHasExercise WHERE Exercise_Id =" + exerciseId;
+		
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			do{
+				trainingdayList.add(cursor.getInt(0));
+			}while(cursor.moveToNext());
+		}
+		
+		cursor.close();
+		return trainingdayList;
 	}
 	
-	public void deleteTrainingDayFromWorkoutplan(int trainingDayId, int workoutplanId, int primarykey) {
+	/**
+	 * Add a Exercise to a trainingDay and performanceTarget
+	 * 
+	 * @param trainingsDayId
+	 * @param exerciseId
+	 * @param eTargetSetCount
+	 * @param eTargetRepCount
+	 */
+	public void addExerciseToTrainingDayAndPerformanceTarget(int trainingsDayId, int exerciseId, int eTargetSetCount,  int eTargetRepCount) {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "DELETE FROM WorkoutplanHasTrainingDay WHERE TrainingDay_Id=" + trainingDayId + " AND Workoutplan_Id=" + workoutplanId + " AND WorkoutplanHasTrainingDay_Id=" + primarykey +"";
+		sql = "INSERT INTO TrainingDayHasExercise (TrainingDay_Id, Exercise_Id) VALUES (" + trainingsDayId +","+exerciseId+")";
 		db.execSQL(sql);
-		db.close();
+		/**
+		 * Idee: Weiteres Attribut in TrainingDayHasExercise : PerformanceTarget Id um jede Übung einzeln anzusprechen
+		 */
+		sql= "INSERT INTO PerformanceTarget (TrainingDay_Id, Exercise_Id, RepetitionTarget, SetTarget) VALUES  (" + trainingsDayId +","+exerciseId+", " + eTargetRepCount + ","+eTargetSetCount+")";
+		db.execSQL(sql);
+		
+	}
+	
+	/**
+	 * Add a Exercise to a trainingDay
+	 * 
+	 * @param trainingsDayId
+	 * @param exerciseId
+	 * @param eTargetSetCount
+	 * @param eTargetRepCount
+	 */
+	public void addExerciseToTrainingDay(int trainingsDayId, int exerciseId) {
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "INSERT INTO TrainingDayHasExercise (TrainingDay_Id, Exercise_Id) VALUES (" + trainingsDayId +","+exerciseId+")";
+		db.execSQL(sql);
+
+	}
+	
+	/**
+	 * Check if a Exercise was already added to a trainingDay
+	 * 
+	 * @param trainingDayId
+	 * @param e
+	 */
+	public boolean checkIfExist(int trainingDayId, int exerciseId){
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		boolean exist = false;
+		
+		sql = "Select * FROM TrainingDayHasExercise WHERE TrainingDay_Id = " + trainingDayId +" AND Exercise_Id = "+ exerciseId;
+		Cursor cursor = db.rawQuery(sql, null);
+	    if (cursor.moveToFirst()) {
+	    	do {
+		              exist = true;	
+		              return exist;
+		        } while (cursor.moveToNext());
+	    }
+	    cursor.close();
+	    
+	    return exist;
+	}
+	
+	public void deleteExerciseFromTrainingDay(int trainingDayId, Exercise e) {
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql ="DELETE FROM TrainingDayHasExercise WHERE TrainingDay_Id = " + trainingDayId + " AND Exercise_Id = " + e.getId();
+		db.execSQL(sql);	
+	}
+	
+	/**
+	 * Delete a trainingDay from one Workoutplan
+	 * 
+	 * @param trainingDayId
+	 * @param workoutplanId
+	 * @param primarykey
+	 */
+	public void deleteTrainingDayFromWorkoutplan(TrainingDay trainingDay, int workoutplanId) {
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "DELETE FROM WorkoutplanHasTrainingDay WHERE TrainingDay_Id=" + trainingDay.getId() 
+				+ " AND Workoutplan_Id=" + workoutplanId;
+		db.execSQL(sql);
+	}
+	
+	/**
+	 * Delete a trainingDay from all workoutplans
+	 * 
+	 * @param trainingDayId
+	 * @author Eric Schmidt
+	 */
+	public void deleteTrainingDayFromAllWorkoutplan(int trainingDayId){
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "DELETE FROM WorkoutplanHasTrainingDay WHERE TrainingDay_Id=" + trainingDayId;
+		db.execSQL(sql);
 	}
 	
 	public ArrayList<TrainingDay> searchKeyString(String key){
@@ -148,9 +291,8 @@ public class TrainingDayMapper {
 	            } while (cursor.moveToNext());
 	        }
 	   
-	        cursor.close();
-	        
-
+	    cursor.close();
+	    
 	    return trainingDayList;
 	}
 }

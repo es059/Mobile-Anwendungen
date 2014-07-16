@@ -1,42 +1,31 @@
 package com.workout.log.db;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.workout.log.bo.Exercise;
-import com.workout.log.bo.PerformanceActual;
-import com.workout.log.bo.PerformanceTarget;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.PerformanceActual;
 
 /**
  * Mapper Class of BusinessObject PerformanceTarget
  * 
  * @author Eric Schmidt
  */
+@SuppressLint("SimpleDateFormat") 
 public class PerformanceActualMapper {
 	private DataBaseHelper myDBHelper;
 	private String sql;
 	
 	public PerformanceActualMapper(Context context){
-		myDBHelper = new DataBaseHelper(context);
-		try {	 
-	       	myDBHelper.createDataBase();
-	 	} catch (IOException ioe) {
-	 		throw new Error("Unable to create database");
-	 	}
-	 	try {
-	 		myDBHelper.openDataBase();
-	 	}catch(SQLException sqle){
-	 		throw sqle;
-	 	}
+		myDBHelper = DataBaseHelper.getInstance(context);
 	}
 	
 	/**
@@ -50,8 +39,21 @@ public class PerformanceActualMapper {
 			SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 			sql = "DELETE FROM PerformanceActual WHERE PerformanceActual_Id =" + performanceActualId;
 			db.execSQL(sql);
-			db.close();
+			
 		}
+	}
+	
+	/**
+	 * Delete all Entries in PerformanceActual where the given exercise occurs
+	 * 
+	 * @param e the exercise to be deleted
+	 * @author Eric Schmidt
+	 */
+	public void deleteExerciseFromPerfromanceActual(Exercise e){
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "DELETE FROM PerformanceActual WHERE Exercise_Id =" + e.getId() + "";
+		db.execSQL(sql);
+		
 	}
 	
 	/**
@@ -61,7 +63,6 @@ public class PerformanceActualMapper {
 	 * @return
 	 */
 	public ArrayList<String> getAllDates(Exercise exercise){
-		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		ArrayList<String> date = new ArrayList<String>();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 		sql = "SELECT DISTINCT TimestampActual FROM PerformanceActual WHERE Exercise_Id ="
@@ -72,7 +73,8 @@ public class PerformanceActualMapper {
 				date.add(cursor.getString(0));
 			}while(cursor.moveToNext());
 		}
-		db.close();
+		cursor.close();
+		
 		return date;
 	}
 	/**
@@ -90,24 +92,31 @@ public class PerformanceActualMapper {
 		ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 		for(String item : strings){
-			sql = "SELECT MAX(RepetitionActual), MAX(WeightActual) FROM PerformanceActual WHERE"
+			sql = "SELECT RepetitionActual, WeightActual, SetActual, PerformanceActual_Id FROM PerformanceActual WHERE"
 					+ " TimestampActual = '" + item + "' AND"
-					+ " Exercise_Id = " + exercise.getId();
+					+ " Exercise_Id = " + exercise.getId()
+					+ " ORDER BY WeightActual DESC, RepetitionActual DESC";
 			cursor = db.rawQuery(sql, null);
 			if (cursor.moveToFirst()){
-				PerformanceActual performanceActual = new PerformanceActual();
-				performanceActual.setRepetition(cursor.getInt(0));
-				performanceActual.setWeight(cursor.getDouble(1));
-				try {
-					performanceActual.setTimestamp(sp.parse(item));
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-				performanceActualList.add(performanceActual);
+				do{
+					PerformanceActual performanceActual = new PerformanceActual();
+					performanceActual.setExercise(exercise);
+					if (cursor.getString(0) != null) performanceActual.setRepetition(cursor.getInt(0));
+					if (cursor.getString(1) != null) performanceActual.setWeight(cursor.getDouble(1));
+					performanceActual.setSet(cursor.getInt(2));
+					performanceActual.setId(cursor.getInt(3));
+					try {
+						performanceActual.setTimestamp(sp.parse(item));
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					performanceActualList.add(performanceActual);
+				}while(cursor.moveToNext());
 			}
+			cursor.close();
 		}
-	
-		db.close();
+		
+		
 		return performanceActualList;
 	}
 	
@@ -127,7 +136,8 @@ public class PerformanceActualMapper {
 		if (cursor.moveToFirst()){
 			trainingDays = cursor.getInt(0);
 		}
-		db.close();
+		cursor.close();
+		
 		return trainingDays;
 	}
 	
@@ -151,9 +161,9 @@ public class PerformanceActualMapper {
 			do {
 				PerformanceActual performanceActual = new PerformanceActual();
 				performanceActual.setId(cursor.getInt(0));
-				performanceActual.setRepetition(cursor.getInt(1));
+				if (cursor.getString(1) != null) performanceActual.setRepetition(cursor.getInt(1));
 				performanceActual.setSet(cursor.getInt(2));
-				performanceActual.setWeight(cursor.getDouble(3));
+				if (cursor.getString(3) != null) performanceActual.setWeight(cursor.getDouble(3));
 				try {
 					performanceActual.setTimestamp(sp.parse(cursor.getString(4)));
 				} catch (ParseException e) {
@@ -163,7 +173,8 @@ public class PerformanceActualMapper {
 				performanceActualList.add(performanceActual);
 			} while (cursor.moveToNext());
 		}
-		db.close();
+		cursor.close();
+		
 		return performanceActualList;
 	}
 	
@@ -176,7 +187,7 @@ public class PerformanceActualMapper {
 	 * @return ArrayList<PerformanceActual> a List of PerformanceActual Objects from the last Workout
 	 * @author Eric Schmidt
 	 */
-	public ArrayList<PerformanceActual> getLastPerformanceActual(Calendar currentDate, Exercise currentExercise){
+	public ArrayList<PerformanceActual> getPreviousPerformanceActual(Calendar currentDate, Exercise currentExercise){
 		ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 		Cursor cursor;
@@ -199,9 +210,9 @@ public class PerformanceActualMapper {
 			do{
 				PerformanceActual performanceActual = new PerformanceActual();
 				performanceActual.setId(cursor.getInt(0));
-				performanceActual.setRepetition(cursor.getInt(1));
+				if (cursor.getString(1) != null) performanceActual.setRepetition(cursor.getInt(1));
 				performanceActual.setSet(cursor.getInt(2));
-				performanceActual.setWeight(cursor.getDouble(3));
+				if (cursor.getString(3) != null) performanceActual.setWeight(cursor.getDouble(3));
 				try {
 					performanceActual.setTimestamp(sp.parse(cursor.getString(4)));
 				} catch (ParseException e) {
@@ -213,7 +224,8 @@ public class PerformanceActualMapper {
 		}else if (dayCount == 100){
 			c.add(Calendar.DATE, 100);
 		}
-		db.close();
+		cursor.close();
+		
 		return performanceActualList;
 		
 	}
@@ -250,9 +262,9 @@ public class PerformanceActualMapper {
 			do{
 				PerformanceActual performanceActual = new PerformanceActual();
 				performanceActual.setId(cursor.getInt(0));
-				performanceActual.setRepetition(cursor.getInt(1));
+				if (cursor.getString(1) != null) performanceActual.setRepetition(cursor.getInt(1));
 				performanceActual.setSet(cursor.getInt(2));
-				performanceActual.setWeight(cursor.getDouble(3));
+				if (cursor.getString(3) != null) performanceActual.setWeight(cursor.getDouble(3));
 				try {
 					performanceActual.setTimestamp(sp.parse(cursor.getString(4)));
 				} catch (ParseException e) {
@@ -262,7 +274,8 @@ public class PerformanceActualMapper {
 				performanceActualList.add(performanceActual);
 			}while(cursor.moveToNext());
 		}
-		db.close();
+		cursor.close();
+		
 		return performanceActualList;
 		
 	}
@@ -274,7 +287,7 @@ public class PerformanceActualMapper {
 	 *  @return Exercise
 	 *  @author Eric Schmidt
 	 */
-	public PerformanceActual savePerformanceActual(PerformanceActual performanceActual){
+	public void addPerformanceActual(PerformanceActual performanceActual, Date date){
 		int id = 1;
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
@@ -286,24 +299,22 @@ public class PerformanceActualMapper {
 					id = Integer.parseInt(cursor.getString(0));
 					id++;
 				}
-			}	
+			}
+			cursor.close();
 		}else{
 			id = performanceActual.getId();
 		}
 		sql= "INSERT OR REPLACE INTO PerformanceActual "
 				+ "(PerformanceActual_Id, RepetitionActual, SetActual, "
 				+ "WeightActual, TimestampActual, Exercise_Id) "
-				+ "VALUES (" + id + "," + performanceActual.getRepetition() 
+				+ "VALUES (" + id + "," +((performanceActual.getRepetition() == -1) ? null :  performanceActual.getRepetition()) 
 				+ "," + performanceActual.getSet()
-				+ "," + performanceActual.getWeight() + ",'" + sp.format(new Date())
+				+ "," + ((performanceActual.getWeight() == -1) ? null : performanceActual.getWeight())
+				+ ",'" + sp.format(date)
 				+ "'," + performanceActual.getExercise().getId() + ")";
 				
 		db.execSQL(sql);
-		performanceActual.setId(id);
-		performanceActual.setTimestamp(new Date());
-		db.close();
-		return performanceActual;
-		
+		db.close();		
 	}
 	
 }

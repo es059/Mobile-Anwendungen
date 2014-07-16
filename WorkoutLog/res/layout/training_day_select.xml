@@ -28,7 +28,7 @@
 			    <ListView
 			        android:id="@+id/trainingDay_select_list"
 			        android:layout_width="match_parent"
-			        android:layout_height="wrap_content"
+			        android:layout_height="fill_parent"
 			        android:layout_below="@+id/training_day_select_fragment"
 			        android:layout_centerHorizontal="true"
 			        android:longClickable="true" >

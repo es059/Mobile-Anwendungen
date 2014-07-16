@@ -1,14 +1,14 @@
 package com.workout.log.customLayout;
 
-import com.example.workoutlog.R;
-import com.workout.log.bo.PerformanceActual;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.example.workoutlog.R;
+import com.workout.log.bo.PerformanceActual;
 
 public class ListViewPerformanceActual extends RelativeLayout{
 	private TextView set;
@@ -29,11 +29,15 @@ public class ListViewPerformanceActual extends RelativeLayout{
 	}
 	public void setPerfromanceActual(PerformanceActual performanceActual){
 		this.set.setText(String.valueOf(performanceActual.getSet()));
-		if (performanceActual.getRepetition() != 0){
+		if (performanceActual.getRepetition() != -1){
 			this.repetition.setText(String.valueOf(performanceActual.getRepetition()));
+		}else{
+			this.repetition.setText("");
 		}
-		if (performanceActual.getWeight() != 0.0){
+		if (performanceActual.getWeight() != -1){
 			this.weight.setText(String.valueOf(performanceActual.getWeight()));
+		}else{
+			this.weight.setText("");
 		}
 	}
 	

@@ -3,80 +3,28 @@
     package="com.example.workoutlog"
     android:versionCode="1"
     android:versionName="1.0" >
-
+    
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    
     <uses-sdk
-        android:minSdkVersion="16"
+        android:minSdkVersion="14"
         android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_icon"
         android:label="@string/app_name"
+        android:configChanges="orientation|keyboardHidden|screenSize"
         android:theme="@style/CustomActionBarTheme" >
-        <activity
-            android:name="com.workout.log.ExerciseOverview"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name="com.workout.log.ExerciseSpecific"
-            android:label="@string/title_activity_exercise_specific"
-            android:parentActivityName="com.workout.log.ExerciseOverview" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.workout.log.MainActivity" />
-        </activity>
-        <activity
-            android:name="com.workout.log.ExerciseAdd"
-            android:label="@string/title_activity_add" >
-        </activity>
-        <activity
-            android:name="com.workout.log.WorkoutplanAdd"
-            android:label="@string/title_activity_workoutplan_add"
-            android:parentActivityName="com.workout.log.ExerciseOverview" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.workout.log.ExerciseOverview" />
-        </activity>
-        <activity
-            android:name="com.workout.log.TrainingDayAdd"
-            android:label="@string/title_activity_training_day_add" >
-        </activity>
-        <activity
-            android:name="com.workout.log.WorkoutplanSelect"
-            android:label="@string/title_activity_workout_select" >
-        </activity>
-        <activity android:name="com.workout.log.HelperActivity" >
+        <activity 
+            android:windowSoftInputMode="adjustPan"
+            android:name="com.workout.log.HelperActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.workout.log.GraphActivity"
-            android:label="@string/title_activity_graph" >
-        </activity>
         <activity android:name="org.achartengine.GraphicalActivity"/> 
-        
-        <activity android:name="com.workout.log.ManageTrainingDays" 
-            android:label="@string/title_activity_training_day_add">   
-        </activity>
-		<activity 
-		    android:name="com.workout.log.ExerciseAddToTrainingDay" 
-		    android:label="@string/title_activity_exercise_add_to_training_day">    
-		</activity>
-		<activity 
-		    android:name="com.workout.log.TrainingDayExerciseOverview" 
-		    android:label="@string/title_activity_training_day_exercise_overview">   
-		</activity>
-		<activity 
-		    android:name="com.workout.log.ManageWorkoutplan" 
-		    android:label="@string/title_activity_manage_workoutplan">  
-		</activity>
-		<activity 
-		    android:name="com.workout.log.TrainingDayAddToWorkoutplan" 
-		    android:label="@string/title_activity_training_day_add_to_workoutplan">  
-		</activity>
     </application>
-
 </manifest>

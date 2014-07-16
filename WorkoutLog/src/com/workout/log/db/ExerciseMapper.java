@@ -1,95 +1,77 @@
 package com.workout.log.db;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-import com.workout.log.bo.Exercise;
-import com.workout.log.bo.Workoutplan;
-
 import android.content.Context;
-import android.database.CursorJoiner.Result;
-import android.database.sqlite.SQLiteDatabase;
 import android.database.Cursor;
-import android.database.SQLException;
-import android.text.Editable;
-import android.util.Log;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.workout.log.bo.Exercise;
 
 public class ExerciseMapper {
-	
 	private DataBaseHelper myDBHelper;
 	private String sql;
-	private int mgID;
+	private int muscleGroupID;
+	
+	private static MuscleGroupMapper mMapper = null;
+	private static TrainingDayMapper tMapper = null;
+	private static PerformanceActualMapper paMapper = null;
+	private static PerformanceTargetMapper ptMapper = null;
 	
 	public ExerciseMapper(Context context){
-		myDBHelper = new DataBaseHelper(context);
-		try {	 
-	       	myDBHelper.createDataBase();
-	 	} catch (IOException ioe) {
-	 		throw new Error("Unable to create database");
-	 	}
-	 	try {
-	 		myDBHelper.openDataBase();
-	 	}catch(SQLException sqle){
-	 		throw sqle;
-	 	}
+		myDBHelper = DataBaseHelper.getInstance(context);
+	    if (mMapper == null) mMapper = new MuscleGroupMapper(context);
+	    if (tMapper == null) tMapper = new TrainingDayMapper(context);
+	    if (paMapper == null) paMapper = new PerformanceActualMapper(context);
+	    if (ptMapper == null) ptMapper= new PerformanceTargetMapper(context);
 	}
 	
-	public void add(String a, String b){
-
+	public void add(String exerciseName, String muscleGroup){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "SELECT MuscleGroup_Id FROM MuscleGroup WHERE MuscleGroupName='" + b + "'";
+		sql = "SELECT MuscleGroup_Id FROM MuscleGroup WHERE MuscleGroupName='" + muscleGroup + "'";
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
-			mgID = Integer.parseInt(cursor.getString(0));
+			muscleGroupID = Integer.parseInt(cursor.getString(0));
 		}
-		String sql1 = "INSERT INTO Exercise (ExerciseName, MuscleGroup_Id ) VALUES ('" +a +"', " + mgID + ")";
-		db.execSQL(sql1);
-		db.close();
+		sql = "INSERT INTO Exercise (ExerciseName, MuscleGroup_Id ) VALUES ('" + exerciseName +"', " + muscleGroupID + ")";
+		db.execSQL(sql);
+		cursor.close();
 	}
-
-
-	public void add(Exercise e){
-		int id = 0;
+	
+	public void add(Exercise exercise){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "SELECT MAX(Exercise_id) FROM Exercise";
+		sql = "SELECT MuscleGroup_Id FROM MuscleGroup WHERE MuscleGroupName='" + exercise.getMuscleGroup().getName() + "'";
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
-			id = Integer.parseInt(cursor.getString(1));
+			muscleGroupID = Integer.parseInt(cursor.getString(0));
 		}
-		sql = "INSERT INTO Exercise (Exercise_Id) VALUES (id)";
+		sql = "INSERT INTO Exercise (Exercise_Id, ExerciseName, MuscleGroup_Id ) VALUES ("+ exercise.getId() + ", '" + exercise.getName() +"', " + muscleGroupID + ")";
 		db.execSQL(sql);
-		e.setID(id);
-		db.close();
-	}
-	
-	public void delete(int e){	
-		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "DELETE FROM Exercise WHERE Exercise_Id =" + e + "";
-		db.execSQL(sql);
-		db.close();
-	}
-	
-	public ArrayList<Exercise> getAll() {
-		ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
-		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "SELECT * FROM Exercise";
-		Cursor cursor = db.rawQuery(sql, null);
-		if (cursor.moveToFirst()) {
-            do {
-              Exercise e = new Exercise();
-              e.setID(Integer.parseInt(cursor.getString(1)));
-              e.setName(cursor.getString(2));
-              exerciseList.add(e);
-            	
-            } while (cursor.moveToNext());
-        }
-   
-        cursor.close();
-        
-
-    return exerciseList;
+		cursor.close();
 		
 	}
+	
+	public void delete(Exercise e){	
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "DELETE FROM Exercise WHERE Exercise_Id =" + e.getId() + "";
+		db.execSQL(sql);
+		
+	}
+	
+	/**
+	 * This method will delete one Exercise from all trainingdays by using the table
+	 * TrainingDayHasExercise.
+	 * 
+	 * @param e the Exercise to be deleted
+	 * @author Eric Schmidt
+	 */
+	public void deleteExerciseFromAllTrainingDays(Exercise e){
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "DELETE FROM TrainingDayHasExercise WHERE Exercise_Id =" + e.getId() + "";
+		db.execSQL(sql);
+		
+	}
+	
 	public ArrayList<String> getAllbyString() {
 		ArrayList<String> exerciseList = new ArrayList<String>();
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
@@ -104,21 +86,33 @@ public class ExerciseMapper {
             	
             } while (cursor.moveToNext());
         }
-   
         cursor.close();
         
-
-    return exerciseList;
-		
+        return exerciseList;	
 	}
 	
-	public void update(int ID, String bezeichnung){
+	/**
+	 * Update the exercise with the given Information
+	 * 
+	 * @param exerciseId
+	 * @param bezeichnung
+	 * @param muscleGroup
+	 * 
+	 * @author Eric Schmidt
+	 */
+	public void update(int exerciseId, String bezeichnung, String muscleGroup){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		String sql = "UPDATE Exercise SET ExerciseName='" + bezeichnung +  "' WHERE Exercise_Id=" + ID + "";
+		sql = "SELECT MuscleGroup_Id FROM MuscleGroup WHERE MuscleGroupName='" + muscleGroup + "'";
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			muscleGroupID = Integer.parseInt(cursor.getString(0));
+		}
+		sql = "UPDATE Exercise SET ExerciseName='" + bezeichnung +  "', MuscleGroup_Id=" + muscleGroupID + 
+				" WHERE Exercise_Id=" + exerciseId + "";
 		db.execSQL(sql);
-		db.close();
 		
-	
+		
+		cursor.close();
 	}
 	
 	/**
@@ -131,47 +125,31 @@ public class ExerciseMapper {
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 	    ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
 	    
-	    sql= "SELECT Exercise_Id, ExerciseName FROM Exercise";
+	    sql= "SELECT Exercise_Id FROM Exercise";
 	    Cursor cursor = db.rawQuery(sql, null);
 	    if ( cursor.moveToFirst()){
 	    	do{
-	            Exercise e = new Exercise();
-	            e.setID(cursor.getInt(0));
-	            e.setName(cursor.getString(1));
-	            exerciseList.add(e);
+	    		exerciseList.add(getExerciseById(cursor.getInt(0)));
 	    	}while(cursor.moveToNext());
 	    }
-	    db.close();
+	    
+	    cursor.close();
 	    return exerciseList;
 	}
 	
 	public ArrayList<Exercise> searchKeyString(String key){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 	    ArrayList<Exercise> exerciseList = new ArrayList<Exercise>();
-	   // Log.d("searchKeyString");
-
-	        // Alles Anfragen auswählen
-	     //   String selectQuery = "SELECT  * FROM Uebung WHERE Bezeichung="+"'+ key +'";
-	     String selectQuery =  "SELECT * FROM Exercise WHERE ExerciseName LIKE '%" + key + "%'";
-	        Cursor cursor = db.rawQuery(selectQuery, null);
-	        // you can change it to
-	        // db.rawQuery("SELECT * FROM "+table+" WHERE KEY_KEY LIKE ?", new String[] {key+"%"});
-	        // if you want to get everything starting with that key value
-
-	        // looping through all rows and adding to list
-	        if (cursor.moveToFirst()) {
-	            do {
-	              Exercise e = new Exercise();
-	              e.setID(Integer.parseInt(cursor.getString(1)));
-	              e.setName(cursor.getString(2));
-	              exerciseList.add(e);
-	            	
-	            } while (cursor.moveToNext());
-	        }
-	   
-	        cursor.close();
-	        
-
+	    String selectQuery =  "SELECT * FROM Exercise WHERE ExerciseName LIKE '%" + key + "%'";
+	    Cursor cursor = db.rawQuery(selectQuery, null);
+	    
+        if (cursor.moveToFirst()) {
+            do {
+            	exerciseList.add(getExerciseById(cursor.getInt(1)));	
+            } while (cursor.moveToNext());
+        }
+        
+	    cursor.close();
 	    return exerciseList;
 	}
 	
@@ -187,18 +165,16 @@ public class ExerciseMapper {
 		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		
-		sql = "SELECT Exercise_Id,TrainingstagHatUebungId  FROM TrainingDayHasExercise WHERE TrainingDay_Id = "
+		sql = "SELECT Exercise_Id,TrainingstagHasExercise_Id FROM TrainingDayHasExercise WHERE TrainingDay_Id = "
 				+ trainingDayId;
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
 			do{
-				Exercise exercise = getExerciseById(Integer.parseInt(cursor.getString(0)));
-				exercise.setTrainingDayHasExerciseId(cursor.getInt(1));
-				exerciseList.add(exercise);
-				System.out.println(exercise.getId() + exercise.getName() + exercise.getTrainingDayHasExerciseId());
+				exerciseList.add(getExerciseById(cursor.getInt(0)));
 			}while(cursor.moveToNext());
 		}
-		db.close();
+		cursor.close();
+		
 		return exerciseList;
 	}
 	/**
@@ -216,15 +192,13 @@ public class ExerciseMapper {
 			sql = "SELECT Exercise_Id, ExerciseName FROM Exercise WHERE Exercise_Id = " + e.getId() + " AND MuscleGroup_Id = " + muscleGroupId;
 			Cursor cursor = db.rawQuery(sql, null);
 				if (cursor.moveToFirst()){
-					Exercise exercise = new Exercise();
-				    exercise.setID(Integer.parseInt(cursor.getString(0)));
-				    exercise.setName(cursor.getString(1));
-				    exerciseList.add(exercise);
+					exerciseList.add(getExerciseById(cursor.getInt(0)));
 				}
+			cursor.close();
 		}
-		
 		return exerciseList;
 	}
+	
 	/**
 	 * Get one Exercise by an id
 	 * 
@@ -234,14 +208,30 @@ public class ExerciseMapper {
 	 */
 	 public Exercise getExerciseById(int exerciseId){
 		    Exercise exercise = new Exercise();
+
 		    SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
-		    sql = "SELECT Exercise_Id, ExerciseName FROM Exercise WHERE Exercise_Id = " + exerciseId;
+		    sql = "SELECT * FROM Exercise WHERE Exercise_Id = " + exerciseId;
 		    Cursor cursor = db.rawQuery(sql, null);
 		    if (cursor.moveToFirst()){
-			    exercise.setID(Integer.parseInt(cursor.getString(0)));
-			    exercise.setName(cursor.getString(1));
+		    	exercise.setMuscleGroup(mMapper.getMuscleGroupById(cursor.getInt(0)));
+		    	exercise.setID(Integer.parseInt(cursor.getString(1)));
+		    	exercise.setName(cursor.getString(2));
 		    }
-		    db.close();
+		    cursor.close();
+		    
 		    return exercise;
 	}
+	 
+	/**
+	 * To get better performance call this method only if you need 
+	 * the trainingDays, performanceActualList and PerforamnceTargetList of a Exercise.
+	 * This is only needed if you want to undo a exercise 
+	 */
+	 public Exercise addAdditionalInfo(Exercise exercise){
+		 exercise.setTrainingDayIdList(tMapper.getTrainingDayIdsByExercise(exercise.getId()));
+	     exercise.setPerformanceActualList(paMapper.getAllPerformanceActual(exercise));
+	     exercise.setPerformanceTargetList(ptMapper.getAllPerformanceTargetByExercise(exercise));
+	     
+	     return exercise;
+	 }
 }

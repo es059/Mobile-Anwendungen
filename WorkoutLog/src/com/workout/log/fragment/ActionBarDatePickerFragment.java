@@ -1,29 +1,27 @@
 package com.workout.log.fragment;
 
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
+
+import android.annotation.SuppressLint;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.workoutlog.R;
 import com.workout.log.ExerciseSpecific;
 import com.workout.log.bo.PerformanceActual;
 import com.workout.log.db.PerformanceActualMapper;
 
-import android.app.Fragment;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
-
+@SuppressLint("SimpleDateFormat")
 public class ActionBarDatePickerFragment extends Fragment implements OnClickListener{
 	private TextView date;
 	private ImageButton next;
@@ -46,7 +44,7 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 		dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 		
 		paMapper = new PerformanceActualMapper(getActivity());
-		exerciseSpecific = (ExerciseSpecific) getActivity();
+		exerciseSpecific = (ExerciseSpecific) getActivity().getSupportFragmentManager().findFragmentByTag("ExerciseSpecific");
 		
 		next = (ImageButton) view.findViewById(R.id.Next);
 		previous = (ImageButton) view.findViewById(R.id.Previous);
@@ -58,6 +56,7 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 		
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -66,7 +65,10 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 		case R.id.Next:
 			performanceActualList = paMapper.getNextPerformanceActual(calendar, exerciseSpecific.getExercise());
 			if (!performanceActualList.isEmpty()){
+				exerciseSpecific.savePerformanceActual();
 				exerciseSpecific.updateListView(performanceActualList);
+				exerciseSpecific.closeKeyboard();
+				
 				calendar.setTime(performanceActualList.get(0).getTimestamp());
 				setDate();
 			}else{
@@ -80,13 +82,12 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 			}
 			break;
 		case R.id.Previous:
-			performanceActualList = paMapper.getLastPerformanceActual(calendar, exerciseSpecific.getExercise());
-			if (!performanceActualList.isEmpty()){
-				if (isCurrent){
-					exerciseSpecific.savePerformanceActual();
-					Toast.makeText(getActivity(), "Inhalte wurden gespeichert", Toast.LENGTH_SHORT).show();
-				}
+			performanceActualList = paMapper.getPreviousPerformanceActual(calendar, exerciseSpecific.getExercise());
+			if (!performanceActualList.isEmpty()){	
+				exerciseSpecific.savePerformanceActual();
 				exerciseSpecific.updateListView(performanceActualList);
+				exerciseSpecific.closeKeyboard();
+				
 				calendar.setTime(performanceActualList.get(0).getTimestamp());
 				setDate();
 			}else{
@@ -103,6 +104,7 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 	 * 
 	 * @author Eric Schmidt
 	 */
+	@SuppressWarnings("deprecation")
 	private void setDate(){
 		Calendar c = Calendar.getInstance();
 		if (String.valueOf(calendar.getTime().getDate()) == String.valueOf(c.getTime().getDate())){
@@ -115,6 +117,16 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 			next.setVisibility(View.VISIBLE);
 			isCurrent = false;
 		}
+	}
+	
+	/**
+	 * Returns the current Date
+	 * 
+	 * @return Date the current Date
+	 * @author Eric Schmidt
+	 */
+	public Date getDate(){
+		return calendar.getTime();
 	}
 	
 	/**
