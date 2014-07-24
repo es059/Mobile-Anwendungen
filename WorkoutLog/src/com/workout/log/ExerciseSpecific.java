@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.workoutlog.R;
+import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingRightInAnimationAdapter;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.SwipeToDelete.UndoBarController;
 import com.workout.log.SwipeToDelete.UndoItem;
@@ -223,7 +224,15 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 	 */
 	public void updateListView(ArrayList<PerformanceActual> pa) {
 		adapter = new PerformanceActualListAdapter(getActivity(), 0, pa);
-		exerciseListView.setAdapter(adapter);
+		
+		
+		/**
+		 * Enable animation of the ListView Items
+		 */
+		SwingRightInAnimationAdapter swingRightInAnimationAdapter = new SwingRightInAnimationAdapter(adapter);
+		swingRightInAnimationAdapter.setAbsListView(exerciseListView);
+		
+		exerciseListView.setAdapter(swingRightInAnimationAdapter);
 		performanceActualList = pa;
 	}
 
@@ -257,6 +266,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		data.putBoolean("SaveMode", saveMode);
 
 		exerciseOverview = new ExerciseOverview();
+		exerciseOverview.setSwipeAnimation(SwipeAnimation.Normal);
 		exerciseOverview.setArguments(data);
 
 		FragmentTransaction transaction = getFragmentManager()

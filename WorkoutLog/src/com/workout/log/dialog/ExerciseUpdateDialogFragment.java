@@ -124,7 +124,7 @@ public class ExerciseUpdateDialogFragment extends DialogFragment {
 	 */
 	public void updateListView(ArrayList<Exercise> List){
 		if (fragment instanceof ExerciseAdd){
-			((ExerciseAdd) fragment).updateListView(eMapper.getAllExercise());
+			((ExerciseAdd) fragment).updateListView(eMapper.getAllExercise(), true);
 		}else{
 			((ExerciseAddToTrainingDay) fragment).updateListView(eMapper.getAllExercise());
 		}

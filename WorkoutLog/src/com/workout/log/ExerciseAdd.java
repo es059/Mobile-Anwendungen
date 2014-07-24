@@ -18,6 +18,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.example.workoutlog.R;
+import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.SwipeToDelete.UndoBarController;
 import com.workout.log.SwipeToDelete.UndoItem;
@@ -93,7 +94,7 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 		exerciseListView = (ListView) getView().findViewById(R.id.add_exerciseList);
 		exerciseListView.setOnItemLongClickListener(this);
 		
-		updateListView(eMapper.getAllExercise());
+		updateListView(eMapper.getAllExercise(), false);
 		loadSwipeToDismiss();
 	}
 	
@@ -149,9 +150,9 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 	 * @author Eric Schmidt
 	 */
 	@SuppressWarnings("unchecked")
-	public void updateListView(ArrayList<Exercise> list){
+	public void updateListView(ArrayList<Exercise> list, boolean searchMode){
 		exerciseList = list;
-		new BackGroundTask(exerciseListView).execute(list);
+		new BackGroundTask(exerciseListView, searchMode).execute(list);
 	}
 	
 	/**
@@ -303,8 +304,10 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 		private MuscleGroupMapper mMapper = null;
 		
 		private ListView exerciseListView;
+		private boolean searchMode;
 
-		public BackGroundTask (ListView exerciseListView){	
+		public BackGroundTask (ListView exerciseListView, boolean searchMode){	
+			this.searchMode = searchMode;
 			this.exerciseListView = exerciseListView;
 		}
 
@@ -339,8 +342,17 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 	    protected void onPostExecute(ExerciseListWithoutSetsRepsAdapter result) {
 	        super.onPostExecute(result);
 
-	        if (result != null) exerciseListView.setAdapter(result);
-	        else exerciseListView.invalidateViews();
+	        if (result != null && searchMode == false){
+	          	/**
+	    		 * Enable animation of the ListView Items
+	    		 */
+	        	SwingBottomInAnimationAdapter swingButtonInAnimationAdapter = new SwingBottomInAnimationAdapter(result);
+	        	swingButtonInAnimationAdapter.setAbsListView(exerciseListView);
+	        	
+	        	exerciseListView.setAdapter(swingButtonInAnimationAdapter);
+	        }else if (result != null){
+	        	exerciseListView.setAdapter(result);
+	        }else exerciseListView.invalidateViews();
 	        
 	        getActivity().setProgressBarIndeterminateVisibility(false);
 	    }

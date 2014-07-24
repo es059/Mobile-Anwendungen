@@ -48,7 +48,7 @@ public class ExerciseSearchBarFragment extends Fragment{
 	        	ArrayList<Exercise> List = new ArrayList<Exercise>();
 	        	List = eMapper.searchKeyString(String.valueOf(s));
 	        	if (fragment instanceof ExerciseAdd){
-	        		((ExerciseAdd) fragment).updateListView(List);
+	        		((ExerciseAdd) fragment).updateListView(List, true);
 	        	}else{
 	        		((ExerciseAddToTrainingDay) fragment).updateListView(List);	
 	        	}

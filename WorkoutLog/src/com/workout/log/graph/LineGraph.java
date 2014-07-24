@@ -96,7 +96,7 @@ public class LineGraph{
 		    repetitionsRenderer.setPointStyle(PointStyle.CIRCLE);
 		    repetitionsRenderer.setLineWidth(5);
 		    repetitionsRenderer.setFillPoints(true);
-		    repetitionsRenderer.setShowLegendItem(true);
+		    repetitionsRenderer.setShowLegendItem(true); 
 	
 		    XYMultipleSeriesRenderer  mRenderer = new XYMultipleSeriesRenderer(2);
 		    mRenderer.setXLabels(0);
@@ -149,7 +149,7 @@ public class LineGraph{
 			/**
 			 * Scrolling
 			 */
-			mRenderer.setPanEnabled(true, false);
+			mRenderer.setPanEnabled(true, true);
 			/**
 			 * Diverse
 			 */
