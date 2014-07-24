@@ -12,17 +12,17 @@ import android.widget.TextView;
 import com.example.workoutlog.R;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.PerformanceTarget;
-import com.workout.log.data.ExerciseItem;
+import com.workout.log.data.ListItem;
 import com.workout.log.data.MuscleGroupSectionItem;
 import com.workout.log.db.PerformanceTargetMapper;
 
-public class OverviewAdapter  extends ArrayAdapter<ExerciseItem>{
-	private ArrayList<ExerciseItem> items;
+public class OverviewAdapter  extends ArrayAdapter<ListItem>{
+	private ArrayList<ListItem> items;
 	private LayoutInflater layoutInflater;
 	private PerformanceTargetMapper pMapper = null;
 	private int trainingDayId;
 	
-	public OverviewAdapter(Context context, ArrayList<ExerciseItem> items, int trainingDayId){
+	public OverviewAdapter(Context context, ArrayList<ListItem> items, int trainingDayId){
 		super(context,0,items);
 		this.items = items;
 		this.trainingDayId = trainingDayId;
@@ -34,10 +34,10 @@ public class OverviewAdapter  extends ArrayAdapter<ExerciseItem>{
 	public View getView(int position, View convertView, ViewGroup parent){
 		View v = convertView;
 		
-		final ExerciseItem i = items.get(position);
-		if (i != null){
-			if (i.isSection()){
-				MuscleGroupSectionItem si = (MuscleGroupSectionItem) i;
+		final ListItem item = items.get(position);
+		if (item != null){
+			if (item.isSection()){
+				MuscleGroupSectionItem si = (MuscleGroupSectionItem) item;
 				v = layoutInflater.inflate(R.layout.listview_exercise_header, null);
 				v.setOnClickListener(null);
 				v.setOnLongClickListener(null);
@@ -46,7 +46,7 @@ public class OverviewAdapter  extends ArrayAdapter<ExerciseItem>{
 				final TextView sectionView = (TextView) v.findViewById(R.id.listview_exericse_header_text);
 				sectionView.setText(si.getTitle());
 			}else{
-				Exercise exercise = (Exercise) i;
+				Exercise exercise = (Exercise) item;
 				v = layoutInflater.inflate(R.layout.listview_exercise, null);
 				final TextView 	exerciseView = (TextView) v.findViewById(R.id.exercise);
 				final TextView 	setView = (TextView) v.findViewById(R.id.set);

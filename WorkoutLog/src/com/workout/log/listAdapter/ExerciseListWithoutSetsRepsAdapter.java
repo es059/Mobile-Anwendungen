@@ -11,14 +11,14 @@ import android.widget.TextView;
 
 import com.example.workoutlog.R;
 import com.workout.log.bo.Exercise;
-import com.workout.log.data.ExerciseItem;
+import com.workout.log.data.ListItem;
 import com.workout.log.data.MuscleGroupSectionItem;
 
-public class ExerciseListWithoutSetsRepsAdapter extends ArrayAdapter<ExerciseItem>{
-	private ArrayList<ExerciseItem> exerciseList;
+public class ExerciseListWithoutSetsRepsAdapter extends ArrayAdapter<ListItem>{
+	private ArrayList<ListItem> exerciseList;
 	private LayoutInflater layoutInflater;
 	
-	public ExerciseListWithoutSetsRepsAdapter(Context context, ArrayList<ExerciseItem> items){
+	public ExerciseListWithoutSetsRepsAdapter(Context context, ArrayList<ListItem> items){
 		super(context,0,items);
 		this.exerciseList = items;
 		layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -28,7 +28,7 @@ public class ExerciseListWithoutSetsRepsAdapter extends ArrayAdapter<ExerciseIte
 	public View getView(int position, View convertView, ViewGroup parent){
 		View v = convertView;
 		
-		final ExerciseItem i = exerciseList.get(position);
+		final ListItem i = exerciseList.get(position);
 		if (i != null){
 			if (i.isSection()){
 				MuscleGroupSectionItem si = (MuscleGroupSectionItem) i;
@@ -56,7 +56,7 @@ public class ExerciseListWithoutSetsRepsAdapter extends ArrayAdapter<ExerciseIte
 	 * @return the current List Object
 	 * @author Eric Schmidt
 	 */
-	public ArrayList<ExerciseItem> getTrainingDayList(){
+	public ArrayList<ListItem> getTrainingDayList(){
 		return exerciseList;
 	}
 }

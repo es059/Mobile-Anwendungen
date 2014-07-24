@@ -24,7 +24,7 @@ import com.workout.log.SwipeToDelete.UndoItem;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.MuscleGroup;
 import com.workout.log.bo.PerformanceTarget;
-import com.workout.log.data.ExerciseItem;
+import com.workout.log.data.ListItem;
 import com.workout.log.data.MuscleGroupSectionItem;
 import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.MuscleGroupMapper;
@@ -307,7 +307,7 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 	     */
 		private ArrayList<Exercise> eListMuscleGroup;
 		private ArrayList<MuscleGroup> mList = null;
-		private ArrayList<ExerciseItem> listComplete;
+		private ArrayList<ListItem> listComplete;
 
 		
 		private ListView exerciseListView;
@@ -334,7 +334,7 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 			 */
 			ExerciseMapper eMapper = new ExerciseMapper(getActivity());
 			exerciseList = eMapper.getExerciseByTrainingDay(trainingDayId);
-			listComplete = new ArrayList<ExerciseItem>();
+			listComplete = new ArrayList<ListItem>();
 			for (MuscleGroup m : mList){
 				eListMuscleGroup = eMapper.getExerciseByMuscleGroup(exerciseList, m.getId());
 				if (!eListMuscleGroup.isEmpty()){

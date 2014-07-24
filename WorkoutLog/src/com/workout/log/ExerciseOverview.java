@@ -27,7 +27,7 @@ import com.workout.log.bo.Exercise;
 import com.workout.log.bo.MuscleGroup;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.bo.Workoutplan;
-import com.workout.log.data.ExerciseItem;
+import com.workout.log.data.ListItem;
 import com.workout.log.data.MuscleGroupSectionItem;
 import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.MuscleGroupMapper;
@@ -207,7 +207,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 		private ArrayList<TrainingDay> tList;
 		private ArrayList<Exercise> eList;
 		private ArrayList<MuscleGroup> mList;
-		private ArrayList<ExerciseItem> listComplete;
+		private ArrayList<ListItem> listComplete;
 		private ArrayList<Exercise> eListMuscleGroup;
 		
 		private ListView exerciseView;
@@ -254,7 +254,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 				//Select Exercises from Selected Trainingday and MuscleGroup 
 				ExerciseMapper eMapper = new ExerciseMapper(getActivity());
 				eList = eMapper.getExerciseByTrainingDay(trainingDayId);
-				listComplete = new ArrayList<ExerciseItem>();
+				listComplete = new ArrayList<ListItem>();
 				for (MuscleGroup m : mList){
 					eListMuscleGroup = eMapper.getExerciseByMuscleGroup(eList, m.getId());
 					if (!eListMuscleGroup.isEmpty()){

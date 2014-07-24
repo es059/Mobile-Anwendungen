@@ -21,7 +21,7 @@ import android.widget.Toast;
 import com.example.workoutlog.R;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.MuscleGroup;
-import com.workout.log.data.ExerciseItem;
+import com.workout.log.data.ListItem;
 import com.workout.log.data.MuscleGroupSectionItem;
 import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.MuscleGroupMapper;
@@ -129,7 +129,7 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 		mList = mMapper.getAll();
 		//Select All Exercises from MuscleGroup 
 		eMapper = new ExerciseMapper(getActivity());
-		ArrayList<ExerciseItem> listComplete = new ArrayList<ExerciseItem>();
+		ArrayList<ListItem> listComplete = new ArrayList<ListItem>();
 		for (MuscleGroup m : mList){
 			eListMuscleGroup = eMapper.getExerciseByMuscleGroup(List, m.getId());
 			if (!eListMuscleGroup.isEmpty()){

@@ -28,7 +28,7 @@ import com.workout.log.bo.Exercise;
 import com.workout.log.bo.MuscleGroup;
 import com.workout.log.bo.PerformanceActual;
 import com.workout.log.bo.PerformanceTarget;
-import com.workout.log.data.ExerciseItem;
+import com.workout.log.data.ListItem;
 import com.workout.log.data.MuscleGroupSectionItem;
 import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.MuscleGroupMapper;
@@ -351,7 +351,7 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 			mMapper = new MuscleGroupMapper(getActivity());
 			//Select all MuscleGroups
 			mList = mMapper.getAll();
-			ArrayList<ExerciseItem> listComplete = new ArrayList<ExerciseItem>();
+			ArrayList<ListItem> listComplete = new ArrayList<ListItem>();
 			for (MuscleGroup m : mList){
 				eListMuscleGroup = eMapper.getExerciseByMuscleGroup(params[0], m.getId());
 				if (!eListMuscleGroup.isEmpty()){

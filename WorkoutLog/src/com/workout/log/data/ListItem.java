@@ -1,5 +1,5 @@
 package com.workout.log.data;
 
-public interface ExerciseItem {
+public interface ListItem {
 	public boolean isSection();
 }

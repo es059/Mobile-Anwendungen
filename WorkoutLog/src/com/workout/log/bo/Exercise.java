@@ -2,9 +2,9 @@ package com.workout.log.bo;
 
 import java.util.ArrayList;
 
-import com.workout.log.data.ExerciseItem;
+import com.workout.log.data.ListItem;
 
-public class Exercise implements ExerciseItem {
+public class Exercise implements ListItem {
 
 	private String mName = "";
 	private  int mId = 0;

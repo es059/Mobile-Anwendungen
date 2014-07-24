@@ -21,7 +21,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -162,8 +161,6 @@ public class HelperActivity extends FragmentActivity{
 		 
 	}
 	
-
-	
 	/**
 	 * Navigation Menu implementation
 	 * 
@@ -178,7 +175,7 @@ public class HelperActivity extends FragmentActivity{
                    GravityCompat.START);
         
         // Add Drawer Item to dataList
-        adapter = new CustomDrawerAdapter(this, R.layout.custom_drawer_item, menuList.getDataList());
+        adapter = new CustomDrawerAdapter(this, menuList.getDataList());
         mDrawerList.setAdapter(adapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         
@@ -222,42 +219,21 @@ public class HelperActivity extends FragmentActivity{
 	private void SelectItem(int possition) { 
 		FragmentTransaction transaction;
 		switch(possition) {
-			case 0:
+			case 1:
 				transaction = getSupportFragmentManager().beginTransaction();
 			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 			    transaction.replace(R.id.fragment_container, new ExerciseOverview(), "ExerciseOverview");
 			    transaction.addToBackStack(null);
 			    transaction.commit();
 				break;
-			case 1: 
-				transaction = getSupportFragmentManager().beginTransaction();
-			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-			    transaction.replace(R.id.fragment_container, new ManageWorkoutplan(), "ManageWorkoutplan");
-			    transaction.addToBackStack(null);
-			    transaction.commit();
-				break;
 			case 2: 
-				transaction = getSupportFragmentManager().beginTransaction();
-			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-			    transaction.replace(R.id.fragment_container, new ManageTrainingDays(), "ManageTrainingDays");
-			    transaction.addToBackStack(null);
-			    transaction.commit();
-				break;
-			case 3: 
-				transaction = getSupportFragmentManager().beginTransaction();
-			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-			    transaction.replace(R.id.fragment_container, new ExerciseAdd(), "ExerciseAdd");
-			    transaction.addToBackStack(null);
-			    transaction.commit();
-				break;
-			case 4: 
 				transaction = getSupportFragmentManager().beginTransaction();
 			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 			    transaction.replace(R.id.fragment_container, new Graph(), "GraphActivity");
 			    transaction.addToBackStack(null);
 			    transaction.commit();
 				break;
-			case 5: 
+			case 3:
 				/**
 				 * Export current database to selected file path
 				 */
@@ -315,6 +291,27 @@ public class HelperActivity extends FragmentActivity{
 						}
 					}	
 				});
+				break;
+			case 5: 
+				transaction = getSupportFragmentManager().beginTransaction();
+			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			    transaction.replace(R.id.fragment_container, new ManageWorkoutplan(), "ManageWorkoutplan");
+			    transaction.addToBackStack(null);
+			    transaction.commit();
+				break;
+			case 6: 
+				transaction = getSupportFragmentManager().beginTransaction();
+			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			    transaction.replace(R.id.fragment_container, new ManageTrainingDays(), "ManageTrainingDays");
+			    transaction.addToBackStack(null);
+			    transaction.commit();
+				break;
+			case 7: 
+				transaction = getSupportFragmentManager().beginTransaction();
+			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			    transaction.replace(R.id.fragment_container, new ExerciseAdd(), "ExerciseAdd");
+			    transaction.addToBackStack(null);
+			    transaction.commit();
 				break;
 		}
 	}

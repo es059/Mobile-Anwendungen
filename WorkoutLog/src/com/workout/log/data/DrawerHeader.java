@@ -1,9 +1,9 @@
 package com.workout.log.data;
 
-public class MuscleGroupSectionItem implements ListItem{
-	private final String mTitle;
+public class DrawerHeader implements ListItem{
+private final String mTitle;
 	
-	public MuscleGroupSectionItem(String title){
+	public DrawerHeader(String title){
 		mTitle = title;
 	}
 	

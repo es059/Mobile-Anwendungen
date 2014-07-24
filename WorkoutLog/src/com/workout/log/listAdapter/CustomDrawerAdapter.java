@@ -2,8 +2,8 @@ package com.workout.log.listAdapter;
 
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,53 +12,71 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.workoutlog.R;
+import com.workout.log.data.DrawerHeader;
 import com.workout.log.data.DrawerItem;
+import com.workout.log.data.ListItem;
+import com.workout.log.db.ExerciseMapper;
+import com.workout.log.db.TrainingDayMapper;
+import com.workout.log.db.WorkoutplanMapper;
  
-public class CustomDrawerAdapter extends ArrayAdapter<DrawerItem> {
+public class CustomDrawerAdapter extends ArrayAdapter<ListItem> {
+      private List<ListItem> drawerItemList;
+      private LayoutInflater layoutInflater;
+      private Context context = null;
  
-      Context context;
-      List<DrawerItem> drawerItemList;
-      int layoutResID;
- 
-      public CustomDrawerAdapter(Context context, int layoutResourceID, List<DrawerItem> listItems) {
-            super(context, layoutResourceID, listItems);
-            this.context = context;
+      public CustomDrawerAdapter(Context context, List<ListItem> listItems) {
+            super(context, 0, listItems);
             this.drawerItemList = listItems;
-            this.layoutResID = layoutResourceID;
+            this.context = context;
+            this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       }
  
       @Override
       public View getView(int position, View convertView, ViewGroup parent) {
-            DrawerItemHolder drawerHolder;
             View view = convertView;
  
-            if (view == null) {
-                  LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-                  drawerHolder = new DrawerItemHolder();
- 
-                  view = inflater.inflate(layoutResID, parent, false);
-                  drawerHolder.ItemName = (TextView) view
-                              .findViewById(R.id.drawer_itemName);
-                  drawerHolder.icon = (ImageView) view.findViewById(R.id.drawer_icon);
- 
-                  view.setTag(drawerHolder);
- 
-            } else {
-                  drawerHolder = (DrawerItemHolder) view.getTag();
- 
-            }
- 
-            DrawerItem dItem = this.drawerItemList.get(position);
-            if (dItem.getImgResID() != -1){
-	            drawerHolder.icon.setImageDrawable(view.getResources().getDrawable(
-	                        dItem.getImgResID()));
-            }
-            drawerHolder.ItemName.setText(dItem.getItemName());
+            final ListItem item = drawerItemList.get(position);
+            if (item != null){
+    			if (item.isSection()){
+    				DrawerHeader drawerHeader = (DrawerHeader) item;
+    				view = layoutInflater.inflate(R.layout.custom_drawer_header, null);
+    				view.setOnClickListener(null);
+    				view.setOnLongClickListener(null);
+    				view.setLongClickable(false);
+    				
+    				final TextView sectionView = (TextView) view.findViewById(R.id.drawer_header_text);
+    				sectionView.setTextColor(Color.parseColor("#000000"));
+    				sectionView.setText(drawerHeader.getTitle());
+    			}else{
+    				DrawerItem drawerItem = (DrawerItem) item;
+    				view = layoutInflater.inflate(R.layout.custom_drawer_item, null);
+    				final TextView 	itemName = (TextView) view.findViewById(R.id.drawer_itemName);
+    				final ImageView	itemIcon = (ImageView) view.findViewById(R.id.drawer_icon);
+    				final TextView 	itemInformation = (TextView) view.findViewById(R.id.drawer_information);
+    				
+    				
+    				switch (drawerItem.getItemName()){
+	    				case "Trainingspläne":
+	    					WorkoutplanMapper wMapper = new WorkoutplanMapper(context);
+	    					itemInformation.setText(String.valueOf(wMapper.getAll().size()));
+	    					break;
+	    				case "Trainingstage":
+	    					TrainingDayMapper tMapper = new TrainingDayMapper(context);
+	    					itemInformation.setText(String.valueOf(tMapper.getAllTrainingDay().size()));
+	    					break;
+	    				case "Übungen":
+	    					ExerciseMapper eMapper = new ExerciseMapper(context);
+	    					itemInformation.setText(String.valueOf(eMapper.getAllExercise().size()));
+	    					break;
+    				}
+    				
+    				itemName.setText(drawerItem.getItemName());
+    				if (drawerItem.getImgResID() != -1){
+    					itemIcon.setImageDrawable(view.getResources().getDrawable(
+    			            		drawerItem.getImgResID()));
+    					}
+    			}
+    		}
             return view;
-      }
- 
-      private static class DrawerItemHolder {
-            TextView ItemName;
-            ImageView icon;
       }
 }
