@@ -1,7 +1,7 @@
 package com.workout.log.data;
 
 public class MuscleGroupSectionItem implements ListItem{
-	private final String mTitle;
+	private String mTitle;
 	
 	public MuscleGroupSectionItem(String title){
 		mTitle = title;
@@ -9,6 +9,10 @@ public class MuscleGroupSectionItem implements ListItem{
 	
 	public String getTitle(){
 		return mTitle;
+	}
+	
+	public void setTitle(String title){
+		this.mTitle = title;
 	}
 	
 	@Override

@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
@@ -26,6 +27,7 @@ import com.workout.log.bo.Exercise;
 import com.workout.log.bo.MuscleGroup;
 import com.workout.log.bo.PerformanceActual;
 import com.workout.log.bo.PerformanceTarget;
+import com.workout.log.data.Default;
 import com.workout.log.data.ListItem;
 import com.workout.log.data.MuscleGroupSectionItem;
 import com.workout.log.db.ExerciseMapper;
@@ -36,6 +38,7 @@ import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.dialog.ExerciseAddDialogFragment;
 import com.workout.log.dialog.ExerciseUpdateDialogFragment;
 import com.workout.log.fragment.ExerciseSearchBarFragment;
+import com.workout.log.listAdapter.DefaultAddListAdapter;
 import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
 
 /**
@@ -94,7 +97,7 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 		exerciseListView = (ListView) getView().findViewById(R.id.add_exerciseList);
 		exerciseListView.setOnItemLongClickListener(this);
 		
-		updateListView(eMapper.getAllExercise(), false);
+		updateListView(eMapper.getAllExercise(), false, null);
 		loadSwipeToDismiss();
 	}
 	
@@ -108,7 +111,7 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()){
 			case R.id.menu_add:
-				this.showDialogAddFragment();
+				this.showDialogAddFragment(null);
 				break; 
 		}
 		return super.onOptionsItemSelected(item);
@@ -117,8 +120,8 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 	/**
 	 * Method which opens a DialogFragment to create a new exercise
 	 */
-	public void showDialogAddFragment(){
-		ExerciseAddDialogFragment dialogFragment = ExerciseAddDialogFragment.newInstance(getActivity(), listAdapter);
+	public void showDialogAddFragment(String exerciseStringName){
+		ExerciseAddDialogFragment dialogFragment = ExerciseAddDialogFragment.newInstance(getActivity(), listAdapter, exerciseStringName);
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
 	}
 
@@ -150,9 +153,26 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 	 * @author Eric Schmidt
 	 */
 	@SuppressWarnings("unchecked")
-	public void updateListView(ArrayList<Exercise> list, boolean searchMode){
+	public void updateListView(ArrayList<Exercise> list, boolean searchMode, final String exerciseStringName){
 		exerciseList = list;
-		new BackGroundTask(exerciseListView, searchMode).execute(list);
+		if (exerciseList.size() == 0){
+			Default d = new Default();
+			d.setTitel(exerciseStringName + " nicht gefunden");
+			d.setHint("Hinzufügen");
+			ArrayList<Default> ld = new ArrayList<Default>();
+			ld.add(d);
+			DefaultAddListAdapter l = new DefaultAddListAdapter(getActivity(), 0, ld);
+			exerciseListView.setAdapter(l);
+			exerciseListView.setOnItemClickListener(new OnItemClickListener(){
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
+					showDialogAddFragment(exerciseStringName);
+				}	
+			});
+			
+		}else{
+			new BackGroundTask(exerciseListView, searchMode).execute(list);
+		}
 	}
 	
 	/**

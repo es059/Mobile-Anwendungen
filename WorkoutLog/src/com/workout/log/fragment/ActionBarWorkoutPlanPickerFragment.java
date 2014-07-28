@@ -1,5 +1,6 @@
 package com.workout.log.fragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +27,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 	private ImageButton previousButton;
 	private ImageButton nextButton;
 	private TextView workoutplanTextView;
+	private TextView workoutplanDateView;
 	
 	private ArrayList<Workoutplan> workoutplanList;
 	private ArrayList<TrainingDay> trainingDayList;
@@ -56,7 +59,9 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 		manageWorkoutplan  = (ManageWorkoutplan) getActivity().getSupportFragmentManager().findFragmentByTag("ManageWorkoutplan");
 		previousButton = (ImageButton) getView().findViewById(R.id.Previous);
 		nextButton = (ImageButton) getView().findViewById(R.id.Next);
-		workoutplanTextView = (TextView) getView().findViewById(R.id.trainingDayPicker);
+		
+		workoutplanTextView = (TextView) getView().findViewById(R.id.workoutplanPicker);
+		workoutplanDateView = (TextView) getView().findViewById(R.id.workoutplanPickerDate);
 
 		workoutplanList = new ArrayList<Workoutplan>();
 		trainingDayList = new ArrayList<TrainingDay>();
@@ -67,12 +72,19 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 		if (workoutplanList.size() != 0){
 			setCurrentIdByWorkoutplanId(wpMapper.getCurrent().getId());
 			trainingDayList = tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanList.get(currentListId).getId());
+			
 			workoutplanTextView.setText(workoutplanList.get(currentListId).getName());
+			
+			SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
+			workoutplanDateView.setText(sp.format(workoutplanList.get(currentListId).getTimeStamp()));
+			
 			manageWorkoutplan.setWorkoutplanId(workoutplanList.get(currentListId).getId());
+			
 			/**
 			 * ClickListener handles the Update/delete function of the workoutplan
 			 */
-			workoutplanTextView.setOnClickListener(new OnClickListener(){
+			RelativeLayout workoutplanInformation = (RelativeLayout) getView().findViewById(R.id.workoutplan_Information);
+			workoutplanInformation.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View arg0) {
 					WorkoutplanUpdateDialogFragment dialogFragment = WorkoutplanUpdateDialogFragment.newInstance(getActivity(), workoutplanList.get(currentListId).getId());
@@ -113,6 +125,9 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 					previousButton.setVisibility(View.VISIBLE);
 				}
 				workoutplanTextView.setText(workoutplanList.get(currentListId +1).getName());
+				SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
+				workoutplanDateView.setText(sp.format(workoutplanList.get(currentListId +1).getTimeStamp()));
+				
 				manageWorkoutplan.updateListView(tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanList.get(currentListId +1).getId()));
 				manageWorkoutplan.setWorkoutplanId(workoutplanList.get(currentListId +1).getId());
 				wpMapper.setCurrent(workoutplanList.get(currentListId +1).getId());
@@ -125,13 +140,17 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 			break;
 		case R.id.Previous:
 			if(workoutplanList.size() <= currentListId +1) {
-				nextButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_navigation_next_item));}
-				workoutplanTextView.setText(workoutplanList.get(currentListId -1).getName());
-				manageWorkoutplan.updateListView(tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanList.get(currentListId -1).getId()));
-				manageWorkoutplan.setWorkoutplanId(workoutplanList.get(currentListId - 1).getId());
-				wpMapper.setCurrent(workoutplanList.get(currentListId -1).getId());
-				Toast.makeText(getActivity(), workoutplanList.get(currentListId -1).getName() + " ist nun aktiv!", Toast.LENGTH_SHORT ).show();
-				currentListId -= 1;
+				nextButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_navigation_next_item));
+			}
+			workoutplanTextView.setText(workoutplanList.get(currentListId -1).getName());
+			SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
+			workoutplanDateView.setText(sp.format(workoutplanList.get(currentListId -1).getTimeStamp()));
+			
+			manageWorkoutplan.updateListView(tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanList.get(currentListId -1).getId()));
+			manageWorkoutplan.setWorkoutplanId(workoutplanList.get(currentListId - 1).getId());
+			wpMapper.setCurrent(workoutplanList.get(currentListId -1).getId());
+			Toast.makeText(getActivity(), workoutplanList.get(currentListId -1).getName() + " ist nun aktiv!", Toast.LENGTH_SHORT ).show();
+			currentListId -= 1;
 			if(currentListId == 0) {
 				previousButton.setVisibility(View.INVISIBLE);
 			}

@@ -23,6 +23,7 @@ public class CustomDrawerAdapter extends ArrayAdapter<ListItem> {
       private List<ListItem> drawerItemList;
       private LayoutInflater layoutInflater;
       private Context context = null;
+      private boolean upperPart = true;
  
       public CustomDrawerAdapter(Context context, List<ListItem> listItems) {
             super(context, 0, listItems);
@@ -39,21 +40,40 @@ public class CustomDrawerAdapter extends ArrayAdapter<ListItem> {
             if (item != null){
     			if (item.isSection()){
     				DrawerHeader drawerHeader = (DrawerHeader) item;
+    				
+    				if (drawerHeader.getTitle() == "Verwaltung") upperPart = false;
     				view = layoutInflater.inflate(R.layout.custom_drawer_header, null);
-    				view.setOnClickListener(null);
+    				
+    				if (upperPart){
+    					view.setBackgroundColor(Color.parseColor("#3a3a3a"));
+    				}else{
+    					view.setBackgroundColor(Color.parseColor("#232323"));
+    				}
+    				view.setOnClickListener(null); 
     				view.setOnLongClickListener(null);
     				view.setLongClickable(false);
     				
     				final TextView sectionView = (TextView) view.findViewById(R.id.drawer_header_text);
-    				sectionView.setTextColor(Color.parseColor("#000000"));
+    				sectionView.setTextColor(Color.parseColor("#fe9901"));
     				sectionView.setText(drawerHeader.getTitle());
     			}else{
     				DrawerItem drawerItem = (DrawerItem) item;
     				view = layoutInflater.inflate(R.layout.custom_drawer_item, null);
+    				
+    				if (upperPart){
+    					view.setBackgroundColor(Color.parseColor("#3a3a3a"));
+    				}else{
+    					view.setBackgroundColor(Color.parseColor("#232323"));
+    				}
+    				
+    				if (drawerItem.getItemName() == "Import/Export") view.setPadding(0, 0, 0, 100);
+    				
     				final TextView 	itemName = (TextView) view.findViewById(R.id.drawer_itemName);
     				final ImageView	itemIcon = (ImageView) view.findViewById(R.id.drawer_icon);
     				final TextView 	itemInformation = (TextView) view.findViewById(R.id.drawer_information);
     				
+    				itemInformation.setTextColor(Color.WHITE);
+    				itemName.setTextColor(Color.WHITE);
     				
     				switch (drawerItem.getItemName()){
 	    				case "Trainingspläne":
@@ -72,9 +92,8 @@ public class CustomDrawerAdapter extends ArrayAdapter<ListItem> {
     				
     				itemName.setText(drawerItem.getItemName());
     				if (drawerItem.getImgResID() != -1){
-    					itemIcon.setImageDrawable(view.getResources().getDrawable(
-    			            		drawerItem.getImgResID()));
-    					}
+    					itemIcon.setImageDrawable(view.getResources().getDrawable(drawerItem.getImgResID()));
+    				}
     			}
     		}
             return view;

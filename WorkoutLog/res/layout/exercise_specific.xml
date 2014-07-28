@@ -45,7 +45,8 @@
 
         <TableRow
             android:id="@+id/tableRow1"
-            android:layout_width="wrap_content"
+            android:background="#303030"
+			android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
 	        <TextView
@@ -53,33 +54,37 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_gravity="center"
+	            android:textColor="#FFFFFF"
         		android:gravity="center"
+        		style="?android:attr/listSeparatorTextViewStyle"
         		android:textStyle="bold"
 	            android:layout_weight="1"
-	            android:text="@+string/specific_set"
-	            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+	            android:text="@+string/specific_set"/>
 	        
 	        <TextView
-		        android:id="@+id/textView3"
-		        android:layout_width="wrap_content"
-		        android:layout_weight="1"
-		        android:layout_gravity="center"
-		        android:gravity="center"
-		        android:textStyle="bold"
-		        android:layout_height="wrap_content"
-		        android:text="@+string/specific_weight"
-		        android:textAppearance="?android:attr/textAppearanceListItemSmall"  />
+	            android:id="@+id/textView3"
+	            style="?android:attr/listSeparatorTextViewStyle"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center_horizontal"
+	            android:gravity="center"
+	            android:layout_weight="1"
+	            android:text="@+string/specific_weight"
+	            android:textColor="#FFFFFF"
+	            android:textStyle="bold" />
 	
 	    	<TextView
-		        android:id="@+id/textView2"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_weight="1"
-		        android:textStyle="bold"
-		        android:layout_gravity="center"
-		        android:gravity="center"
-		        android:text="@+string/specific_repetition"
-		        android:textAppearance="?android:attr/textAppearanceListItemSmall"  />
+	    	    android:id="@+id/textView2"
+	    	    style="?android:attr/listSeparatorTextViewStyle"
+	    	    android:layout_width="wrap_content"
+	    	    android:layout_height="wrap_content"
+	    	    android:layout_gravity="center_horizontal"
+	    	    android:gravity="center"
+	    	    android:layout_weight="1"
+	    	    android:text="@+string/specific_repetition"
+	    	    android:textColor="#FFFFFF"
+	    	    android:textStyle="bold" />
+
         </TableRow>
     </TableLayout>
 </RelativeLayout>

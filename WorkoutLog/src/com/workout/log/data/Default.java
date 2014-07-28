@@ -5,10 +5,7 @@ public class Default {
 	private String mTitel = "";
 	private String mHint = "";
 	
-	public  Default(String titel, String hint){
-		setTitel(titel);
-		setHint(hint);
-		
+	public  Default(){
 	}
 
 	public String getTitel() {

@@ -21,6 +21,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.example.workoutlog.R;
+import com.workout.log.ExerciseAdd.BackGroundTask;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.SwipeToDelete.UndoBarController;
 import com.workout.log.SwipeToDelete.UndoItem;
@@ -28,6 +29,7 @@ import com.workout.log.bo.Exercise;
 import com.workout.log.bo.MuscleGroup;
 import com.workout.log.bo.PerformanceActual;
 import com.workout.log.bo.PerformanceTarget;
+import com.workout.log.data.Default;
 import com.workout.log.data.ListItem;
 import com.workout.log.data.MuscleGroupSectionItem;
 import com.workout.log.db.ExerciseMapper;
@@ -39,6 +41,7 @@ import com.workout.log.dialog.ExerciseAddDialogFragment;
 import com.workout.log.dialog.ExerciseSpecificAddDialogFragment;
 import com.workout.log.dialog.ExerciseUpdateDialogFragment;
 import com.workout.log.fragment.ExerciseSearchBarFragment;
+import com.workout.log.listAdapter.DefaultAddListAdapter;
 import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
 
 public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickListener, OnItemLongClickListener, UndoBarController.UndoListener{
@@ -105,7 +108,7 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 		exerciseListView.setOnItemClickListener(this);
 		exerciseListView.setOnItemLongClickListener(this);
 		
-		updateListView(eMapper.getAllExercise());
+		updateListView(eMapper.getAllExercise(), null);
 		loadSwipeToDismiss();
 	}
 
@@ -122,14 +125,17 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.menu_add) {
-			this.showDialogAddFragment();
+			this.showDialogAddFragment(null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void showDialogAddFragment(){
-		ExerciseAddDialogFragment dialogFragment = ExerciseAddDialogFragment.newInstance(getActivity(), listAdapter);
+	/**
+	 * Method which opens a DialogFragment to create a new exercise
+	 */
+	public void showDialogAddFragment(String exerciseStringName){
+		ExerciseAddDialogFragment dialogFragment = ExerciseAddDialogFragment.newInstance(getActivity(), listAdapter, exerciseStringName);
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
 	}
 
@@ -174,9 +180,26 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 	 * @author Eric Schmidt
 	 */
 	@SuppressWarnings("unchecked")
-	public void updateListView(ArrayList<Exercise> list){
+	public void updateListView(ArrayList<Exercise> list, final String exerciseStringName){
 		exerciseList = list;
-		new BackGroundTask(exerciseListView).execute(list); 
+		if (exerciseList.size() == 0){
+			Default d = new Default();
+			d.setTitel(exerciseStringName + " nicht gefunden");
+			d.setHint("Hinzufügen");
+			ArrayList<Default> ld = new ArrayList<Default>();
+			ld.add(d);
+			DefaultAddListAdapter l = new DefaultAddListAdapter(getActivity(), 0, ld);
+			exerciseListView.setAdapter(l);
+			exerciseListView.setOnItemClickListener(new OnItemClickListener(){
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
+					showDialogAddFragment(exerciseStringName);
+				}	
+			});
+			
+		}else{
+			new BackGroundTask(exerciseListView).execute(list);
+		}
 	}
 
 	/**

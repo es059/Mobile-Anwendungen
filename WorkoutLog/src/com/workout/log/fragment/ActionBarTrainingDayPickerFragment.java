@@ -38,7 +38,7 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		super.onCreateView(inflater, container, savedInstanceState);
 		//Reference ExerciseOverview Layout and set ListView 
-		View view = inflater.inflate(R.layout.actionbar_workout_plan_picker_fragment, container,false);
+		View view = inflater.inflate(R.layout.actionbar_trainingday_picker_fragment, container,false);
 	
 		getAllTrainingDay();
 		trainingDayPicker = (TextView) view.findViewById(R.id.trainingDayPicker);

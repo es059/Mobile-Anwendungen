@@ -14,12 +14,11 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"/>
  	
-    <ListView
+    <com.workout.log.data.DynamicListView
         android:id="@+id/ExerciseListView"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/training_day_select_fragment"  >
-    </ListView>
+        android:layout_below="@id/training_day_select_fragment"  />
     
     <!-- Used for the Undo TextField -->
     <LinearLayout

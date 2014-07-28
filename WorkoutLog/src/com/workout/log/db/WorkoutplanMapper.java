@@ -57,6 +57,7 @@ public class WorkoutplanMapper   {
 	 * @ return Workoutplan
 	 */
 	public Workoutplan getCurrent(){
+		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		Workoutplan w = new Workoutplan();
 		//Establish Database Conncetion
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
@@ -66,7 +67,11 @@ public class WorkoutplanMapper   {
 		if (cursor.moveToFirst()){
 			w.setId(Integer.parseInt(cursor.getString(0)));
 			w.setName(cursor.getString(1));
-			w.setTimeStamp(new Date(cursor.getLong(2)));
+			try {
+	    		w.setTimeStamp(sp.parse(cursor.getString(2)));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 		}
 		cursor.close();
 		
@@ -120,6 +125,7 @@ public class WorkoutplanMapper   {
 	 * @author Eric Schmidt & Florian Blessing
 	 */
 	public ArrayList<Workoutplan> getAll() {
+		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		ArrayList<Workoutplan> workoutplanList = new ArrayList<Workoutplan>();
 		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
@@ -131,7 +137,11 @@ public class WorkoutplanMapper   {
 				Workoutplan w = new Workoutplan();
 				w.setId(Integer.parseInt(cursor.getString(0)));
 				w.setName(cursor.getString(1));
-			    w.setTimeStamp(new Date(cursor.getLong(2)));
+				try {
+		    		w.setTimeStamp(sp.parse(cursor.getString(2)));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
 				workoutplanList.add(w);
 			}while(cursor.moveToNext());
 		}

@@ -113,8 +113,7 @@ public class HelperActivity extends FragmentActivity{
 	    if (onBackPressedListener != null){
 	        onBackPressedListener.doBack();
 	    }else{
-	    	if (getSupportFragmentManager().getBackStackEntryCount() == 1 || getSupportFragmentManager().findFragmentByTag("ExerciseOverview") != null ||
-	    		getSupportFragmentManager().findFragmentByTag("ExerciseOverview").isVisible()) {
+	    	if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 	    		/**
 	    		 * Closes the application if the userer presses back twice
 	    		 */
@@ -147,10 +146,10 @@ public class HelperActivity extends FragmentActivity{
 		if (onBackPressedListener != null){
 	        onHomePressedListener.doHome();
 		}else{
-		   if (getFragmentManager().getBackStackEntryCount() == 1) {
+		   if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 		    		
 		   }else {
-			   getFragmentManager().popBackStack();
+			   getSupportFragmentManager().popBackStack();
 				/**
 				 * Set the visibility of the NavigationDrawer to Visible
 				 */

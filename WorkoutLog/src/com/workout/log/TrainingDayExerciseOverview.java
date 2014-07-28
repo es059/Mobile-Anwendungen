@@ -14,16 +14,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.example.workoutlog.R;
+import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.SwipeToDelete.UndoBarController;
 import com.workout.log.SwipeToDelete.UndoItem;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.MuscleGroup;
 import com.workout.log.bo.PerformanceTarget;
+import com.workout.log.data.DynamicListView;
 import com.workout.log.data.ListItem;
 import com.workout.log.data.MuscleGroupSectionItem;
 import com.workout.log.db.ExerciseMapper;
@@ -32,14 +35,16 @@ import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.dialog.ExerciseSpecificUpdateDialogFragment;
 import com.workout.log.fragment.ActionBarTrainingDaySelectFragment;
-import com.workout.log.listAdapter.OverviewAdapter;
+import com.workout.log.listAdapter.TrainingDayExerciseAdapter;
 
 
 public class TrainingDayExerciseOverview extends Fragment implements OnItemLongClickListener, UndoBarController.UndoListener{
-	private ListView exerciseListView = null;
+	private DynamicListView exerciseListView = null;
+	
 	private ArrayList<Exercise> exerciseList = null;
 	private int trainingDayId;
-	private OverviewAdapter listAdapter = null;
+	private boolean sortMode = false;
+	private TrainingDayExerciseAdapter listAdapter = null;
 		
 	private PerformanceTargetMapper ptMapper = null;
 	private TrainingDayMapper tMapper = null;
@@ -83,8 +88,10 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 		 * Receive the arguments set by either ManageWorkoutplan or ManageTrainingDays
 		 */
 		eMapper = new ExerciseMapper(getActivity());
-		exerciseListView = (ListView) getView().findViewById(R.id.ExerciseListView);
+		exerciseListView = (DynamicListView) getView().findViewById(R.id.ExerciseListView);
 		exerciseListView.setOnItemLongClickListener(this);
+		exerciseListView.setDivider(null);
+				
 		exerciseList = new ArrayList<Exercise>();
 		
 		/**
@@ -106,9 +113,11 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 		setHasOptionsMenu(true);
 	}
 
+
+	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.workoutplan_menu, menu);
+		inflater.inflate(R.menu.trainingday_exercise_overview_menu, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -118,8 +127,16 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		if (id == R.id.menu_sort) {
+			if (sortMode){
+				sortMode = false;
+				exerciseListView.setOnItemLongClickListener(this);
+				Toast.makeText(getActivity(), "Drag & Drop ist deaktiviert", Toast.LENGTH_LONG).show();
+			}else{
+				sortMode = true;
+				exerciseListView.setOnItemLongClickListener(exerciseListView.getItemLongClickListener());
+				Toast.makeText(getActivity(), "Drag & Drop ist aktiviert", Toast.LENGTH_LONG).show();
+			}
 		}
 		else if( id == R.id.menu_add){
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -301,7 +318,7 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 	 * 
 	 * @author Eric Schmidt
 	 */
-	public class BackGroundTask extends AsyncTask<Void, Void, OverviewAdapter> {
+	public class BackGroundTask extends AsyncTask<Void, Void, TrainingDayExerciseAdapter> {
 	    /**
 	     * Variables for the UpdateListView method
 	     */
@@ -310,9 +327,9 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 		private ArrayList<ListItem> listComplete;
 
 		
-		private ListView exerciseListView;
+		private DynamicListView exerciseListView;
 
-		public BackGroundTask (ListView exerciseListView){	
+		public BackGroundTask (DynamicListView exerciseListView){	
 			this.exerciseListView = exerciseListView;
 		}
 
@@ -323,7 +340,7 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 	    }
 
 	    @Override
-	    protected OverviewAdapter doInBackground(Void... params) {
+	    protected TrainingDayExerciseAdapter doInBackground(Void... params) {
 			/**
 			 * Select all MuscleGroups
 			 */
@@ -343,17 +360,30 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 				}
 			}
 			
-			listAdapter = new OverviewAdapter(getActivity(), listComplete,trainingDayId);
+			listAdapter = new TrainingDayExerciseAdapter(getActivity(), listComplete,trainingDayId);
+			exerciseListView.setItemList(listComplete);
 			
 			return listAdapter;
 	    }
 
 	    @Override
-	    protected void onPostExecute(OverviewAdapter result) {
+	    protected void onPostExecute(TrainingDayExerciseAdapter result) {
 	        super.onPostExecute(result);
 
-	        if (result != null) exerciseListView.setAdapter(listAdapter);
-	        
+	        if (result != null){
+	        	final AlphaInAnimationAdapter animAdapter = new AlphaInAnimationAdapter(result);
+	        	animAdapter.setInitialDelayMillis(300);
+	    		animAdapter.setAbsListView(exerciseListView);
+	        	exerciseListView.setAdapter(animAdapter);
+	        	
+	        	exerciseListView.setOnItemMovedListener(new DynamicListView.OnItemMovedListener() {
+	                 @Override
+	                 public void onItemMoved(final int newPosition) {
+	                	 animAdapter.notifyDataSetChanged();
+	                 }
+	             });
+	        }
+	
 	        else exerciseListView.invalidateViews();
 	        
 	        getActivity().setProgressBarIndeterminateVisibility(false);

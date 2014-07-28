@@ -34,16 +34,18 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 	private Spinner muscleGroup;
 	private Context applicationContext;
 	private String selectedMuscleGroup = "";
+	private String exerciseStringName = "";
 
-	public static ExerciseAddDialogFragment newInstance(Context context, ExerciseListWithoutSetsRepsAdapter exerciseListWithoutSetsRepsAdapter) {
-		ExerciseAddDialogFragment exerciseAddDialogFragment = new ExerciseAddDialogFragment(context, exerciseListWithoutSetsRepsAdapter);
+	public static ExerciseAddDialogFragment newInstance(Context context, ExerciseListWithoutSetsRepsAdapter exerciseListWithoutSetsRepsAdapter, String exerciseStringName) {
+		ExerciseAddDialogFragment exerciseAddDialogFragment = new ExerciseAddDialogFragment(context, exerciseListWithoutSetsRepsAdapter, exerciseStringName);
 		eMapper = new ExerciseMapper(context);
 		
 		return exerciseAddDialogFragment;
 	}
 	
-	public ExerciseAddDialogFragment(Context context, ExerciseListWithoutSetsRepsAdapter exerciseListWithoutSetsRepsAdapter) {
+	public ExerciseAddDialogFragment(Context context, ExerciseListWithoutSetsRepsAdapter exerciseListWithoutSetsRepsAdapter, String exerciseStringName) {
 		super();
+		this.exerciseStringName = exerciseStringName;
 		exerciseListAdapter = exerciseListWithoutSetsRepsAdapter;
 		applicationContext = context;
 	}
@@ -61,6 +63,9 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 		
 		// Set an EditText view to get user input 
 		exerciseName = (EditText) view.findViewById(R.id.EditText_ExerciseName);
+		if (exerciseStringName != null){
+			exerciseName.setText(exerciseStringName);
+		}
 		// initialize Spinner to get muscleGroup
 		muscleGroup = (Spinner) view.findViewById(R.id.Spinner_MuscleGroup);
 		// Create an ArrayAdapter using the string array and a default spinner layout

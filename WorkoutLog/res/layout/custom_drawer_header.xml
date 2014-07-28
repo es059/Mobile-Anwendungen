@@ -3,8 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-	<include
+   	<View
+  	 	android:id="@+id/divider"
+   		android:layout_width="fill_parent"
+   		android:layout_height="3dip"
+   		android:background="#fe9901"
+   		android:layout_marginBottom="10dip"/>
+    
+	<TextView 
 	    android:id="@+id/drawer_header_text"
-	    layout="@android:layout/preference_category">
-	</include>    
+	    style="?android:attr/listSeparatorTextViewStyle"
+	    android:layout_marginBottom="10dip"
+	    />
+  
 </LinearLayout>

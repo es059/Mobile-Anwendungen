@@ -2,7 +2,10 @@ package com.workout.log;
 
 import java.util.ArrayList;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,8 +17,10 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -114,10 +119,10 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
                     return false;
                 // right to left swipe
                 if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    actionBarTrainingDayPickerFragment.onNext();
-                    
+                    slideToLeft();
+                // left to right swipe
                 }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                	actionBarTrainingDayPickerFragment.onPrevious();
+                	slideToRight();
                 }
             } catch (Exception e) {
                 // nothing
@@ -125,12 +130,39 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
             return false;
         }
 
-            @Override
+        @Override
         public boolean onDown(MotionEvent e) {
               return true;
         }
     }
 	 
+	public Bitmap loadBitmapFromView(View v, int width, int height) {
+		Bitmap x = v.getDrawingCache();
+	    Bitmap b = Bitmap.createBitmap(width , height, Bitmap.Config.ARGB_8888);                
+	    Canvas c = new Canvas(x);
+	    v.layout(0, 0, v.getLayoutParams().width, v.getLayoutParams().height);
+	    v.draw(c);	
+	 
+	    return b;
+	}
+	
+	/**
+	 * Handles the right sliding animation
+	 */
+	public void slideToRight(){
+		//loadBitmapFromView(exerciseListView, exerciseListView.getWidth(), exerciseListView.getHeight());
+		exerciseListView.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.right_slide));
+		actionBarTrainingDayPickerFragment.onPrevious();
+	}
+	
+	/**
+	 * Handles the left sliding animation
+	 */
+	public void slideToLeft(){
+		getView().startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide));
+		actionBarTrainingDayPickerFragment.onNext();
+	}
+	
 	public void setSwipeAnimation(SwipeAnimation swipeAnimation){
 		this.swipeAnimation = swipeAnimation;
 	}
@@ -274,9 +306,9 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 	        super.onPostExecute(result);
 
 	        if (result != null){
-	        	/**
+	   /*     	*//**
 	    		 * Enable animation of the ListView Items
-	    		 */
+	    		 *//*
 	        	if (swipeAnimation == SwipeAnimation.Normal){
 		        	SwingBottomInAnimationAdapter swingButtonInAnimationAdapter = new SwingBottomInAnimationAdapter(result);
 		        	swingButtonInAnimationAdapter.setAbsListView(exerciseView);
@@ -288,10 +320,10 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 	        	}else if (swipeAnimation == SwipeAnimation.Left){
 	        		SwingRightInAnimationAdapter swingRightInAnimationAdapter = new SwingRightInAnimationAdapter(result);
 	        		swingRightInAnimationAdapter.setAbsListView(exerciseView);
-	        		exerciseView.setAdapter(swingRightInAnimationAdapter);		
-	        	}
+	        		exerciseView.setAdapter(swingRightInAnimationAdapter);	
+	        	}*/
+	        	exerciseView.setAdapter(result);
 	        }
-	        
 	        getActivity().setProgressBarIndeterminateVisibility(false);  
 	    }
 	}

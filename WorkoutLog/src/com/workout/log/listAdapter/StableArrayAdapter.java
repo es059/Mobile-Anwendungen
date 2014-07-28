@@ -53,10 +53,6 @@ public class StableArrayAdapter extends ArrayAdapter<TrainingDay> {
     }
 
     @Override
-    public boolean hasStableIds() {
-        return true;
-    }
-    @Override
 	 public View getView(int position, View convertView, ViewGroup parent) {
 		 TrainingDay trainingDay = getItem(position);
 		 ListViewTrainingDay listViewTrainingDay = null;
@@ -89,5 +85,10 @@ public class StableArrayAdapter extends ArrayAdapter<TrainingDay> {
 	 */
 	public ArrayList<TrainingDay> getTrainingDayList(){
 		return trainingDayList;
+	}
+
+	@Override
+	public boolean hasStableIds() {
+		return true;
 	}
 }
