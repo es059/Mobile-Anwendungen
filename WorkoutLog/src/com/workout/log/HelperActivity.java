@@ -180,7 +180,7 @@ public class HelperActivity extends FragmentActivity{
         
         this.getActionBar().setDisplayHomeAsUpEnabled(true);
         this.getActionBar().setHomeButtonEnabled(true);
-
+        
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                     R.drawable.ic_drawer, R.string.drawer_open,
                     R.string.drawer_close) {
@@ -192,10 +192,11 @@ public class HelperActivity extends FragmentActivity{
               @Override
 			public void onDrawerOpened(View drawerView) {
             	  getActionBar().setTitle(mDrawerTitle);
+            	  adapter.notifyDataSetChanged();
             	  invalidateOptionsMenu();
               }
         };
-       
+        
         mDrawerLayout.setDrawerListener(mDrawerToggle);   	
 	}
 	

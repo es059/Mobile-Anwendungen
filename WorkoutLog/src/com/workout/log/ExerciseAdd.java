@@ -171,6 +171,7 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 			});
 			
 		}else{
+			exerciseListView.setOnItemClickListener(null);
 			new BackGroundTask(exerciseListView, searchMode).execute(list);
 		}
 	}

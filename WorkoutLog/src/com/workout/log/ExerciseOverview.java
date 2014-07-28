@@ -103,12 +103,12 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 		exerciseListView.setOnItemClickListener(this);
 		
 		  gestureDetector = new GestureDetector(getActivity(), new MyGestureDetector());
-	        gestureListener = new View.OnTouchListener() {
+	      gestureListener = new View.OnTouchListener() {
 	            public boolean onTouch(View v, MotionEvent event) {
 	                return gestureDetector.onTouchEvent(event);
 	            }
 	        };
-		exerciseListView.setOnTouchListener(gestureListener);
+		//exerciseListView.setOnTouchListener(gestureListener);
 	}
 	
 	private class MyGestureDetector extends SimpleOnGestureListener {

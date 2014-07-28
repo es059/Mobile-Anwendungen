@@ -198,6 +198,7 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 			});
 			
 		}else{
+			exerciseListView.setOnItemClickListener(this);
 			new BackGroundTask(exerciseListView).execute(list);
 		}
 	}
