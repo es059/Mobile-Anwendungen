@@ -29,9 +29,11 @@ public class ListViewTrainingDay extends RelativeLayout{
 	}
 	public void setTrainingDay(TrainingDay trainingDay){
 		this.titel.setText(trainingDay.getName());
-		//Get the amount if trainingdays in the current workoutplan
+		/**
+		 * Get the amount if trainingdays in the current workoutplan
+		 */
 		ExerciseMapper eMapper = new ExerciseMapper(getContext());
 		ArrayList<Exercise> exerciseList = eMapper.getExerciseByTrainingDay(trainingDay.getId());
-		this.exerciseCount.setHint("(Übungen: " + String.valueOf(exerciseList.size()) + ")");	
+		this.exerciseCount.setHint("Übungen: " + String.valueOf(exerciseList.size()));	
 	}
 }

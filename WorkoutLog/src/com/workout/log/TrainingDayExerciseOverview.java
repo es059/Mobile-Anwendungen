@@ -30,7 +30,6 @@ import com.workout.log.data.DynamicListView;
 import com.workout.log.data.ListItem;
 import com.workout.log.data.MuscleGroupSectionItem;
 import com.workout.log.db.ExerciseMapper;
-import com.workout.log.db.MuscleGroupMapper;
 import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.dialog.ExerciseSpecificUpdateDialogFragment;
@@ -130,10 +129,32 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 		if (id == R.id.menu_sort) {
 			if (sortMode){
 				sortMode = false;
+				
+				/**
+				 * Save the sorted ArrayList
+				 */
+				int count = 0;
+				for (ListItem l : listAdapter.getList()){
+					if(!l.isSection()){
+						count++;
+						Exercise e = (Exercise) l;
+						e.setOrderNumber(count);
+						tMapper.updateTrainingDayHasExercise(e, trainingDayId, e.getOrderNumber());
+					}
+				}
+				updateListView();
 				exerciseListView.setOnItemLongClickListener(this);
 				Toast.makeText(getActivity(), "Drag & Drop ist deaktiviert", Toast.LENGTH_LONG).show();
 			}else{
 				sortMode = true;
+				
+				for (ListItem l : exerciseList){
+					if (l.isSection()) exerciseList.remove(l);
+				}
+				listAdapter.clear();
+				listAdapter.addAll(exerciseList);
+				listAdapter.notifyDataSetChanged();
+				
 				exerciseListView.setOnItemLongClickListener(exerciseListView.getItemLongClickListener());
 				Toast.makeText(getActivity(), "Drag & Drop ist aktiviert", Toast.LENGTH_LONG).show();
 			}
@@ -322,8 +343,6 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 	    /**
 	     * Variables for the UpdateListView method
 	     */
-		private ArrayList<Exercise> eListMuscleGroup;
-		private ArrayList<MuscleGroup> mList = null;
 		private ArrayList<ListItem> listComplete;
 
 		
@@ -342,24 +361,29 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 	    @Override
 	    protected TrainingDayExerciseAdapter doInBackground(Void... params) {
 			/**
-			 * Select all MuscleGroups
-			 */
-			MuscleGroupMapper mMapper = new MuscleGroupMapper(getActivity());
-			mList = mMapper.getAll();
-			/**
 			 * Select Exercises from selected Trainingday and MuscleGroup 
 			 */
 			ExerciseMapper eMapper = new ExerciseMapper(getActivity());
 			exerciseList = eMapper.getExerciseByTrainingDay(trainingDayId);
 			listComplete = new ArrayList<ListItem>();
-			for (MuscleGroup m : mList){
-				eListMuscleGroup = eMapper.getExerciseByMuscleGroup(exerciseList, m.getId());
-				if (!eListMuscleGroup.isEmpty()){
-					listComplete.add(new MuscleGroupSectionItem(m.getName()));
-					listComplete.addAll(eListMuscleGroup);
-				}
-			}
 			
+			for(int i = 0; i < exerciseList.size(); i++) {
+				MuscleGroup mg = exerciseList.get(i).getMuscleGroup();
+				
+				if (i > 0){
+					if(!mg.getName().equals(exerciseList.get(i-1).getMuscleGroup().getName())) {
+						listComplete.add(new MuscleGroupSectionItem(mg.getName()));
+						listComplete.add(exerciseList.get(i));
+					}else{
+						listComplete.add(exerciseList.get(i));
+					}
+				}else{
+					listComplete.add(new MuscleGroupSectionItem(mg.getName()));
+					listComplete.add(exerciseList.get(i));
+				}
+				
+			}
+
 			listAdapter = new TrainingDayExerciseAdapter(getActivity(), listComplete,trainingDayId);
 			exerciseListView.setItemList(listComplete);
 			

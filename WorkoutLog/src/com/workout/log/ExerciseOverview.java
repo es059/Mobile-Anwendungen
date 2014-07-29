@@ -2,32 +2,21 @@ package com.workout.log;
 
 import java.util.ArrayList;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.workoutlog.R;
-import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingLeftInAnimationAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingRightInAnimationAdapter;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.MuscleGroup;
 import com.workout.log.bo.TrainingDay;
@@ -47,13 +36,6 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 	private static int trainingDayId = -1;
     private static ExerciseSpecific exerciseSpecific = new ExerciseSpecific();
     public static ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = null;
-    private SwipeAnimation swipeAnimation = null;
-
-    private static final int SWIPE_MIN_DISTANCE = 120;
-    private static final int SWIPE_MAX_OFF_PATH = 250;
-    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-    private GestureDetector gestureDetector;
-    private View.OnTouchListener gestureListener;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,8 +61,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 	@Override
 	public void onResume(){
 		super.onResume();
-		
-		swipeAnimation = SwipeAnimation.Normal;
+	
 		exerciseSpecific = new ExerciseSpecific();
 		actionBarTrainingDayPickerFragment = (ActionBarTrainingDayPickerFragment) getActivity().
 				getSupportFragmentManager().findFragmentByTag("TrainingDayPicker");
@@ -101,70 +82,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 			updateListView(trainingDayId);
 		}
 		exerciseListView.setOnItemClickListener(this);
-		
-		  gestureDetector = new GestureDetector(getActivity(), new MyGestureDetector());
-	      gestureListener = new View.OnTouchListener() {
-	            public boolean onTouch(View v, MotionEvent event) {
-	                return gestureDetector.onTouchEvent(event);
-	            }
-	        };
-		//exerciseListView.setOnTouchListener(gestureListener);
-	}
-	
-	private class MyGestureDetector extends SimpleOnGestureListener {
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            try {
-                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
-                    return false;
-                // right to left swipe
-                if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    slideToLeft();
-                // left to right swipe
-                }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                	slideToRight();
-                }
-            } catch (Exception e) {
-                // nothing
-            }
-            return false;
-        }
 
-        @Override
-        public boolean onDown(MotionEvent e) {
-              return true;
-        }
-    }
-	 
-	public Bitmap loadBitmapFromView(View v, int width, int height) {
-		Bitmap x = v.getDrawingCache();
-	    Bitmap b = Bitmap.createBitmap(width , height, Bitmap.Config.ARGB_8888);                
-	    Canvas c = new Canvas(x);
-	    v.layout(0, 0, v.getLayoutParams().width, v.getLayoutParams().height);
-	    v.draw(c);	
-	 
-	    return b;
-	}
-	
-	/**
-	 * Handles the right sliding animation
-	 */
-	public void slideToRight(){
-		//loadBitmapFromView(exerciseListView, exerciseListView.getWidth(), exerciseListView.getHeight());
-		exerciseListView.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.right_slide));
-		actionBarTrainingDayPickerFragment.onPrevious();
-	}
-	
-	/**
-	 * Handles the left sliding animation
-	 */
-	public void slideToLeft(){
-		getView().startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide));
-		actionBarTrainingDayPickerFragment.onNext();
-	}
-	
-	public void setSwipeAnimation(SwipeAnimation swipeAnimation){
-		this.swipeAnimation = swipeAnimation;
 	}
 	
 	@Override
@@ -194,12 +112,11 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent= null;
-		switch (item.getItemId()){
-			case R.id.menu_add:
-				intent = new Intent();
-				intent.setClass(getActivity(), ExerciseAdd.class);
-				startActivity(intent);
-				break;
+		int itemId = item.getItemId();
+		if (itemId == R.id.menu_add) {
+			intent = new Intent();
+			intent.setClass(getActivity(), ExerciseAdd.class);
+			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -240,7 +157,6 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 		private ArrayList<Exercise> eList;
 		private ArrayList<MuscleGroup> mList;
 		private ArrayList<ListItem> listComplete;
-		private ArrayList<Exercise> eListMuscleGroup;
 		
 		private ListView exerciseView;
 
@@ -287,12 +203,22 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 				ExerciseMapper eMapper = new ExerciseMapper(getActivity());
 				eList = eMapper.getExerciseByTrainingDay(trainingDayId);
 				listComplete = new ArrayList<ListItem>();
-				for (MuscleGroup m : mList){
-					eListMuscleGroup = eMapper.getExerciseByMuscleGroup(eList, m.getId());
-					if (!eListMuscleGroup.isEmpty()){
-						listComplete.add(new MuscleGroupSectionItem(m.getName()));
-						listComplete.addAll(eListMuscleGroup);
+				
+				for(int i = 0; i < eList.size(); i++) {
+					MuscleGroup mg = eList.get(i).getMuscleGroup();
+					
+					if (i > 0){
+						if(!mg.getName().equals(eList.get(i-1).getMuscleGroup().getName())) {
+							listComplete.add(new MuscleGroupSectionItem(mg.getName()));
+							listComplete.add(eList.get(i));
+						}else{
+							listComplete.add(eList.get(i));
+						}
+					}else{
+						listComplete.add(new MuscleGroupSectionItem(mg.getName()));
+						listComplete.add(eList.get(i));
 					}
+					
 				}
 		    
 				OverviewAdapter adapter = new OverviewAdapter(getActivity(), listComplete, trainingDayId);

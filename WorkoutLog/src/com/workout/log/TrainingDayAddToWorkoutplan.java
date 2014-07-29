@@ -143,11 +143,10 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()){
-		case R.id.menu_add:
+		int itemId = item.getItemId();
+		if (itemId == R.id.menu_add) {
 			TrainingDayAddDialogFragment dialogFragment = TrainingDayAddDialogFragment.newInstance(getActivity(), trainingDayListAdapter);
 			dialogFragment.show(this.getFragmentManager(), "Open Exercise Add Dialog on Click");
-			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}

@@ -93,15 +93,14 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()){
-		case R.id.menu_add:
-			 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-		     transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		     transaction.replace(R.id.fragment_container, new TrainingDayAddToWorkoutplan(), "TrainingDayAddToWorkoutplan");
-		     transaction.addToBackStack(null);
-		     transaction.commit();
-			break; 
-			}
+		int itemId = item.getItemId();
+		if (itemId == R.id.menu_add) {
+			FragmentTransaction transaction = getFragmentManager().beginTransaction();
+			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			transaction.replace(R.id.fragment_container, new TrainingDayAddToWorkoutplan(), "TrainingDayAddToWorkoutplan");
+			transaction.addToBackStack(null);
+			transaction.commit();
+		}
 		return super.onOptionsItemSelected(item);
 	}
 

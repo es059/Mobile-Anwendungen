@@ -7,7 +7,8 @@ import com.workout.log.data.ListItem;
 public class Exercise implements ListItem {
 
 	private String mName = "";
-	private  int mId = 0;
+	private int mId = 0;
+	private int orderNumber = 0;
 	private MuscleGroup mMuscleGroup = null;
 	private ArrayList<Integer> mTrainingDayIdList = null;
 	private ArrayList<PerformanceTarget> mPerformanceTargetList = null;
@@ -65,5 +66,13 @@ public class Exercise implements ListItem {
 
 	public void setPerformanceActualList(ArrayList<PerformanceActual> mPerformanceActualList) {
 		this.mPerformanceActualList = mPerformanceActualList;
+	}
+
+	public int getOrderNumber() {
+		return orderNumber;
+	}
+
+	public void setOrderNumber(int orderNumber) {
+		this.orderNumber = orderNumber;
 	}
 }

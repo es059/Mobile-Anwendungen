@@ -109,10 +109,9 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()){
-			case R.id.menu_add:
-				this.showDialogAddFragment(null);
-				break; 
+		int itemId = item.getItemId();
+		if (itemId == R.id.menu_add) {
+			this.showDialogAddFragment(null);
 		}
 		return super.onOptionsItemSelected(item);
 	}

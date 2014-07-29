@@ -70,15 +70,12 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 	@SuppressWarnings("static-access")
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()){
-		case R.id.Next:
+		int id = v.getId();
+		if (id == R.id.Next) {
 			onNext();
-			break;
-		case R.id.Previous:
+		} else if (id == R.id.Previous) {
 			onPrevious();
-			break;
-		default:
-			break;
+		} else {
 		}
 	}
 	
@@ -86,7 +83,6 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 	 * Functions for next trainingDay
 	 */
 	public void onNext(){
-		exerciseOverview.setSwipeAnimation(SwipeAnimation.Right);
 		if (index < (trainingDayList.size() -1)){
 			index++;
 		}else{
@@ -103,7 +99,6 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 	 * Functions for previous trainingDay
 	 */
 	public void onPrevious(){
-		exerciseOverview.setSwipeAnimation(SwipeAnimation.Left);
 		if (index > 0){
 			index--;
 			trainingDayPicker.setText(trainingDayList.get(index).getName());

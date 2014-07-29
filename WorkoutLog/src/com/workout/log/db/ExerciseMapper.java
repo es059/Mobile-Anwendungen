@@ -165,12 +165,14 @@ public class ExerciseMapper {
 		
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		
-		sql = "SELECT Exercise_Id,TrainingstagHasExercise_Id FROM TrainingDayHasExercise WHERE TrainingDay_Id = "
-				+ trainingDayId;
+		sql = "SELECT Exercise_Id,TrainingstagHasExercise_Id, ExerciseOrder FROM TrainingDayHasExercise WHERE TrainingDay_Id = "
+				+ trainingDayId + " ORDER BY ExerciseOrder";
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
 			do{
-				exerciseList.add(getExerciseById(cursor.getInt(0)));
+				Exercise e = getExerciseById(cursor.getInt(0));
+				e.setOrderNumber(cursor.getInt(2));
+				exerciseList.add(e);
 			}while(cursor.moveToNext());
 		}
 		cursor.close();

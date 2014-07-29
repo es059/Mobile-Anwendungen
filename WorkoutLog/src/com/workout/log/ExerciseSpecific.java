@@ -245,10 +245,15 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		switch (id) {
-		case R.id.menu_add:
+		if (id == R.id.menu_add) {
 			addPerformanceActualItem();
-			break;
+		}
+		if (id == R.id.menu_statistic){
+			FragmentTransaction transaction = getFragmentManager().beginTransaction();
+			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			transaction.replace(R.id.fragment_container, new DailyStatistic(), "DailyStatistic");
+			transaction.addToBackStack(null);
+			transaction.commit();
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -266,14 +271,11 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		data.putBoolean("SaveMode", saveMode);
 
 		exerciseOverview = new ExerciseOverview();
-		exerciseOverview.setSwipeAnimation(SwipeAnimation.Normal);
 		exerciseOverview.setArguments(data);
 
-		FragmentTransaction transaction = getFragmentManager()
-				.beginTransaction();
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		transaction.replace(R.id.fragment_container, exerciseOverview,
-				"ExerciseOverview");
+		transaction.replace(R.id.fragment_container, exerciseOverview, "ExerciseOverview");
 		transaction.addToBackStack(null);
 		transaction.commit();
 

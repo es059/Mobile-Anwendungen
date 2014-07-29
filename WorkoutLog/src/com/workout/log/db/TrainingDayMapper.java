@@ -185,6 +185,26 @@ public class TrainingDayMapper {
 		return trainingdayList;
 	}
 	
+	
+	public void updateTrainingDayHasExercise(Exercise e, int trainingDayId, int OrderNumber){
+		int trainingDayHasExerciseId = -1;
+		
+		SQLiteDatabase db = myDBHelper.getWritableDatabase();
+		sql = "SELECT TrainingstagHasExercise_Id FROM TrainingDayHasExercise WHERE Exercise_Id =" + e.getId() + 
+				" AND TrainingDay_Id = " + trainingDayId;
+		
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			trainingDayHasExerciseId = cursor.getInt(0);
+		}
+		
+		sql = "UPDATE TrainingDayHasExercise SET ExerciseOrder=" + OrderNumber +
+				" WHERE TrainingstagHasExercise_Id = " + trainingDayHasExerciseId;
+		db.execSQL(sql);
+		cursor.close();
+		
+	}
+	
 	/**
 	 * Add a Exercise to a trainingDay and performanceTarget
 	 * 

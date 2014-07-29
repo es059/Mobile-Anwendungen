@@ -113,8 +113,8 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 		
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()){
-		case R.id.Next:
+		int id = v.getId();
+		if (id == R.id.Next) {
 			if(workoutplanList.size() <= currentListId +1) {
 				WorkoutplanAddDialogFragment dialogFragment = WorkoutplanAddDialogFragment.newInstance(getActivity(), workoutplanList);
 				dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
@@ -137,15 +137,13 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 					nextButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_add));
 				}
 			}
-			break;
-		case R.id.Previous:
+		} else if (id == R.id.Previous) {
 			if(workoutplanList.size() <= currentListId +1) {
 				nextButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_navigation_next_item));
 			}
 			workoutplanTextView.setText(workoutplanList.get(currentListId -1).getName());
 			SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 			workoutplanDateView.setText(sp.format(workoutplanList.get(currentListId -1).getTimeStamp()));
-			
 			manageWorkoutplan.updateListView(tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanList.get(currentListId -1).getId()));
 			manageWorkoutplan.setWorkoutplanId(workoutplanList.get(currentListId - 1).getId());
 			wpMapper.setCurrent(workoutplanList.get(currentListId -1).getId());
@@ -154,8 +152,6 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 			if(currentListId == 0) {
 				previousButton.setVisibility(View.INVISIBLE);
 			}
-			break;
-		
 		}	
 	}
 	

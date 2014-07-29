@@ -42,6 +42,8 @@ public class CustomDrawerAdapter extends ArrayAdapter<ListItem> {
     				DrawerHeader drawerHeader = (DrawerHeader) item;
     				
     				if (drawerHeader.getTitle() == "Verwaltung") upperPart = false;
+    				if (drawerHeader.getTitle() == "Funktionen") upperPart = true;
+    				
     				view = layoutInflater.inflate(R.layout.custom_drawer_header, null);
     				
     				if (upperPart){

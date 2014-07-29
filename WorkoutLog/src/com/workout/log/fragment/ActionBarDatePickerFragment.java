@@ -61,8 +61,8 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
-		switch (v.getId()){
-		case R.id.Next:
+		int id = v.getId();
+		if (id == R.id.Next) {
 			performanceActualList = paMapper.getNextPerformanceActual(calendar, exerciseSpecific.getExercise());
 			if (!performanceActualList.isEmpty()){
 				exerciseSpecific.savePerformanceActual();
@@ -80,8 +80,7 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 				calendar.setTime(new Date());
 				setDate();
 			}
-			break;
-		case R.id.Previous:
+		} else if (id == R.id.Previous) {
 			performanceActualList = paMapper.getPreviousPerformanceActual(calendar, exerciseSpecific.getExercise());
 			if (!performanceActualList.isEmpty()){	
 				exerciseSpecific.savePerformanceActual();
@@ -93,9 +92,7 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 			}else{
 				Toast.makeText(getActivity(), "Keine letzte Übung gefunden", Toast.LENGTH_SHORT).show();
 			}
-			break;
-		default:
-			break;
+		} else {
 		}
 	}
 	

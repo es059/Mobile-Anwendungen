@@ -81,14 +81,17 @@ public class TrainingDayExerciseAdapter  extends ArrayAdapter<ListItem>{
 				 * Get target performance information (Set & Repetition)
 				 */
 				PerformanceTarget performanceTarget = pMapper.getPerformanceTargetByExerciseId(exercise, trainingDayId);
-				setView.setHint("(Sätze: " + String.valueOf(performanceTarget.getSet()) + ")");
-				repetitionView.setHint("(Wdh: " + String.valueOf(performanceTarget.getRepetition())+ ")");
+				setView.setHint("Sätze: " + String.valueOf(performanceTarget.getSet()));
+				repetitionView.setHint("Wdh: " + String.valueOf(performanceTarget.getRepetition()));
 			}
 		}
 		return v;
 
 	}
 	 
+	public ArrayList<ListItem> getList(){
+		return items;
+	}
 
 	@Override
 	public long getItemId(final int position) {
