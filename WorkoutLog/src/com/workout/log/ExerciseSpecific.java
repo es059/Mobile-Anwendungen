@@ -70,8 +70,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		 */
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		transaction.replace(R.id.specific_dateTimePicker,
-				new ActionBarDatePickerFragment(), "DateTimePicker");
+		transaction.replace(R.id.specific_dateTimePicker, new ActionBarDatePickerFragment(), "DateTimePicker");
 		transaction.commit();
 
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);

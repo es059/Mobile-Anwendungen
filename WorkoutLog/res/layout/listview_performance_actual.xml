@@ -24,7 +24,6 @@
 		            android:layout_gravity="center"
 	        		android:gravity="center"
 		            android:layout_weight="1"
-		            android:text="Satz 1"
 		            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
 	 
 		       <EditText
@@ -33,7 +32,7 @@
 		            android:layout_width="5dp"
 		            android:layout_marginLeft="10dp"
 		            android:layout_height="wrap_content"
-					android:hint="Gewicht"
+					android:hint="@+string/Weight"
 					android:digits="0123456789."
 					android:inputType="phone"
 		            android:ems="10" />
@@ -45,7 +44,7 @@
 		            android:layout_marginLeft="10dp"
 		            android:gravity="center"
 		            android:layout_height="wrap_content"
-					android:hint="Wdh"
+					android:hint="@string/Rep"
 					android:digits="0123456789."
 					android:inputType="phone"
 		            android:ems="10" />

@@ -39,14 +39,14 @@ public class TrainingDayAddDialogFragment extends DialogFragment {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View view = inflater.inflate(R.layout.dialogfragment_trainingday_edit, null);
 		
-		alert.setTitle("Traniningstag Hinzufügen");
+		alert.setTitle(getResources().getString(R.string.TrainingDayAdd));
 		
 		// Set an EditText view to get user input 
 		final EditText input = (EditText) view.findViewById(R.id.EditText_TrainingdayName);
 		
 		alert.setView(view);
 
-		alert.setPositiveButton("Speichern", new DialogInterface.OnClickListener() {
+		alert.setPositiveButton(getResources().getString(R.string.Save), new DialogInterface.OnClickListener() {
 		@Override
 		public void onClick(DialogInterface dialog, int whichButton) {
 			/**
@@ -64,11 +64,11 @@ public class TrainingDayAddDialogFragment extends DialogFragment {
 			trainingDayListAdapter.addAll(tdMapper.getAllTrainingDay());
 			trainingDayListAdapter.notifyDataSetChanged();
 		
-			Toast.makeText(getActivity(), "Trainingstag wurde erfolgreich hinzugefügt!", Toast.LENGTH_SHORT ).show();
+			Toast.makeText(getActivity(), getResources().getString(R.string.TrainingDayAddDialogFragment_AddSuccess), Toast.LENGTH_SHORT ).show();
 		  }
 		});
 
-		alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+		alert.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
 		  @Override
 		public void onClick(DialogInterface dialog, int whichButton) {
 		    // Canceled.

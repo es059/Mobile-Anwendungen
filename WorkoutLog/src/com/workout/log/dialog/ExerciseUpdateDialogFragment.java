@@ -52,7 +52,7 @@ public class ExerciseUpdateDialogFragment extends DialogFragment {
 		final EditText exerciseName = (EditText) view.findViewById(R.id.EditText_ExerciseName);
 		final Spinner muscleGroup = (Spinner) view.findViewById(R.id.Spinner_MuscleGroup);		
 
-		alert.setTitle("Übung bearbeiten");
+		alert.setTitle(getResources().getString(R.string.ExerciseEdit));
 		// Create an ArrayAdapter using the string array and a default spinner layout
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(fragment.getActivity(),
 		        R.array.MuscleGroup, android.R.layout.simple_spinner_item);
@@ -83,7 +83,7 @@ public class ExerciseUpdateDialogFragment extends DialogFragment {
 		
 		alert.setView(view);
 		
-		alert.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+		alert.setPositiveButton(getResources().getString(R.string.Update), new DialogInterface.OnClickListener() {
 		@Override
 		public void onClick(DialogInterface dialog, int whichButton) {
 			// String aus Textfeld holen  
@@ -92,16 +92,16 @@ public class ExerciseUpdateDialogFragment extends DialogFragment {
 				// Mapper-Methode aufrufen zum Hinzufügen einer neuen Übung
 				eMapper.update(exerciseId, value, selectedMuscleGroup);
 				// Toast einblenden 
-				Toast.makeText(getActivity(), "Übung wurde erfolgreich geändert!", Toast.LENGTH_SHORT ).show();
+				Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseUpdateDialogFragment_EditSuccess), Toast.LENGTH_SHORT ).show();
 				// ListView aktualisieren 
 				updateListView(eMapper.getAllExercise());
 			}else{
-				Toast.makeText(getActivity(), "Bitte sätmliche Felder ausfüllen", Toast.LENGTH_SHORT ).show();
+				Toast.makeText(getActivity(), getResources().getString(R.string.MissingField), Toast.LENGTH_SHORT ).show();
 			}
 		  }
 		});
 
-		alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+		alert.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
 		  @Override
 		public void onClick(DialogInterface dialog, int whichButton) {
 		    // Canceled.

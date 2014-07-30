@@ -46,7 +46,7 @@ public class HelperActivity extends FragmentActivity{
     private CharSequence mTitle;
 
     private CustomDrawerAdapter adapter;
-    private MenuList menuList = new MenuList(this);
+    private MenuList menuList;
     
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -54,7 +54,6 @@ public class HelperActivity extends FragmentActivity{
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_helper);
 
-		loadNavigationDrawer();
 		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         
         this.getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -77,6 +76,14 @@ public class HelperActivity extends FragmentActivity{
 		     transaction.commit();
 		}
 	}
+	
+	protected void onResume(){
+		super.onResume();
+		
+		menuList = new MenuList(this);
+		loadNavigationDrawer();
+	}
+	
 	/**
 	 * Check Shared Preferences if the user had opened the Application before
 	 * 

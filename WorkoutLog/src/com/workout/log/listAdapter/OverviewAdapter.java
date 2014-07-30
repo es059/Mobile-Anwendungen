@@ -22,11 +22,14 @@ public class OverviewAdapter  extends ArrayAdapter<ListItem>{
 	private LayoutInflater layoutInflater;
 	private PerformanceTargetMapper pMapper = null;
 	private int trainingDayId;
+	private Context context = null;
 	
 	public OverviewAdapter(Context context, ArrayList<ListItem> items, int trainingDayId){
 		super(context,0,items);
 		this.items = items;
 		this.trainingDayId = trainingDayId;
+		this.context = context;
+		
 		pMapper = new PerformanceTargetMapper(getContext());
 		layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
@@ -59,8 +62,8 @@ public class OverviewAdapter  extends ArrayAdapter<ListItem>{
 				exerciseView.setText(exercise.getName());
 				//Get target performance information (Set & Repetition)
 				PerformanceTarget performanceTarget = pMapper.getPerformanceTargetByExerciseId(exercise, trainingDayId);
-				setView.setHint("Sätze: " + String.valueOf(performanceTarget.getSet()));
-				repetitionView.setHint("Wdh: " + String.valueOf(performanceTarget.getRepetition()));
+				setView.setHint(context.getResources().getString((R.string.Set)) + ": " + String.valueOf(performanceTarget.getSet()));
+				repetitionView.setHint(context.getResources().getString((R.string.Rep)) + ": " + String.valueOf(performanceTarget.getRepetition()));
 			}
 		}
 		return v;

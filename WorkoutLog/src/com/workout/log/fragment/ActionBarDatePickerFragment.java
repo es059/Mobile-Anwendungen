@@ -105,7 +105,7 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 	private void setDate(){
 		Calendar c = Calendar.getInstance();
 		if (String.valueOf(calendar.getTime().getDate()) == String.valueOf(c.getTime().getDate())){
-			date.setText("Heute");
+			date.setText(getResources().getString(R.string.ActionBarDatePickerFragment_Today));
 			next.setVisibility(View.INVISIBLE);
 			isCurrent = true;
 		}else{

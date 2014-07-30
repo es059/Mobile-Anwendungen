@@ -55,7 +55,7 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View view = inflater.inflate(R.layout.dialogfragment_exercise_edit, null);
 		
-		alert.setTitle("Übung hinzufügen");	
+		alert.setTitle(getResources().getString(R.string.ExerciseAddDialogFragment_ExerciseAdd));	
 		
 		// Set an EditText view to get user input 
 		exerciseName = (EditText) view.findViewById(R.id.EditText_ExerciseName);
@@ -83,7 +83,7 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 		
 		alert.setView(view);
 
-		alert.setPositiveButton("Speichern", new DialogInterface.OnClickListener() {
+		alert.setPositiveButton(getResources().getString(R.string.Save), new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int whichButton) {
 				// String aus Textfeld holen  
@@ -93,16 +93,16 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 					// Mapper-Methode aufrufen zum Hinzufügen einer neuen Übung
 					eMapper.add(value, selectedMuscleGroup);
 					// Toast einblenden 
-					Toast.makeText(getActivity(), "Übung wurde erfolgreich hinzugefügt!", Toast.LENGTH_SHORT ).show();
+					Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseAddDialogFragment_AddSuccess), Toast.LENGTH_SHORT ).show();
 					// ListView aktualisieren 
 					updateAdapter(eMapper.getAllExercise());
 				}else{
-					Toast.makeText(getActivity(), "Bitte füllen Sie sämtliche Felder aus!", Toast.LENGTH_SHORT ).show();
+					Toast.makeText(getActivity(), getResources().getString(R.string.MissingField), Toast.LENGTH_SHORT ).show();
 				}
 		  }
 		});
 
-		alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+		alert.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
 		  @Override
 		public void onClick(DialogInterface dialog, int whichButton) {
 		    // Canceled.

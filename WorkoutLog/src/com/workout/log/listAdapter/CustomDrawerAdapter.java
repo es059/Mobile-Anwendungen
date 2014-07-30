@@ -41,8 +41,8 @@ public class CustomDrawerAdapter extends ArrayAdapter<ListItem> {
     			if (item.isSection()){
     				DrawerHeader drawerHeader = (DrawerHeader) item;
     				
-    				if (drawerHeader.getTitle() == "Verwaltung") upperPart = false;
-    				if (drawerHeader.getTitle() == "Funktionen") upperPart = true;
+    				if (drawerHeader.getTitle() == context.getResources().getString(R.string.MenuList_Manage)) upperPart = false;
+    				if (drawerHeader.getTitle() == context.getResources().getString(R.string.MenuList_Functions)) upperPart = true;
     				
     				view = layoutInflater.inflate(R.layout.custom_drawer_header, null);
     				
@@ -68,7 +68,7 @@ public class CustomDrawerAdapter extends ArrayAdapter<ListItem> {
     					view.setBackgroundColor(Color.parseColor("#232323"));
     				}
     				
-    				if (drawerItem.getItemName() == "Import/Export") view.setPadding(0, 0, 0, 100);
+    				if (drawerItem.getItemName() == context.getResources().getString(R.string.MenuList_Import_Export)) view.setPadding(0, 0, 0, 100);
     				
     				final TextView 	itemName = (TextView) view.findViewById(R.id.drawer_itemName);
     				final ImageView	itemIcon = (ImageView) view.findViewById(R.id.drawer_icon);
@@ -77,20 +77,17 @@ public class CustomDrawerAdapter extends ArrayAdapter<ListItem> {
     				itemInformation.setTextColor(Color.WHITE);
     				itemName.setTextColor(Color.WHITE);
     				
-    				switch (drawerItem.getItemName()){
-	    				case "Trainingspläne":
-	    					WorkoutplanMapper wMapper = new WorkoutplanMapper(context);
-	    					itemInformation.setText(String.valueOf(wMapper.getAll().size()));
-	    					break;
-	    				case "Trainingstage":
-	    					TrainingDayMapper tMapper = new TrainingDayMapper(context);
-	    					itemInformation.setText(String.valueOf(tMapper.getAllTrainingDay().size()));
-	    					break;
-	    				case "Übungen":
-	    					ExerciseMapper eMapper = new ExerciseMapper(context);
-	    					itemInformation.setText(String.valueOf(eMapper.getAllExercise().size()));
-	    					break;
-    				}
+    				String itemNameString = drawerItem.getItemName();
+					if (context.getResources().getString(R.string.MenuList_Workoutplans).equals(itemNameString)) {
+						WorkoutplanMapper wMapper = new WorkoutplanMapper(context);
+						itemInformation.setText(String.valueOf(wMapper.getAll().size()));
+					} else if (context.getResources().getString(R.string.MenuList_Trainingdays).equals(itemNameString)) {
+						TrainingDayMapper tMapper = new TrainingDayMapper(context);
+						itemInformation.setText(String.valueOf(tMapper.getAllTrainingDay().size()));
+					} else if (context.getResources().getString(R.string.MenuList_Exercises).equals(itemNameString)) {
+						ExerciseMapper eMapper = new ExerciseMapper(context);
+						itemInformation.setText(String.valueOf(eMapper.getAllExercise().size()));
+					}
     				
     				itemName.setText(drawerItem.getItemName());
     				if (drawerItem.getImgResID() != -1){

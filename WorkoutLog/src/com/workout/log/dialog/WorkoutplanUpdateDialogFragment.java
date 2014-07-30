@@ -55,7 +55,7 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment{
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View view = inflater.inflate(R.layout.dialogfragment_workoutplan_edit, null);
 		
-		alert.setTitle("Trainingsplan ändern");
+		alert.setTitle(getResources().getString(R.string.TrainingDayEdit));
 		
 		// Set an EditText view to get user input 
 		final EditText workoutplanName = (EditText) view.findViewById(R.id.EditText_WorkoutplanName);
@@ -68,7 +68,7 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment{
 		
 		alert.setView(view);
 		
-		alert.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+		alert.setPositiveButton(getResources().getString(R.string.Update), new DialogInterface.OnClickListener() {
 		@Override
 		public void onClick(DialogInterface dialog, int whichButton) {
 			/**
@@ -81,16 +81,16 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment{
 				 * Update Workoutplan
 				 */
 				wMapper.update(w);
-				Toast.makeText(getActivity(), "Trainingstag wurde erfolgreich geändert!", Toast.LENGTH_SHORT ).show();
+				Toast.makeText(getActivity(), getResources().getString(R.string.TrainingDayEditSuccess), Toast.LENGTH_SHORT ).show();
 
 				updateFragment();			
 			}else{
-				Toast.makeText(getActivity(), "Bitte einen Namen angeben", Toast.LENGTH_SHORT ).show();
+				Toast.makeText(getActivity(), getResources().getString(R.string.MissingField), Toast.LENGTH_SHORT ).show();
 			}
 		  }
 		});
 
-		alert.setNeutralButton("Löschen", new DialogInterface.OnClickListener() {
+		alert.setNeutralButton(getResources().getString(R.string.Delete), new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				/**
@@ -161,13 +161,13 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment{
 				 * Show the Undo Layout
 				 */
 				UndoItem itemUndo=new UndoItem(items,null);
-				String messageUndoBar = "Item gelöscht";
+				String messageUndoBar = getResources().getString(R.string.ItemsDeleted);
         		 
 		        mUndoBarController.showUndoBar(false,messageUndoBar,itemUndo);
 			}
 		});
 		
-		alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+		alert.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
 		  @Override
 		public void onClick(DialogInterface dialog, int whichButton) {
 		    // Canceled.

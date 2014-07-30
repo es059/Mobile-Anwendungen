@@ -8,6 +8,9 @@
     <string name="ExerciseSpecific_NoDataAvailable">Leider sind keine Daten verfügbar</string>
     <string name="ExerciseSpecific_NewSet">Neuen Satz hinzugefügt!</string>
     
+    <!--  String resources for ActionBarDatePickerFragment -->
+    <string name="ActionBarDatePickerFragment_Today">Heute</string>
+    
     <!-- String resources for ImportExport -->
     <string name="ImportExport_Finished">Import der Daten abgeschlossen</string>
     <string name="ImportExport_ExportTo">Export in Verzeichnis</string>
@@ -27,6 +30,31 @@
     <string name="MenuList_Trainingdays">Trainingstage</string>
     <string name="MenuList_Exercises">Übungen</string>
     
+    <!-- String resources for ExerciseAddDialogFragment-->
+    <string name="ExerciseAddDialogFragment_ExerciseAdd">Übungen hinzufügen</string>
+    <string name="ExerciseAddDialogFragment_AddSuccess">Übung wurde erfolgreich hinzugefügt!</string>
+    
+    <!-- String resources for ExerciseSpecificAddDialogFragment-->
+    <string name="ExerciseSpecificAddDialogFragment_ExerciseAdd">Hinzufügen der Übungen</string>
+    
+    <string name="ExerciseSpecificAddDialogFramgent_AddSuccess">Übung wurde erfolgreich dem Trainingstag hinzugefügt</string>
+    <string name="ExerciseSpecificAddDialogFramgent_AddFailure">Übung kann nicht doppelt hinzugefügt werden</string>
+    
+    <!-- String resources for ExerciseUpdateDialogFragment-->
+    <string name="ExerciseUpdateDialogFragment_EditSuccess">Übung wurde erfolgreich geändert!</string>
+    
+    <!-- String resources for TrainingDayAddDialogFragment-->
+	<string name="TrainingDayAddDialogFragment_AddSuccess">Trainingstag wurde erfolgreich hinzugefügt!</string>
+	
+	<!--  String resources for TrainingDayAddToWorkoutplanDialogFragment -->
+	<string name="TrainingDayAddToWorkoutplanDialogFragment_AddSuccess">Trainingstag wurde erfolgreich dem Trainingsplan hinzugefügt!</string> 
+    
+ 	<!--  String resources for WorkoutplanAddDialogFragment -->
+ 	<string name="WorkoutplanAddDialogFragment_WorkoutplanAdd">Trainingsplan hinzufügen</string>
+	
+ 	<!--  String resources for LineGraph -->
+ 	<string name="LineGraph_Rep">Wiederholung</string>
+ 	
     <!-- Common string resources-->
     <string name="ItemsDeleted">Item(s) gelöscht</string>
     <string name="NotFound">nicht gefunden</string>
@@ -37,6 +65,29 @@
     <string name="Rep">Wdh</string>
     <string name="Exercise">Übungen</string>
     <string name="TrainingDay">Trainingstage</string>
+    <string name="Save">Speichern</string>
+    <string name="Cancel">Abbrechen</string>
+    <string name="Update">Ändern</string>
+    <string name="ExerciseEdit">Übung bearbeiten</string>
+    <string name="MissingField">"Bitte füllen Sie sämtliche Felder aus!"</string>
+    <string name="TrainingDayAddToWorkoutplan">Traniningstag hinzufügen</string>
+    <string name="TrainingDayAdd">Traniningstag hinzufügen</string>
+    <string name="TrainingDayEdit">Trainingsplan Ändern</string>
+    <string name="TrainingDayEditSuccess">Trainingstag wurde erfolgreich geändert!</string>
+    <string name="Delete">Löschen</string>
+    
+    <!-- ActionBar XML string resources-->
+  	<string name="ActionBar_Date">Datum</string>
+   	<string name="ActionBar_Search">Suchen</string>
+    <string name="ActionBar_Workoutplans">Trainingspläne</string>
+    
+    <!-- Common XML string resources-->
+    <string name="specific_repetition">Wdh</string>
+  	<string name="specific_set">Satz</string>
+  	<string name="specific_weight">Gewicht</string>
+  
+    <string name="DialogFragmentTrainingDayEdit_TrainingdayName">Trainingstagname</string>
+  	<string name="DiaglogFragmentWorkoutplanEdit">Trainingsplaname</string>
     
     <string name="app_name">Workout Log</string>
     <string name="title_activity_exercise_specific">Übung</string>
@@ -47,9 +98,6 @@
     <string name="menu_edit">Übung ändern</string>
     <string name="menu_workoutplan">Trainingsplan</string>
     <string name="menu_settings">Einstellungen</string>
-    <string name="specific_repetition">Wdh</string>
-    <string name="specific_set">Satz</string>
-    <string name="specific_weight">Gewicht</string>
     <string name="drawer_open">Open drawer</string>
     <string name="drawer_close">Close drawer</string>
 

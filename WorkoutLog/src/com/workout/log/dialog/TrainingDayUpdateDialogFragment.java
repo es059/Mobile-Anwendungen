@@ -43,7 +43,7 @@ public class TrainingDayUpdateDialogFragment extends DialogFragment {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View view = inflater.inflate(R.layout.dialogfragment_trainingday_edit, null);
 		
-		alert.setTitle("Trainingsplan Ändern");
+		alert.setTitle(getResources().getString(R.string.TrainingDayEdit));
 		
 		// Set an EditText view to get user input 
 		final EditText trainingDayName = (EditText) view.findViewById(R.id.EditText_TrainingdayName);
@@ -56,7 +56,7 @@ public class TrainingDayUpdateDialogFragment extends DialogFragment {
 		
 		alert.setView(view);
 		
-		alert.setPositiveButton("Update", new DialogInterface.OnClickListener(){
+		alert.setPositiveButton(getResources().getString(R.string.Update), new DialogInterface.OnClickListener(){
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				String value = String.valueOf(trainingDayName.getText());
@@ -65,16 +65,16 @@ public class TrainingDayUpdateDialogFragment extends DialogFragment {
 					// Mapper-Methode aufrufen zum Hinzufügen einer neuen Übung
 					tMapper.update(t);
 					// Toast einblenden 
-					Toast.makeText(getActivity(), "Trainingstag wurde erfolgreich geändert!", Toast.LENGTH_SHORT ).show();
+					Toast.makeText(getActivity(), getResources().getString(R.string.TrainingDayEditSuccess), Toast.LENGTH_SHORT ).show();
 					// ListView aktualisieren 
 					updateListView();
 				}else{
-					Toast.makeText(getActivity(), "Bitte sätmliche Felder ausfüllen", Toast.LENGTH_SHORT ).show();
+					Toast.makeText(getActivity(), getResources().getString(R.string.MissingField), Toast.LENGTH_SHORT ).show();
 				}
 			  }
 		});
 
-		alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+		alert.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int whichButton) {
 			    // Canceled.

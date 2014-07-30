@@ -42,7 +42,7 @@ public class ExerciseSpecificAddDialogFragment extends DialogFragment {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View view = inflater.inflate(R.layout.dialogfragment_exercise_specific, null);
 		
-		alert.setTitle("Hinzufügen der Übung");
+		alert.setTitle(getResources().getString(R.string.ExerciseSpecificAddDialogFragment_ExerciseAdd));
 		
 		eTargetSetCount = (NumberPicker) view.findViewById(R.id.Satzanzahl);
 		eTargetRepCount = (NumberPicker) view.findViewById(R.id.WdhAnzahl);
@@ -56,26 +56,26 @@ public class ExerciseSpecificAddDialogFragment extends DialogFragment {
 		alert.setView(view);
 		
 		
-		alert.setPositiveButton("Speichern", new DialogInterface.OnClickListener() {
+		alert.setPositiveButton(getResources().getString(R.string.Save), new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int whichButton) {
 				String eTargetSet = String.valueOf(eTargetSetCount.getValue());
 				String eTargetRep = String.valueOf(eTargetRepCount.getValue());
 				
 				if(eTargetSet.isEmpty() || eTargetRep.isEmpty()) {
-					Toast.makeText(getActivity(), "Bitte alle Felder ausfüllen!", Toast.LENGTH_SHORT ).show();
+					Toast.makeText(getActivity(), getResources().getString(R.string.MissingField), Toast.LENGTH_SHORT ).show();
 				}else {
 					if (!tdMapper.checkIfExist(trainingDayId, exerciseId)){
 						tdMapper.addExerciseToTrainingDayAndPerformanceTarget(trainingDayId, exerciseId, eTargetSetCount.getValue(), eTargetRepCount.getValue());
-						Toast.makeText(getActivity(), "Übung wurde erfolgreich dem Trainingtag hinzugefügt!", Toast.LENGTH_SHORT ).show();
+						Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseSpecificAddDialogFramgent_AddSuccess), Toast.LENGTH_SHORT ).show();
 					}else{
-						Toast.makeText(getActivity(), "Übung kann nicht doppelt hinzugefügt werden", Toast.LENGTH_SHORT ).show();
+						Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseSpecificAddDialogFramgent_AddFailure), Toast.LENGTH_SHORT ).show();
 					}
 					
 				}		
 			  }
 			});
-			alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+			alert.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int whichButton) {}
 			});

@@ -42,7 +42,7 @@ public class ExerciseSpecificUpdateDialogFragment extends DialogFragment{
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View view = inflater.inflate(R.layout.dialogfragment_exercise_specific, null);
 		
-		alert.setTitle("Ändern der Übung");
+		alert.setTitle(getResources().getString(R.string.ExerciseEdit));
 
 		final NumberPicker eTargetSetCount = (NumberPicker) view.findViewById(R.id.Satzanzahl);
 		final NumberPicker eTargetRepCount = (NumberPicker) view.findViewById(R.id.WdhAnzahl);
@@ -67,22 +67,20 @@ public class ExerciseSpecificUpdateDialogFragment extends DialogFragment{
 		
 		alert.setView(view);
 		
-		alert.setPositiveButton("Update", new DialogInterface.OnClickListener(){
+		alert.setPositiveButton(getResources().getString(R.string.Update), new DialogInterface.OnClickListener(){
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				pt.setRepetition(eTargetRepCount.getValue());
 				pt.setSet(eTargetSetCount.getValue());
 				
 				pMapper.updatePerformanceTarget(pt);
-				
-				// Toast einblenden 
-				Toast.makeText(getActivity(), "Trainingstag wurde erfolgreich geändert!", Toast.LENGTH_SHORT ).show();
-				// ListView aktualisieren 
+				 
+				Toast.makeText(getActivity(), getResources().getString(R.string.TrainingDayEditSuccess), Toast.LENGTH_SHORT ).show();
 				updateListView();
 			  }
 		});
 
-		alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+		alert.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int whichButton) {
 			    // Canceled.

@@ -5,17 +5,21 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
 import org.achartengine.ChartFactory;
 import org.achartengine.chart.PointStyle;
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint.Align;
 import android.view.View;
+
+import com.example.workoutlog.R;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.PerformanceActual;
 import com.workout.log.db.PerformanceActualMapper;
@@ -73,8 +77,8 @@ public class LineGraph{
 		View mChart = null;
 		getPerformanceActualData(context, exericse);
 		if (!date.isEmpty()){  
-			XYSeries weightSeries =  new XYSeries("Gewicht",0);
-			XYSeries repetitionsSeries =  new XYSeries("Wiederholung",1);
+			XYSeries weightSeries =  new XYSeries(context.getResources().getString(R.string.Weight),0);
+			XYSeries repetitionsSeries =  new XYSeries(context.getResources().getString(R.string.LineGraph_Rep),1);
 	
 			XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
 	

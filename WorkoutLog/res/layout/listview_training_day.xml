@@ -36,7 +36,7 @@
 	                android:layout_height="wrap_content"
 	                android:layout_gravity="center_vertical"
 	                android:layout_marginLeft="8dp"
-				 	android:hint="(Übungen)"
+				 	android:hint="@+string/exercise"
 				 	android:singleLine="true"
 				 	android:textAppearance="?android:attr/textAppearanceSmall"  />
 

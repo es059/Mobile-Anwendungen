@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.Toast;
 
+import com.example.workoutlog.R;
 import com.workout.log.db.WorkoutplanMapper;
 
 @SuppressLint("ValidFragment")
@@ -33,9 +34,9 @@ private static WorkoutplanMapper wpMapper;
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState){
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-		alert.setTitle("Trainingstag hinzufügen");
+		alert.setTitle(getResources().getString(R.string.TrainingDayAddToWorkoutplan));
 	
-		alert.setPositiveButton("Bestätigen", new DialogInterface.OnClickListener() {
+		alert.setPositiveButton(getResources().getString(R.string.Save), new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int whichButton) {
 				/**
@@ -46,11 +47,11 @@ private static WorkoutplanMapper wpMapper;
 		        /**
 		         * Show a Message that the trainingday was added to the workoutplan
 		         */
-		        Toast.makeText(getActivity(), "Trainingstag wurde erfolgreich dem Trainingsplan hinzugefügt!", Toast.LENGTH_SHORT ).show();
+		        Toast.makeText(getActivity(), getResources().getString(R.string.TrainingDayAddToWorkoutplanDialogFragment_AddSuccess), Toast.LENGTH_SHORT ).show();
 			  }
 			});
 
-			alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+			alert.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
 			  @Override
 			public void onClick(DialogInterface dialog, int whichButton) {
 			    // Canceled.

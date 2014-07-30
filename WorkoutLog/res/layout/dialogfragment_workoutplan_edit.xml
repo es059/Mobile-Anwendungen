@@ -10,7 +10,6 @@
         android:paddingTop="20dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/TextView_Information"
         android:singleLine="true"
-        android:hint="Trainingsplan Name" />
+        android:hint="@+string/DiaglogFragmentWorkoutplanEdit" />
 </RelativeLayout>

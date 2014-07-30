@@ -41,14 +41,14 @@ public class WorkoutplanAddDialogFragment extends DialogFragment {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View view = inflater.inflate(R.layout.dialogfragment_workoutplan_edit, null);
 		
-		alert.setTitle("Trainingsplan hinzufügen");
+		alert.setTitle(getResources().getString(R.string.WorkoutplanAddDialogFragment_WorkoutplanAdd));
 		
 		// Set an EditText view to get user input 
 		final EditText workoutplanName = (EditText) view.findViewById(R.id.EditText_WorkoutplanName);
 		
 		alert.setView(view);
 
-		alert.setPositiveButton("Speichern", new DialogInterface.OnClickListener() {
+		alert.setPositiveButton(getResources().getString(R.string.Save),new DialogInterface.OnClickListener() {
 		@Override
 		public void onClick(DialogInterface dialog, int whichButton) {
 			Workoutplan w = new Workoutplan();
@@ -65,7 +65,7 @@ public class WorkoutplanAddDialogFragment extends DialogFragment {
 			ft.commit();
 		  }
 		});
-		alert.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+		alert.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
 		  @Override
 		public void onClick(DialogInterface dialog, int whichButton) {
 		    // Canceled.

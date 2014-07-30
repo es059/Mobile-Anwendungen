@@ -20,7 +20,9 @@ public class DailyStatisticListAdapter extends ExpandableListItemAdapter<Statist
 
     private LayoutInflater layoutInflater;
     private List<StatisticListElement> items;
-    /*
+    private Context context = null;
+    
+    /**
      * This will create a new ExpandableListItemAdapter, providing a custom layout resource, 
      * and the two child ViewGroups' id's. If you don't want this, just pass either just the
      * Context, or the Context and the List<T> up to super.
@@ -29,6 +31,7 @@ public class DailyStatisticListAdapter extends ExpandableListItemAdapter<Statist
         super(context, R.layout.activity_expandablelistitem_card, R.id.activity_expandablelistitem_card_title, R.id.activity_expandablelistitem_card_content, items);   
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.items = items;
+        this.context = context;
         
     }
 
@@ -53,7 +56,7 @@ public class DailyStatisticListAdapter extends ExpandableListItemAdapter<Statist
         sp = new SimpleDateFormat ("EEE, MMM d, yyyy");
         
         date.setText(sp.format(tempDate));
-        set.setText(items.get(position).getPerformanceActualList().size() + " Sätze");
+        set.setText(items.get(position).getPerformanceActualList().size() + " " + context.getResources().getString((R.string.Set)));
         date.setTextColor(Color.WHITE);
         set.setTextColor(Color.WHITE);
         return v;
