@@ -144,7 +144,7 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 				}
 				updateListView();
 				exerciseListView.setOnItemLongClickListener(this);
-				Toast.makeText(getActivity(), "Drag & Drop ist deaktiviert", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), getResources().getString(R.string.TrainingDayExerciseOverview_DDInactive), Toast.LENGTH_LONG).show();
 			}else{
 				sortMode = true;
 				
@@ -156,7 +156,7 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 				listAdapter.notifyDataSetChanged();
 				
 				exerciseListView.setOnItemLongClickListener(exerciseListView.getItemLongClickListener());
-				Toast.makeText(getActivity(), "Drag & Drop ist aktiviert", Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), getResources().getString(R.string.TrainingDayExerciseOverview_DDActive), Toast.LENGTH_LONG).show();
 			}
 		}
 		else if( id == R.id.menu_add){
@@ -262,7 +262,7 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
      		            		count++;
      		            	}
      		            }
-     		            String messageUndoBar = count + " Item(s) gelöscht";
+     		            String messageUndoBar = count + " " + getResources().getString(R.string.ItemsDeleted);
      		            		 
      		            mUndoBarController.showUndoBar(false,messageUndoBar,itemUndo);	
                     }

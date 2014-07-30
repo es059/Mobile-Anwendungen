@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- String resources for HelperActivity -->
+    <string name="HelperActivity_Close">Erneut drücken um zu Beenden</string>
+    
+    <!-- String resources for ExerciseSpecific -->
+    <string name="ExerciseSpecific_NoDataAvailable">Leider sind keine Daten verfügbar</string>
+    <string name="ExerciseSpecific_NewSet">Neuen Satz hinzugefügt!</string>
+    
+    <!-- String resources for ImportExport -->
+    <string name="ImportExport_Finished">Import der Daten abgeschlossen</string>
+    <string name="ImportExport_ExportTo">Export in Verzeichnis</string>
+    <string name="ImportExport_ChooseDb">Bitte wählen Sie eine DB-Datei aus</string>
+    
+    <!-- String resources for TrainingDayExerciseOverview -->
+    <string name="TrainingDayExerciseOverview_DDActive">Drag U+0026 Drop ist aktiviert</string>
+    <string name="TrainingDayExerciseOverview_DDInactive">Drag U+0026 Drop ist deaktiviert</string>
+    
+    <!-- String resources for MenuList -->
+    <string name="MenuList_Functions">Funktionen</string>
+    <string name="MenuList_Diary">Tagebuch</string>
+    <string name="MenuList_Statistic">Statistic</string>
+    <string name="MenuList_Import_Export">Import/Export</string>
+    <string name="MenuList_Manage">Verwaltung</string>
+    <string name="MenuList_Workoutplans">Trainingspläne</string>
+    <string name="MenuList_Trainingdays">Trainingstage</string>
+    <string name="MenuList_Exercises">Übungen</string>
+    
+    <!-- Common string resources-->
+    <string name="ItemsDeleted">Item(s) gelöscht</string>
+    <string name="NotFound">nicht gefunden</string>
+    <string name="Add">Hinzufügen</string>
+    <string name="DataSaved">Daten wurden gespeichert</string>
+    <string name="Set">Sätze</string>
+    <string name="Weight">Gewicht</string>
+    <string name="Rep">Wdh</string>
+    <string name="Exercise">Übungen</string>
+    <string name="TrainingDay">Trainingstage</string>
+    
+    <string name="app_name">Workout Log</string>
+    <string name="title_activity_exercise_specific">Übung</string>
+    <string name="title_activity_add">Übung hinzufügen</string>
+    <string name="title_activity_workoutplan_add">Trainingsplan</string>
+    <string name="menu_add">Hinzufügen</string>
+    <string name="menu_save">Speichern</string>
+    <string name="menu_edit">Übung ändern</string>
+    <string name="menu_workoutplan">Trainingsplan</string>
+    <string name="menu_settings">Einstellungen</string>
+    <string name="specific_repetition">Wdh</string>
+    <string name="specific_set">Satz</string>
+    <string name="specific_weight">Gewicht</string>
+    <string name="drawer_open">Open drawer</string>
+    <string name="drawer_close">Close drawer</string>
+
+    <string-array name="exerciseLongClickDialogArray">
+        <item>Löschen</item>
+        <item>Ändern</item>
+    </string-array>
+    
+    <string-array name="MuscleGroup">
+        <item>Rücken</item>
+        <item>Bauch</item>
+        <item>Schulter</item>
+        <item>Brust</item>
+        <item>Beine</item>
+        <item>Trizeps</item>
+        <item>Bizeps</item>
+        <item>Cardio</item>
+    </string-array>
+
+    <string name="title_activity_training_day_add">TrainingDayAdd</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="navigations_Liste">
+        <item>Home</item>
+        <item>Tagebuch</item>
+        <item>Trainingsplan</item>
+    </string-array>
+
+    <string name="title_activity_training_day_select">TrainingDaySelect</string>
+    <string name="title_activity_workout_select">WorkoutSelect</string>
+    <string name="title_activity_graph">GraphActivity</string>
+    <string name="title_activity_exercise_add_to_training_day">ExerciseAddToTrainingDay</string>
+    <string name="title_activity_training_day_exercise_overview">TrainingDayExerciseOverview</string>
+
+    <plurals name="items">
+        <item quantity="one">1 item removed</item>
+        <item quantity="other">%d items removed</item>
+    </plurals>
+
+    <string name="title_activity_manage_workoutplan">ManageWorkoutplan</string>
+    <string name="title_activity_training_day_add_to_workoutplan">TrainingDayAddToWorkoutplan</string>
+
+</resources>

@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.workoutlog.R;
@@ -36,7 +35,6 @@ public class TrainingDayUpdateDialogFragment extends DialogFragment {
 		this.fragment = fragment;
 		
 		tMapper = new TrainingDayMapper(fragment.getActivity());
-
 	}
 
 	@Override
@@ -46,9 +44,6 @@ public class TrainingDayUpdateDialogFragment extends DialogFragment {
 		View view = inflater.inflate(R.layout.dialogfragment_trainingday_edit, null);
 		
 		alert.setTitle("Trainingsplan Ändern");
-		// Set an TextView view to view the InformationText
-		TextView informationText = (TextView) view.findViewById(R.id.TextView_Information);
-		informationText.setText("Bitte geben Sie einen neuen Namen des Trainingsplans ein:");
 		
 		// Set an EditText view to get user input 
 		final EditText trainingDayName = (EditText) view.findViewById(R.id.EditText_TrainingdayName);

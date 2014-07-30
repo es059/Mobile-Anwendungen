@@ -15,7 +15,6 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.workoutlog.R;
@@ -57,9 +56,6 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 		View view = inflater.inflate(R.layout.dialogfragment_exercise_edit, null);
 		
 		alert.setTitle("Übung hinzufügen");	
-		// Set an TextView view to view the InformationText
-		TextView informationText = (TextView) view.findViewById(R.id.TextView_Information);
-		informationText.setText("Bitte geben sie den Namen Ihrer Übung hier ein \nund wählen Sie passende Muskelgruppe aus:");
 		
 		// Set an EditText view to get user input 
 		exerciseName = (EditText) view.findViewById(R.id.EditText_ExerciseName);

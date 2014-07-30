@@ -135,7 +135,7 @@ public class ImportExport extends Fragment implements OnItemClickListener {
 		try {
 			newDb = new FileOutputStream(currentPath.toString() + "/WorkoutLog_" + sD.format(new Date()) +".db");
 			dataBaseHelper.copyDatabase(null, newDb);
-			Toast.makeText(getActivity(), "Export in Verzeichnis " + currentPath.toString(), Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), getResources().getString(R.string.ImportExport_ExportTo) + " " + currentPath.toString(), Toast.LENGTH_SHORT).show();
 			/**
         	 * Load the new File list
         	 */
@@ -159,9 +159,9 @@ public class ImportExport extends Fragment implements OnItemClickListener {
 		try {
 			if (dbPath.getName().endsWith(".db")){
 				dataBaseHelper.importDatabase(dbPath.getAbsolutePath());								
-				Toast.makeText(getActivity(), "Import der Daten abgeschlossen", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), getResources().getString(R.string.ImportExport_Finished), Toast.LENGTH_SHORT).show();
 			}else{
-				Toast.makeText(getActivity(), "Bitte wählen Sie eine DB-Datei aus", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), getResources().getString(R.string.ImportExport_ChooseDb), Toast.LENGTH_SHORT).show();
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

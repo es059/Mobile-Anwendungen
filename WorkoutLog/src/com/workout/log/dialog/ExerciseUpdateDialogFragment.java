@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.workoutlog.R;
@@ -51,13 +50,9 @@ public class ExerciseUpdateDialogFragment extends DialogFragment {
 		View view = inflater.inflate(R.layout.dialogfragment_exercise_edit, null);
 		
 		final EditText exerciseName = (EditText) view.findViewById(R.id.EditText_ExerciseName);
-		final Spinner muscleGroup = (Spinner) view.findViewById(R.id.Spinner_MuscleGroup);
-		TextView informationText = (TextView) view.findViewById(R.id.TextView_Information);
-		
+		final Spinner muscleGroup = (Spinner) view.findViewById(R.id.Spinner_MuscleGroup);		
 
 		alert.setTitle("Übung bearbeiten");
-		// Set an TextView view to view the InformationText
-		informationText.setText("Nehmen Sie die Änderungen an Ihrer Übung hier vor:");
 		// Create an ArrayAdapter using the string array and a default spinner layout
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(fragment.getActivity(),
 		        R.array.MuscleGroup, android.R.layout.simple_spinner_item);

@@ -42,7 +42,7 @@ public class ExerciseSpecificUpdateDialogFragment extends DialogFragment{
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View view = inflater.inflate(R.layout.dialogfragment_exercise_specific, null);
 		
-		alert.setTitle("Hinzufügen der Übung");
+		alert.setTitle("Ändern der Übung");
 
 		final NumberPicker eTargetSetCount = (NumberPicker) view.findViewById(R.id.Satzanzahl);
 		final NumberPicker eTargetRepCount = (NumberPicker) view.findViewById(R.id.WdhAnzahl);

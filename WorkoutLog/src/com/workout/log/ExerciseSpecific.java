@@ -56,10 +56,9 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 	private static ArrayList<PerformanceActual> performanceActualList = null;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.exercise_specific, container,
-				false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.exercise_specific, container,false);
+		
 		performanceActualList = new ArrayList<PerformanceActual>();
 		/**
 		 * Set the visibility of the NavigationDrawer to Invisible
@@ -267,7 +266,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 			transaction.replace(R.id.fragment_container, dailyStatistic, "DailyStatistic");
 			transaction.commit();
 		}else{
-			Toast.makeText(getActivity(), "Leider sind keine Daten verfügbar", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseSpecific_NoDataAvailable), Toast.LENGTH_SHORT).show();
 		}
 	}
 	
@@ -306,8 +305,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 	 * 
 	 */
 	public void addPerformanceActualItem() {
-		if (dateFragment == null) dateFragment = (ActionBarDatePickerFragment) getFragmentManager()
-				.findFragmentByTag("DateTimePicker");
+		if (dateFragment == null) dateFragment = (ActionBarDatePickerFragment) getFragmentManager().findFragmentByTag("DateTimePicker");
 		// New PerformanceActual Object
 		PerformanceActual pa = new PerformanceActual();
 		pa.setExercise(exercise);
@@ -318,8 +316,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		// Set the ArrayList on the current value
 		performanceActualList = adapter.getPerformanceActualList();
 		// Show the User a hint message
-		Toast.makeText(getActivity(), "Neuen Satz hinzugefügt!",
-				Toast.LENGTH_SHORT).show();
+		Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseSpecific_NewSet),Toast.LENGTH_SHORT).show();
 	}
 
 	
@@ -350,10 +347,8 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 	 * 
 	 */
 	public void savePerformanceActual() {
-		PerformanceActualMapper pMapper = new PerformanceActualMapper(
-				getActivity());
-		dateFragment = (ActionBarDatePickerFragment) getFragmentManager()
-				.findFragmentByTag("DateTimePicker");
+		PerformanceActualMapper pMapper = new PerformanceActualMapper(getActivity());
+		dateFragment = (ActionBarDatePickerFragment) getFragmentManager().findFragmentByTag("DateTimePicker");
 		/**
 		 * Variables used to identify if a item is changed or not. True if the
 		 * values have not changed
@@ -414,8 +409,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 			}
 		}
 		if (saveMode)
-			Toast.makeText(getActivity(), "Daten wurden gespeichert",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(), getResources().getString(R.string.DataSaved), Toast.LENGTH_SHORT).show();
 	}
 
 	/**
@@ -521,7 +515,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		            		 count++;
 		            	 }
 		             }
-		             String messageUndoBar = count + " Item(s) gelöscht";
+		             String messageUndoBar = count + " " + getResources().getString(R.string.ItemsDeleted);
 		            		 
 		             mUndoBarController.showUndoBar(false,messageUndoBar,itemUndo);
 		         }

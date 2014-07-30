@@ -34,6 +34,6 @@ public class ListViewTrainingDay extends RelativeLayout{
 		 */
 		ExerciseMapper eMapper = new ExerciseMapper(getContext());
 		ArrayList<Exercise> exerciseList = eMapper.getExerciseByTrainingDay(trainingDay.getId());
-		this.exerciseCount.setHint("Übungen: " + String.valueOf(exerciseList.size()));	
+		this.exerciseCount.setHint(getResources().getString(R.string.Exercise) + ": " + String.valueOf(exerciseList.size()));	
 	}
 }

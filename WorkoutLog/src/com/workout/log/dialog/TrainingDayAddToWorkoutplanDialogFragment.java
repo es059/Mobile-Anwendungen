@@ -34,7 +34,6 @@ private static WorkoutplanMapper wpMapper;
 	public Dialog onCreateDialog(Bundle savedInstanceState){
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 		alert.setTitle("Trainingstag hinzufügen");
-		alert.setMessage("Wollen Sie diesen Trainingstag dem Trainingsplan hinzufügen?");
 	
 		alert.setPositiveButton("Bestätigen", new DialogInterface.OnClickListener() {
 			@Override
@@ -43,23 +42,7 @@ private static WorkoutplanMapper wpMapper;
 				 * Save the trainingday to the current workoutplan
 				 */
 				wpMapper.addTrainingDayToWorkoutplan(trainingDayId, workoutPlanId);
-				
-			/*	*//**
-				 * Prepare the transaction and submit the workoutPlanId 
-				 *//*
-				Bundle data = new Bundle();
-				
-			    data.putInt("WorkoutplanId",workoutPlanId);
-				
-			    ManageWorkoutplan manageWorkoutPlan = new ManageWorkoutplan();
-			    manageWorkoutPlan.setArguments(data);
-			    
-			    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-		        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		        transaction.replace(R.id.fragment_container, manageWorkoutPlan , "ExerciseOverview");
-		        transaction.addToBackStack(null);
-		        transaction.commit();*/
-				
+						
 		        /**
 		         * Show a Message that the trainingday was added to the workoutplan
 		         */

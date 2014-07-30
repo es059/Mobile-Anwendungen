@@ -206,7 +206,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 		            		count++;
 		            	}
 		            }
-		            String messageUndoBar = count + " Item(s) gelöscht";
+		            String messageUndoBar = count + " " + getResources().getString(R.string.ItemsDeleted);
 		            		 
 		            mUndoBarController.showUndoBar(false,messageUndoBar,itemUndo);
                }
@@ -287,7 +287,8 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	        getActivity().setProgressBarIndeterminateVisibility(true);
 	    }
 
-	    @Override
+	    @SuppressWarnings("unchecked")
+		@Override
 	    protected StableArrayAdapter doInBackground(ArrayList<TrainingDay>... params) {
 	    	stableArrayAdapter = null;
 	    	currentListId = -1;

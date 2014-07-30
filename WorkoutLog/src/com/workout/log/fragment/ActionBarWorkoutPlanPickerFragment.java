@@ -3,6 +3,7 @@ package com.workout.log.fragment;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -53,6 +54,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 		return view;
 	}
 
+	@SuppressLint("SimpleDateFormat")
 	@Override
 	public void onResume(){
 		super.onResume();
@@ -112,6 +114,8 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 		manageWorkoutplan.updateListView(trainingDayList);
 	}
 		
+	@SuppressWarnings("static-access")
+	@SuppressLint("SimpleDateFormat")
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();

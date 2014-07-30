@@ -71,7 +71,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 		if (transferExtras != null){				
 			try{
 				if (transferExtras.getBoolean("SaveMode")){
-					Toast.makeText(getActivity(), "Daten wurden gespeichert", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getActivity(), getResources().getString(R.string.DataSaved), Toast.LENGTH_SHORT).show();
 				}
 				trainingDayId = transferExtras.getInt("TrainingDayId");
 				actionBarTrainingDayPickerFragment.setCurrentTrainingDay(trainingDayId);

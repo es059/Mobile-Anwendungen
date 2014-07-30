@@ -46,7 +46,7 @@ public class HelperActivity extends FragmentActivity{
     private CharSequence mTitle;
 
     private CustomDrawerAdapter adapter;
-    private MenuList menuList = new MenuList();
+    private MenuList menuList = new MenuList(this);
     
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -117,7 +117,7 @@ public class HelperActivity extends FragmentActivity{
 	    		        return;
 	    		    }
 	    		    this.doubleBackToExitPressedOnce = true;
-	    		    Toast.makeText(this, "Erneut drücken um zu Beenden", Toast.LENGTH_SHORT).show();
+	    		    Toast.makeText(this, getResources().getString(R.string.HelperActivity_Close), Toast.LENGTH_SHORT).show();
 
 	    		    new Handler().postDelayed(new Runnable() {
 

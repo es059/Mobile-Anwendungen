@@ -265,7 +265,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
  		            		count++;
  		            	}
  		            }
- 		            String messageUndoBar = count + " Item(s) gelöscht";
+ 		            String messageUndoBar = count + " " + getResources().getString(R.string.ItemsDeleted);
  		            		 
  		            mUndoBarController.showUndoBar(false,messageUndoBar,itemUndo);	 
                 }

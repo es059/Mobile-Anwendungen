@@ -34,6 +34,6 @@ public class SpinnerExercise extends RelativeLayout {
 		PerformanceActualMapper paMapper = new PerformanceActualMapper(getContext());
 		this.titel.setText(exercise.getName());
 		//Fill the TextView with the trainingDays of the exercise
-		this.trainingDays.setHint("(Trainingstage: " + String.valueOf(paMapper.getTrainingDaysbyExercise(exercise.getId())+ ")"));
+		this.trainingDays.setHint(getResources().getString(R.string.TrainingDay) + ": " + String.valueOf(paMapper.getTrainingDaysbyExercise(exercise.getId())+ ")"));
 	}
 }

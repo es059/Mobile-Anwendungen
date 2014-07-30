@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.example.workoutlog.R;
 import com.workout.log.bo.Workoutplan;
@@ -43,9 +42,6 @@ public class WorkoutplanAddDialogFragment extends DialogFragment {
 		View view = inflater.inflate(R.layout.dialogfragment_workoutplan_edit, null);
 		
 		alert.setTitle("Trainingsplan hinzufügen");
-		// Set an TextView view to view the InformationText
-		TextView informationText = (TextView) view.findViewById(R.id.TextView_Information);
-		informationText.setText("Bitte geben Sie den Namen eines neuen Trainingsplans ein:");
 		
 		// Set an EditText view to get user input 
 		final EditText workoutplanName = (EditText) view.findViewById(R.id.EditText_WorkoutplanName);

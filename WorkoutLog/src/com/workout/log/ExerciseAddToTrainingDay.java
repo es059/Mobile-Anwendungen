@@ -184,8 +184,8 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 		exerciseList = list;
 		if (exerciseList.size() == 0){
 			Default d = new Default();
-			d.setTitel(exerciseStringName + " nicht gefunden");
-			d.setHint("Hinzufügen");
+			d.setTitel(exerciseStringName + " " + getResources().getString(R.string.NotFound));
+			d.setHint(getResources().getString(R.string.Add));
 			ArrayList<Default> ld = new ArrayList<Default>();
 			ld.add(d);
 			DefaultAddListAdapter l = new DefaultAddListAdapter(getActivity(), 0, ld);
@@ -275,7 +275,7 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
  		            		count++;
  		            	}
  		            }
- 		            String messageUndoBar = count + " Item(s) gelöscht";
+ 		            String messageUndoBar = count + " " + getResources().getString(R.string.ItemsDeleted);
  		            		 
  		            mUndoBarController.showUndoBar(false,messageUndoBar,itemUndo);	
                 }

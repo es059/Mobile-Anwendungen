@@ -224,7 +224,7 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener,
  		            		count++;
  		            	}
  		            }
- 		            String messageUndoBar = count + " Item(s) gelöscht";
+ 		            String messageUndoBar = count + " " + getResources().getString(R.string.ItemsDeleted);
  		            		 
  		            mUndoBarController.showUndoBar(false,messageUndoBar,itemUndo);	         
                 }
