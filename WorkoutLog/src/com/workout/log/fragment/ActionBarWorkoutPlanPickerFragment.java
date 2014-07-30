@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.workoutlog.R;
+import com.workout.log.ExerciseOverview;
 import com.workout.log.ManageWorkoutplan;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.bo.Workoutplan;
@@ -130,7 +131,10 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 				
 				manageWorkoutplan.updateListView(tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanList.get(currentListId +1).getId()));
 				manageWorkoutplan.setWorkoutplanId(workoutplanList.get(currentListId +1).getId());
+				
 				wpMapper.setCurrent(workoutplanList.get(currentListId +1).getId());
+				((ExerciseOverview) getActivity().getSupportFragmentManager().findFragmentByTag("ExerciseOverview")).setTrainingDay(-1);
+				
 				Toast.makeText(getActivity(), workoutplanList.get(currentListId +1).getName() + " ist nun aktiv!", Toast.LENGTH_SHORT ).show();
 				currentListId += 1;
 				if(workoutplanList.size() <= currentListId +1) {
@@ -146,7 +150,10 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 			workoutplanDateView.setText(sp.format(workoutplanList.get(currentListId -1).getTimeStamp()));
 			manageWorkoutplan.updateListView(tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanList.get(currentListId -1).getId()));
 			manageWorkoutplan.setWorkoutplanId(workoutplanList.get(currentListId - 1).getId());
+			
 			wpMapper.setCurrent(workoutplanList.get(currentListId -1).getId());
+			((ExerciseOverview) getActivity().getSupportFragmentManager().findFragmentByTag("ExerciseOverview")).setTrainingDay(-1);
+			
 			Toast.makeText(getActivity(), workoutplanList.get(currentListId -1).getName() + " ist nun aktiv!", Toast.LENGTH_SHORT ).show();
 			currentListId -= 1;
 			if(currentListId == 0) {

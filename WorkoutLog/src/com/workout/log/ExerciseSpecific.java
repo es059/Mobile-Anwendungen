@@ -224,8 +224,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 	 */
 	public void updateListView(ArrayList<PerformanceActual> pa) {
 		adapter = new PerformanceActualListAdapter(getActivity(), 0, pa);
-		
-		
+			
 		/**
 		 * Enable animation of the ListView Items
 		 */
@@ -249,19 +248,30 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 			addPerformanceActualItem();
 		}
 		if (id == R.id.menu_statistic){
-			DailyStatistic dailyStatistic = new DailyStatistic();
-			Bundle args = new Bundle();
-			args.putInt("exercise_Id", exerciseId);
-			dailyStatistic.setArguments(args);
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-			transaction.replace(R.id.fragment_container, dailyStatistic, "DailyStatistic");
-			transaction.addToBackStack(null);
-			transaction.commit();
+			openDailyStatistic();
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
+	public void openDailyStatistic(){
+		if (paMapper.getAllStatisticElements(exercise.getId(), paMapper.getAllDates(exercise)).size() != 0){
+			DailyStatistic dailyStatistic = new DailyStatistic();
+			Bundle args = new Bundle();
+			
+			args.putInt("exercise_Id", exercise.getId());
+			args.putString("exerciseName", exercise.getName());
+			dailyStatistic.setArguments(args);
+			
+			FragmentTransaction transaction = getFragmentManager().beginTransaction();
+			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			transaction.replace(R.id.fragment_container, dailyStatistic, "DailyStatistic");
+			transaction.commit();
+		}else{
+			Toast.makeText(getActivity(), "Leider sind keine Daten verfügbar", Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	
 	/**
 	 * Opens the ExerciseOverview Activity and tells it which TrainingDay to
 	 * open

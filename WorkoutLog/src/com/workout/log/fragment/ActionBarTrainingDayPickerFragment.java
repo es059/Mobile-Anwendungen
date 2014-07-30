@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.example.workoutlog.R;
 import com.workout.log.ExerciseOverview;
-import com.workout.log.SwipeAnimation;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.bo.Workoutplan;
 import com.workout.log.db.TrainingDayMapper;
@@ -44,6 +43,7 @@ public class ActionBarTrainingDayPickerFragment extends Fragment implements OnCl
 		trainingDayPicker = (TextView) view.findViewById(R.id.trainingDayPicker);
 		
 		if (!trainingDayList.isEmpty()){
+			if(index >= trainingDayList.size()) index = 0;
 			trainingDayPicker.setText(trainingDayList.get(index).getName());
 		}else{
 			trainingDayPicker.setHint("Trainingstage");

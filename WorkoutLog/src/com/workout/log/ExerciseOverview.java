@@ -232,22 +232,6 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 	        super.onPostExecute(result);
 
 	        if (result != null){
-	   /*     	*//**
-	    		 * Enable animation of the ListView Items
-	    		 *//*
-	        	if (swipeAnimation == SwipeAnimation.Normal){
-		        	SwingBottomInAnimationAdapter swingButtonInAnimationAdapter = new SwingBottomInAnimationAdapter(result);
-		        	swingButtonInAnimationAdapter.setAbsListView(exerciseView);
-		        	exerciseView.setAdapter(swingButtonInAnimationAdapter);
-	        	}else if (swipeAnimation == SwipeAnimation.Right){
-	        		SwingLeftInAnimationAdapter swingLeftInAnimationAdapter = new SwingLeftInAnimationAdapter(result);
-	        		swingLeftInAnimationAdapter.setAbsListView(exerciseView);
-	        		exerciseView.setAdapter(swingLeftInAnimationAdapter);
-	        	}else if (swipeAnimation == SwipeAnimation.Left){
-	        		SwingRightInAnimationAdapter swingRightInAnimationAdapter = new SwingRightInAnimationAdapter(result);
-	        		swingRightInAnimationAdapter.setAbsListView(exerciseView);
-	        		exerciseView.setAdapter(swingRightInAnimationAdapter);	
-	        	}*/
 	        	exerciseView.setAdapter(result);
 	        }
 	        getActivity().setProgressBarIndeterminateVisibility(false);  
