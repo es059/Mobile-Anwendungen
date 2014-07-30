@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.PerformanceActual;
+import com.workout.log.data.StatisticListElement;
 
 /**
  * Mapper Class of BusinessObject PerformanceTarget
@@ -23,9 +24,11 @@ import com.workout.log.bo.PerformanceActual;
 public class PerformanceActualMapper {
 	private DataBaseHelper myDBHelper;
 	private String sql;
+	private Context context;
 	
 	public PerformanceActualMapper(Context context){
 		myDBHelper = DataBaseHelper.getInstance(context);
+		this.context = context;
 	}
 	
 	/**
@@ -178,6 +181,45 @@ public class PerformanceActualMapper {
 		return performanceActualList;
 	}
 	
+	public ArrayList<StatisticListElement> getAllStatisticElements(int exercise_Id, ArrayList<String> dates) {
+		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
+		ExerciseMapper eMapper = new ExerciseMapper(context);
+		ArrayList<StatisticListElement> items = new ArrayList<StatisticListElement>();
+		
+		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
+		
+		for(int i = 0; i < dates.size(); i++) {
+			int count = 0;
+			sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + exercise_Id 
+					+ " AND TimestampActual = \'" + dates.get(i) + "\' ";
+			StatisticListElement object = new StatisticListElement();
+			ArrayList<PerformanceActual> paList = new ArrayList<PerformanceActual>();
+			object.setTimestamp(dates.get(i));
+			object.setPerformanceActualList(paList);
+			items.add(i, object);
+			Cursor cursor = db.rawQuery(sql, null);
+			if (cursor.moveToFirst()){
+				do {
+					PerformanceActual performanceActual = new PerformanceActual();
+					performanceActual.setId(cursor.getInt(0));
+					if (cursor.getString(1) != null) performanceActual.setRepetition(cursor.getInt(1));
+					performanceActual.setSet(cursor.getInt(2));
+					if (cursor.getString(3) != null) performanceActual.setWeight(cursor.getDouble(3));
+					try {
+						performanceActual.setTimestamp(sp.parse(cursor.getString(4)));
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					performanceActual.setExercise(eMapper.getExerciseById(exercise_Id));
+					items.get(i).getPerformanceActualList().add(count,performanceActual);
+					count++;
+				} while (cursor.moveToNext());
+			}
+			cursor.close();
+		}
+		return items;
+	}
+	
 	/**
 	 * Get a ArrayList of PerformanceActual Objects from 
 	 * the last workout of one exercise
@@ -315,6 +357,43 @@ public class PerformanceActualMapper {
 				
 		db.execSQL(sql);
 		db.close();		
+	}
+	
+	/**
+	 * Get one PerformanceTarget by an Exercise id
+	 * 
+	 *  @param Exercise exercise
+	 *  @param String timestamp in SimpleDateFormat dd.MM.yyyy
+	 *  @return Exercise
+	 *  @author Eric Schmidt
+	 */
+	public ArrayList<PerformanceActual> getCurrentPerformanceActual(int exercise_Id){
+		ExerciseMapper eMapper = new ExerciseMapper(context);
+		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
+		ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
+		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
+		sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + exercise_Id 
+				+ "";
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			do {
+				PerformanceActual performanceActual = new PerformanceActual();
+				performanceActual.setId(cursor.getInt(0));
+				if (cursor.getString(1) != null) performanceActual.setRepetition(cursor.getInt(1));
+				performanceActual.setSet(cursor.getInt(2));
+				if (cursor.getString(3) != null) performanceActual.setWeight(cursor.getDouble(3));
+				try {
+					performanceActual.setTimestamp(sp.parse(cursor.getString(4)));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				performanceActual.setExercise(eMapper.getExerciseById(exercise_Id));
+				performanceActualList.add(performanceActual);
+			} while (cursor.moveToNext());
+		}
+		cursor.close();
+		
+		return performanceActualList;
 	}
 	
 }

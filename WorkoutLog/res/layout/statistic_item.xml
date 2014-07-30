@@ -2,11 +2,11 @@
 <RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
      android:id="@+id/listExercise"
 	 android:layout_width="match_parent"
-	 android:layout_height="match_parent"
+	 android:layout_height="wrap_content"
 	 android:orientation="horizontal">
 	<LinearLayout     
     	android:layout_width="match_parent"
-	    android:layout_height="match_parent"
+	    android:layout_height="wrap_content"
 	    android:gravity="top"
 	    android:orientation="horizontal" >
     <TableLayout
@@ -27,28 +27,6 @@
 		            android:text="Satz 1"
 		            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
 	 
-		       <EditText
-		            android:id="@+id/specific_edit_weight"
-		            android:layout_weight="1"
-		            android:layout_width="5dp"
-		            android:layout_marginLeft="10dp"
-		            android:layout_height="wrap_content"
-					android:hint="Gewicht"
-					android:digits="0123456789."
-					android:inputType="phone"
-		            android:ems="10" />
-		       
-		       <EditText
-		            android:id="@+id/specific_edit_repetition"
-		            android:layout_weight="1"
-		            android:layout_width="5dp"
-		            android:layout_marginLeft="10dp"
-		            android:gravity="center"
-		            android:layout_height="wrap_content"
-					android:hint="Wdh"
-					android:digits="0123456789."
-					android:inputType="phone"
-		            android:ems="10" />
         	</TableRow>
     	</TableLayout>
 	</LinearLayout>

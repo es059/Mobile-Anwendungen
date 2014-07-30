@@ -249,9 +249,13 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 			addPerformanceActualItem();
 		}
 		if (id == R.id.menu_statistic){
+			DailyStatistic dailyStatistic = new DailyStatistic();
+			Bundle args = new Bundle();
+			args.putInt("exercise_Id", exerciseId);
+			dailyStatistic.setArguments(args);
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();
 			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-			transaction.replace(R.id.fragment_container, new DailyStatistic(), "DailyStatistic");
+			transaction.replace(R.id.fragment_container, dailyStatistic, "DailyStatistic");
 			transaction.addToBackStack(null);
 			transaction.commit();
 		}
