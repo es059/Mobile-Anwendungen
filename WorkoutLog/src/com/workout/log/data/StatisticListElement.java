@@ -1,7 +1,6 @@
 package com.workout.log.data;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import com.workout.log.bo.PerformanceActual;
 

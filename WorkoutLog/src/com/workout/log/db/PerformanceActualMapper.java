@@ -118,9 +118,53 @@ public class PerformanceActualMapper {
 			}
 			cursor.close();
 		}
-		
-		
 		return performanceActualList;
+	}
+	
+	
+	/**
+	 * Searches the performanceActual Item with the Exercise and the Timestamp. This only works if the exercise is
+	 * from the Cardio MuscleGroup since there is only one entry per day.
+	 */
+	public PerformanceActual getPerformanceActualByExerciseAndDate(Exercise exercise, Date timestamp){
+		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
+		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
+		PerformanceActual performanceActual = null;
+		
+		sql = "SELECT PerformanceActual_Id FROM PerformanceActual WHERE Exercise_Id =" + exercise.getId() + " AND TimestampActual = '" + sp.format(timestamp) + "'";
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			performanceActual = this.getPerformanceActualById(cursor.getInt(0));
+		}
+		
+		return performanceActual;
+	}
+	
+	/**
+	 * Get Performance Actual by a Id
+	 */
+	
+	public PerformanceActual getPerformanceActualById (int performanceActualId){
+		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
+		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
+		PerformanceActual performanceActual = new PerformanceActual();
+		ExerciseMapper eMapper = new ExerciseMapper(context);
+		
+		sql = "SELECT RepetitionActual, SetActual, WeightActual, TimestampActual, Exercise_Id  FROM PerformanceActual WHERE PerformanceActual_Id = " + performanceActualId;
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()){
+			performanceActual.setId(performanceActualId);
+			performanceActual.setRepetition(cursor.getInt(0));
+			performanceActual.setSet(cursor.getInt(1));
+			performanceActual.setWeight(cursor.getDouble(2));
+			try {
+				performanceActual.setTimestamp(sp.parse(cursor.getString(3)));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			performanceActual.setExercise(eMapper.getExerciseById(cursor.getInt(4)));
+		}
+		return performanceActual;	
 	}
 	
 	/**

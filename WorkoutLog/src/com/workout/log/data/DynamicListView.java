@@ -46,7 +46,6 @@ import com.nineoldandroids.animation.TypeEvaluator;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.view.ViewHelper;
 import com.workout.log.bo.Exercise;
-
 /**
  * The DynamicListView is an extension of {@link ListView} that supports cell dragging
  * and swapping.
@@ -206,9 +205,7 @@ public class DynamicListView extends ListView {
         mOriginalTranscriptMode = getTranscriptMode();
         setTranscriptMode(TRANSCRIPT_MODE_NORMAL);
 
-
         mTotalOffset = 0;
-
         mMobileItemId = getAdapter().getItemId(position);
         mHoverCell = getAndAddHoverView(selectedView);
         if (mOnHoverCellListener != null) {

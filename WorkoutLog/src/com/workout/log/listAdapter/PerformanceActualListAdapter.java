@@ -11,12 +11,12 @@ import com.workout.log.bo.PerformanceActual;
 import com.workout.log.customLayout.ListViewPerformanceActual;
 
 public class PerformanceActualListAdapter extends ArrayAdapter<PerformanceActual> {
+	private ArrayList<PerformanceActual> performanceActualList = null;
 	
-	ArrayList<PerformanceActual> performanceActualList = null;
-	
-	public PerformanceActualListAdapter(Context context, int textViewResourceId, ArrayList<PerformanceActual> objects) {
-		super(context, textViewResourceId, objects);
-		performanceActualList = objects;
+	public PerformanceActualListAdapter(Context context, ArrayList<PerformanceActual> objects) {
+		super(context, 0, objects);
+		
+		this.performanceActualList = objects;
 	}
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {

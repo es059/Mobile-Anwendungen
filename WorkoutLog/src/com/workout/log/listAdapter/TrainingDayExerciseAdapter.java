@@ -17,6 +17,7 @@ import com.workout.log.bo.Exercise;
 import com.workout.log.bo.PerformanceTarget;
 import com.workout.log.data.ListItem;
 import com.workout.log.data.MuscleGroupSectionItem;
+import com.workout.log.data.MuscleGroupType;
 import com.workout.log.db.PerformanceTargetMapper;
 
 public class TrainingDayExerciseAdapter  extends ArrayAdapter<ListItem>{
@@ -26,12 +27,7 @@ public class TrainingDayExerciseAdapter  extends ArrayAdapter<ListItem>{
 	private int trainingDayId;
 	private Context context = null;
 	
-	private final int INVALID_ID = -1;
 	private HashMap<ListItem, Integer> mIdMap = new HashMap<ListItem, Integer>();
-	
-	private TextView exerciseView;
-	private TextView setView;
-	private TextView repetitionView; 
 	
 	public TrainingDayExerciseAdapter(Context context, ArrayList<ListItem> items, int trainingDayId){
 		super(context,0,items);
@@ -42,9 +38,9 @@ public class TrainingDayExerciseAdapter  extends ArrayAdapter<ListItem>{
 		pMapper = new PerformanceTargetMapper(getContext());
 		layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);	
 		
-	     for (int i = 0; i < items.size(); ++i) {
-	            mIdMap.put(items.get(i), i);
-	      }
+	    for (int i = 0; i < items.size(); ++i) {
+	         mIdMap.put(items.get(i), i);
+	    }
 	}
 	
 	@Override
@@ -70,6 +66,10 @@ public class TrainingDayExerciseAdapter  extends ArrayAdapter<ListItem>{
 				sectionView.setText(si.getTitle());
 			}else{
 				Exercise exercise = (Exercise) item;
+				
+				MuscleGroupType muscleGroupType = MuscleGroupType.Normal;
+				if(exercise.getMuscleGroup().getName().equals(context.getResources().getString(R.string.Cardio))) muscleGroupType = MuscleGroupType.Cardio;
+				
 				if (v == null || !(vg.getChildAt(0) instanceof TableLayout)){
 					v = layoutInflater.inflate(R.layout.listview_trainingday_exercise, null);
 				}
@@ -77,15 +77,26 @@ public class TrainingDayExerciseAdapter  extends ArrayAdapter<ListItem>{
 				final TextView 	exerciseView = (TextView) v.findViewById(R.id.exercise);
 				final TextView 	setView = (TextView) v.findViewById(R.id.set);
 				final TextView 	repetitionView = (TextView) v.findViewById(R.id.repetitions);
-							
-				exerciseView.setText(exercise.getName());
 				
-				/**
-				 * Get target performance information (Set & Repetition)
-				 */
-				PerformanceTarget performanceTarget = pMapper.getPerformanceTargetByExerciseId(exercise, trainingDayId);
-				setView.setHint(context.getResources().getString((R.string.Set)) + ": " + String.valueOf(performanceTarget.getSet()));
-				repetitionView.setHint(context.getResources().getString((R.string.Rep)) + ": " + String.valueOf(performanceTarget.getRepetition()));
+				if (muscleGroupType == MuscleGroupType.Cardio){
+					exerciseView.setText(exercise.getName());
+					//Get target performance information (Set & Repetition)
+					PerformanceTarget performanceTarget = pMapper.getPerformanceTargetByExerciseId(exercise, trainingDayId);
+					
+					v.findViewById(R.id.setDivider).setVisibility(View.GONE);
+					setView.setVisibility(View.GONE);
+					
+					repetitionView.setHint(context.getResources().getString((R.string.Min)) + ": " + String.valueOf(performanceTarget.getRepetition()));
+				}else{
+					exerciseView.setText(exercise.getName());
+					
+					/**
+					 * Get target performance information (Set & Repetition)
+					 */
+					PerformanceTarget performanceTarget = pMapper.getPerformanceTargetByExerciseId(exercise, trainingDayId);
+					setView.setHint(context.getResources().getString((R.string.Set)) + ": " + String.valueOf(performanceTarget.getSet()));
+					repetitionView.setHint(context.getResources().getString((R.string.Rep)) + ": " + String.valueOf(performanceTarget.getRepetition()));
+				}
 			}
 		}
 		return v;
@@ -95,12 +106,18 @@ public class TrainingDayExerciseAdapter  extends ArrayAdapter<ListItem>{
 	public ArrayList<ListItem> getList(){
 		return items;
 	}
-
+	
+/*	@Override
+	public long getItemId(final int position){
+		return getItem(position).hashCode();
+	}*/
+	
 	@Override
 	public long getItemId(final int position) {
-		return getItem(position).hashCode();
+		return super.getItemId(position);
 	}
-	 
+	
+
 	@Override
 	public boolean hasStableIds() {
 		return true;

@@ -27,7 +27,7 @@
 	            android:layout_height="wrap_content">
 		
 	           	<View
-             	 	android:id="@+id/divider"
+             	 	android:id="@+id/setDivider"
               		android:layout_width="3dip"
               		android:layout_height="15dip"
               		android:background="#fe9901"
@@ -51,7 +51,7 @@
 	            android:layout_height="wrap_content">
 	     
                 <View
-             	 	android:id="@+id/divider"
+             	 	android:id="@+id/repDivider"
               		android:layout_width="3dip"
               		android:layout_height="15dip"
               		android:background="#fe9901"

@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="19"
         android:targetSdkVersion="19" />
 
     <application
@@ -26,5 +26,6 @@
             </intent-filter>
         </activity>
         <activity android:name="org.achartengine.GraphicalActivity"/> 
+        <service android:name="com.workout.log.pedometer.StepService"/>
     </application>
 </manifest>

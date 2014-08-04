@@ -21,7 +21,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.example.workoutlog.R;
-import com.workout.log.ExerciseAdd.BackGroundTask;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.SwipeToDelete.UndoBarController;
 import com.workout.log.SwipeToDelete.UndoItem;
@@ -366,7 +365,8 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 	        getActivity().setProgressBarIndeterminateVisibility(true);
 	    }
 
-	    @Override
+	    @SuppressWarnings("unchecked")
+		@Override
 	    protected ExerciseListWithoutSetsRepsAdapter doInBackground(ArrayList<Exercise>... params) {
 	    	/**
 			 * Build a ArrayList containing the muscleGroup and exercises
