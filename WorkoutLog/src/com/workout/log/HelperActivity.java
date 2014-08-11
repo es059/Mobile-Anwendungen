@@ -1,6 +1,5 @@
 package com.workout.log;
 
-
 import java.util.ArrayList;
 
 import android.content.Intent;
@@ -8,20 +7,28 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings.Secure;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.workoutlog.R;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.workout.log.ad.BannerFragment;
 import com.workout.log.bo.Workoutplan;
 import com.workout.log.data.MenuList;
 import com.workout.log.db.WorkoutplanMapper;
@@ -33,7 +40,9 @@ public class HelperActivity extends FragmentActivity{
 	protected OnBackPressedListener onBackPressedListener;
 	protected OnHomePressedListener onHomePressedListener;
 	
-	Boolean doubleBackToExitPressedOnce = false;
+	private InterstitialAd interstitial;
+	private float dpWidth;
+	private Boolean doubleBackToExitPressedOnce = false;
 	
 	/**
 	 * Variables for the Navigation Drawer
@@ -56,6 +65,41 @@ public class HelperActivity extends FragmentActivity{
 
 		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         
+		/**
+		 * If resolution is smaller than 4 inches than show intersitital ad
+		 */
+		Display display = getWindowManager().getDefaultDisplay();
+	    DisplayMetrics outMetrics = new DisplayMetrics ();
+	    display.getMetrics(outMetrics);
+
+	    float density  = getResources().getDisplayMetrics().density;
+	    dpWidth  = outMetrics.widthPixels / density;
+        
+	    if(dpWidth < 360){
+	        // Create the interstitial.
+	        interstitial = new InterstitialAd(this);
+	        interstitial.setAdUnitId("ca-app-pub-8930461526777410/7867711089");
+	
+	        // Create an ad request. Check logcat output for the hashed device ID to
+	        // get test ads on a physical device.
+	        AdRequest adRequest = new AdRequest.Builder()
+	        	.addKeyword("Gym")
+	            .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+	            .addTestDevice(Secure.getString(this.getContentResolver(),Secure.ANDROID_ID))
+	            .build();
+	
+	        // Begin loading your interstitial.
+	        interstitial.loadAd(adRequest);
+	        
+	        // Set the AdListener.
+	        interstitial.setAdListener(new AdListener() {
+		          @Override
+		          public void onAdLoaded() {
+		              displayInterstitial();
+		          }
+	         });
+	    }
+        
         this.getActionBar().setDisplayHomeAsUpEnabled(true);
         this.getActionBar().setHomeButtonEnabled(true);
 		
@@ -74,7 +118,14 @@ public class HelperActivity extends FragmentActivity{
 		     transaction.replace(R.id.fragment_container, new ManageWorkoutplan(), "ManageWorkoutplan");
 		     transaction.addToBackStack(null);
 		     transaction.commit();
-		}
+		}		
+	}
+	
+	// Invoke displayInterstitial() when you are ready to display an interstitial.
+	public void displayInterstitial() {
+	  if (interstitial.isLoaded()) {
+	    interstitial.show();
+	  }
 	}
 	
 	protected void onResume(){
@@ -170,7 +221,24 @@ public class HelperActivity extends FragmentActivity{
 	private void loadNavigationDrawer(){
 	    mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer_list);
+        
+        RelativeLayout mDrawer = (RelativeLayout) findViewById(R.id.left_drawer);
+        
+        if (dpWidth >= 360){
+	        /**
+	         * Add AdFragment to the Navigation Drawer
+	         */
+	        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		    transaction.replace(R.id.ad_wrapper, new BannerFragment(), "AdFragment");
+		    transaction.commit();
+        }else{
+        	final float scale = this.getResources().getDisplayMetrics().density;
+        	int pixels = (int) (240 * scale + 0.5f);
+        	
+        	mDrawer.getLayoutParams().width = pixels;
+        }
         
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
                    GravityCompat.START);
@@ -198,7 +266,6 @@ public class HelperActivity extends FragmentActivity{
             	  invalidateOptionsMenu();
               }
         };
-        
         mDrawerLayout.setDrawerListener(mDrawerToggle);   	
 	}
 	

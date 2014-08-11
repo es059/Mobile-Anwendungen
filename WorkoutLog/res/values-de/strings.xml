@@ -17,8 +17,8 @@
     <string name="ImportExport_ChooseDb">Bitte wählen Sie eine DB-Datei aus</string>
     
     <!-- String resources for TrainingDayExerciseOverview -->
-    <string name="TrainingDayExerciseOverview_DDActive">Drag U+0026 Drop ist aktiviert</string>
-    <string name="TrainingDayExerciseOverview_DDInactive">Drag U+0026 Drop ist deaktiviert</string>
+    <string name="TrainingDayExerciseOverview_DDActive">Drag und Drop ist aktiviert</string>
+    <string name="TrainingDayExerciseOverview_DDInactive">Drag und Drop ist deaktiviert</string>
     
     <!-- String resources for MenuList -->
     <string name="MenuList_Functions">Funktionen</string>
@@ -116,7 +116,7 @@
         <item>Beine</item>
         <item>Trizeps</item>
         <item>Bizeps</item>
-        <item>Cardio</item>
+        <!-- Cardio is not available <item>Cardio</item> -->
     </string-array>
 
     <string name="title_activity_training_day_add">TrainingDayAdd</string>

@@ -206,7 +206,7 @@ public class DynamicListView extends ListView {
         setTranscriptMode(TRANSCRIPT_MODE_NORMAL);
 
         mTotalOffset = 0;
-        mMobileItemId = getAdapter().getItemId(position);
+        mMobileItemId = getAdapter().getItem(position).hashCode();
         mHoverCell = getAndAddHoverView(selectedView);
         if (mOnHoverCellListener != null) {
             mHoverCell = mOnHoverCellListener.onHoverCellCreated(mHoverCell);
@@ -265,8 +265,8 @@ public class DynamicListView extends ListView {
             throw new IllegalStateException("Adapter doesn't have stable ids! Make sure your adapter has stable ids, and override hasStableIds() to return true.");
         }
 
-        mAboveItemId = position - 1 >= 0 ? adapter.getItemId(position - 1) : INVALID_ROW_ID;
-        mBelowItemId = position + 1 < adapter.getCount() ? adapter.getItemId(position + 1) : INVALID_ROW_ID;
+        mAboveItemId = position - 1 >= 0 ? adapter.getItem(position - 1).hashCode() : INVALID_ROW_ID;
+        mBelowItemId = position + 1 < adapter.getCount() ? adapter.getItem(position + 1).hashCode() : INVALID_ROW_ID;
     }
 
     /**
@@ -274,6 +274,7 @@ public class DynamicListView extends ListView {
      */
     private View getViewForId(long itemId) {
         int firstVisiblePosition = getFirstVisiblePosition();
+        long id;
         ListAdapter adapter = getAdapter();
         if (!adapter.hasStableIds()) {
             throw new IllegalStateException("Adapter doesn't have stable ids! Make sure your adapter has stable ids, and override hasStableIds() to return true.");
@@ -281,8 +282,18 @@ public class DynamicListView extends ListView {
 
         for (int i = 0; i < getChildCount(); i++) {
             View v = getChildAt(i);
-            int position = firstVisiblePosition + i;
-            long id = adapter.getItemId(position);
+            if(itemId == -1){
+	            try{
+		            int position = firstVisiblePosition + i;
+		            id = adapter.getItem(position).hashCode();
+	            }catch(Exception e){
+	            	int position = firstVisiblePosition + i - 1;
+		            id = adapter.getItem(position).hashCode();
+	            }
+            }else{
+            	int position = firstVisiblePosition + i;
+	            id = adapter.getItem(position).hashCode();
+            }
             if (id == itemId) {
                 return v;
             }

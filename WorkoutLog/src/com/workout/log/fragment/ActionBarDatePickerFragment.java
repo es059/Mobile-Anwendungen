@@ -70,8 +70,8 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 		
 		if(!exerciseSpecific.getExercise().getMuscleGroup().getName().equals(getResources().getString(R.string.Cardio))){
 			
-			set.setText(getString(R.string.Set) + ":" + String.valueOf(performanceTarget.getSet()));
-			rep.setText(getString(R.string.Rep) + ":" + String.valueOf(performanceTarget.getRepetition()));
+			set.setText(getString(R.string.Set) + ": " + String.valueOf(performanceTarget.getSet()));
+			rep.setText(getString(R.string.Rep) + ": " + String.valueOf(performanceTarget.getRepetition()));
 		}else{
 			((View) view).findViewById(R.id.divider).setVisibility(View.GONE);
 			

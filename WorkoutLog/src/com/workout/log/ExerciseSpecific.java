@@ -438,7 +438,6 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		transaction.replace(R.id.fragment_container, exerciseOverview, "ExerciseOverview");
-		transaction.addToBackStack(null);
 		transaction.commit();
 
 		closeKeyboard();
@@ -472,12 +471,34 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		pa.setTimestamp(dateFragment.getDate());
 		// Update Adapter + ListView
 		adapter.add(pa);
+		//Save the data into the ArrayList
+		saveIntoList();
 		// Set the ArrayList on the current value
 		performanceActualList = adapter.getPerformanceActualList();
 		// Show the User a hint message
 		Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseSpecific_NewSet),Toast.LENGTH_SHORT).show();
 	}
 
+	/**
+	 * Save the current data in the ListView into the ArrayList
+	 */
+	public void saveIntoList(){
+		for (PerformanceActual item : performanceActualList) {
+			View v = getViewByPosition(item.getSet() - 1, exerciseListView);			
+			
+			repetition = (EditText) v.findViewById(R.id.specific_edit_repetition);
+			weight = (EditText) v.findViewById(R.id.specific_edit_weight);
+
+			if (!repetition.getText().toString().isEmpty()) {
+				item.setRepetition(Integer.parseInt(repetition.getText().toString()));
+			}
+
+			if (!weight.getText().toString().isEmpty()) {
+				item.setWeight(Double.parseDouble(weight.getText().toString()));
+			}
+		}
+	}
+	
 	
 	/**
 	 * Helps to determine the view of the current item in the listview.
@@ -658,6 +679,11 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 			            arrayCount=0;
 		        	}
 		            
+	            	/**
+	              	 * Save the data into the ArrayList
+	              	 */
+	        		saveIntoList();
+		        	
 		            for (int position : reverseSortedPositions) {
 		            	PerformanceActual performanceActual = (PerformanceActual) exerciseListView.getItemAtPosition(position);
 	                	/**
@@ -678,14 +704,14 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		            			 */
 		            			if (pa.getId() != 0) paMapper.addPerformanceActual(pa, pa.getTimestamp());
 		            		}
-		            	}
-		            	
+		            	}		            	
 		            	PerformanceActual item=adapter.getItem(position);
 		            	adapter.remove(item);
 		            	
 		            	items[arrayCount]=item;
 		                itemPositions[arrayCount]=position;
 		                arrayCount++;
+		                
 		                
 		            	/**
 		            	 * Set the ArrayList on the current value

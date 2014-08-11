@@ -49,6 +49,8 @@ public class UndoBarController {
         mBarAnimator = mBarView.animate();
         mUndoListener = undoListener;
 
+        mBarView.bringToFront();
+        
         mMessageView = (TextView) mBarView.findViewById(R.id.undobar_message);
         mBarView.findViewById(R.id.undobar_button)
                 .setOnClickListener(new View.OnClickListener() {

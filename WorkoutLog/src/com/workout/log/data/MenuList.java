@@ -39,6 +39,7 @@ public class MenuList {
 		 DrawerItem exercise = new DrawerItem(context.getResources().getString(R.string.MenuList_Exercises));
 		 exercise.setImgResID(R.drawable.exercise);
 		 dataList.add(exercise);
+		 
 	}
 	public List<ListItem> getDataList() {
 		return dataList;

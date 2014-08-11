@@ -81,9 +81,17 @@ public class DailyStatisticListAdapter extends ExpandableListItemAdapter<Statist
 				final TextView rep = (TextView) tempView.findViewById(R.id.specific_rep);
 				
 				set.setText(String.valueOf(items.get(position).getPerformanceActualList().get(i).getSet()));
-				weight.setText(String.valueOf(items.get(position).getPerformanceActualList().get(i).getWeight()));
-				rep.setText(String.valueOf(items.get(position).getPerformanceActualList().get(i).getRepetition()));
+				if (items.get(position).getPerformanceActualList().get(i).getWeight() != -1){
+					weight.setText(String.valueOf(items.get(position).getPerformanceActualList().get(i).getWeight()));
+				}else{
+					weight.setText("-");
+				}
 				
+				if (items.get(position).getPerformanceActualList().get(i).getRepetition() != -1){
+					rep.setText(String.valueOf(items.get(position).getPerformanceActualList().get(i).getRepetition()));
+				}else{
+					rep.setText("-");
+				}
 				linearLayout.addView(tempView);
 			}
     	}

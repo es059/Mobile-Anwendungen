@@ -68,7 +68,9 @@ public class CustomDrawerAdapter extends ArrayAdapter<ListItem> {
     					view.setBackgroundColor(Color.parseColor("#232323"));
     				}
     				
-    				if (drawerItem.getItemName() == context.getResources().getString(R.string.MenuList_Import_Export)) view.setPadding(0, 0, 0, 100);
+    				if (drawerItem.getItemName() == context.getResources().getString(R.string.MenuList_Import_Export)){
+    					view.setPadding(0, 0, 0, 50);
+    				}
     				
     				final TextView 	itemName = (TextView) view.findViewById(R.id.drawer_itemName);
     				final ImageView	itemIcon = (ImageView) view.findViewById(R.id.drawer_icon);

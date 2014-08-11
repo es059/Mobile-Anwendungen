@@ -2,6 +2,7 @@ package com.workout.log;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.workoutlog.R;
 import com.workout.log.bo.Exercise;
@@ -33,6 +33,7 @@ import com.workout.log.listAdapter.OverviewAdapter;
 public class ExerciseOverview extends Fragment implements OnItemClickListener {
 	private static ListView exerciseListView; 
     
+	private static Activity activity;
 	private static int trainingDayId = -1;
     private static ExerciseSpecific exerciseSpecific = new ExerciseSpecific();
     public static ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = null;
@@ -47,6 +48,8 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.replace(R.id.overview_trainingDayPicker, new ActionBarTrainingDayPickerFragment(), "TrainingDayPicker");
         transaction.commit();
+		
+        activity = getActivity();
         
         return view;
 	}
@@ -70,9 +73,6 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 		exerciseListView = (ListView) getView().findViewById(R.id.exerciseOverviewList);
 		if (transferExtras != null){				
 			try{
-				if (transferExtras.getBoolean("SaveMode")){
-					Toast.makeText(getActivity(), getResources().getString(R.string.DataSaved), Toast.LENGTH_SHORT).show();
-				}
 				trainingDayId = transferExtras.getInt("TrainingDayId");
 				actionBarTrainingDayPickerFragment.setCurrentTrainingDay(trainingDayId);
 			} catch (Exception e){
@@ -162,14 +162,14 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 
 		public BackGroundTask (ListView exerciseView){	
 			this.exerciseView = exerciseView;
-
+			
 			exerciseView.setAdapter(null);
 		}
 
 	    @Override
 	    protected void onPreExecute() {
 	        super.onPreExecute();
-	        getActivity().setProgressBarIndeterminateVisibility(true);
+	        activity.setProgressBarIndeterminateVisibility(true);
 	    }
 
 	    @Override
@@ -180,10 +180,10 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 	    	 */
 			if (tList == null){
 				//Select Current Workoutplan
-				WorkoutplanMapper wMapper = new WorkoutplanMapper(getActivity());
+				WorkoutplanMapper wMapper = new WorkoutplanMapper(activity);
 				Workoutplan w = wMapper.getCurrent();
 				//Select all Trainingdays from the current Workoutplan
-				TrainingDayMapper tMapper = new TrainingDayMapper(getActivity());
+				TrainingDayMapper tMapper = new TrainingDayMapper(activity);
 				tList = tMapper.getAllTrainingDaysFromWorkoutplan(w.getId());
 			}
 			if (!tList.isEmpty()){
@@ -196,11 +196,11 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 		    	
 		    	if (mList == null){	
 					//Select all MuscleGroups
-					MuscleGroupMapper mMapper = new MuscleGroupMapper(getActivity());
+					MuscleGroupMapper mMapper = new MuscleGroupMapper(activity);
 					mList = mMapper.getAll();
 				}
 				//Select Exercises from Selected Trainingday and MuscleGroup 
-				ExerciseMapper eMapper = new ExerciseMapper(getActivity());
+				ExerciseMapper eMapper = new ExerciseMapper(activity);
 				eList = eMapper.getExerciseByTrainingDay(trainingDayId);
 				listComplete = new ArrayList<ListItem>();
 				
@@ -221,7 +221,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 					
 				}
 		    
-				OverviewAdapter adapter = new OverviewAdapter(getActivity(), listComplete, trainingDayId);
+				OverviewAdapter adapter = new OverviewAdapter(activity, listComplete, trainingDayId);
 				return adapter;	
 			}
 			return null;
@@ -234,7 +234,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 	        if (result != null){
 	        	exerciseView.setAdapter(result);
 	        }
-	        getActivity().setProgressBarIndeterminateVisibility(false);  
+	        activity.setProgressBarIndeterminateVisibility(false);  
 	    }
 	}
 }

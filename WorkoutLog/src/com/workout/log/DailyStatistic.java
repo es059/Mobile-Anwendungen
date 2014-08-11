@@ -2,6 +2,7 @@ package com.workout.log;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.content.Intent;
@@ -83,6 +84,8 @@ public class DailyStatistic extends Fragment{
 		
 		List<StatisticListElement> statisticList = new ArrayList<StatisticListElement>();
 		statisticList = paMapper.getAllStatisticElements(exercise_Id, paMapper.getAllDates(eMapper.getExerciseById(exercise_Id)));
+		
+		Collections.reverse(statisticList);
 		
 		adapter = new DailyStatisticListAdapter(getActivity(), statisticList);
         AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(adapter);
