@@ -29,7 +29,7 @@ public class ExerciseUpdateDialogFragment extends DialogFragment {
 	private static ExerciseMapper eMapper;
 	private Fragment fragment;
 	private int exerciseId;
-	private String selectedMuscleGroup = "";
+	private int selectedMuscleGroupId = -1;
 	
 	public static ExerciseUpdateDialogFragment newInstance(Fragment fragment, int exerciseId) {
 		ExerciseUpdateDialogFragment ExerciseUpdateDialogFragment = new ExerciseUpdateDialogFragment(fragment, exerciseId);
@@ -63,7 +63,56 @@ public class ExerciseUpdateDialogFragment extends DialogFragment {
 		muscleGroup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 		    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-		    	selectedMuscleGroup = (String) parent.getItemAtPosition(pos);
+				String selectedMuscleGroup = (String) parent.getItemAtPosition(pos);
+		    	
+		    	switch (selectedMuscleGroup){
+		    	case "Rücken":
+		    		selectedMuscleGroupId = 1;
+		    		break;
+		    	case "Bauch":
+		    		selectedMuscleGroupId = 2;
+		    		break;
+		    	case "Brust":
+		    		selectedMuscleGroupId = 3;
+		    		break;
+		    	case "Beine":
+		    		selectedMuscleGroupId = 4;
+		    		break;
+		    	case "Bizeps":
+		    		selectedMuscleGroupId = 5;
+		    		break;
+		    	case "Trizeps":
+		    		selectedMuscleGroupId = 6;
+		    		break;
+		    	case "Cardio":
+		    		selectedMuscleGroupId = 7;
+		    		break;
+		    	case "Schulter":
+		    		selectedMuscleGroupId = 8;
+		    		break;
+		    		
+		    	case "Back":
+		    		selectedMuscleGroupId = 1;
+		    		break;
+		    	case "Abs":
+		    		selectedMuscleGroupId = 2;
+		    		break;
+		     	case "Chest":
+		    		selectedMuscleGroupId = 3;
+		    		break;
+		    	case "Legs":
+		    		selectedMuscleGroupId = 4;
+		    		break;
+		    	case "Biceps":
+		    		selectedMuscleGroupId = 5;
+		    		break;
+		    	case "Triceps":
+		    		selectedMuscleGroupId = 6;
+		    		break;
+		     	case "Shoulder":
+		    		selectedMuscleGroupId = 8;
+		    		break;
+		    	}
 		    }
 			@Override
 		    public void onNothingSelected(AdapterView<?> parent) {}
@@ -75,10 +124,31 @@ public class ExerciseUpdateDialogFragment extends DialogFragment {
 		Exercise e = eMapper.getExerciseById(exerciseId);
 		MuscleGroup m = e.getMuscleGroup();
 		exerciseName.setText(e.getName());
-		for (int i = 0; i <= muscleGroup.getCount() -1; i++){
-			if(m.getName().toString().contentEquals(muscleGroup.getItemAtPosition(i).toString())){
-				muscleGroup.setSelection(i);
-			}
+		switch (m.getId()){
+	    	case 1:
+	    		muscleGroup.setSelection(0); //Back
+	    		break;
+	    	case 2:
+	    		muscleGroup.setSelection(1); //Abs
+	    		break;
+	    	case 3:
+	    		muscleGroup.setSelection(3); //Chest
+	    		break;
+	    	case 4:
+	    		muscleGroup.setSelection(4); //Legs
+	    		break;
+	    	case 5:
+	    		muscleGroup.setSelection(6); //Biceps
+	    		break;
+	    	case 6:
+	    		muscleGroup.setSelection(5); //Triceps
+	    		break;
+	    	case 8:
+	    		muscleGroup.setSelection(2); //Shoulder
+	    		break;
+	    	case 7:
+	    		//muscleGroup.setSelection(7); --> Cardio
+	    		break;
 		}
 		
 		alert.setView(view);
@@ -88,9 +158,9 @@ public class ExerciseUpdateDialogFragment extends DialogFragment {
 		public void onClick(DialogInterface dialog, int whichButton) {
 			// String aus Textfeld holen  
 			String value = String.valueOf(exerciseName.getText());
-			if(!value.isEmpty() && !selectedMuscleGroup.isEmpty()){
+			if(!value.isEmpty() && selectedMuscleGroupId != -1){
 				// Mapper-Methode aufrufen zum Hinzufügen einer neuen Übung
-				eMapper.update(exerciseId, value, selectedMuscleGroup);
+				eMapper.update(exerciseId, value, selectedMuscleGroupId);
 				// Toast einblenden 
 				Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseUpdateDialogFragment_EditSuccess), Toast.LENGTH_SHORT ).show();
 				// ListView aktualisieren 

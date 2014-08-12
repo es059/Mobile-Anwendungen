@@ -43,8 +43,11 @@ public class BannerFragment extends Fragment {
 	    // get test ads on a physical device.
 	    AdRequest adRequest = new AdRequest.Builder()
 	    	.addKeyword("Gym")
-	        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-	        .addTestDevice(Secure.getString(getActivity().getContentResolver(),Secure.ANDROID_ID))
+	    	.addKeyword("Fitness")
+	    	.addKeyword("Muscle")
+	    	.addKeyword("Health")
+	    	.addKeyword("Bodybuilding")
+	    	.addKeyword("Gym")
 	        .build();
 		 
 	    // Start loading the ad in the background.

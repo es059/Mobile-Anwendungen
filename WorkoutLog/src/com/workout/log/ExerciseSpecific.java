@@ -396,6 +396,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 			}
 		}
 		if (id == R.id.menu_statistic){
+			savePerformanceActual();
 			openDailyStatistic();
 		}
 		return super.onOptionsItemSelected(item);

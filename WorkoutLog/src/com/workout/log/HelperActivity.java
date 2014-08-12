@@ -28,7 +28,12 @@ import com.example.workoutlog.R;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.workout.log.ad.BannerFragment;
+import com.workout.log.analytics.MyApplication;
+import com.workout.log.analytics.MyApplication.TrackerName;
 import com.workout.log.bo.Workoutplan;
 import com.workout.log.data.MenuList;
 import com.workout.log.db.WorkoutplanMapper;
@@ -57,6 +62,24 @@ public class HelperActivity extends FragmentActivity{
     private CustomDrawerAdapter adapter;
     private MenuList menuList;
     
+    
+    
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		//Get an Analytics tracker to report app starts & uncaught exceptions etc.
+		GoogleAnalytics.getInstance(this).reportActivityStart(this);
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		//Stop the analytics tracking
+		GoogleAnalytics.getInstance(this).reportActivityStop(this);
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -65,6 +88,13 @@ public class HelperActivity extends FragmentActivity{
 
 		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         
+		/**
+		 * Tracker
+		 */
+		//Get a Tracker (should auto-report)
+		((MyApplication) getApplication()).getTracker(MyApplication.TrackerName.APP_TRACKER);
+		
+		
 		/**
 		 * If resolution is smaller than 4 inches than show intersitital ad
 		 */
@@ -261,6 +291,19 @@ public class HelperActivity extends FragmentActivity{
               }
               @Override
 			public void onDrawerOpened(View drawerView) {
+            	  /**
+	  				* Tracker
+	  				*/
+	  			  // Get tracker.
+	  		      Tracker t = ((MyApplication) getApplication()).getTracker(
+	  		            TrackerName.APP_TRACKER);
+	  		      // Build and send an Event.
+	  		      t.send(new HitBuilders.EventBuilder()
+	  		         .setCategory("ClickEvent")
+	  		         .setAction("Open Drawer")
+	  		         .setLabel("Open the NavigationDrawer")
+	  		         .build());
+            	  
             	  getActionBar().setTitle(mDrawerTitle);
             	  adapter.notifyDataSetChanged();
             	  invalidateOptionsMenu();

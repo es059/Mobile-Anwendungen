@@ -312,7 +312,7 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 					listAdapter.notifyDataSetChanged();
 				}
 			}
-		}
+		}		
 	}
 	
 	/**
@@ -336,6 +336,41 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 			this.exerciseListView = exerciseListView;
 		}
 
+		
+		private String getMuscleGroupNameById(MuscleGroup muscleGroup){
+			
+			String[] muscleGroupArray = getResources().getStringArray(R.array.MuscleGroup);
+			String muscleGroupName = "";
+			
+			switch (muscleGroup.getId()){
+		    	case 1:
+		    		muscleGroupName = muscleGroupArray[0]; //Back
+		    		break;
+		    	case 2:
+		    		muscleGroupName =  muscleGroupArray[1]; //Abs
+		    		break;
+		    	case 3:
+		    		muscleGroupName =  muscleGroupArray[3]; //Chest
+		    		break;
+		    	case 4:
+		    		muscleGroupName =  muscleGroupArray[4]; //Legs
+		    		break;
+		    	case 5:
+		    		muscleGroupName =  muscleGroupArray[6]; //Biceps
+		    		break;
+		    	case 6:
+		    		muscleGroupName =  muscleGroupArray[5]; //Triceps
+		    		break;
+		    	case 8:
+		    		muscleGroupName =  muscleGroupArray[2]; //Shoulder
+		    		break;
+		    	case 7:
+		    		//muscleGroupName =  muscleGroupArray[7]; --> Cardio
+		    		break;
+			}
+			return muscleGroupName;	
+		}
+		
 	    @Override
 	    protected void onPreExecute() {
 	        super.onPreExecute();
@@ -355,7 +390,7 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 			for (MuscleGroup m : mList){
 				eListMuscleGroup = eMapper.getExerciseByMuscleGroup(params[0], m.getId());
 				if (!eListMuscleGroup.isEmpty()){
-					listComplete.add(new MuscleGroupSectionItem(m.getName()));
+					listComplete.add(new MuscleGroupSectionItem(getMuscleGroupNameById(m)));
 					listComplete.addAll(eListMuscleGroup);
 				}
 			}
@@ -382,6 +417,7 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 	        getActivity().setProgressBarIndeterminateVisibility(false);
 	    }
 	}
+
 }
 	
 	

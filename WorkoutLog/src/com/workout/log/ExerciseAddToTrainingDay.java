@@ -328,7 +328,7 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 					Exercise item = items[i];
 					int itemPosition = itemPositions[i];
 					
-					eMapper.add(item.getName(), item.getMuscleGroup().getName());
+					eMapper.add(item.getName(), item.getMuscleGroup().getId());
 					for (Integer trainingDayId : item.getTrainingDayIdList()){
 						tMapper.addExerciseToTrainingDay(trainingDayId, item.getId());
 					}
@@ -371,6 +371,39 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 	        getActivity().setProgressBarIndeterminateVisibility(true);
 	    }
 
+	    private String getMuscleGroupNameById(MuscleGroup muscleGroup){
+			String[] muscleGroupArray = getResources().getStringArray(R.array.MuscleGroup);
+			String muscleGroupName = "";
+			
+			switch (muscleGroup.getId()){
+		    	case 1:
+		    		muscleGroupName = muscleGroupArray[0]; //Back
+		    		break;
+		    	case 2:
+		    		muscleGroupName =  muscleGroupArray[1]; //Abs
+		    		break;
+		    	case 3:
+		    		muscleGroupName =  muscleGroupArray[3]; //Chest
+		    		break;
+		    	case 4:
+		    		muscleGroupName =  muscleGroupArray[4]; //Legs
+		    		break;
+		    	case 5:
+		    		muscleGroupName =  muscleGroupArray[6]; //Biceps
+		    		break;
+		    	case 6:
+		    		muscleGroupName =  muscleGroupArray[5]; //Triceps
+		    		break;
+		    	case 8:
+		    		muscleGroupName =  muscleGroupArray[2]; //Shoulder
+		    		break;
+		    	case 7:
+		    		//muscleGroupName =  muscleGroupArray[7]; --> Cardio
+		    		break;
+			}
+			return muscleGroupName;	
+		}
+	    
 	    @SuppressWarnings("unchecked")
 		@Override
 	    protected ExerciseListWithoutSetsRepsAdapter doInBackground(ArrayList<Exercise>... params) {
@@ -385,7 +418,7 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 			for (MuscleGroup m : mList){
 				eListMuscleGroup = eMapper.getExerciseByMuscleGroup(params[0], m.getId());
 				if (!eListMuscleGroup.isEmpty()){
-					listComplete.add(new MuscleGroupSectionItem(m.getName()));
+					listComplete.add(new MuscleGroupSectionItem(getMuscleGroupNameById(m)));
 					listComplete.addAll(eListMuscleGroup);
 				}
 			}

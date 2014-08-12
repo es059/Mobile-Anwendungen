@@ -19,10 +19,14 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.example.workoutlog.R;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.SwipeToDelete.UndoBarController;
 import com.workout.log.SwipeToDelete.UndoItem;
+import com.workout.log.analytics.MyApplication;
+import com.workout.log.analytics.MyApplication.TrackerName;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.MuscleGroup;
 import com.workout.log.bo.PerformanceTarget;
@@ -128,6 +132,20 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 		int id = item.getItemId();
 		if (id == R.id.menu_sort) {
 			if (sortMode){
+				
+				/**
+				 * Tracker
+				 */
+				// Get tracker.
+		        Tracker t = ((MyApplication) getActivity().getApplication()).getTracker(
+		            TrackerName.APP_TRACKER);
+		        // Build and send an Event.
+		        t.send(new HitBuilders.EventBuilder()
+		            .setCategory("ClickEvent")
+		            .setAction("Drag&Drop")
+		            .setLabel("Change to Drag&Drop")
+		            .build());
+				
 				sortMode = false;
 				
 				/**

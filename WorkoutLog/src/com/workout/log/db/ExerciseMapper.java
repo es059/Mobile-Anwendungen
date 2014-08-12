@@ -26,16 +26,10 @@ public class ExerciseMapper {
 	    if (ptMapper == null) ptMapper= new PerformanceTargetMapper(context);
 	}
 	
-	public void add(String exerciseName, String muscleGroup){
+	public void add(String exerciseName, int muscleGroupId){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "SELECT MuscleGroup_Id FROM MuscleGroup WHERE MuscleGroupName='" + muscleGroup + "'";
-		Cursor cursor = db.rawQuery(sql, null);
-		if (cursor.moveToFirst()){
-			muscleGroupID = Integer.parseInt(cursor.getString(0));
-		}
-		sql = "INSERT INTO Exercise (ExerciseName, MuscleGroup_Id ) VALUES ('" + exerciseName +"', " + muscleGroupID + ")";
+		sql = "INSERT INTO Exercise (ExerciseName, MuscleGroup_Id ) VALUES ('" + exerciseName +"', " + muscleGroupId + ")";
 		db.execSQL(sql);
-		cursor.close();
 	}
 	
 	public void add(Exercise exercise){
@@ -100,19 +94,11 @@ public class ExerciseMapper {
 	 * 
 	 * @author Eric Schmidt
 	 */
-	public void update(int exerciseId, String bezeichnung, String muscleGroup){
+	public void update(int exerciseId, String bezeichnung, int muscleGroupId){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "SELECT MuscleGroup_Id FROM MuscleGroup WHERE MuscleGroupName='" + muscleGroup + "'";
-		Cursor cursor = db.rawQuery(sql, null);
-		if (cursor.moveToFirst()){
-			muscleGroupID = Integer.parseInt(cursor.getString(0));
-		}
-		sql = "UPDATE Exercise SET ExerciseName='" + bezeichnung +  "', MuscleGroup_Id=" + muscleGroupID + 
+		sql = "UPDATE Exercise SET ExerciseName='" + bezeichnung +  "', MuscleGroup_Id=" + muscleGroupId + 
 				" WHERE Exercise_Id=" + exerciseId + "";
 		db.execSQL(sql);
-		
-		
-		cursor.close();
 	}
 	
 	/**

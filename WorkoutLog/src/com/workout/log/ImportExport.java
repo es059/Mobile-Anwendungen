@@ -26,6 +26,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.workoutlog.R;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.workout.log.analytics.MyApplication;
+import com.workout.log.analytics.MyApplication.TrackerName;
 import com.workout.log.db.DataBaseHelper;
 import com.workout.log.listAdapter.FileExplorerAdapter;
 import com.workout.log.navigation.OnBackPressedListener;
@@ -116,6 +120,18 @@ public class ImportExport extends Fragment implements OnItemClickListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.menu_export) {
+			/**
+			 * Tracker
+			 */
+			// Get tracker.
+	        Tracker t = ((MyApplication) getActivity().getApplication()).getTracker(
+	            TrackerName.APP_TRACKER);
+	        // Build and send an Event.
+	        t.send(new HitBuilders.EventBuilder()
+	            .setCategory("ClickEvent")
+	            .setAction("Export")
+	            .setLabel("Export the Database")
+	            .build());
 			exportDatabase();
 		}
 		return super.onOptionsItemSelected(item);
@@ -148,7 +164,7 @@ public class ImportExport extends Fragment implements OnItemClickListener {
 	}
 	
 	/**
-	 * Export the database in the current folder
+	 * Import the database in the current folder
 	 * 
 	 * @author Eric Schmidt
 	 */
@@ -203,6 +219,18 @@ public class ImportExport extends Fragment implements OnItemClickListener {
         	 */
         	refreshListView(fileChosen);
         }else if(!fileChosen.isDirectory()){
+        	/**
+			 * Tracker
+			 */
+			// Get tracker.
+	        Tracker t = ((MyApplication) getActivity().getApplication()).getTracker(
+	            TrackerName.APP_TRACKER);
+	        // Build and send an Event.
+	        t.send(new HitBuilders.EventBuilder()
+	            .setCategory("ClickEvent")
+	            .setAction("Import")
+	            .setLabel("Import the Database")
+	            .build());
         	/**
 			 * Import
 			 */

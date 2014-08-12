@@ -64,7 +64,7 @@
     <string name="Weight">Weight</string>
     <string name="Rep">Rep</string>
     <string name="Exercises">Exercises</string>
-    <string name="noExercise">Create new exercise</string>
+    <string name="noExercise">Create a new exercise</string>
     <string name="TrainingDays">Training days</string>
     <string name="noTrainingDay">Create new training day</string>
     <string name="Save">Save</string>
@@ -73,7 +73,7 @@
     <string name="ExerciseEdit">Edit exercise</string>
     <string name="MissingField">"Please fill in all fields"</string>
     <string name="TrainingDayAddToWorkoutplan">Add training day</string>
-    <string name="TrainingDayAdd">Create a new training day</string>
+    <string name="TrainingDayAdd">Add a new training day</string>
     <string name="TrainingDayEdit">Edit training day</string>
     <string name="TrainingDayEditSuccess">Training day was successfully changed</string>
     <string name="Delete">Delete</string>

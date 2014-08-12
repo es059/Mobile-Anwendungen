@@ -37,6 +37,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 	private static int trainingDayId = -1;
     private static ExerciseSpecific exerciseSpecific = new ExerciseSpecific();
     public static ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = null;
+    private static String[] muscleGroupArray;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,6 +51,8 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
         transaction.commit();
 		
         activity = getActivity();
+        
+        muscleGroupArray = getResources().getStringArray(R.array.MuscleGroup);
         
         return view;
 	}
@@ -171,7 +174,39 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 	        super.onPreExecute();
 	        activity.setProgressBarIndeterminateVisibility(true);
 	    }
-
+	    
+	    private String getMuscleGroupNameById(MuscleGroup muscleGroup){
+			String muscleGroupName = "";
+			
+			switch (muscleGroup.getId()){
+		    	case 1:
+		    		muscleGroupName = muscleGroupArray[0]; //Back
+		    		break;
+		    	case 2:
+		    		muscleGroupName =  muscleGroupArray[1]; //Abs
+		    		break;
+		    	case 3:
+		    		muscleGroupName =  muscleGroupArray[3]; //Chest
+		    		break;
+		    	case 4:
+		    		muscleGroupName =  muscleGroupArray[4]; //Legs
+		    		break;
+		    	case 5:
+		    		muscleGroupName =  muscleGroupArray[6]; //Biceps
+		    		break;
+		    	case 6:
+		    		muscleGroupName =  muscleGroupArray[5]; //Triceps
+		    		break;
+		    	case 8:
+		    		muscleGroupName =  muscleGroupArray[2]; //Shoulder
+		    		break;
+		    	case 7:
+		    		//muscleGroupName =  muscleGroupArray[7]; --> Cardio
+		    		break;
+			}
+			return muscleGroupName;	
+		}
+	    
 	    @Override
 	    protected OverviewAdapter doInBackground(Integer... params) {
 	    	/**
@@ -209,13 +244,13 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 					
 					if (i > 0){
 						if(!mg.getName().equals(eList.get(i-1).getMuscleGroup().getName())) {
-							listComplete.add(new MuscleGroupSectionItem(mg.getName()));
+							listComplete.add(new MuscleGroupSectionItem(getMuscleGroupNameById(mg)));
 							listComplete.add(eList.get(i));
 						}else{
 							listComplete.add(eList.get(i));
 						}
 					}else{
-						listComplete.add(new MuscleGroupSectionItem(mg.getName()));
+						listComplete.add(new MuscleGroupSectionItem(getMuscleGroupNameById(mg)));
 						listComplete.add(eList.get(i));
 					}
 					
