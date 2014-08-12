@@ -63,8 +63,10 @@
     <string name="Set">Sets</string>
     <string name="Weight">Weight</string>
     <string name="Rep">Rep</string>
-    <string name="Exercise">Exercise</string>
-    <string name="TrainingDay">Training day</string>
+    <string name="Exercises">Exercises</string>
+    <string name="noExercise">Create new exercise</string>
+    <string name="TrainingDays">Training days</string>
+    <string name="noTrainingDay">Create new training day</string>
     <string name="Save">Save</string>
     <string name="Cancel">Cancel</string>
     <string name="Update">Update</string>
@@ -82,6 +84,7 @@
   	<string name="ActionBar_Date">Date</string>
    	<string name="ActionBar_Search">Search</string>
     <string name="ActionBar_Workoutplans">Workout routines</string>
+      <string name="Dialog_ExerciseAdd">Exercise name</string>
     
     <!-- Common XML string resources-->
     <string name="specific_repetition">Rep</string>
@@ -103,6 +106,8 @@
     <string name="drawer_open">Open drawer</string>
     <string name="drawer_close">Close drawer</string>
 
+    <string name="noWorkoutplan">No workout routine available</string>
+    
     <string-array name="exerciseLongClickDialogArray">
         <item>Delete</item>
         <item>Edit</item>

@@ -27,6 +27,7 @@ import com.workout.log.bo.Exercise;
 import com.workout.log.bo.PerformanceTarget;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.bo.Workoutplan;
+import com.workout.log.data.Default;
 import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.db.WorkoutplanMapper;
@@ -34,6 +35,7 @@ import com.workout.log.dialog.TrainingDayAddDialogFragment;
 import com.workout.log.dialog.TrainingDayAddToWorkoutplanDialogFragment;
 import com.workout.log.dialog.TrainingDayUpdateDialogFragment;
 import com.workout.log.fragment.TrainingDaysSearchBarFragment;
+import com.workout.log.listAdapter.DefaultAddListAdapter;
 import com.workout.log.listAdapter.TrainingDayListAdapter;
 import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;
@@ -59,7 +61,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 	private ArrayList<TrainingDay> trainingDayList = null;
 	private UndoBarController mUndoBarController = null;
 	
-	 @Override
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		super.onCreateView(inflater, container, savedInstanceState);
 		view = inflater.inflate(R.layout.training_day_add, container,false);			
@@ -130,7 +132,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 		trainingDayListView.setOnItemClickListener(this);
 		trainingDayListView.setOnItemLongClickListener(this);
 		
-		updateListView(null);
+		updateListView(tdMapper.getAllTrainingDay(), null);
 		loadSwipeToDismiss();
 		setHasOptionsMenu(true);
 	}
@@ -145,10 +147,15 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int itemId = item.getItemId();
 		if (itemId == R.id.menu_add) {
-			TrainingDayAddDialogFragment dialogFragment = TrainingDayAddDialogFragment.newInstance(getActivity(), trainingDayListAdapter);
-			dialogFragment.show(this.getFragmentManager(), "Open Exercise Add Dialog on Click");
+			showDialogAddFragment(null);
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	public void showDialogAddFragment(String trainingDayStringName){
+		TrainingDayAddDialogFragment dialogFragment = TrainingDayAddDialogFragment.newInstance(getActivity(),
+				trainingDayListAdapter, trainingDayStringName, this);
+		dialogFragment.show(this.getFragmentManager(), "Open Exercise Add Dialog on Click");
 	}
 
 	@Override
@@ -182,8 +189,30 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 
 	
 	@SuppressWarnings("unchecked")
-	public void updateListView(ArrayList<TrainingDay> trainingDayList) {
-		new BackGroundTask().execute(trainingDayList);
+	public void updateListView(ArrayList<TrainingDay> trainingDayList, final String trainingDayStringName) {
+		if (trainingDayList.size() == 0){
+			Default d = new Default();
+			if (trainingDayStringName == null || trainingDayStringName.equals("")){
+				d.setTitel(getString(R.string.noTrainingDay));
+			}else{
+				d.setTitel(trainingDayStringName + " " + getResources().getString(R.string.NotFound));
+				d.setHint(getResources().getString(R.string.Add));
+			}
+			ArrayList<Default> ld = new ArrayList<Default>();
+			ld.add(d);
+			DefaultAddListAdapter l = new DefaultAddListAdapter(getActivity(), 0, ld);
+			trainingDayListView.setAdapter(l);
+			trainingDayListView.setOnItemClickListener(new OnItemClickListener(){
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
+					showDialogAddFragment(trainingDayStringName);
+				}	
+			});
+			
+		}else{
+			trainingDayListView.setOnItemClickListener(this);
+			new BackGroundTask().execute(trainingDayList);
+		}
 	}
 	
 	public void openManageWorkoutplan(){
@@ -234,8 +263,10 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
                 		PerformanceTargetMapper pMapper = new PerformanceTargetMapper(getActivity());
                 		
                 		tMapper.delete(trainingDay);
-                		for (Exercise e : trainingDay.getExerciseList()){
-                			tMapper.deleteExerciseFromTrainingDay(trainingDay.getId(), e);
+                		if (trainingDay.getExerciseList() != null){
+	                		for (Exercise e : trainingDay.getExerciseList()){
+	                			tMapper.deleteExerciseFromTrainingDay(trainingDay.getId(), e);
+	                		}
                 		}
                 		tMapper.deleteTrainingDayFromAllWorkoutplan(trainingDay.getId());
                 		pMapper.deleteTrainingDayFromAllPerformanceTarget(trainingDay.getId());

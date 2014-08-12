@@ -8,9 +8,6 @@ import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -24,15 +21,20 @@ import com.workout.log.SwipeToDelete.UndoBarController;
 import com.workout.log.SwipeToDelete.UndoItem;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.bo.Workoutplan;
+import com.workout.log.data.Default;
+import com.workout.log.data.ManageWorkoutplanListItem;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.fragment.ActionBarWorkoutPlanPickerFragment;
+import com.workout.log.listAdapter.ManageWorkoutplanListAdapter;
 import com.workout.log.listAdapter.StableArrayAdapter;
 
 public class ManageWorkoutplan extends Fragment implements OnItemClickListener, UndoBarController.UndoListener {
 	private ListView listView;
 	private ArrayList<TrainingDay> trainingDayList;
+	private ArrayList<ManageWorkoutplanListItem> manageWorkoutplanList;
 	private StableArrayAdapter stableArrayAdapter;
+	private ManageWorkoutplanListAdapter manageWorkoutplanListAdapter;
 	private TrainingDayMapper tdMapper;
 	private WorkoutplanMapper wpMapper;
 	
@@ -83,25 +85,6 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 		loadSwipeToDimiss();
 
 		setHasOptionsMenu(true);
-	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.workoutplan_menu, menu);
-		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int itemId = item.getItemId();
-		if (itemId == R.id.menu_add) {
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-			transaction.replace(R.id.fragment_container, new TrainingDayAddToWorkoutplan(), "TrainingDayAddToWorkoutplan");
-			transaction.addToBackStack(null);
-			transaction.commit();
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	/**
@@ -255,10 +238,10 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 				for (int i = end - 1; i >= 0; i--) {
 					TrainingDay item = items[i];
 					int itemPosition = itemPositions[i];
-
+					
 					wpMapper.addTrainingDayToWorkoutplan(item.getId(), workoutplanId);
-					stableArrayAdapter.insert(item, itemPosition);
-					stableArrayAdapter.notifyDataSetChanged();
+					manageWorkoutplanListAdapter.insert(item, itemPosition);
+					manageWorkoutplanListAdapter.notifyDataSetChanged();
 				}
 			}
 		}
@@ -269,7 +252,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	 * 
 	 * @author Eric Schmidt
 	 */
-	public class BackGroundTask extends AsyncTask<ArrayList<TrainingDay>, Void, StableArrayAdapter> {
+	public class BackGroundTask extends AsyncTask<ArrayList<TrainingDay>, Void, ManageWorkoutplanListAdapter> {
 	    /**
 	     * Variables for the UpdateListView method
 	     */
@@ -287,15 +270,15 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	        getActivity().setProgressBarIndeterminateVisibility(true);
 	    }
 
-	    @SuppressWarnings("unchecked")
-		@Override
-	    protected StableArrayAdapter doInBackground(ArrayList<TrainingDay>... params) {
-	    	stableArrayAdapter = null;
+	    @Override
+	    protected ManageWorkoutplanListAdapter doInBackground(ArrayList<TrainingDay>... params) {
+	    	manageWorkoutplanListAdapter = null;
 	    	currentListId = -1;
 	    	
 			wpMapper = new WorkoutplanMapper(getActivity());
 			
 			workoutplanList = new ArrayList<Workoutplan>();
+			manageWorkoutplanList = new ArrayList<ManageWorkoutplanListItem>();
 			
 			workoutplanList = wpMapper.getAll();
 			
@@ -318,16 +301,24 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 						currentListId = i;
 					}
 				}
-				if (params[0] == null) params[0] = tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanList.get(currentListId).getId());	
-				stableArrayAdapter = new StableArrayAdapter(getActivity(), R.layout.listview_training_day, params[0]);
+				if (params[0] == null) params[0] = tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanList.get(currentListId).getId());
+				for(int i = 0; i < params[0].size(); i++) {
+					manageWorkoutplanList.add(params[0].get(i));
+				}
+				
+				Default d = new Default();
+				manageWorkoutplanList.add(d);
+				manageWorkoutplanListAdapter = new ManageWorkoutplanListAdapter(getActivity(), manageWorkoutplanList, ManageWorkoutplan.this);
 				setTrainingDayList(params[0]);
 			}
+			
+		
 						
-			return stableArrayAdapter;	
+			return manageWorkoutplanListAdapter;	
 	    }
 
 	    @Override
-	    protected void onPostExecute(StableArrayAdapter result) {
+	    protected void onPostExecute(ManageWorkoutplanListAdapter result) {
 	        super.onPostExecute(result);
 	        trainingDayListView.setAdapter(null);
 	        if (result != null) trainingDayListView.setAdapter(result);

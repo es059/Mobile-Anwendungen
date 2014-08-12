@@ -1,28 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
      android:id="@+id/listViewLayoutDefaultAdd"
 	 android:layout_width="match_parent"
-	 android:layout_height="match_parent"
+	 android:layout_height="wrap_content"
+	 android:minHeight="40dp"
 	 android:padding="5dp"
 	 android:orientation="horizontal">
 	 <TextView
 	     android:id="@+id/default_add_titel"
-  		 android:layout_width="wrap_content"
+  		 android:layout_width="match_parent"
 	     android:layout_height="wrap_content"
+		 android:minHeight="40dp"
 	     android:gravity="center_vertical"
 	     android:padding="2dip"
+	     android:singleLine="false"
 	     android:textAppearance="@android:attr/textAppearanceLarge"
 	     android:textSize="18sp"
+	     android:layout_weight="4"
 	     android:textStyle="bold" /> 
-
-        <TextView
+	<View
+         android:layout_width="0dp"
+         android:layout_height="wrap_content"
+		 android:minHeight="40dp"
+         android:layout_weight="0.1"/>    		
+	 
+	 <TextView
          android:id="@+id/default_add_hint"
   		 android:layout_width="wrap_content"
 	     android:layout_height="wrap_content"
+	 	 android:minHeight="40dp"
 	     android:gravity="center_vertical"
-	     android:layout_alignParentRight="true"
+	     android:singleLine="true"
 	     android:padding="2dip"
 	     android:textAppearance="@android:attr/textAppearanceLarge"
 	     android:textSize="15sp"/>
         
-</RelativeLayout>
+</LinearLayout>
+

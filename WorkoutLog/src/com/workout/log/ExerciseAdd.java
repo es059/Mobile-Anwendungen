@@ -120,7 +120,8 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 	 * Method which opens a DialogFragment to create a new exercise
 	 */
 	public void showDialogAddFragment(String exerciseStringName){
-		ExerciseAddDialogFragment dialogFragment = ExerciseAddDialogFragment.newInstance(getActivity(), listAdapter, exerciseStringName);
+		ExerciseAddDialogFragment dialogFragment = ExerciseAddDialogFragment.newInstance(getActivity(), listAdapter,
+				exerciseStringName, this);
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
 	}
 
@@ -156,8 +157,12 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 		exerciseList = list;
 		if (exerciseList.size() == 0){
 			Default d = new Default();
-			d.setTitel(exerciseStringName + " " + getResources().getString(R.string.NotFound));
-			d.setHint(getResources().getString(R.string.Add));
+			if (exerciseStringName == null || exerciseStringName.equals("")){
+				d.setTitel(getString(R.string.noExercise));
+			}else{
+				d.setTitel(exerciseStringName + " " + getResources().getString(R.string.NotFound));
+				d.setHint(getResources().getString(R.string.Add));
+			}
 			ArrayList<Default> ld = new ArrayList<Default>();
 			ld.add(d);
 			DefaultAddListAdapter l = new DefaultAddListAdapter(getActivity(), 0, ld);

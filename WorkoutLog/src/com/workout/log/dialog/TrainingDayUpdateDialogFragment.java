@@ -85,9 +85,9 @@ public class TrainingDayUpdateDialogFragment extends DialogFragment {
 
 	private void updateListView(){
 		if(fragment instanceof ManageTrainingDays){
-			((ManageTrainingDays) fragment).updateListView(tMapper.getAllTrainingDay());
+			((ManageTrainingDays) fragment).updateListView(tMapper.getAllTrainingDay(), null);
 		}else{
-			((TrainingDayAddToWorkoutplan) fragment).updateListView(tMapper.getAllTrainingDay());
+			((TrainingDayAddToWorkoutplan) fragment).updateListView(tMapper.getAllTrainingDay(), null);
 		}
 	}
 }

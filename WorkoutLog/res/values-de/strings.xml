@@ -63,8 +63,10 @@
     <string name="Set">Sätze</string>
     <string name="Weight">Gewicht</string>
     <string name="Rep">Wdh</string>
-    <string name="Exercise">Übungen</string>
-    <string name="TrainingDay">Trainingstage</string>
+    <string name="Exercises">Übungen</string>
+    <string name="noExercise">Neue Übung hinzufügen</string>
+    <string name="TrainingDays">Trainingstage</string>
+    <string name="noTrainingDay">Neuen Trainingstag hinzufügen</string>
     <string name="Save">Speichern</string>
     <string name="Cancel">Abbrechen</string>
     <string name="Update">Ändern</string>
@@ -82,6 +84,7 @@
   	<string name="ActionBar_Date">Datum</string>
    	<string name="ActionBar_Search">Suchen</string>
     <string name="ActionBar_Workoutplans">Trainingspläne</string>
+    <string name="Dialog_ExerciseAdd">Übungsname</string>
     
     <!-- Common XML string resources-->
     <string name="specific_repetition">Wdh</string>
@@ -102,6 +105,8 @@
     <string name="menu_settings">Einstellungen</string>
     <string name="drawer_open">Open drawer</string>
     <string name="drawer_close">Close drawer</string>
+    
+    <string name="noWorkoutplan">Kein Trainingsplan verfügbar</string>
 
     <string-array name="exerciseLongClickDialogArray">
         <item>Löschen</item>

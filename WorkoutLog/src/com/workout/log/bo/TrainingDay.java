@@ -2,7 +2,9 @@ package com.workout.log.bo;
 
 import java.util.ArrayList;
 
-public class TrainingDay {
+import com.workout.log.data.ManageWorkoutplanListItem;
+
+public class TrainingDay implements ManageWorkoutplanListItem {
 
 	private String mName = "";
 	private int mId = 0;

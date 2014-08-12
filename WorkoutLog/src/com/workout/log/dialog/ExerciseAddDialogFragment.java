@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,6 +19,10 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.workoutlog.R;
+import com.workout.log.ExerciseAdd;
+import com.workout.log.ExerciseAddToTrainingDay;
+import com.workout.log.ManageTrainingDays;
+import com.workout.log.TrainingDayAddToWorkoutplan;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.MuscleGroup;
 import com.workout.log.data.ListItem;
@@ -34,17 +39,21 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 	private Context applicationContext;
 	private String selectedMuscleGroup = "";
 	private String exerciseStringName = "";
+	private Fragment fragment;
 
-	public static ExerciseAddDialogFragment newInstance(Context context, ExerciseListWithoutSetsRepsAdapter exerciseListWithoutSetsRepsAdapter, String exerciseStringName) {
-		ExerciseAddDialogFragment exerciseAddDialogFragment = new ExerciseAddDialogFragment(context, exerciseListWithoutSetsRepsAdapter, exerciseStringName);
+	public static ExerciseAddDialogFragment newInstance(Context context, ExerciseListWithoutSetsRepsAdapter exerciseListWithoutSetsRepsAdapter,
+			String exerciseStringName, Fragment fragment) {
+		ExerciseAddDialogFragment exerciseAddDialogFragment = new ExerciseAddDialogFragment(context, exerciseListWithoutSetsRepsAdapter, exerciseStringName, fragment);
 		eMapper = new ExerciseMapper(context);
 		
 		return exerciseAddDialogFragment;
 	}
 	
-	public ExerciseAddDialogFragment(Context context, ExerciseListWithoutSetsRepsAdapter exerciseListWithoutSetsRepsAdapter, String exerciseStringName) {
+	public ExerciseAddDialogFragment(Context context, ExerciseListWithoutSetsRepsAdapter exerciseListWithoutSetsRepsAdapter, String exerciseStringName, Fragment fragment) {
 		super();
 		this.exerciseStringName = exerciseStringName;
+		this.fragment = fragment;
+		
 		exerciseListAdapter = exerciseListWithoutSetsRepsAdapter;
 		applicationContext = context;
 	}
@@ -95,7 +104,10 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 					// Toast einblenden 
 					Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseAddDialogFragment_AddSuccess), Toast.LENGTH_SHORT ).show();
 					// ListView aktualisieren 
-					updateAdapter(eMapper.getAllExercise());
+					if (fragment instanceof ExerciseAdd) ((ExerciseAdd) 
+							fragment).updateListView(eMapper.getAllExercise(), false, null);   
+					if (fragment instanceof ExerciseAddToTrainingDay) ((ExerciseAddToTrainingDay) 
+							fragment).updateListView(eMapper.getAllExercise(), null);   
 				}else{
 					Toast.makeText(getActivity(), getResources().getString(R.string.MissingField), Toast.LENGTH_SHORT ).show();
 				}
@@ -111,36 +123,4 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 
 		return alert.show();
 	}
-	
-	public void updateAdapter(ArrayList<Exercise> List){
-		/**
-		 * Variables to implement header in the ListView
-		 */
-		ArrayList<Exercise> eListMuscleGroup = null;
-		ArrayList<MuscleGroup> mList = null;
-		MuscleGroupMapper mMapper = new MuscleGroupMapper(getActivity());
-		
-		
-		exerciseListAdapter.clear();
-		
-		/**
-		 * Build a ArrayList containing the muscleGroup and exercises
-		 */
-		//Select all MuscleGroups
-		mList = mMapper.getAll();
-		//Select All Exercises from MuscleGroup 
-		eMapper = new ExerciseMapper(getActivity());
-		ArrayList<ListItem> listComplete = new ArrayList<ListItem>();
-		for (MuscleGroup m : mList){
-			eListMuscleGroup = eMapper.getExerciseByMuscleGroup(List, m.getId());
-			if (!eListMuscleGroup.isEmpty()){
-				listComplete.add(new MuscleGroupSectionItem(m.getName()));
-				listComplete.addAll(eListMuscleGroup);
-			}
-		}
-		
-		exerciseListAdapter.addAll(listComplete);
-		exerciseListAdapter.notifyDataSetChanged();
-	}
-
 }
