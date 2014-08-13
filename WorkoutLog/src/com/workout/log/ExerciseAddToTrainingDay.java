@@ -79,7 +79,7 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 		 */
 	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        transaction.replace(R.id.add_searchBar, new ExerciseSearchBarFragment(this), "ActionBarSearchBarFragment");
+        transaction.replace(R.id.add_searchBar, ExerciseSearchBarFragment.newInstance(this), "ActionBarSearchBarFragment");
         transaction.commit();
 
 		setHasOptionsMenu(true);

@@ -25,7 +25,13 @@ public class ExerciseSearchBarFragment extends Fragment{
 	private Fragment fragment;
 	private ExerciseMapper eMapper;
 	
-	public ExerciseSearchBarFragment(Fragment fragment){
+	public static final ExerciseSearchBarFragment newInstance(Fragment fragment)
+	{
+		ExerciseSearchBarFragment exerciseSearchBarFragment = new ExerciseSearchBarFragment(fragment);	
+	    return exerciseSearchBarFragment;
+	}
+	
+	private ExerciseSearchBarFragment(Fragment fragment){
 		this.fragment = fragment;
 	}
 	

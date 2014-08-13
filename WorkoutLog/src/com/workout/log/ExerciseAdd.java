@@ -72,7 +72,7 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 		 */
 	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        transaction.replace(R.id.add_searchBar, new ExerciseSearchBarFragment(this), "ActionBarSearchBarFragment");
+        transaction.replace(R.id.add_searchBar, ExerciseSearchBarFragment.newInstance(this), "ActionBarSearchBarFragment");
         transaction.commit();
 
 		setHasOptionsMenu(true);

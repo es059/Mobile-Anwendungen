@@ -25,7 +25,13 @@ public class TrainingDaysSearchBarFragment extends Fragment {
 	private Fragment fragment;
 	private TrainingDayMapper tdMapper;
 
-	public TrainingDaysSearchBarFragment(Fragment fragment){
+	public static final TrainingDaysSearchBarFragment newInstance(Fragment fragment)
+	{
+		TrainingDaysSearchBarFragment trainingDaySearchBarFragment = new TrainingDaysSearchBarFragment(fragment);	
+	    return trainingDaySearchBarFragment;
+	}
+	
+	private TrainingDaysSearchBarFragment(Fragment fragment){
 		this.fragment = fragment;
 	}
 	
