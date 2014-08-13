@@ -18,7 +18,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	private static DataBaseHelper mInstance = null;
 	private static SQLiteDatabase myDataBase = null;
 	
-	private static String DB_PATH = "/data/data/com.example.workoutlog/databases/";
+	private static String DB_PATH = "/data/data/com.remic.workoutlog/databases/";
 	private static String DB_NAME = "WorkoutLog.db";
 
 	private final Context myContext;

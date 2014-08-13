@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.workout.log.ExerciseAdd;
 import com.workout.log.ExerciseAddToTrainingDay;
 import com.workout.log.bo.Exercise;

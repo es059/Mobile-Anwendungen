@@ -12,5 +12,5 @@
         android:paddingTop="20dp"
         android:layout_below="@+id/TextView_Information"
         android:singleLine="true"
-        android:hint="@string/DiaglogFragmentWorkoutplanEdit" />
+        android:hint="@string/DialogFragmentTrainingDayEdit_TrainingdayName" />
 </RelativeLayout>

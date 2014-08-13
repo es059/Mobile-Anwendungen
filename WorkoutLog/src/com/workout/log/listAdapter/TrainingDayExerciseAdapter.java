@@ -12,7 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.PerformanceTarget;
 import com.workout.log.data.ListItem;

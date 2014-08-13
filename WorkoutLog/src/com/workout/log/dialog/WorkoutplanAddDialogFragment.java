@@ -15,7 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.workout.log.bo.Workoutplan;
 import com.workout.log.db.WorkoutplanMapper;
 

@@ -5,7 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 
 public class MenuList {
 	private List<ListItem> dataList;

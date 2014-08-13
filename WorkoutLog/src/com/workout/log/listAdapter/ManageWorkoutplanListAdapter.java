@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.workout.log.TrainingDayAddToWorkoutplan;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.data.ManageWorkoutplanListItem;
@@ -91,6 +91,22 @@ public class ManageWorkoutplanListAdapter extends ArrayAdapter<ManageWorkoutplan
 	@Override
 	public boolean hasStableIds() {
 		return true;
+	}
+	
+	/**
+	 * Returns the current List<TrainingDay>
+	 * 
+	 * @return the current List Object
+	 * @author Eric Schmidt
+	 */
+	public ArrayList<TrainingDay> getTrainingDayList(){
+		ArrayList<TrainingDay> trainingDayList = new ArrayList<TrainingDay>();
+		for (ManageWorkoutplanListItem item : items){
+			if (item instanceof TrainingDay){
+				trainingDayList.add((TrainingDay) item);
+			}
+		}
+		return trainingDayList;
 	}
 
 }

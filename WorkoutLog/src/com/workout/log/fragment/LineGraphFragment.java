@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.workout.log.bo.Exercise;
 import com.workout.log.graph.LineGraph;
 

@@ -1,6 +1,6 @@
 package com.workout.log.ad;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;

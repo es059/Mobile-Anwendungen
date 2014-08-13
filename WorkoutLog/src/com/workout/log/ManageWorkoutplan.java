@@ -15,7 +15,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.SwipeToDelete.UndoBarController;
 import com.workout.log.SwipeToDelete.UndoItem;
@@ -33,11 +33,9 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	private ListView listView;
 	private ArrayList<TrainingDay> trainingDayList;
 	private ArrayList<ManageWorkoutplanListItem> manageWorkoutplanList;
-	private StableArrayAdapter stableArrayAdapter;
 	private ManageWorkoutplanListAdapter manageWorkoutplanListAdapter;
 	private TrainingDayMapper tdMapper;
 	private WorkoutplanMapper wpMapper;
-	
 	private UndoBarController mUndoBarController = null;
 	private static int workoutplanId =1;
 	int currentListId = -1;
@@ -164,8 +162,8 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	                   	               		
 	               		tdMapper.deleteTrainingDayFromWorkoutplan(trainingDay, workoutplanId);
 	               		
-	               		TrainingDay item= stableArrayAdapter.getItem(position);
-	               		stableArrayAdapter.remove(item);
+	               		TrainingDay item= (TrainingDay) manageWorkoutplanListAdapter.getItem(position);
+	               		manageWorkoutplanListAdapter.remove(item);
 		            	
 	                    items[arrayCount]=item;
 	 	               	itemPositions[arrayCount]=position;
@@ -174,9 +172,9 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	               		/**
 		            	 * Set the ArrayList on the current value
 		            	 */
-	               		trainingDayList = stableArrayAdapter.getTrainingDayList();		    
+	               		trainingDayList = manageWorkoutplanListAdapter.getTrainingDayList();		    
                    }      
-                   stableArrayAdapter.notifyDataSetChanged();
+                   manageWorkoutplanListAdapter.notifyDataSetChanged();
                    
 		           UndoItem itemUndo=new UndoItem(items,itemPositions);
 		   
@@ -242,6 +240,11 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 					wpMapper.addTrainingDayToWorkoutplan(item.getId(), workoutplanId);
 					manageWorkoutplanListAdapter.insert(item, itemPosition);
 					manageWorkoutplanListAdapter.notifyDataSetChanged();
+					
+					/**
+	            	 * Set the ArrayList on the current value
+	            	 */
+               		trainingDayList = manageWorkoutplanListAdapter.getTrainingDayList();	
 				}
 			}
 		}

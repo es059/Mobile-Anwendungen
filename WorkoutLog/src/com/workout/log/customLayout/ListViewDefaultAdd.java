@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 
 public class ListViewDefaultAdd extends RelativeLayout{
 	private TextView titel;

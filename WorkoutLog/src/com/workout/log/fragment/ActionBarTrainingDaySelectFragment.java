@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.workout.log.TrainingDayExerciseOverview;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.db.TrainingDayMapper;

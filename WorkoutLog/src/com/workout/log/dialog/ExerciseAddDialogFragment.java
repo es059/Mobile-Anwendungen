@@ -18,7 +18,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.workout.log.ExerciseAdd;
 import com.workout.log.ExerciseAddToTrainingDay;
 import com.workout.log.ManageTrainingDays;

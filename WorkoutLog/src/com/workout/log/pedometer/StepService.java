@@ -18,7 +18,7 @@
 
 package com.workout.log.pedometer;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 
 import android.app.Notification;
 import android.app.NotificationManager;

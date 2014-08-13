@@ -16,7 +16,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.workout.log.ExerciseSpecific;
 import com.workout.log.bo.PerformanceActual;
 import com.workout.log.bo.PerformanceTarget;

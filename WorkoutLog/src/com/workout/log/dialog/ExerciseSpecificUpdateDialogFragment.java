@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.workout.log.TrainingDayExerciseOverview;
 import com.workout.log.bo.PerformanceTarget;
 import com.workout.log.db.ExerciseMapper;

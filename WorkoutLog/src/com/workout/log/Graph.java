@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.workout.log.fragment.ActionBarGraphFragment;
 import com.workout.log.fragment.LineGraphFragment;
 

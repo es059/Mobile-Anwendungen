@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.workout.log.ExerciseOverview;
 import com.workout.log.ManageWorkoutplan;
 import com.workout.log.bo.TrainingDay;

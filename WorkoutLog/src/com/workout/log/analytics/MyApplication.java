@@ -2,7 +2,7 @@ package com.workout.log.analytics;
 
 import android.app.Application;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
  

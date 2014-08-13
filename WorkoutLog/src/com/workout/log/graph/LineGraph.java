@@ -19,7 +19,7 @@ import android.graphics.Color;
 import android.graphics.Paint.Align;
 import android.view.View;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.PerformanceActual;
 import com.workout.log.db.PerformanceActualMapper;

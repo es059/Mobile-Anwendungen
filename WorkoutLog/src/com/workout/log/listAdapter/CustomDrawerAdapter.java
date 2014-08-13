@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.workout.log.data.DrawerHeader;
 import com.workout.log.data.DrawerItem;
 import com.workout.log.data.ListItem;

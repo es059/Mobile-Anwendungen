@@ -24,7 +24,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -131,7 +131,7 @@ public class HelperActivity extends FragmentActivity{
 	    }
         
         this.getActionBar().setDisplayHomeAsUpEnabled(true);
-        this.getActionBar().setHomeButtonEnabled(true);
+
 		
         /**
          * Handles the Fragment calls which are to be done first
@@ -279,7 +279,7 @@ public class HelperActivity extends FragmentActivity{
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         
         this.getActionBar().setDisplayHomeAsUpEnabled(true);
-        this.getActionBar().setHomeButtonEnabled(true);
+        
         
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                     R.drawable.ic_drawer, R.string.drawer_open,

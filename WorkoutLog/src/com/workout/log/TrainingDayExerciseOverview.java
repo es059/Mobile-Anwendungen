@@ -18,7 +18,7 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
@@ -116,8 +116,6 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 		setHasOptionsMenu(true);
 	}
 
-
-	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.trainingday_exercise_overview_menu, menu);
@@ -178,7 +176,7 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 			}
 		}
 		else if( id == R.id.menu_add){
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
+			FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 	        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 	        transaction.replace(R.id.fragment_container, new ExerciseAddToTrainingDay(), "ExerciseAddToTrainingDay");
 	        transaction.addToBackStack(null);

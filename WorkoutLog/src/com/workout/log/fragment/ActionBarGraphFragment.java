@@ -11,7 +11,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Spinner;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.workout.log.bo.Exercise;
 import com.workout.log.db.ExerciseMapper;
 import com.workout.log.listAdapter.ExerciseSpinnerListAdapter;

@@ -16,7 +16,7 @@ package com.workout.log.SwipeToDelete;
  * limitations under the License.
  */
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

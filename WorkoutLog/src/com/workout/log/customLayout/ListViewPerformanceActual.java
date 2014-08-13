@@ -7,7 +7,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.workoutlog.R;
+import com.remic.workoutlog.R;
 import com.workout.log.bo.PerformanceActual;
 
 public class ListViewPerformanceActual extends RelativeLayout{
