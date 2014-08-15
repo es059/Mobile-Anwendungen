@@ -1,6 +1,8 @@
 package com.workout.log;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -62,7 +64,7 @@ public class HelperActivity extends ActionBarActivity{
     private CustomDrawerAdapter adapter;
     private MenuList menuList;
     
-    
+    private boolean calledGetParentActivityIntent = false;
     
 	@Override
 	protected void onStart() {
@@ -79,6 +81,23 @@ public class HelperActivity extends ActionBarActivity{
 		//Stop the analytics tracking
 		GoogleAnalytics.getInstance(this).reportActivityStop(this);
 	}
+
+	
+	/**
+	 * Destroy any SqlDumpFile which was created
+	 */
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		Stack<File> fileStack = ((ManageWorkoutplan) getSupportFragmentManager().findFragmentByTag("ManageWorkoutplan")).getFileStack();
+		
+		while (!fileStack.empty()){
+			File file = (File) fileStack.pop();
+			if(file.exists()) file.delete();
+		}
+	}
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -224,23 +243,44 @@ public class HelperActivity extends ActionBarActivity{
 	    }
 	}
 	
+	
+	/**
+	 * Use this methods after the Fragments to reset this boolean to false. This will ensure that the
+	 * Method getParentActivityIntent() is only called once!
+	 * 
+	 * @param calledGetParentActivityIntent
+	 */
+	public void setCalledGetParentActivityIntent(boolean calledGetParentActivityIntent){
+		this.calledGetParentActivityIntent = calledGetParentActivityIntent;
+	}
+	
 	@Override
 	public Intent getParentActivityIntent() {
-		if (onBackPressedListener != null){
-	        onHomePressedListener.doHome();
-		}else{
-		   if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-		    		
-		   }else {
-			   getSupportFragmentManager().popBackStack();
-				/**
-				 * Set the visibility of the NavigationDrawer to Visible
-				 */
-			   setNavigationDrawerVisibility(true);
-		   }
-        }
-		return null;
-		 
+		/**
+		 * This if clause prevents the method to be called twice, which happens because the HelperActivity extends
+		 * ActionbarActivity. This extension is needed in order to make the share function possible. 
+		 * If however the Activity extends FragmentActivity, like before the implementation of the share functionality, the method is only
+		 * called once...
+		 * 
+		 * @author Eric Schmidt
+		 */
+		if (calledGetParentActivityIntent != true){
+			calledGetParentActivityIntent = true;
+			if (onBackPressedListener != null){
+		        onHomePressedListener.doHome();
+			}else{
+			   if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+			    		
+			   }else {
+				   getSupportFragmentManager().popBackStack();
+					/**
+					 * Set the visibility of the NavigationDrawer to Visible
+					 */
+				   setNavigationDrawerVisibility(true);
+			   }
+	        }
+		}
+		return null; 
 	}
 	
 	/**

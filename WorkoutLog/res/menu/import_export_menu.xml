@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android" 
+    xmlns:myapp="http://schemas.android.com/apk/res-auto">
      <item
         android:id="@+id/menu_export"
         android:orderInCategory="100"
         android:title="Export"
         android:icon="@drawable/ic_action_export2"
-        android:showAsAction="always"/>
+        myapp:showAsAction="always"/>
 
 </menu>

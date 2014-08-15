@@ -47,6 +47,7 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener,
 	private TrainingDayMapper tMapper = null;
 	private WorkoutplanMapper wMapper = null;
 	private PerformanceTargetMapper pMapper = null;
+	private SwipeDismissListViewTouchListener touchListener = null;
 	
 	private ArrayList<TrainingDay> trainingDayList = null;
 	private UndoBarController mUndoBarController = null;
@@ -60,11 +61,15 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener,
 	    /**
 		 * Add the searchBar fragment to the current fragment
 		 */
-	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
+	    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.replace(R.id.add_searchBar, TrainingDaysSearchBarFragment.newInstance(this), "ManageTrainingDaysSearchBar");
         transaction.commit();
 		
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        setHasOptionsMenu(true);
+        ((HelperActivity) getActivity()).setCalledGetParentActivityIntent(false);
+        
 		return view;
 	}
 	
@@ -173,6 +178,7 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener,
 			ArrayList<Default> ld = new ArrayList<Default>();
 			ld.add(d);
 			DefaultAddListAdapter l = new DefaultAddListAdapter(getActivity(), 0, ld);
+			trainingDayListView.setOnTouchListener(null);
 			trainingDayListView.setAdapter(l);
 			trainingDayListView.setOnItemClickListener(new OnItemClickListener(){
 				@Override
@@ -182,6 +188,7 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener,
 			});
 			
 		}else{
+			trainingDayListView.setOnTouchListener(touchListener);
 			trainingDayListView.setOnItemClickListener(this);
 			new BackGroundTask().execute(trainingDayList);
 		}
@@ -191,7 +198,7 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener,
 	 * Implementation of Swipe to dismiss function
 	 */
 	private void loadSwipeToDismiss(){
-		SwipeDismissListViewTouchListener touchListener =
+		touchListener =
             new SwipeDismissListViewTouchListener(trainingDayListView,new SwipeDismissListViewTouchListener.DismissCallbacks() {
             	TrainingDay[] items= null;
     			int[] itemPositions = null;

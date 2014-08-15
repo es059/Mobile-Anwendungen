@@ -45,7 +45,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 		/**
 		 * Add the top navigation fragment to the current fragment
 		 */
-	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
+	    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.replace(R.id.overview_trainingDayPicker, new ActionBarTrainingDayPickerFragment(), "TrainingDayPicker");
         transaction.commit();

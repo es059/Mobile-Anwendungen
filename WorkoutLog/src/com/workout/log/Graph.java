@@ -18,12 +18,12 @@ public class Graph extends Fragment {
 		
 		FragmentTransaction transaction;
 		
-		transaction = getFragmentManager().beginTransaction();
+		transaction = getActivity().getSupportFragmentManager().beginTransaction();
 	    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 	    transaction.replace(R.id.overview_dateTimePicker, new ActionBarGraphFragment(), "ActionBarGraphFragment");
 	    transaction.commit();
 	    
-	    transaction = getFragmentManager().beginTransaction();
+	    transaction = getActivity().getSupportFragmentManager().beginTransaction();
 	    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 	    transaction.replace(R.id.lineGraph, new LineGraphFragment(), "LineGraphFragment");
 	    transaction.commit();

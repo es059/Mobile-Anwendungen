@@ -78,6 +78,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 			@Override
 			public void doBack() {
 				openManageWorkoutplan();
+				((HelperActivity) getActivity()).setOnBackPressedListener(null);
 			}		
 		});
 		
@@ -88,6 +89,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 			@Override
 			public Intent doHome() {
 				openManageWorkoutplan();
+				((HelperActivity) getActivity()).setOnBackPressedListener(null);
 				return null;
 			}		
 		});
@@ -95,7 +97,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 	    /**
 		 * Add the searchBar fragment to the current fragment
 		 */
-	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
+	    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.replace(R.id.add_searchBar, TrainingDaysSearchBarFragment.newInstance(this), "ManageTrainingDaysSearchBar");
         transaction.commit();

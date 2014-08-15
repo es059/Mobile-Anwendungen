@@ -14,7 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
@@ -30,6 +32,7 @@ import com.workout.log.analytics.MyApplication.TrackerName;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.MuscleGroup;
 import com.workout.log.bo.PerformanceTarget;
+import com.workout.log.data.Default;
 import com.workout.log.data.DynamicListView;
 import com.workout.log.data.ListItem;
 import com.workout.log.data.MuscleGroupSectionItem;
@@ -38,6 +41,7 @@ import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.dialog.ExerciseSpecificUpdateDialogFragment;
 import com.workout.log.fragment.ActionBarTrainingDaySelectFragment;
+import com.workout.log.listAdapter.DefaultAddListAdapter;
 import com.workout.log.listAdapter.TrainingDayExerciseAdapter;
 
 
@@ -52,19 +56,30 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 	private PerformanceTargetMapper ptMapper = null;
 	private TrainingDayMapper tMapper = null;
 	private ExerciseMapper eMapper = null;
+	private SwipeDismissListViewTouchListener touchListener = null;
 	
 	private UndoBarController mUndoBarController = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.training_day_exercise_overview, container, false);
+		
+		/**
+		 * Set the visibility of the NavigationDrawer to Invisible
+		 */
+		((HelperActivity) getActivity()).setNavigationDrawerVisibility(false);
+		
         /**
 		 * Add the ActionBar fragment to the current fragment
-		 */
-	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
+		 */		
+	    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.replace(R.id.training_day_select_fragment, new ActionBarTrainingDaySelectFragment(), "ActionBarTrainingDaySelectFragment");
-        transaction.commit();        
+        transaction.commit();   
+        
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+        setHasOptionsMenu(true);
+        ((HelperActivity) getActivity()).setCalledGetParentActivityIntent(false);
         
         return view;
 	}
@@ -82,10 +97,6 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 		tMapper = new TrainingDayMapper(getActivity());
 		ptMapper = new PerformanceTargetMapper(getActivity());
 		
-		/**
-		 * Set the visibility of the NavigationDrawer to Invisible
-		 */
-		((HelperActivity) getActivity()).setNavigationDrawerVisibility(false);
 		
 		/**
 		 * Receive the arguments set by either ManageWorkoutplan or ManageTrainingDays
@@ -176,15 +187,20 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 			}
 		}
 		else if( id == R.id.menu_add){
-			FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-	        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-	        transaction.replace(R.id.fragment_container, new ExerciseAddToTrainingDay(), "ExerciseAddToTrainingDay");
-	        transaction.addToBackStack(null);
-	        transaction.commit();
+			openExerciseAddToTrainingDay();
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
+	
+	public void openExerciseAddToTrainingDay(){
+		FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.replace(R.id.fragment_container, new ExerciseAddToTrainingDay(), "ExerciseAddToTrainingDay");
+        transaction.addToBackStack(null);
+        transaction.commit();
+	}
+	
 	public int getTrainingDayId() {
 		return trainingDayId;
 	}
@@ -225,7 +241,7 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 	 * Implementation of Swipe to dissmiss function
 	 */
 	private void loadSwipeToDismiss(){
-		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(exerciseListView,
+		touchListener = new SwipeDismissListViewTouchListener(exerciseListView,
                 new SwipeDismissListViewTouchListener.DismissCallbacks() {
 					Exercise[] items= null;
 		 			int[] itemPositions = null;
@@ -355,7 +371,7 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 	 * 
 	 * @author Eric Schmidt
 	 */
-	public class BackGroundTask extends AsyncTask<Void, Void, TrainingDayExerciseAdapter> {
+	public class BackGroundTask extends AsyncTask<Void, Void, BaseAdapter> {
 	    /**
 	     * Variables for the UpdateListView method
 	     */
@@ -375,7 +391,7 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 	    }
 
 	    @Override
-	    protected TrainingDayExerciseAdapter doInBackground(Void... params) {
+	    protected BaseAdapter doInBackground(Void... params) {
 			/**
 			 * Select Exercises from selected Trainingday and MuscleGroup 
 			 */
@@ -383,45 +399,68 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 			exerciseList = eMapper.getExerciseByTrainingDay(trainingDayId);
 			listComplete = new ArrayList<ListItem>();
 			
-			for(int i = 0; i < exerciseList.size(); i++) {
-				MuscleGroup mg = exerciseList.get(i).getMuscleGroup();
-				
-				if (i > 0){
-					if(!mg.getName().equals(exerciseList.get(i-1).getMuscleGroup().getName())) {
+			if(exerciseList.size() != 0){
+				for(int i = 0; i < exerciseList.size(); i++) {
+					MuscleGroup mg = exerciseList.get(i).getMuscleGroup();
+					
+					if (i > 0){
+						if(!mg.getName().equals(exerciseList.get(i-1).getMuscleGroup().getName())) {
+							listComplete.add(new MuscleGroupSectionItem(mg.getName()));
+							listComplete.add(exerciseList.get(i));
+						}else{
+							listComplete.add(exerciseList.get(i));
+						}
+					}else{
 						listComplete.add(new MuscleGroupSectionItem(mg.getName()));
 						listComplete.add(exerciseList.get(i));
-					}else{
-						listComplete.add(exerciseList.get(i));
 					}
-				}else{
-					listComplete.add(new MuscleGroupSectionItem(mg.getName()));
-					listComplete.add(exerciseList.get(i));
+					
+					listAdapter = new TrainingDayExerciseAdapter(getActivity(), listComplete,trainingDayId);
+					exerciseListView.setItemList(listComplete);
 				}
-				
+				return listAdapter;
 			}
-
-			listAdapter = new TrainingDayExerciseAdapter(getActivity(), listComplete,trainingDayId);
-			exerciseListView.setItemList(listComplete);
 			
-			return listAdapter;
+			/**
+			 * If there is no entry 
+			 */
+			Default d = new Default();
+			d.setTitel(getString(R.string.noExerciseInTrainingDay));
+			
+			ArrayList<Default> ld = new ArrayList<Default>();
+			ld.add(d);
+			DefaultAddListAdapter defaultListAdapter = new DefaultAddListAdapter(getActivity(), 0, ld);
+			return defaultListAdapter;
 	    }
 
 	    @Override
-	    protected void onPostExecute(TrainingDayExerciseAdapter result) {
+	    protected void onPostExecute(BaseAdapter result) {
 	        super.onPostExecute(result);
 
 	        if (result != null){
-	        	final AlphaInAnimationAdapter animAdapter = new AlphaInAnimationAdapter(result);
-	        	animAdapter.setInitialDelayMillis(300);
-	    		animAdapter.setAbsListView(exerciseListView);
-	        	exerciseListView.setAdapter(animAdapter);
-	        	
-	        	exerciseListView.setOnItemMovedListener(new DynamicListView.OnItemMovedListener() {
-	                 @Override
-	                 public void onItemMoved(final int newPosition) {
-	                	 animAdapter.notifyDataSetChanged();
-	                 }
-	             });
+	        	if (result instanceof TrainingDayExerciseAdapter){
+	        		exerciseListView.setOnTouchListener(touchListener);
+		        	final AlphaInAnimationAdapter animAdapter = new AlphaInAnimationAdapter(result);
+		        	animAdapter.setInitialDelayMillis(300);
+		    		animAdapter.setAbsListView(exerciseListView);
+		        	exerciseListView.setAdapter(animAdapter);
+		        	
+		        	exerciseListView.setOnItemMovedListener(new DynamicListView.OnItemMovedListener() {
+		                 @Override
+		                 public void onItemMoved(final int newPosition) {
+		                	 animAdapter.notifyDataSetChanged();
+		                 }
+		             });
+	        	}else{
+	        		exerciseListView.setOnTouchListener(null);
+	        		exerciseListView.setAdapter(result);
+	    			exerciseListView.setOnItemClickListener(new OnItemClickListener(){
+	    				@Override
+	    				public void onItemClick(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
+	    					openExerciseAddToTrainingDay();
+	    				}	
+	    			});
+	        	}
 	        }
 	
 	        else exerciseListView.invalidateViews();

@@ -2,6 +2,7 @@ package com.workout.log;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Stack;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -53,6 +54,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	private static int workoutplanId =1;
 	private int currentListId = -1;
 	private View view;
+	private Stack<File> fileStack = null;
 	
 
     @Override
@@ -64,7 +66,9 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 		 */
 		this.hasOptionsMenu();
 		
-	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
+		fileStack = new Stack<File>();
+		
+	    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.replace(R.id.specific_dateTimePicker, new ActionBarWorkoutPlanPickerFragment(), "ActionBarWorkoutPlanPickerFragment");
         transaction.commit();
@@ -158,14 +162,26 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 				workoutplanSQLDump = new WorkoutplanSQLDumpHelper(getActivity());
 				
 				/**
-				 * Get the File of the database
+				 * Get the File of the database and add it to the Stack so it can be deleted if you close the app
 				 */
 				File sqlDump = workoutplanSQLDump.createSQLDump(actionBarWorkoutPlanPickerFragment.getCurrentWorkoutplan());
+				fileStack.push(sqlDump);
+				
 				
 				return sqlDump;
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Returns the fileStack Objects which contains all Files that where created
+	 * in order to share the Workoutplans
+	 * 
+	 * @author Eric Schmidt
+	 */
+	public Stack<File> getFileStack(){
+		return fileStack;
 	}
 	
 	/**

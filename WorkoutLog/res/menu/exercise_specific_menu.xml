@@ -1,6 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-     tools:context="com.example.workoutlog.AddActivity" >
+    tools:context="com.example.workoutlog.AddActivity"
+    xmlns:myapp="http://schemas.android.com/apk/res-auto" >
 
     
     <item
@@ -8,7 +9,7 @@
         android:orderInCategory="100"
         android:title="@string/menu_add"
         android:icon="@android:drawable/ic_menu_add"
-        android:showAsAction="always"/>
+        myapp:showAsAction="always"/>
     
         
     <item
@@ -16,6 +17,6 @@
         android:orderInCategory="100"
         android:title="@string/menu_add"
         android:icon="@drawable/statistic"
-        android:showAsAction="always"/>
+        myapp:showAsAction="always"/>
 
 </menu>

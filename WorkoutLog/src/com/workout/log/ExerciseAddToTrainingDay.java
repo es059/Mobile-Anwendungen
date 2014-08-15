@@ -77,7 +77,7 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
         /**
 		 * Add the searchBar fragment to the current fragment
 		 */
-	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
+	    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.replace(R.id.add_searchBar, ExerciseSearchBarFragment.newInstance(this), "ActionBarSearchBarFragment");
         transaction.commit();

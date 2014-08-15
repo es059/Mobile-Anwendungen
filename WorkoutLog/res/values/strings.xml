@@ -73,9 +73,13 @@
     <string name="Weight">Weight</string>
     <string name="Rep">Rep</string>
     <string name="Exercises">Exercises</string>
-    <string name="noExercise">Create a new exercise</string>
     <string name="TrainingDays">Training days</string>
+    
+    <string name="noExercise">Create a new exercise</string>
     <string name="noTrainingDay">Create new training day</string>
+    <string name="noExerciseInTrainingDay">Add exercises to this training day</string>
+    <string name="AddTrainingDayToWorkoutplan">Add training days to this workout routine</string>
+    
     <string name="Save">Save</string>
     <string name="Cancel">Cancel</string>
     <string name="Update">Update</string>

@@ -73,7 +73,7 @@ public class ManageWorkoutplanListAdapter extends ArrayAdapter<ManageWorkoutplan
 				
 				hint.setVisibility(View.GONE);
 				title.setTextColor(Color.WHITE);
-				title.setText(context.getString(R.string.TrainingDayAdd));
+				title.setText(context.getString(R.string.AddTrainingDayToWorkoutplan));
 			}
 		}	
 		return v;

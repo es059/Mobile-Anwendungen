@@ -20,6 +20,9 @@ public class ListViewDefaultAdd extends RelativeLayout{
 		LayoutInflater inflater = LayoutInflater.from(context);
 		v = inflater.inflate(R.layout.listview_default_add, null);
 		
+		v.setOnLongClickListener(null);
+		v.setLongClickable(false);
+		
 		titel = (TextView) v.findViewById(R.id.default_add_titel);
 		hint = (TextView) v.findViewById(R.id.default_add_hint);
 		

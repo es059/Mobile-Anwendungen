@@ -73,9 +73,13 @@
     <string name="Weight">Gewicht</string>
     <string name="Rep">Wdh</string>
     <string name="Exercises">Übungen</string>
-    <string name="noExercise">Neue Übung hinzufügen</string>
     <string name="TrainingDays">Trainingstage</string>
+    
     <string name="noTrainingDay">Neuen Trainingstag hinzufügen</string>
+    <string name="noExercise">Neue Übung hinzufügen</string>
+    <string name="noExerciseInTrainingDay">Übungen dem Trainingstag hinzufügen</string>
+    <string name="AddTrainingDayToWorkoutplan">Trainingstage dem Trainingsplan hinzufügen</string>
+    
     <string name="Save">Speichern</string>
     <string name="Cancel">Abbrechen</string>
     <string name="Update">Ändern</string>
