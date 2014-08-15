@@ -116,6 +116,12 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 		if(workoutplanList.size() <= currentListId + 1)nextButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_add));
 	
 		manageWorkoutplan.updateListView(trainingDayList);
+		
+		
+		/**
+		 * Refresh the ShareIntent
+		 */
+		manageWorkoutplan.setShareIntent(manageWorkoutplan.createShareIntent());
 	}
 		
 	@SuppressWarnings("static-access")
@@ -148,6 +154,11 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 				if(workoutplanList.size() <= currentListId +1) {
 					nextButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_add));
 				}
+				
+				/**
+				 * Refresh the ShareIntent
+				 */
+				manageWorkoutplan.setShareIntent(manageWorkoutplan.createShareIntent());
 			}
 		} else if (id == R.id.Previous) {
 			if(workoutplanList.size() <= currentListId +1) {
@@ -167,6 +178,11 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 			if(currentListId == 0) {
 				previousButton.setVisibility(View.INVISIBLE);
 			}
+			
+			/**
+			 * Refresh the ShareIntent
+			 */
+			manageWorkoutplan.setShareIntent(manageWorkoutplan.createShareIntent());
 		}	
 	}
 	
@@ -184,6 +200,19 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 	
 	public static int getCurrentListId() {
 		return currentListId;
+	}
+	
+	/**
+	 * Returns the current Workoutplan
+	 * 
+	 * @return the current Workoutplan
+	 * @author Eric Schmidt
+	 */
+	public Workoutplan getCurrentWorkoutplan(){
+		if (workoutplanList != null && workoutplanList.size() != 0){
+			return workoutplanList.get(currentListId);
+		}
+		return null;
 	}
 	
 	/**

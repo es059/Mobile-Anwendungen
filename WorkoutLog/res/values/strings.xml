@@ -33,6 +33,7 @@
     <!-- String resources for ExerciseAddDialogFragment-->
     <string name="ExerciseAddDialogFragment_ExerciseAdd">Create a new Exercise</string>
     <string name="ExerciseAddDialogFragment_AddSuccess">Exercise was successfully added</string>
+    <string name="ExerciseAddDialogFragment_ExerciseExists">Exercise already exists</string>
     
     <!-- String resources for ExerciseSpecificAddDialogFragment-->
     <string name="ExerciseSpecificAddDialogFragment_ExerciseAdd">Add exercise to training day</string>
@@ -51,6 +52,14 @@
     
  	<!--  String resources for WorkoutplanAddDialogFragment -->
  	<string name="WorkoutplanAddDialogFragment_WorkoutplanAdd">Create a new workout routine</string>
+ 	
+ 	<!--  String resources for ImportExport -->
+ 	<string name="ImportExport_ConfirmImport">This will delete your current data and overrides it with the content of this file.\n\nAre your sure?</string>
+ 	<string name="ImportExport_ConfirmImportTitle">Confirm</string>
+    <string name="ImportExport_WorkoutplanImportComplete">The workout routine was successfully added</string>
+ 	
+ 	<!--  String resources for WorkoutplanDataBaseHelper -->
+	<string name="WorkoutplanDatabaseName">WorkoutRoutine</string>
 	
  	<!--  String resources for LineGraph -->
  	<string name="LineGraph_Rep">Repetition</string>
@@ -101,6 +110,7 @@
     <string name="menu_add">Add</string>
     <string name="menu_save">Save</string>
     <string name="menu_edit">Edit exercise</string>
+    <string name="menu_sort">Sort</string>
     <string name="menu_workoutplan">Workout routine</string>
     <string name="menu_settings">Settings</string>
     <string name="drawer_open">Open drawer</string>

@@ -97,7 +97,7 @@ public class WorkoutplanMapper   {
 	 * 
 	 * @param w the new Workoutplan
 	 */
-	public void add(Workoutplan w) {
+	public Workoutplan add(Workoutplan w) {
 		int id = 1;
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		
@@ -116,6 +116,7 @@ public class WorkoutplanMapper   {
 		
 		cursor.close();
 		
+		return w;
 	}
 	
 	/**

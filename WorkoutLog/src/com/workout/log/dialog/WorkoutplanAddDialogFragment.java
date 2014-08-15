@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.remic.workoutlog.R;
+import com.workout.log.ManageWorkoutplan;
 import com.workout.log.bo.Workoutplan;
 import com.workout.log.db.WorkoutplanMapper;
 
@@ -62,7 +63,7 @@ public class WorkoutplanAddDialogFragment extends DialogFragment {
 			FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
 			ft.detach(fragment);
 			ft.attach(fragment);
-			ft.commit();
+			ft.commit();	
 		  }
 		});
 		alert.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {

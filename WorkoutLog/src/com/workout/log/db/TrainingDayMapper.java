@@ -32,7 +32,7 @@ public class TrainingDayMapper {
 	 * 
 	 * @param trainingDayName
 	 */
-	public void add(TrainingDay trainingDay){
+	public TrainingDay add(TrainingDay trainingDay){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
 		int id = 1;
 		if (trainingDay.getId() == 0){
@@ -43,12 +43,16 @@ public class TrainingDayMapper {
 					id = Integer.parseInt(cursor.getString(0));
 					id++;
 				}
-			}	
+			}
+			cursor.close();
 		}else{
 			id = trainingDay.getId();
 		}
 		sql = "INSERT INTO TrainingDay (TrainingDay_Id, TrainingDayName) VALUES (" + id + ", '"+ trainingDay.getName() + "')";
 		db.execSQL(sql);	
+		
+		trainingDay.setId(id);
+		return trainingDay;
 	}
 	
 	public ArrayList<Workoutplan> getWorkoutplansFromTrainingDays(int trainingDayId){

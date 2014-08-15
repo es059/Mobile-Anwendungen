@@ -149,14 +149,18 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 				
 				if(!value.isEmpty() && selectedMuscleGroupId != -1){
 					// Mapper-Methode aufrufen zum Hinzufügen einer neuen Übung
-					eMapper.add(value, selectedMuscleGroupId);
-					// Toast einblenden 
-					Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseAddDialogFragment_AddSuccess), Toast.LENGTH_SHORT ).show();
-					// ListView aktualisieren 
-					if (fragment instanceof ExerciseAdd) ((ExerciseAdd) 
-							fragment).updateListView(eMapper.getAllExercise(), false, null);   
-					if (fragment instanceof ExerciseAddToTrainingDay) ((ExerciseAddToTrainingDay) 
-							fragment).updateListView(eMapper.getAllExercise(), null);   
+					boolean success = eMapper.add(value, selectedMuscleGroupId);
+					if (success){
+						// Toast einblenden 
+						Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseAddDialogFragment_AddSuccess), Toast.LENGTH_SHORT ).show();
+						// ListView aktualisieren 
+						if (fragment instanceof ExerciseAdd) ((ExerciseAdd) 
+								fragment).updateListView(eMapper.getAllExercise(), false, null);   
+						if (fragment instanceof ExerciseAddToTrainingDay) ((ExerciseAddToTrainingDay) 
+								fragment).updateListView(eMapper.getAllExercise(), null);   
+					}else{
+						Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseAddDialogFragment_ExerciseExists), Toast.LENGTH_SHORT ).show();
+					}
 				}else{
 					Toast.makeText(getActivity(), getResources().getString(R.string.MissingField), Toast.LENGTH_SHORT ).show();
 				}

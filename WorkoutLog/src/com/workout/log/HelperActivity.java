@@ -9,10 +9,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings.Secure;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Gravity;
@@ -41,7 +41,7 @@ import com.workout.log.listAdapter.CustomDrawerAdapter;
 import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;
 
-public class HelperActivity extends FragmentActivity{
+public class HelperActivity extends ActionBarActivity{
 	protected OnBackPressedListener onBackPressedListener;
 	protected OnHomePressedListener onHomePressedListener;
 	

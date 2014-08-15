@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Stack;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -31,6 +33,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.workout.log.analytics.MyApplication;
 import com.workout.log.analytics.MyApplication.TrackerName;
 import com.workout.log.db.DataBaseHelper;
+import com.workout.log.db.WorkoutplanSQLDumpHelper;
 import com.workout.log.listAdapter.FileExplorerAdapter;
 import com.workout.log.navigation.OnBackPressedListener;
 
@@ -46,7 +49,6 @@ public class ImportExport extends Fragment implements OnItemClickListener {
     private ListView fileListe = null;
     
     private Stack<File> savedPaths = null;
-    private String fileEndsWith = ".db";  
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -187,6 +189,18 @@ public class ImportExport extends Fragment implements OnItemClickListener {
 	}
 	
 	/**
+	 * Import the SQLDump in database
+	 * 
+	 * @author Eric Schmidt
+	 */
+	public void importSQLDump(File chosenFile){
+		WorkoutplanSQLDumpHelper workoutplanSQLDumpHelper = new WorkoutplanSQLDumpHelper(getActivity());
+		workoutplanSQLDumpHelper.importSQLDump(chosenFile);
+		
+		Toast.makeText(getActivity(), getResources().getString(R.string.ImportExport_WorkoutplanImportComplete), Toast.LENGTH_SHORT).show();
+	}
+	
+	/**
 	 * Update the ListView with the fileList of a given File
 	 * 
 	 * @author Eric Schmidt
@@ -207,7 +221,7 @@ public class ImportExport extends Fragment implements OnItemClickListener {
 	
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		File fileChosen = fileList.get(arg2);
+		final File fileChosen = fileList.get(arg2);
         if (fileChosen.isDirectory() && fileChosen.canRead()) {
         	/**
         	 * Save the currentPath to the ArrayList
@@ -231,11 +245,34 @@ public class ImportExport extends Fragment implements OnItemClickListener {
 	            .setAction("Import")
 	            .setLabel("Import the Database")
 	            .build());
-        	/**
-			 * Import
-			 */
-        	importDatabase(fileChosen);
-        }		
+        	
+	        
+	    	if (fileChosen.getName().endsWith(".db")){
+		        /**
+		         * Confirm the import of another database
+		         */
+		        new AlertDialog.Builder(getActivity())
+		        	.setIconAttribute(android.R.attr.alertDialogIcon)
+		        	.setTitle(getString(R.string.ImportExport_ConfirmImportTitle))
+			        .setMessage(getString(R.string.ImportExport_ConfirmImport))
+			        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+			            public void onClick(DialogInterface dialog, int which) { 
+			            	/**
+			    			 * Import
+			    			 */
+			            	importDatabase(fileChosen);
+			            }
+			         })
+			        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+			            public void onClick(DialogInterface dialog, int which) { 
+			                // do nothing
+			            }
+			         })
+			        .show();
+	        }else{
+	        	importSQLDump(fileChosen);
+	        }
+        }
 	}
 	
 	
@@ -255,7 +292,10 @@ public class ImportExport extends Fragment implements OnItemClickListener {
 	                File sel = new File(dir, filename);
 	                if (!sel.canRead()) return false;
 	                else {
-	                    boolean endsWith = fileEndsWith != null ? filename.toLowerCase().endsWith(fileEndsWith) : true;
+	                	boolean endsWith = false;
+	                	if (filename.toLowerCase().endsWith(".db") || filename.toLowerCase().endsWith(".log")){
+	                		endsWith = true;
+	                	}
 	                    return endsWith || sel.isDirectory();
 	                }
 	            }

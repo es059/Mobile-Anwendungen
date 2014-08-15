@@ -26,23 +26,60 @@ public class ExerciseMapper {
 	    if (ptMapper == null) ptMapper= new PerformanceTargetMapper(context);
 	}
 	
-	public void add(String exerciseName, int muscleGroupId){
-		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "INSERT INTO Exercise (ExerciseName, MuscleGroup_Id ) VALUES ('" + exerciseName +"', " + muscleGroupId + ")";
-		db.execSQL(sql);
+	public boolean add(String exerciseName, int muscleGroupId){
+		if (exerciseExist(exerciseName) == null){
+			SQLiteDatabase db = myDBHelper.getWritableDatabase();
+			sql = "INSERT INTO Exercise (ExerciseName, MuscleGroup_Id ) VALUES ('" + exerciseName +"', " + muscleGroupId + ")";
+			db.execSQL(sql);
+			
+			return true;
+		}
+		return false;
 	}
 	
-	public void add(Exercise exercise){
+	public Exercise add(Exercise exercise){
+		int exerciseId = 0;
+		if (exerciseExist(exercise.getName()) == null){
+			SQLiteDatabase db = myDBHelper.getWritableDatabase();
+			sql = "SELECT MuscleGroup_Id FROM MuscleGroup WHERE MuscleGroupName='" + exercise.getMuscleGroup().getName() + "'";
+			Cursor cursor = db.rawQuery(sql, null);
+			if (cursor.moveToFirst()){
+				muscleGroupID = Integer.parseInt(cursor.getString(0));
+			}
+			
+			if (exercise.getId() == 0){
+				sql = "SELECT MAX(Exercise_Id) FROM Exercise";
+				cursor = db.rawQuery(sql, null);
+				if (cursor.moveToFirst()){
+					if (!cursor.isNull(0)){
+						exerciseId = Integer.parseInt(cursor.getString(0));
+						exerciseId++;
+					}
+				}
+			}else{
+				exerciseId = exercise.getId();
+			}
+			sql = "INSERT INTO Exercise (Exercise_Id, ExerciseName, MuscleGroup_Id ) VALUES ("+ exerciseId + ", '" + exercise.getName() +"', " + muscleGroupID + ")";
+			db.execSQL(sql);
+			cursor.close();
+			
+			exercise.setID(exerciseId);
+			return exercise;
+		}
+		return exerciseExist(exercise.getName());
+	}
+	
+	public Exercise exerciseExist(String exerciseName){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-		sql = "SELECT MuscleGroup_Id FROM MuscleGroup WHERE MuscleGroupName='" + exercise.getMuscleGroup().getName() + "'";
+		sql = "SELECT Exercise_Id FROM Exercise WHERE ExerciseName = '" + exerciseName + "'"; 
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()){
-			muscleGroupID = Integer.parseInt(cursor.getString(0));
+			Exercise exercise = getExerciseById(cursor.getInt(0));
+			cursor.close();
+			return exercise;
 		}
-		sql = "INSERT INTO Exercise (Exercise_Id, ExerciseName, MuscleGroup_Id ) VALUES ("+ exercise.getId() + ", '" + exercise.getName() +"', " + muscleGroupID + ")";
-		db.execSQL(sql);
 		cursor.close();
-		
+		return null;
 	}
 	
 	public void delete(Exercise e){	

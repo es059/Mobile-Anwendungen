@@ -1,13 +1,21 @@
 package com.workout.log;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -25,21 +33,27 @@ import com.workout.log.data.Default;
 import com.workout.log.data.ManageWorkoutplanListItem;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.db.WorkoutplanMapper;
+import com.workout.log.db.WorkoutplanSQLDumpHelper;
 import com.workout.log.fragment.ActionBarWorkoutPlanPickerFragment;
 import com.workout.log.listAdapter.ManageWorkoutplanListAdapter;
-import com.workout.log.listAdapter.StableArrayAdapter;
 
 public class ManageWorkoutplan extends Fragment implements OnItemClickListener, UndoBarController.UndoListener {
 	private ListView listView;
 	private ArrayList<TrainingDay> trainingDayList;
 	private ArrayList<ManageWorkoutplanListItem> manageWorkoutplanList;
+	private ShareActionProvider mShareActionProvider;
+	
 	private ManageWorkoutplanListAdapter manageWorkoutplanListAdapter;
+	private WorkoutplanSQLDumpHelper workoutplanSQLDump;
+	private ActionBarWorkoutPlanPickerFragment actionBarWorkoutPlanPickerFragment;
 	private TrainingDayMapper tdMapper;
 	private WorkoutplanMapper wpMapper;
 	private UndoBarController mUndoBarController = null;
+	
 	private static int workoutplanId =1;
-	int currentListId = -1;
+	private int currentListId = -1;
 	private View view;
+	
 
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -48,6 +62,8 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 		/**
 		 * Add the WorkoutplanPicker fragment to the current fragment
 		 */
+		this.hasOptionsMenu();
+		
 	    FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.replace(R.id.specific_dateTimePicker, new ActionBarWorkoutPlanPickerFragment(), "ActionBarWorkoutPlanPickerFragment");
@@ -65,6 +81,9 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	public void onResume(){
 		super.onResume();
 
+		actionBarWorkoutPlanPickerFragment = (ActionBarWorkoutPlanPickerFragment)
+				this.getFragmentManager().findFragmentByTag("ActionBarWorkoutPlanPickerFragment");
+		
 		/**
 		 * If more than one xml layout file uses the Layout for the UndoBar than 
 		 * use this line to ensure that the reference is always correct
@@ -83,8 +102,70 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 		loadSwipeToDimiss();
 
 		setHasOptionsMenu(true);
+		
+		setShareIntent(createShareIntent());
 	}
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.manage_workoutplan_menu, menu);
+		
+		 // Locate MenuItem with ShareActionProvider
+	    MenuItem item = menu.findItem(R.id.menu_item_share);
+	    
+		// Fetch and store ShareActionProvider
+	    mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+	    mShareActionProvider.setShareIntent(createShareIntent()); 
+	}
+
+	public Intent createShareIntent(){
+		File sqlDump = createCurrentSqlDump();
+		if (sqlDump != null){
+			Intent shareIntent = new Intent();
+			shareIntent.setAction(Intent.ACTION_SEND);
+			shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(sqlDump));
+			shareIntent.setType("text/plain");
+			return shareIntent;
+		}
+		return null;
+	}
+	
+	// Call to update the share intent
+	public void setShareIntent(Intent shareIntent) {
+	    if (mShareActionProvider != null) {
+	    	/**
+	    	 * First delete the old databaseFile then update the ShareIntent
+	    	 */
+	        mShareActionProvider.setShareIntent(shareIntent);
+	    }
+	}
+	
+	private File createCurrentSqlDump(){
+		/**
+		 * Get the current Workoutplan
+		 */
+		if (actionBarWorkoutPlanPickerFragment == null){
+			actionBarWorkoutPlanPickerFragment = (ActionBarWorkoutPlanPickerFragment)
+					this.getFragmentManager().findFragmentByTag("ActionBarWorkoutPlanPickerFragment");
+		}
+		
+		/**
+		 * Create a database with the current databse
+		 */
+		if (actionBarWorkoutPlanPickerFragment.getCurrentWorkoutplan() != null){
+			workoutplanSQLDump = new WorkoutplanSQLDumpHelper(getActivity());
+			
+			/**
+			 * Get the File of the database
+			 */
+			File sqlDump = workoutplanSQLDump.createSQLDump(actionBarWorkoutPlanPickerFragment.getCurrentWorkoutplan());
+			
+			return sqlDump;
+		}
+		return null;
+	}
+	
 	/**
 	 * Redirects to TraininDayExerciseOverview Fragment
 	 */

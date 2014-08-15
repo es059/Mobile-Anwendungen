@@ -56,7 +56,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		}
 	    openDataBase();
     }
-
 	 
 	/**
 	* Creates a empty database on the system and rewrites it with your own database.

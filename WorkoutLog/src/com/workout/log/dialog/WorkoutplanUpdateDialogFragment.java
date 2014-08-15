@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.remic.workoutlog.R;
+import com.workout.log.ManageWorkoutplan;
 import com.workout.log.SwipeToDelete.UndoBarController;
 import com.workout.log.SwipeToDelete.UndoItem;
 import com.workout.log.bo.Workoutplan;
@@ -82,8 +83,11 @@ public class WorkoutplanUpdateDialogFragment extends DialogFragment{
 				 */
 				wMapper.update(w);
 				Toast.makeText(getActivity(), getResources().getString(R.string.TrainingDayEditSuccess), Toast.LENGTH_SHORT ).show();
-
-				updateFragment();			
+				
+				/**
+				 * Update the Fragment
+				 */
+				updateFragment();	
 			}else{
 				Toast.makeText(getActivity(), getResources().getString(R.string.MissingField), Toast.LENGTH_SHORT ).show();
 			}
