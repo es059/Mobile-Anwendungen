@@ -150,18 +150,20 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 					this.getFragmentManager().findFragmentByTag("ActionBarWorkoutPlanPickerFragment");
 		}
 		
-		/**
-		 * Create a database with the current databse
-		 */
-		if (actionBarWorkoutPlanPickerFragment.getCurrentWorkoutplan() != null){
-			workoutplanSQLDump = new WorkoutplanSQLDumpHelper(getActivity());
-			
+		if(actionBarWorkoutPlanPickerFragment != null){
 			/**
-			 * Get the File of the database
+			 * Create a database with the current databse
 			 */
-			File sqlDump = workoutplanSQLDump.createSQLDump(actionBarWorkoutPlanPickerFragment.getCurrentWorkoutplan());
-			
-			return sqlDump;
+			if (actionBarWorkoutPlanPickerFragment.getCurrentWorkoutplan() != null){
+				workoutplanSQLDump = new WorkoutplanSQLDumpHelper(getActivity());
+				
+				/**
+				 * Get the File of the database
+				 */
+				File sqlDump = workoutplanSQLDump.createSQLDump(actionBarWorkoutPlanPickerFragment.getCurrentWorkoutplan());
+				
+				return sqlDump;
+			}
 		}
 		return null;
 	}
