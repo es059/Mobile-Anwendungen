@@ -14,11 +14,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.remic.workoutlog.R;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.SwipeToDelete.UndoBarController;
@@ -51,6 +55,8 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener,
 	
 	private ArrayList<TrainingDay> trainingDayList = null;
 	private UndoBarController mUndoBarController = null;
+	
+	private ShowcaseView fifthShowcaseView = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -94,15 +100,48 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener,
 		mUndoBarController = null;
 		
 		tdMapper = new TrainingDayMapper(getActivity());
+		
 		trainingDayListView = (ListView) view.findViewById(R.id.trainingDay_add_list);
 		trainingDayListView.setOnItemClickListener(this);
 		trainingDayListView.setOnItemLongClickListener(this);
+		
+		/**
+		 * Listener triggers if the listview is completely drawn
+		 */
+		ViewTreeObserver textViewTreeObserver = trainingDayListView.getViewTreeObserver();
+        textViewTreeObserver.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+        	@Override
+            public void onGlobalLayout() {
+        		if (trainingDayListView.getAdapter() != null && trainingDayListView.getChildCount() != 0 && trainingDayListView.getAdapter().getItem(0) instanceof TrainingDay){ 
+    	        	showfifthHelperOverlay();
+    	        }
+            }
+        });
 		
 		updateListView(tdMapper.getAllTrainingDay(), null);
 		loadSwipeToDismiss();  
 		setHasOptionsMenu(true);
 	}
 
+	/**
+     * ShowcaseView which points to the first entry of the listView
+     */
+    public void showfifthHelperOverlay(){
+    	if (fifthShowcaseView == null){
+	    	ViewTarget target = new ViewTarget(trainingDayListView.getChildAt(0));
+	    	
+	    	fifthShowcaseView = new ShowcaseView.Builder(getActivity())
+	    	.setTarget(target)
+		    .setContentTitle("Step 5: Add exercises to the training day")
+		    .setContentText("Click a training day you want to populate with exercises.")
+		    .setStyle(R.style.CustomShowcaseTheme)
+		    //.singleShot(46)
+		    .build();
+    	}else{
+    		fifthShowcaseView.refreshDrawableState();
+    	}
+    }
+	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.workoutplan_menu, menu);

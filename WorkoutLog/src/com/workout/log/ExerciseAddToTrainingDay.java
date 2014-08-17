@@ -15,11 +15,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.remic.workoutlog.R;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.SwipeToDelete.UndoBarController;
@@ -58,6 +63,8 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 	
 	private ArrayList<Exercise> exerciseList = null;
 	private UndoBarController mUndoBarController = null;
+	
+	private ShowcaseView seventhShowcaseView = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -107,10 +114,42 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 		exerciseListView.setOnItemClickListener(this);
 		exerciseListView.setOnItemLongClickListener(this);
 		
+		/**
+		 * Listener triggers if the listview is completely drawn
+		 */
+		ViewTreeObserver textViewTreeObserver = exerciseListView.getViewTreeObserver();
+        textViewTreeObserver.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+        	@Override
+            public void onGlobalLayout() {
+        		if (exerciseListView.getAdapter() != null && exerciseListView.getChildCount() != 0){ 
+        			showseventhHelperOverlay();
+    	        }
+            }
+        });
+		
 		updateListView(eMapper.getAllExercise(), null);
 		loadSwipeToDismiss();
 	}
 
+	/**
+     * ShowcaseView which points to the first entry of the listView
+     */
+    public void showseventhHelperOverlay(){
+    	if (seventhShowcaseView == null){	    	
+	    	seventhShowcaseView = new ShowcaseView.Builder(getActivity())
+	    	.setTarget(Target.NONE)
+		    .setContentTitle("Step 7: Add an exercises to the training day")
+		    .setContentText("Click on any exercise to add it to the current training day. A dialog box will appear where you can choose the" +
+		    		" repetitions and sets for this exercise. \n\nYou finished the basic set up of a workout routine! You can now choose the navigation entry 'Log'" +
+		    		" and start working out. Have Fun!")
+		    .setStyle(R.style.CustomShowcaseTheme)
+		    .singleShot(48)
+		    .build();
+    	}else{
+    		seventhShowcaseView.refreshDrawableState();
+    	}
+    }
+	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.workoutplan_menu, menu);

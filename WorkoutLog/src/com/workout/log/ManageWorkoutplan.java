@@ -19,11 +19,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.remic.workoutlog.R;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.SwipeToDelete.UndoBarController;
@@ -38,8 +42,8 @@ import com.workout.log.db.WorkoutplanSQLDumpHelper;
 import com.workout.log.fragment.ActionBarWorkoutPlanPickerFragment;
 import com.workout.log.listAdapter.ManageWorkoutplanListAdapter;
 
-public class ManageWorkoutplan extends Fragment implements OnItemClickListener, UndoBarController.UndoListener {
-	private ListView listView;
+public class ManageWorkoutplan extends Fragment implements OnItemClickListener, UndoBarController.UndoListener{
+	private ListView trainingDayListView;
 	private ArrayList<TrainingDay> trainingDayList;
 	private ArrayList<ManageWorkoutplanListItem> manageWorkoutplanList;
 	private ShareActionProvider mShareActionProvider;
@@ -51,11 +55,13 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	private WorkoutplanMapper wpMapper;
 	private UndoBarController mUndoBarController = null;
 	
-	private static int workoutplanId =1;
+	private static int workoutplanId = -1;
 	private int currentListId = -1;
 	private View view;
 	private Stack<File> fileStack = null;
 	
+	private ShowcaseView firstShowcaseView = null;
+	private ShowcaseView secondShowcaseView = null;
 
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -72,7 +78,8 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.replace(R.id.specific_dateTimePicker, new ActionBarWorkoutPlanPickerFragment(), "ActionBarWorkoutPlanPickerFragment");
         transaction.commit();
-		return view;
+                
+        return view;            
 	}
 
 	/**
@@ -86,45 +93,122 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 		super.onResume();
 
 		actionBarWorkoutPlanPickerFragment = (ActionBarWorkoutPlanPickerFragment)
-				this.getFragmentManager().findFragmentByTag("ActionBarWorkoutPlanPickerFragment");
+				getActivity().getSupportFragmentManager().findFragmentByTag("ActionBarWorkoutPlanPickerFragment");
 		
 		/**
 		 * If more than one xml layout file uses the Layout for the UndoBar than 
 		 * use this line to ensure that the reference is always correct
 		 */
 		mUndoBarController = null;
+	
 		
 		wpMapper = new WorkoutplanMapper(getActivity());
-		
 		tdMapper = new TrainingDayMapper(getActivity());
-		listView = (ListView) view.findViewById(R.id.TrainingDayList);
 		
-		listView.setOnItemClickListener(this);
-		listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE); 
+		trainingDayListView = (ListView) view.findViewById(R.id.TrainingDayList);
+		trainingDayListView.setOnItemClickListener(this);
+		trainingDayListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE); 
+		
+		/**
+		 * Listener triggers if the listview is completely drawn
+		 */
+		ViewTreeObserver textViewTreeObserver = trainingDayListView.getViewTreeObserver();
+        textViewTreeObserver.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+        	@Override
+            public void onGlobalLayout() {
+    	        if (manageWorkoutplanList != null && manageWorkoutplanList.size() == 1 && trainingDayListView.getChildCount() != 0){ 
+    	        	showSecondHelperOverlay();
+    	        }
+            }
+        });
 		
 		updateListView(null);
 		loadSwipeToDimiss();
 
 		setHasOptionsMenu(true);
-		
-		setShareIntent(createShareIntent());
 	}
 
+    /**
+     * ShowcaseView which points to the + Symbol 
+     */
+    private void showFirstHelperOverlay(){
+    	if (firstShowcaseView == null){
+	    	ViewTarget target = new ViewTarget(R.id.Next, getActivity().getSupportFragmentManager().
+	    			findFragmentByTag("ActionBarWorkoutPlanPickerFragment"));
+	    	
+			firstShowcaseView = new ShowcaseView.Builder(getActivity())
+		    .setTarget(target)
+		    .setContentTitle("Step 1: Create a new workout routine")
+		    .setContentText("Click here to create a new workout routine.\n\nHint: If you have more than one " +
+	    		"workout routine you can use the button to switch between them")
+		    .setStyle(R.style.CustomShowcaseTheme)
+		    //.singleShot(42)
+		    .build();	
+    	}else{
+    		firstShowcaseView.refreshDrawableState();
+    	}
+    }
+    
+    /**
+     * ShowcaseView which points to the first entry of the listView
+     */
+    public void showSecondHelperOverlay(){
+    	if (secondShowcaseView == null){
+	    	ViewTarget target = new ViewTarget(trainingDayListView.getChildAt(0));
+	    	
+	    	secondShowcaseView = new ShowcaseView.Builder(getActivity())
+	    	.setTarget(target)
+		    .setContentTitle("Step 2: Create/Add a new training day")
+		    .setContentText("Click here to Add a new training day to the current workout routine")
+		    .setStyle(R.style.CustomShowcaseTheme)
+		    //.singleShot(43)
+		    .build();
+	    	
+    	}else{
+    		secondShowcaseView.refreshDrawableState();
+    	}
+    }
+	
+	/**
+	 * Destroy any SqlDumpFile which was created
+	 */
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		Stack<File> fileStack = getFileStack();
+		
+		while (!fileStack.empty()){
+			File file = (File) fileStack.pop();
+			if(file.exists()){
+				file.delete();
+			}
+		}
+	}
+    
+	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.manage_workoutplan_menu, menu);
 		
 		 // Locate MenuItem with ShareActionProvider
-	    MenuItem item = menu.findItem(R.id.menu_item_share);
+	    MenuItem shareItem = menu.findItem(R.id.menu_item_share);
 	    
 		// Fetch and store ShareActionProvider
-	    mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
-	    mShareActionProvider.setShareIntent(createShareIntent()); 
+	    mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
+	    
+	    /**
+	     * Update the ShareIntent
+	     */
+	    this.createCurrentSqlDump(); 
+	    	    
+	    /**
+	     * Create Overlay
+	     */
+		if (getWorkoutplanId() == -1) showFirstHelperOverlay();   
 	}
-
-	public Intent createShareIntent(){
-		File sqlDump = createCurrentSqlDump();
+	
+	private Intent createShareIntent(File sqlDump){
 		if (sqlDump != null){
 			Intent shareIntent = new Intent();
 			shareIntent.setAction(Intent.ACTION_SEND);
@@ -145,33 +229,14 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	    }
 	}
 	
-	private File createCurrentSqlDump(){
-		/**
-		 * Get the current Workoutplan
-		 */
-		if (actionBarWorkoutPlanPickerFragment == null){
-			actionBarWorkoutPlanPickerFragment = (ActionBarWorkoutPlanPickerFragment)
-					this.getFragmentManager().findFragmentByTag("ActionBarWorkoutPlanPickerFragment");
-		}
-		
-		if(actionBarWorkoutPlanPickerFragment != null){
-			/**
-			 * Create a database with the current databse
-			 */
-			if (actionBarWorkoutPlanPickerFragment.getCurrentWorkoutplan() != null){
-				workoutplanSQLDump = new WorkoutplanSQLDumpHelper(getActivity());
-				
-				/**
-				 * Get the File of the database and add it to the Stack so it can be deleted if you close the app
-				 */
-				File sqlDump = workoutplanSQLDump.createSQLDump(actionBarWorkoutPlanPickerFragment.getCurrentWorkoutplan());
-				fileStack.push(sqlDump);
-				
-				
-				return sqlDump;
-			}
-		}
-		return null;
+	/**
+	 * Create the sql dump in an AsyncTask. The AsyncTask will handle the
+	 * call of the createShareIntent method.
+	 * 
+	 * @author Eric Schmidt
+	 */
+	public void createCurrentSqlDump(){
+		new BackGroundTaskSQLDump().execute();		
 	}
 	
 	/**
@@ -211,7 +276,14 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	 */
 	@SuppressWarnings("unchecked")
 	public void updateListView(ArrayList<TrainingDay> trainingdayList) {
-		new BackGroundTask(listView).execute(trainingdayList);
+		/**
+		 * Clear ListAdapter if already referenced
+		 */
+		if (trainingDayListView.getAdapter() != null){
+			((ManageWorkoutplanListAdapter) trainingDayListView.getAdapter()).clear();
+			((ManageWorkoutplanListAdapter) trainingDayListView.getAdapter()).notifyDataSetChanged();
+		}
+		new BackGroundTask().execute(trainingdayList);
 	}
 
 	public void setWorkoutplanId(int id) {
@@ -234,7 +306,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	 * @author Remi Tessier
 	 */
 	private void loadSwipeToDimiss(){
-		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(listView,
+		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(trainingDayListView,
            new SwipeDismissListViewTouchListener.DismissCallbacks() {
 			TrainingDay[] items= null;
 			int[] itemPositions = null;
@@ -289,14 +361,19 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 		            String messageUndoBar = count + " " + getResources().getString(R.string.ItemsDeleted);
 		            		 
 		            mUndoBarController.showUndoBar(false,messageUndoBar,itemUndo);
+		            
+		    	    /**
+		    	     * Update the ShareIntent
+		    	     */
+		    	    createCurrentSqlDump(); 
                }
            });
-		listView.setOnTouchListener(touchListener);
+		trainingDayListView.setOnTouchListener(touchListener);
 		
 		/** Setting this scroll listener is required to ensure that during ListView scrolling,
 		 *  we don't look for swipes.
 		 */
-		listView.setOnScrollListener(touchListener.makeScrollListener());
+		trainingDayListView.setOnScrollListener(touchListener.makeScrollListener());
 		
 		/**
 		 * UndoController
@@ -345,12 +422,17 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	            	 */
                		trainingDayList = manageWorkoutplanListAdapter.getTrainingDayList();	
 				}
+				
+			    /**
+	    	     * Update the ShareIntent
+	    	     */
+	    	    createCurrentSqlDump(); 
 			}
 		}
 	}
 	
 	/**
-	 * Handels the Database queries in an Async Task
+	 * Handles the Database queries in an Async Task
 	 * 
 	 * @author Eric Schmidt
 	 */
@@ -360,12 +442,6 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	     */
 		private ArrayList<Workoutplan> workoutplanList;
 		
-		private ListView trainingDayListView;
-
-		public BackGroundTask (ListView trainingDayListView){	
-			this.trainingDayListView = trainingDayListView;
-		}
-
 	    @Override
 	    protected void onPreExecute() {
 	        super.onPreExecute();
@@ -379,8 +455,8 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	    	
 			wpMapper = new WorkoutplanMapper(getActivity());
 			
-			workoutplanList = new ArrayList<Workoutplan>();
 			manageWorkoutplanList = new ArrayList<ManageWorkoutplanListItem>();
+			workoutplanList = new ArrayList<Workoutplan>();
 			
 			workoutplanList = wpMapper.getAll();
 			
@@ -412,10 +488,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 				manageWorkoutplanList.add(d);
 				manageWorkoutplanListAdapter = new ManageWorkoutplanListAdapter(getActivity(), manageWorkoutplanList, ManageWorkoutplan.this);
 				setTrainingDayList(params[0]);
-			}
-			
-		
-						
+			}	
 			return manageWorkoutplanListAdapter;	
 	    }
 
@@ -424,8 +497,66 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	        super.onPostExecute(result);
 	        trainingDayListView.setAdapter(null);
 	        if (result != null) trainingDayListView.setAdapter(result);
+	        	        
+	        getActivity().setProgressBarIndeterminateVisibility(false); 
+	    }
+	}
+	
+	/**
+	 * Handles creation of the sql dump in an Async Task
+	 * 
+	 * @author Eric Schmidt
+	 */
+	public class BackGroundTaskSQLDump extends AsyncTask<Void, Void, File> {
+
+
+		public void BackGroundTask(){	
+
+		}
+
+	    @Override
+	    protected void onPreExecute() {
+	        super.onPreExecute();
+	        getActivity().setProgressBarIndeterminateVisibility(true);
+	    }
+
+	    @Override
+	    protected File doInBackground(Void... params) {
+	    	/**
+			 * Get the current Workoutplan
+			 */
+			if (actionBarWorkoutPlanPickerFragment == null){
+				actionBarWorkoutPlanPickerFragment = (ActionBarWorkoutPlanPickerFragment)
+						getActivity().getSupportFragmentManager().findFragmentByTag("ActionBarWorkoutPlanPickerFragment");
+			}
+			
+			if(actionBarWorkoutPlanPickerFragment != null){
+				/**
+				 * Create a database with the current databse
+				 */
+				if (actionBarWorkoutPlanPickerFragment.getCurrentWorkoutplan() != null){
+					workoutplanSQLDump = new WorkoutplanSQLDumpHelper(getActivity());
+					
+					/**
+					 * Get the File of the database and add it to the Stack so it can be deleted if you close the app
+					 */
+					File sqlDump = workoutplanSQLDump.createSQLDump(actionBarWorkoutPlanPickerFragment.getCurrentWorkoutplan());
+					fileStack.push(sqlDump);
+					
+					
+					return sqlDump;
+				}
+			}
+			return null;
+	    }
+
+	    @Override
+	    protected void onPostExecute(File result) {
+	        super.onPostExecute(result);
 	       	        
 	        getActivity().setProgressBarIndeterminateVisibility(false); 
+	        
+	        if (mShareActionProvider != null) mShareActionProvider.setShareIntent(createShareIntent(result));
 	    }
 	}
 }

@@ -13,6 +13,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Toast;
@@ -21,6 +23,8 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.remic.workoutlog.R;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
@@ -32,6 +36,7 @@ import com.workout.log.analytics.MyApplication.TrackerName;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.MuscleGroup;
 import com.workout.log.bo.PerformanceTarget;
+import com.workout.log.bo.TrainingDay;
 import com.workout.log.data.Default;
 import com.workout.log.data.DynamicListView;
 import com.workout.log.data.ListItem;
@@ -59,6 +64,8 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 	private SwipeDismissListViewTouchListener touchListener = null;
 	
 	private UndoBarController mUndoBarController = null;
+	
+	private ShowcaseView sixthShowcaseView = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -102,9 +109,23 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 		 * Receive the arguments set by either ManageWorkoutplan or ManageTrainingDays
 		 */
 		eMapper = new ExerciseMapper(getActivity());
+		
 		exerciseListView = (DynamicListView) getView().findViewById(R.id.ExerciseListView);
 		exerciseListView.setOnItemLongClickListener(this);
 		exerciseListView.setDivider(null);
+		
+		/**
+		 * Listener triggers if the listview is completely drawn
+		 */
+		ViewTreeObserver textViewTreeObserver = exerciseListView.getViewTreeObserver();
+        textViewTreeObserver.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+        	@Override
+            public void onGlobalLayout() {
+        		if (exerciseListView.getAdapter() != null && exerciseListView.getChildCount() != 0 && exerciseListView.getAdapter().getItem(0) instanceof Default){ 
+    	        	showsixthHelperOverlay();
+    	        }
+            }
+        });
 				
 		exerciseList = new ArrayList<Exercise>();
 		
@@ -127,6 +148,26 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 		setHasOptionsMenu(true);
 	}
 
+	/**
+     * ShowcaseView which points to the first entry of the listView
+     */
+    public void showsixthHelperOverlay(){
+    	if (sixthShowcaseView == null){
+	    	ViewTarget target = new ViewTarget(exerciseListView.getChildAt(0));
+	    	
+	    	sixthShowcaseView = new ShowcaseView.Builder(getActivity())
+	    	.setTarget(target)
+		    .setContentTitle("Step 6: Create/Add a new exercises to the training day")
+		    .setContentText("Click here to add a new exercise to the current training day.\n\nImportant Note: You have to use the +-Symbol" +
+		    		" to add additonal exercises")
+		    .setStyle(R.style.CustomShowcaseTheme)
+		    //.singleShot(47)
+		    .build();
+    	}else{
+    		sixthShowcaseView.refreshDrawableState();
+    	}
+    }
+	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.trainingday_exercise_overview_menu, menu);

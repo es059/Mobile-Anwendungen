@@ -121,10 +121,9 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 		/**
 		 * Refresh the ShareIntent
 		 */
-		manageWorkoutplan.setShareIntent(manageWorkoutplan.createShareIntent());
+		manageWorkoutplan.createCurrentSqlDump();
 	}
 		
-	@SuppressWarnings("static-access")
 	@SuppressLint("SimpleDateFormat")
 	@Override
 	public void onClick(View v) {
@@ -158,7 +157,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 				/**
 				 * Refresh the ShareIntent
 				 */
-				manageWorkoutplan.setShareIntent(manageWorkoutplan.createShareIntent());
+				manageWorkoutplan.createCurrentSqlDump();
 			}
 		} else if (id == R.id.Previous) {
 			if(workoutplanList.size() <= currentListId +1) {
@@ -182,7 +181,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 			/**
 			 * Refresh the ShareIntent
 			 */
-			manageWorkoutplan.setShareIntent(manageWorkoutplan.createShareIntent());
+			manageWorkoutplan.createCurrentSqlDump();
 		}	
 	}
 	

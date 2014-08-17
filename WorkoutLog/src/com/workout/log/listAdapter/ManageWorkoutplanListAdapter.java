@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -48,12 +49,19 @@ public class ManageWorkoutplanListAdapter extends ArrayAdapter<ManageWorkoutplan
 				final TextView	exerciseCount = (TextView) v.findViewById(R.id.exerciseCount);
 				
 				titel.setText(td.getName());
-				exerciseCount.setHint("Übungen: " + String.valueOf(td.getExerciseList().size()));	
+				exerciseCount.setHint(context.getString(R.string.Exercises) + ": " + String.valueOf(td.getExerciseList().size()));	
 			}else{
 				v = layoutInflater.inflate(R.layout.listview_default_add, null);
 				
-				v.setBackgroundColor(Color.parseColor("#3a3a3a"));
-				
+				if(items.size() == 1){
+					v.setBackgroundColor(Color.parseColor("#3a3a3a"));		
+					v.setAlpha(1f);
+					
+			        //((ManageWorkoutplan) fragment).showFinalHelperOverlay();
+				}else{
+					v.setBackgroundColor(Color.parseColor("#3a3a3a"));
+					v.setAlpha(0.7f);
+				}
 				v.setOnClickListener(new OnClickListener(){
 					@Override
 					public void onClick(View arg0) {

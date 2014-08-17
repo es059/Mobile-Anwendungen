@@ -14,11 +14,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.remic.workoutlog.R;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.SwipeToDelete.UndoBarController;
@@ -60,6 +66,9 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 	
 	private ArrayList<TrainingDay> trainingDayList = null;
 	private UndoBarController mUndoBarController = null;
+	
+	private ShowcaseView thirdShowcaseView = null;
+	private ShowcaseView fourthShowcaseView = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -130,14 +139,69 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 		workoutplanId = manageWorkoutplan.getWorkoutplanId();
 		
 		tdMapper = new TrainingDayMapper(getActivity());
+		
 		trainingDayListView = (ListView) view.findViewById(R.id.trainingDay_add_list);
 		trainingDayListView.setOnItemClickListener(this);
 		trainingDayListView.setOnItemLongClickListener(this);
+		
+		/**
+		 * Listener triggers if the listview is completely drawn
+		 */
+		ViewTreeObserver textViewTreeObserver = trainingDayListView.getViewTreeObserver();
+        textViewTreeObserver.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+        	@Override
+            public void onGlobalLayout() {
+        		if (trainingDayListView.getAdapter() != null && trainingDayListView.getChildCount() != 0 && trainingDayListView.getAdapter().getItem(0) instanceof Default){ 
+    	        	showThirdHelperOverlay();
+    	        }else if (trainingDayListView.getAdapter() != null && trainingDayListView.getChildCount() != 0 && trainingDayListView.getAdapter().getItem(0) instanceof TrainingDay){
+    	        	showFourthHelperOverlay();
+    	        }
+            }
+        });
 		
 		updateListView(tdMapper.getAllTrainingDay(), null);
 		loadSwipeToDismiss();
 		setHasOptionsMenu(true);
 	}
+	
+	/**
+     * ShowcaseView which points to the first entry of the listView
+     */
+    public void showThirdHelperOverlay(){
+    	if (thirdShowcaseView == null){
+	    	ViewTarget target = new ViewTarget(trainingDayListView.getChildAt(0));
+	    	
+	    	thirdShowcaseView = new ShowcaseView.Builder(getActivity())
+	    	.setTarget(target)
+		    .setContentTitle("Step 3: Create a new training day")
+		    .setContentText("Click here to create a new training day.\n\nImportant Note: You have to use the +-Symbol to " +
+		    		"create additional training days")
+		    .setStyle(R.style.CustomShowcaseTheme)
+		    .singleShot(44)
+		    .build();
+    	}else{
+    		thirdShowcaseView.refreshDrawableState();
+    	}
+    }
+    
+	
+	/**
+     * ShowcaseView which points to the first entry of the listView
+     */
+    public void showFourthHelperOverlay(){
+    	if (fourthShowcaseView == null){	    	
+	    	fourthShowcaseView = new ShowcaseView.Builder(getActivity())
+	    	.setTarget(new ActionViewTarget(getActivity(), ActionViewTarget.Type.HOME))
+		    .setContentTitle("Step 4: Add the training day to the workout routine")
+		    .setContentText("Click any training day in the list to add it to the training day.\n\nHint: To fill the training day with exercises, " +
+		    		"go back and open the navigation. Then select 'Training Days'.")
+		    .setStyle(R.style.CustomShowcaseTheme)
+		    //.singleShot(45)
+		    .build();
+    	}else{
+    		fourthShowcaseView.refreshDrawableState();
+    	}
+    }
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

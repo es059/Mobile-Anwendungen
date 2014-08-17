@@ -1,8 +1,6 @@
 package com.workout.log;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Stack;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -81,23 +79,6 @@ public class HelperActivity extends ActionBarActivity{
 		//Stop the analytics tracking
 		GoogleAnalytics.getInstance(this).reportActivityStop(this);
 	}
-
-	
-	/**
-	 * Destroy any SqlDumpFile which was created
-	 */
-	@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-		Stack<File> fileStack = ((ManageWorkoutplan) getSupportFragmentManager().findFragmentByTag("ManageWorkoutplan")).getFileStack();
-		
-		while (!fileStack.empty()){
-			File file = (File) fileStack.pop();
-			if(file.exists()) file.delete();
-		}
-	}
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState){
