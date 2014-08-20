@@ -22,8 +22,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
-import com.github.amlcurran.showcaseview.targets.Target;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.remic.workoutlog.R;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
@@ -34,6 +32,7 @@ import com.workout.log.bo.PerformanceTarget;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.bo.Workoutplan;
 import com.workout.log.data.Default;
+import com.workout.log.data.TrainingDayAddToWorkoutPlanCustomToast;
 import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.db.WorkoutplanMapper;
@@ -51,11 +50,12 @@ import com.workout.log.navigation.OnHomePressedListener;
  * 
  * @author Eric Schmidt
  */
-public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClickListener, OnItemLongClickListener, UndoBarController.UndoListener{
+public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClickListener, OnItemLongClickListener, UndoBarController.UndoListener,
+		TrainingDayAddToWorkoutPlanCustomToast.ShortCutListener{
+	
 	private TrainingDayListAdapter trainingDayListAdapter;
 	private TrainingDayMapper tdMapper;
 	private ListView trainingDayListView; 
-	
 	private int workoutplanId;
 	private ManageWorkoutplan manageWorkoutplan;
 	private View view;
@@ -69,6 +69,10 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 	
 	private ShowcaseView thirdShowcaseView = null;
 	private ShowcaseView fourthShowcaseView = null;
+	
+	private TrainingDayAddToWorkoutPlanCustomToast customToast = null;
+	private TrainingDayAddToWorkoutplanDialogFragment AddTrainingDayDialogFragment = null;
+	private TrainingDay selectedTrainingDay = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -162,6 +166,8 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 		updateListView(tdMapper.getAllTrainingDay(), null);
 		loadSwipeToDismiss();
 		setHasOptionsMenu(true);
+		
+		customToast = new TrainingDayAddToWorkoutPlanCustomToast(getView().findViewById(R.id.undobar), this);
 	}
 	
 	/**
@@ -173,9 +179,8 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 	    	
 	    	thirdShowcaseView = new ShowcaseView.Builder(getActivity())
 	    	.setTarget(target)
-		    .setContentTitle("Create a new training day")
-		    .setContentText("Click here to create a new training day.\n\nImportant Note: You have to use the +-Symbol to " +
-		    		"create additional training days")
+		    .setContentTitle(getString(R.string.thirdShowcaseViewTitle))
+		    .setContentText(getString(R.string.thirdShowcaseViewContext))
 		    .setStyle(R.style.CustomShowcaseTheme)
 		    //.singleShot(44)
 		    .build();
@@ -194,8 +199,8 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
     		
 	    	fourthShowcaseView = new ShowcaseView.Builder(getActivity())
 	    	.setTarget(target)
-		    .setContentTitle("Add the training day to the workout routine")
-		    .setContentText("Click any training day in the list to add it to the workout routine.")
+		    .setContentTitle(getString(R.string.fourthShowcaseViewTitle))
+		    .setContentText(getString(R.string.fourthShowcaseViewContext))
 		    .setStyle(R.style.CustomShowcaseTheme)
 		    //.singleShot(45)
 		    .build();
@@ -203,7 +208,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
     		fourthShowcaseView.refreshDrawableState();
     	}
     }
-	
+    
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.workoutplan_menu, menu);
@@ -227,10 +232,12 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		TrainingDay t = (TrainingDay) arg0.getItemAtPosition(arg2);
-		int trainingDayID = t.getId();
-		TrainingDayAddToWorkoutplanDialogFragment dialogFragment = TrainingDayAddToWorkoutplanDialogFragment.newInstance(getActivity(), trainingDayID, workoutplanId);
-		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
+		if (fourthShowcaseView != null && fourthShowcaseView.isShown()) fourthShowcaseView.hide();
+		
+		selectedTrainingDay = (TrainingDay) arg0.getItemAtPosition(arg2);
+		int trainingDayID = selectedTrainingDay.getId();
+		AddTrainingDayDialogFragment = TrainingDayAddToWorkoutplanDialogFragment.newInstance(getActivity(), trainingDayID, workoutplanId);
+		AddTrainingDayDialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
 		
 	}
 	
@@ -462,5 +469,30 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 	        
 	        getActivity().setProgressBarIndeterminateVisibility(false);
 	    }
+	}
+
+	@Override
+	public void onShortCut() {
+		openTrainingDayExerciseOverview(selectedTrainingDay);
+	}
+
+	public TrainingDayAddToWorkoutPlanCustomToast getCustomToast() {
+		return customToast;
+	}
+	
+	private void openTrainingDayExerciseOverview(TrainingDay td){
+		if (AddTrainingDayDialogFragment.getShowcaseView().isShown()) AddTrainingDayDialogFragment.getShowcaseView().hide();
+		
+		Bundle data = new Bundle();
+	    data.putInt("TrainingDayId", td.getId());
+		
+	    TrainingDayExerciseOverview trainingDayExerciseOverview = new TrainingDayExerciseOverview();
+	    trainingDayExerciseOverview.setArguments(data);
+
+		FragmentTransaction transaction =  getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.replace(R.id.fragment_container, trainingDayExerciseOverview, "TrainingDayExerciseOverview");
+        transaction.addToBackStack(null);
+        transaction.commit();
 	}
 }

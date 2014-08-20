@@ -58,7 +58,6 @@ public class ManageWorkoutplanListAdapter extends ArrayAdapter<ManageWorkoutplan
 					v.setBackgroundColor(Color.parseColor("#3a3a3a"));		
 					v.setAlpha(1f);
 					
-			        //((ManageWorkoutplan) fragment).showFinalHelperOverlay();
 				}else{
 					v.setBackgroundColor(Color.parseColor("#3a3a3a"));
 					v.setAlpha(0.7f);
@@ -66,6 +65,8 @@ public class ManageWorkoutplanListAdapter extends ArrayAdapter<ManageWorkoutplan
 				v.setOnClickListener(new OnClickListener(){
 					@Override
 					public void onClick(View arg0) {
+						if (((ManageWorkoutplan) fragment).getShowcaseView() != null && ((ManageWorkoutplan) fragment).getShowcaseView().isShown()) ((ManageWorkoutplan) fragment).getShowcaseView().hide();
+						
 						FragmentTransaction transaction = fragment.getFragmentManager().beginTransaction();
 						transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 						transaction.replace(R.id.fragment_container, new TrainingDayAddToWorkoutplan(), "TrainingDayAddToWorkoutplan");

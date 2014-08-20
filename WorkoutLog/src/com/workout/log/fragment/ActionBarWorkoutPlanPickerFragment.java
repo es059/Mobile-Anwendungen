@@ -144,9 +144,8 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 	    	
 			firstShowcaseView = new ShowcaseView.Builder(getActivity())
 		    .setTarget(target)
-		    .setContentTitle("Create a new workout routine")
-		    .setContentText("Click here to create a new workout routine.\n\nHint: If you have more than one " +
-	    		"workout routine you can use the button to switch between them")
+		    .setContentTitle(getString(R.string.firstShowcaseViewTitle))
+		    .setContentText(getString(R.string.firstShowcaseViewContext))
 		    .setStyle(R.style.CustomShowcaseTheme)
 		    //.singleShot(42)
 		    .build();	
@@ -154,6 +153,10 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
     		firstShowcaseView.refreshDrawableState();
     	}
     }
+    
+	public ShowcaseView getFirstShowcaseView() {
+		return firstShowcaseView;
+	}
 	
 	@SuppressLint("SimpleDateFormat")
 	@Override

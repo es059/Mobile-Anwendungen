@@ -49,7 +49,8 @@
 	
 	<!--  String resources for TrainingDayAddToWorkoutplanDialogFragment -->
 	<string name="TrainingDayAddToWorkoutplanDialogFragment_AddSuccess">Trainingstag wurde erfolgreich dem Trainingsplan hinzugefügt!</string> 
-    
+    <string name="TrainingDayAddDialogFragment_CustomToast">Füge Übungen hinzu</string>
+	
  	<!--  String resources for WorkoutplanAddDialogFragment -->
  	<string name="WorkoutplanAddDialogFragment_WorkoutplanAdd">Trainingsplan hinzufügen</string>
  	
@@ -92,6 +93,34 @@
     <string name="Delete">Löschen</string>
     <string name="Cardio">Cardio</string>
     <string name="Min">Min</string>
+    
+        <!-- ShowcaseView String resources -->
+    <string name="firstShowcaseViewTitle">Erstelle einen neuen Trainingsplan</string>
+    <string name="firstShowcaseViewContext">Klicke hier, um einen neuen Trainingsplan zu erstellen\n\nHinweis: Falls mehr als ein Trainingsplan
+           		vorhanden sein sollte, kann der mit Hilfe dieses Buttons zwischen ihnen gewechselt werden</string>
+    
+    <string name="secondShowcaseViewTitle">Hinzufügen eines neuen Trainingstags</string>
+    <string name="secondShowcaseViewContext">Klicke hier, um einen neuen Trainingstag dem aktuellen Trainingsplan hinzuzufügen</string>
+    
+    <string name="thirdShowcaseViewTitle">Erstelle einen neuen Trainingstag</string>
+    <string name="thirdShowcaseViewContext">Klicke hier, um einen neuen Trainingstag zu erstellen\n\nWichtiger Hinweis: Um weitere Trainingstage hinzuzufügen, nutze
+        			das +-Symbol in der oberen Leiste</string>  
+    
+    <string name="fourthShowcaseViewTitle">Füge den Trainingstag dem Trainingsplan hinzu</string>
+    <string name="fourthShowcaseViewContext">Klicke einen Trainingstag in der Liste um ihn dem Trainingsplan hinzuzufügen</string>
+    
+   	<string name="fifthShowcaseViewTitle">Befülle den Trainingstag mit Übungen</string>
+   	<string name="fifthShowcaseViewContext">Nutze auf den Short-Cut oder gehe zurück und klicke den Navigationseintrag <b>Trainingstage</b> um die Trainingstage
+   	    			mit Übungen zu befüllen</string>
+   	
+    <string name="sithShowcaseViewTitle"></string>
+    <string name="sithShowcaseViewContext"></string>
+    
+    <string name="seventhShowcaseViewTitle"></string>
+    <string name="seventhShowcaseViewContext"></string>
+    
+    <string name="eigthShowcaseViewTitle"></string>
+    <string name="eigthShowcaseViewContext"></string>
     
     <!-- ActionBar XML string resources-->
   	<string name="ActionBar_Date">Datum</string>

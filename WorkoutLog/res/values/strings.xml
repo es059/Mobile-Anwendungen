@@ -49,7 +49,8 @@
 	
 	<!--  String resources for TrainingDayAddToWorkoutplanDialogFragment -->
 	<string name="TrainingDayAddToWorkoutplanDialogFragment_AddSuccess">Training day was successfully added to the workout routine</string> 
-    
+    <string name="TrainingDayAddDialogFragment_CustomToast">Populate with exercises</string>
+	
  	<!--  String resources for WorkoutplanAddDialogFragment -->
  	<string name="WorkoutplanAddDialogFragment_WorkoutplanAdd">Create a new workout routine</string>
  	
@@ -92,6 +93,34 @@
     <string name="Delete">Delete</string>
     <string name="Cardio">Cardio</string>
     <string name="Min">Min</string>
+    
+    <!-- ShowcaseView String resources -->
+    <string name="firstShowcaseViewTitle">Create a new workout routine</string>
+    <string name="firstShowcaseViewContext">Click here to create a new workout routine.\n\nHint: If you have more than one
+	    		workout routine you can use the button to switch between them</string>
+    
+    <string name="secondShowcaseViewTitle">Create/Add a new training day</string>
+    <string name="secondShowcaseViewContext">Click here to Add a new training day to the current workout routine</string>
+    
+    <string name="thirdShowcaseViewTitle">Create a new training day</string>
+    <string name="thirdShowcaseViewContext">Click here to create a new training day.\n\nImportant Note: You have to use the +-Symbol to
+		    		create additional training days</string>  
+    
+    <string name="fourthShowcaseViewTitle">Add the training day to the workout routine</string>
+    <string name="fourthShowcaseViewContext">Click any training day in the list to add it to the workout routine</string>
+    
+   	<string name="fifthShowcaseViewTitle">Populate the training days with exercises</string>
+   	<string name="fifthShowcaseViewContext">Use the short cut or go back and use the navigation and select <b>Training Days</b> to populate
+		    		the training day with exercises</string>
+   	 
+    <string name="sithShowcaseViewTitle"></string>
+    <string name="sithShowcaseViewContext"></string>
+    
+    <string name="seventhShowcaseViewTitle"></string>
+    <string name="seventhShowcaseViewContext"></string>
+    
+    <string name="eigthShowcaseViewTitle"></string>
+    <string name="eigthShowcaseViewContext"></string>
     
     <!-- ActionBar XML string resources-->
   	<string name="ActionBar_Date">Date</string>
