@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.remic.workoutlog.R;
+import com.workout.log.ManageWorkoutplan;
 import com.workout.log.TrainingDayAddToWorkoutplan;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.data.ManageWorkoutplanListItem;

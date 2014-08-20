@@ -173,11 +173,11 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 	    	
 	    	thirdShowcaseView = new ShowcaseView.Builder(getActivity())
 	    	.setTarget(target)
-		    .setContentTitle("Step 3: Create a new training day")
+		    .setContentTitle("Create a new training day")
 		    .setContentText("Click here to create a new training day.\n\nImportant Note: You have to use the +-Symbol to " +
 		    		"create additional training days")
 		    .setStyle(R.style.CustomShowcaseTheme)
-		    .singleShot(44)
+		    //.singleShot(44)
 		    .build();
     	}else{
     		thirdShowcaseView.refreshDrawableState();
@@ -189,12 +189,13 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
      * ShowcaseView which points to the first entry of the listView
      */
     public void showFourthHelperOverlay(){
-    	if (fourthShowcaseView == null){	    	
+    	if (fourthShowcaseView == null){	
+    		ViewTarget target = new ViewTarget(trainingDayListView.getChildAt(0));
+    		
 	    	fourthShowcaseView = new ShowcaseView.Builder(getActivity())
-	    	.setTarget(new ActionViewTarget(getActivity(), ActionViewTarget.Type.HOME))
-		    .setContentTitle("Step 4: Add the training day to the workout routine")
-		    .setContentText("Click any training day in the list to add it to the training day.\n\nHint: To fill the training day with exercises, " +
-		    		"go back and open the navigation. Then select 'Training Days'.")
+	    	.setTarget(target)
+		    .setContentTitle("Add the training day to the workout routine")
+		    .setContentText("Click any training day in the list to add it to the workout routine.")
 		    .setStyle(R.style.CustomShowcaseTheme)
 		    //.singleShot(45)
 		    .build();
@@ -271,6 +272,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 			trainingDayListView.setOnItemClickListener(new OnItemClickListener(){
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
+					if (thirdShowcaseView != null && thirdShowcaseView.isShown()) thirdShowcaseView.hide();
 					showDialogAddFragment(trainingDayStringName);
 				}	
 			});

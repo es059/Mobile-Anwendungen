@@ -15,6 +15,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.remic.workoutlog.R;
 import com.workout.log.ExerciseOverview;
 import com.workout.log.ManageWorkoutplan;
@@ -39,6 +41,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 	private ManageWorkoutplan manageWorkoutplan; 
 	
 	private static int currentListId = 0;
+	private ShowcaseView firstShowcaseView = null;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -113,7 +116,13 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 		 * current trainingDayList is added to the ListView
 		 */
 		if(currentListId == 0)previousButton.setVisibility(View.INVISIBLE); 
-		if(workoutplanList.size() <= currentListId + 1)nextButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_add));
+		if(workoutplanList.size() <= currentListId + 1){
+			/**
+			 * Show the ShowcaseView
+			 */
+			showFirstHelperOverlay();
+			nextButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_add));
+		}
 	
 		manageWorkoutplan.updateListView(trainingDayList);
 		
@@ -122,13 +131,40 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 		 * Refresh the ShareIntent
 		 */
 		manageWorkoutplan.createCurrentSqlDump();
+		
+	
 	}
 		
+    /**
+     * ShowcaseView which points to the + Symbol 
+     */
+    private void showFirstHelperOverlay(){
+    	if (firstShowcaseView == null){    		
+	    	ViewTarget target = new ViewTarget(R.id.Next, this);
+	    	
+			firstShowcaseView = new ShowcaseView.Builder(getActivity())
+		    .setTarget(target)
+		    .setContentTitle("Create a new workout routine")
+		    .setContentText("Click here to create a new workout routine.\n\nHint: If you have more than one " +
+	    		"workout routine you can use the button to switch between them")
+		    .setStyle(R.style.CustomShowcaseTheme)
+		    //.singleShot(42)
+		    .build();	
+    	}else{
+    		firstShowcaseView.refreshDrawableState();
+    	}
+    }
+	
 	@SuppressLint("SimpleDateFormat")
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
 		if (id == R.id.Next) {
+			/**
+			 * Hide the ShowcaseView if visible
+			 */
+			if(firstShowcaseView != null && firstShowcaseView.isShown()) firstShowcaseView.hide();
+			
 			if(workoutplanList.size() <= currentListId +1) {
 				WorkoutplanAddDialogFragment dialogFragment = WorkoutplanAddDialogFragment.newInstance(getActivity(), workoutplanList);
 				dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");

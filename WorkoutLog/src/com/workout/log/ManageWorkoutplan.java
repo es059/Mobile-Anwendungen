@@ -60,10 +60,9 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	private View view;
 	private Stack<File> fileStack = null;
 	
-	private ShowcaseView firstShowcaseView = null;
 	private ShowcaseView secondShowcaseView = null;
 
-    @Override
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		super.onCreateView(inflater, container, savedInstanceState);
 		view = inflater.inflate(R.layout.activity_manage_workoutplan, container,false);
@@ -127,27 +126,6 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 
 		setHasOptionsMenu(true);
 	}
-
-    /**
-     * ShowcaseView which points to the + Symbol 
-     */
-    private void showFirstHelperOverlay(){
-    	if (firstShowcaseView == null){
-	    	ViewTarget target = new ViewTarget(R.id.Next, getActivity().getSupportFragmentManager().
-	    			findFragmentByTag("ActionBarWorkoutPlanPickerFragment"));
-	    	
-			firstShowcaseView = new ShowcaseView.Builder(getActivity())
-		    .setTarget(target)
-		    .setContentTitle("Step 1: Create a new workout routine")
-		    .setContentText("Click here to create a new workout routine.\n\nHint: If you have more than one " +
-	    		"workout routine you can use the button to switch between them")
-		    .setStyle(R.style.CustomShowcaseTheme)
-		    //.singleShot(42)
-		    .build();	
-    	}else{
-    		firstShowcaseView.refreshDrawableState();
-    	}
-    }
     
     /**
      * ShowcaseView which points to the first entry of the listView
@@ -158,7 +136,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	    	
 	    	secondShowcaseView = new ShowcaseView.Builder(getActivity())
 	    	.setTarget(target)
-		    .setContentTitle("Step 2: Create/Add a new training day")
+		    .setContentTitle("Create/Add a new training day")
 		    .setContentText("Click here to Add a new training day to the current workout routine")
 		    .setStyle(R.style.CustomShowcaseTheme)
 		    //.singleShot(43)
@@ -168,7 +146,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
     		secondShowcaseView.refreshDrawableState();
     	}
     }
-	
+    
 	/**
 	 * Destroy any SqlDumpFile which was created
 	 */
@@ -201,11 +179,6 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	     * Update the ShareIntent
 	     */
 	    this.createCurrentSqlDump(); 
-	    	    
-	    /**
-	     * Create Overlay
-	     */
-		if (getWorkoutplanId() == -1) showFirstHelperOverlay();   
 	}
 	
 	private Intent createShareIntent(File sqlDump){

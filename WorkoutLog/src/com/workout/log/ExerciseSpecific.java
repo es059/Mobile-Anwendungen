@@ -84,7 +84,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		 * Set the visibility of the NavigationDrawer to Invisible
 		 */
 		((HelperActivity) getActivity()).setNavigationDrawerVisibility(false);
-
+		((HelperActivity) getActivity()).setCalledGetParentActivityIntent(false);
 		/**
 		 * Load the top navigation fragment into the current fragment
 		 */
