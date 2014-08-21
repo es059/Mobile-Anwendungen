@@ -23,7 +23,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.remic.workoutlog.R;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.SwipeToDelete.UndoBarController;
@@ -135,14 +135,14 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
      */
     public void showseventhHelperOverlay(){
     	if (seventhShowcaseView == null){	    	
+    		ViewTarget target = new ViewTarget(exerciseListView);
+    		
 	    	seventhShowcaseView = new ShowcaseView.Builder(getActivity())
-	    	.setTarget(Target.NONE)
-		    .setContentTitle("Step 7: Add an exercises to the training day")
-		    .setContentText("Click on any exercise to add it to the current training day. A dialog box will appear where you can choose the" +
-		    		" repetitions and sets for this exercise. \n\nYou finished the basic set up of a workout routine! You can now choose the navigation entry 'Log'" +
-		    		" and start working out. Have Fun!")
+	    	.setTarget(target)
+		    .setContentTitle(getString(R.string.seventhShowcaseViewTitle))
+		    .setContentText(getString(R.string.seventhShowcaseViewContext))
 		    .setStyle(R.style.CustomShowcaseTheme)
-		    .singleShot(48)
+		    //.singleShot(48)
 		    .build();
     	}else{
     		seventhShowcaseView.refreshDrawableState();
@@ -179,6 +179,7 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		if (seventhShowcaseView != null && seventhShowcaseView.isShown()) seventhShowcaseView.hide();
 		Exercise e = (Exercise) arg0.getItemAtPosition(arg2);
 		int currentExerciseId = e.getId();
 		showDialogClickFragment(getActivity(), trainingDayId, currentExerciseId);

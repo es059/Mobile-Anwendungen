@@ -38,7 +38,11 @@ public class TrainingDayAddDialogFragment extends DialogFragment {
 		return trainingDayAddDialogFragment;
 	}
 	
-	public TrainingDayAddDialogFragment(Context context, TrainingDayListAdapter trainingDayListAdapter,
+	public TrainingDayAddDialogFragment(){
+		
+	}
+	
+	private TrainingDayAddDialogFragment(Context context, TrainingDayListAdapter trainingDayListAdapter,
 			String trainingDayStringName, Fragment fragment) {
 		super();
 		this.trainingDayListAdapter = trainingDayListAdapter;

@@ -9,9 +9,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
-import android.widget.Toast;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
@@ -34,6 +31,10 @@ public class TrainingDayAddToWorkoutplanDialogFragment extends DialogFragment {
 		return trainingDayAddToWorkoutplan;
 	}
 
+	public TrainingDayAddToWorkoutplanDialogFragment(){
+		
+	}
+	
 	public TrainingDayAddToWorkoutplanDialogFragment(Context context, int trainingDayId, int workoutplanId) {
 		super();
 		this.context = context;

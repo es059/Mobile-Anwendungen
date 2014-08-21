@@ -113,14 +113,16 @@
    	<string name="fifthShowcaseViewContext">Use the short cut or go back and use the navigation and select <b>Training Days</b> to populate
 		    		the training day with exercises</string>
    	 
-    <string name="sithShowcaseViewTitle"></string>
-    <string name="sithShowcaseViewContext"></string>
+    <string name="sithShowcaseViewTitle">Add a new exercises to the training day</string>
+    <string name="sithShowcaseViewContext">Click here to add a new exercise to the current training day.\n\nImportant Note: You have to use the +-Symbol
+		    		 to add additional exercises</string>
     
-    <string name="seventhShowcaseViewTitle"></string>
-    <string name="seventhShowcaseViewContext"></string>
+    <string name="seventhShowcaseViewTitle">Add an exercises to the training day</string>
+    <string name="seventhShowcaseViewContext">Click on any exercise to add it to the current training day</string>
     
-    <string name="eigthShowcaseViewTitle"></string>
-    <string name="eigthShowcaseViewContext"></string>
+    <string name="eigthShowcaseViewTitle">You finished the tuturial</string>
+    <string name="eigthShowcaseViewContext">You finished the basic set up of a workout routine! You can now choose the navigation entry <b>Log</b>
+		    		and start working out. Have Fun!</string>
     
     <!-- ActionBar XML string resources-->
   	<string name="ActionBar_Date">Date</string>

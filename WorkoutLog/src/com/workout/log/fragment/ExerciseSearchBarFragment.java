@@ -31,6 +31,10 @@ public class ExerciseSearchBarFragment extends Fragment{
 	    return exerciseSearchBarFragment;
 	}
 	
+	public ExerciseSearchBarFragment(){
+		
+	}
+	
 	private ExerciseSearchBarFragment(Fragment fragment){
 		this.fragment = fragment;
 	}

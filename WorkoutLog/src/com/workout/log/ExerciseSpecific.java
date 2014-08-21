@@ -85,13 +85,6 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		 */
 		((HelperActivity) getActivity()).setNavigationDrawerVisibility(false);
 		((HelperActivity) getActivity()).setCalledGetParentActivityIntent(false);
-		/**
-		 * Load the top navigation fragment into the current fragment
-		 */
-		FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		transaction.replace(R.id.specific_dateTimePicker, new ActionBarDatePickerFragment(), "DateTimePicker");
-		transaction.commit();
 		
 		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 		setHasOptionsMenu(true);
@@ -126,12 +119,14 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 
 		/**
 		 * Receive the arguments set by ExerciseOverview
-		 */
+		 */		
 		final Bundle transferExtras = getArguments();
 		if (transferExtras != null) {
 			try {
+				ExerciseMapper eMapper = new ExerciseMapper(getActivity());
 				trainingDayId = transferExtras.getInt("TrainingDayId");
 				exerciseId = transferExtras.getInt("ExerciseID");
+				exercise = eMapper.getExerciseById(exerciseId);
 				getActivity().getActionBar().setTitle(transferExtras.getString("ExerciseName"));
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -152,9 +147,6 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		pMapper = new PerformanceActualMapper(getActivity());
 		
 		dateFragment = (ActionBarDatePickerFragment) getFragmentManager().findFragmentByTag("DateTimePicker");
-		
-		ExerciseMapper eMapper = new ExerciseMapper(getActivity());
-		exercise = eMapper.getExerciseById(exerciseId);
 
 		paMapper = new PerformanceActualMapper(getActivity());
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
@@ -169,6 +161,14 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		Typeface timerTypeface = Typeface.createFromAsset(getActivity().getAssets(),"DS-DIGIB.TTF");
 		timerView = (Chronometer) getView().findViewById(R.id.CardioTimer);
 		timerView.setTypeface(timerTypeface);
+		
+		/**
+		 * Load the top navigation fragment into the current fragment
+		 */
+		FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		transaction.replace(R.id.specific_dateTimePicker, new ActionBarDatePickerFragment(), "DateTimePicker");
+		transaction.commit();
 		
 		/**
 		 * Choose which MuscleGroup is the current exercise and act accordingly
@@ -202,10 +202,10 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 			/**
 			 * Load the pedometer into the current fragment
 			 */
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-			transaction.replace(R.id.specific_pedometer, new PedometerFragment(), "Pedometer");
-			transaction.commit();
+			FragmentTransaction Pedometertransaction = getFragmentManager().beginTransaction();
+			Pedometertransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			Pedometertransaction.replace(R.id.specific_pedometer, new PedometerFragment(), "Pedometer");
+			Pedometertransaction.commit();
 						    
 			cardioWrapper.setVisibility(View.VISIBLE);
 			headerView.setVisibility(View.INVISIBLE);

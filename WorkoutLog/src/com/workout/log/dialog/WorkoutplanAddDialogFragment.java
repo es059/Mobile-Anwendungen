@@ -31,7 +31,11 @@ public class WorkoutplanAddDialogFragment extends DialogFragment {
 		return workoutplanAddDialogFragment;	
 	}
 	
-	public WorkoutplanAddDialogFragment(Context a, ArrayList<Workoutplan> workoutplanList) {
+	public WorkoutplanAddDialogFragment(){
+		
+	}
+	
+	private WorkoutplanAddDialogFragment(Context a, ArrayList<Workoutplan> workoutplanList) {
 		super();
 		wpMapper = new WorkoutplanMapper(a);
 	}

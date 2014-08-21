@@ -189,7 +189,6 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
     	}
     }
     
-	
 	/**
      * ShowcaseView which points to the first entry of the listView
      */

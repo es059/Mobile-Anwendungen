@@ -36,7 +36,6 @@ import com.workout.log.analytics.MyApplication.TrackerName;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.MuscleGroup;
 import com.workout.log.bo.PerformanceTarget;
-import com.workout.log.bo.TrainingDay;
 import com.workout.log.data.Default;
 import com.workout.log.data.DynamicListView;
 import com.workout.log.data.ListItem;
@@ -157,9 +156,8 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 	    	
 	    	sixthShowcaseView = new ShowcaseView.Builder(getActivity())
 	    	.setTarget(target)
-		    .setContentTitle("Step 6: Create/Add a new exercises to the training day")
-		    .setContentText("Click here to add a new exercise to the current training day.\n\nImportant Note: You have to use the +-Symbol" +
-		    		" to add additonal exercises")
+		    .setContentTitle(getString(R.string.sithShowcaseViewTitle))
+		    .setContentText(getString(R.string.sithShowcaseViewContext))
 		    .setStyle(R.style.CustomShowcaseTheme)
 		    //.singleShot(47)
 		    .build();
@@ -498,6 +496,7 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 	    			exerciseListView.setOnItemClickListener(new OnItemClickListener(){
 	    				@Override
 	    				public void onItemClick(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
+	    					if (sixthShowcaseView != null && sixthShowcaseView.isShown()) sixthShowcaseView.hide();
 	    					openExerciseAddToTrainingDay();
 	    				}	
 	    			});

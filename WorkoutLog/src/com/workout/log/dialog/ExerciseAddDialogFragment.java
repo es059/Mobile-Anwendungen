@@ -1,7 +1,5 @@
 package com.workout.log.dialog;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -21,18 +19,10 @@ import android.widget.Toast;
 import com.remic.workoutlog.R;
 import com.workout.log.ExerciseAdd;
 import com.workout.log.ExerciseAddToTrainingDay;
-import com.workout.log.ManageTrainingDays;
-import com.workout.log.TrainingDayAddToWorkoutplan;
-import com.workout.log.bo.Exercise;
-import com.workout.log.bo.MuscleGroup;
-import com.workout.log.data.ListItem;
-import com.workout.log.data.MuscleGroupSectionItem;
 import com.workout.log.db.ExerciseMapper;
-import com.workout.log.db.MuscleGroupMapper;
 import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
 
 public class ExerciseAddDialogFragment extends DialogFragment {
-	private ExerciseListWithoutSetsRepsAdapter exerciseListAdapter;
 	private static ExerciseMapper eMapper;
 	private EditText exerciseName;
 	private Spinner muscleGroup;
@@ -49,12 +39,15 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 		return exerciseAddDialogFragment;
 	}
 	
-	public ExerciseAddDialogFragment(Context context, ExerciseListWithoutSetsRepsAdapter exerciseListWithoutSetsRepsAdapter, String exerciseStringName, Fragment fragment) {
+	public ExerciseAddDialogFragment(){
+		
+	}
+	
+	private ExerciseAddDialogFragment(Context context, ExerciseListWithoutSetsRepsAdapter exerciseListWithoutSetsRepsAdapter, String exerciseStringName, Fragment fragment) {
 		super();
 		this.exerciseStringName = exerciseStringName;
 		this.fragment = fragment;
 		
-		exerciseListAdapter = exerciseListWithoutSetsRepsAdapter;
 		applicationContext = context;
 	}
 

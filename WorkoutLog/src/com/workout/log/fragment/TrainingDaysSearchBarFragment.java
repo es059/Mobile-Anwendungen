@@ -2,7 +2,6 @@ package com.workout.log.fragment;
 
 import java.util.ArrayList;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -18,7 +17,6 @@ import com.workout.log.TrainingDayAddToWorkoutplan;
 import com.workout.log.bo.TrainingDay;
 import com.workout.log.db.TrainingDayMapper;
 
-@SuppressLint("ValidFragment")
 public class TrainingDaysSearchBarFragment extends Fragment {
 	
 	private EditText searchBar;
@@ -29,6 +27,10 @@ public class TrainingDaysSearchBarFragment extends Fragment {
 	{
 		TrainingDaysSearchBarFragment trainingDaySearchBarFragment = new TrainingDaysSearchBarFragment(fragment);	
 	    return trainingDaySearchBarFragment;
+	}
+	
+	public TrainingDaysSearchBarFragment(){
+		
 	}
 	
 	private TrainingDaysSearchBarFragment(Fragment fragment){

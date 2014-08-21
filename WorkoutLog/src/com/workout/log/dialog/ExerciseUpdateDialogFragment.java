@@ -36,7 +36,11 @@ public class ExerciseUpdateDialogFragment extends DialogFragment {
 		return ExerciseUpdateDialogFragment;	
 	}
 	
-	public ExerciseUpdateDialogFragment(Fragment fragment, int exerciseId) {
+	public ExerciseUpdateDialogFragment(){
+		
+	}
+	
+	private ExerciseUpdateDialogFragment(Fragment fragment, int exerciseId) {
 		super();
 		eMapper = new ExerciseMapper(fragment.getActivity());
 		this.fragment = fragment;

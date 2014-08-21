@@ -29,7 +29,11 @@ public class TrainingDayUpdateDialogFragment extends DialogFragment {
 		return trainingDayUpdateDialogFragment;	
 	}
 	
-	public TrainingDayUpdateDialogFragment(Fragment fragment, int trainingDayId) {
+	private TrainingDayUpdateDialogFragment(){
+		
+	}
+	
+	private TrainingDayUpdateDialogFragment(Fragment fragment, int trainingDayId) {
 		super();
 		this.trainingDayId = trainingDayId;
 		this.fragment = fragment;

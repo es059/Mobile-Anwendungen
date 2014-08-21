@@ -29,7 +29,11 @@ public class ExerciseSpecificUpdateDialogFragment extends DialogFragment{
 		return exerciseSpecificUpdateDialogFragment;	
 	}
 	
-	public ExerciseSpecificUpdateDialogFragment(Fragment fragment, int trainingDayId, int exerciseId) {
+	public ExerciseSpecificUpdateDialogFragment(){
+		
+	}
+	
+	private ExerciseSpecificUpdateDialogFragment(Fragment fragment, int trainingDayId, int exerciseId) {
 		super();
 		this.trainingDayId = trainingDayId;
 		this.exerciseId = exerciseId;

@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.github.amlcurran.showcaseview.targets.RectangleTarget;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.remic.workoutlog.R;
@@ -133,12 +134,12 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
      */
     public void showSecondHelperOverlay(){
     	if (secondShowcaseView == null){
-	    	ViewTarget target = new ViewTarget(trainingDayListView.getChildAt(0));
+    		RectangleTarget target = new RectangleTarget(trainingDayListView.getChildAt(0));
 	    	
 	    	secondShowcaseView = new ShowcaseView.Builder(getActivity())
 	    	.setTarget(target)
-		    .setContentTitle(getString(R.string.secondShowcaseViewTitle))
-		    .setContentText(getString(R.string.secondShowcaseViewContext))
+		    //.setContentTitle(getString(R.string.secondShowcaseViewTitle))
+		   // .setContentText(getString(R.string.secondShowcaseViewContext))
 		    .setStyle(R.style.CustomShowcaseTheme)
 		    //.singleShot(43)
 		    .build();
