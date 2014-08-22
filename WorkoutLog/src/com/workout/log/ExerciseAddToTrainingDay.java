@@ -23,6 +23,8 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.RectangleTarget;
+import com.github.amlcurran.showcaseview.targets.Target;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.remic.workoutlog.R;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
@@ -135,10 +137,9 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
      */
     public void showseventhHelperOverlay(){
     	if (seventhShowcaseView == null){	    	
-    		ViewTarget target = new ViewTarget(exerciseListView);
     		
 	    	seventhShowcaseView = new ShowcaseView.Builder(getActivity())
-	    	.setTarget(target)
+	    	.setTarget(Target.NONE)
 		    .setContentTitle(getString(R.string.seventhShowcaseViewTitle))
 		    .setContentText(getString(R.string.seventhShowcaseViewContext))
 		    .setStyle(R.style.CustomShowcaseTheme)

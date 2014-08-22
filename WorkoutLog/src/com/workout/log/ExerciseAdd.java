@@ -91,7 +91,6 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 		 * use this line to ensure that the reference is always correct
 		 */
 		mUndoBarController = null;
-		
 		eMapper = new ExerciseMapper(getActivity());
 		
 		exerciseListView = (ListView) getView().findViewById(R.id.add_exerciseList);
@@ -101,6 +100,7 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 		loadSwipeToDismiss();
 	}
 	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.workoutplan_menu, menu);
