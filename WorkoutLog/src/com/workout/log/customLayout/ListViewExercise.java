@@ -1,15 +1,15 @@
 package com.workout.log.customLayout;
 
-import com.example.workoutlog.R;
-import com.workout.log.bo.Exercise;
-import com.workout.log.bo.PerformanceTarget;
-import com.workout.log.db.PerformanceTargetMapper;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.remic.workoutlog.R;
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.PerformanceTarget;
+import com.workout.log.db.PerformanceTargetMapper;
 
 public class ListViewExercise extends RelativeLayout{
 	TextView exerciseView;
@@ -32,15 +32,13 @@ public class ListViewExercise extends RelativeLayout{
 	 * @param Exercise exercise
 	 * @author Eric Schmidt
 	 */
-	public void setExercise(Exercise exercise){
+	public void setExercise(Exercise exercise, int trainingDayId){
 		this.exerciseView.setText(exercise.getName());
 		//Get target performance information (Set & Repetition)
 		PerformanceTargetMapper pMapper = new PerformanceTargetMapper(getContext());
-		PerformanceTarget performanceTarget = pMapper.getPerformanceTargetByExerciseId(exercise);
-		this.setView.setHint("(Sätze: " + String.valueOf(performanceTarget.getSet()) + ")");
-		this.repetitionView.setHint("(Wdh: " + String.valueOf(performanceTarget.getRepetition())+ ")");
-		
-		
+		PerformanceTarget performanceTarget = pMapper.getPerformanceTargetByExerciseId(exercise, trainingDayId);
+		this.setView.setHint(getResources().getString(R.string.Set) + ": " + String.valueOf(performanceTarget.getSet()));
+		this.repetitionView.setHint(getResources().getString(R.string.Rep) + "Wdh: " + String.valueOf(performanceTarget.getRepetition()));	
 	}
 	
 }

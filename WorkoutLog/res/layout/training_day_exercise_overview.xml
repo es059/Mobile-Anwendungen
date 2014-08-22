@@ -3,23 +3,40 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:myapp="http://schemas.android.com/apk/res-auto"
     tools:context="com.workout.log.TrainingDayExerciseOverview"
     tools:ignore="MergeRootFrame" >
-<fragment
-			        android:id="@+id/training_day_select_fragment"
-			       	android:name="com.workout.log.fragment.ActionBarTrainingDaySelectFragment"
-			        android:layout_width="match_parent"
-			        android:layout_height="@dimen/actionbar_height"
-			        android:layout_alignParentTop="true"
-			        android:layout_centerHorizontal="true"
-			        tools:layout="@layout/actionbar_training_day_select"
-			         />  
-    <ListView
+
+			         
+ 	<FrameLayout
+        android:id="@+id/training_day_select_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/actionbar_height"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+ 	
+    <com.workout.log.data.DynamicListView
         android:id="@+id/ExerciseListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/training_day_select_fragment"  >
-    </ListView>
+        android:layout_height="fill_parent"
+        android:layout_below="@id/training_day_select_fragment"  />
+    
+    <!-- Used for the Undo TextField -->
+    <LinearLayout
+        android:id="@+id/undobar"
+        style="@style/UndoBar"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
 
+        <TextView
+            android:id="@+id/undobar_message"
+            style="@style/UndoBarMessage" >
+        </TextView>
+
+        <Button
+            android:id="@+id/undobar_button"
+            style="@style/UndoBarButton" >
+        </Button>
+    </LinearLayout>
 </RelativeLayout>
 

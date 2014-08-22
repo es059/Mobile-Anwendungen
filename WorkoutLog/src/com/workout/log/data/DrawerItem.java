@@ -1,14 +1,19 @@
 package com.workout.log.data;
 
-public class DrawerItem {
+public class DrawerItem implements ListItem{
 	 
     String ItemName;
-    int imgResID;
+    int imgResID = -1;
 
     public DrawerItem(String itemName, int imgResID) {
           super();
           ItemName = itemName;
           this.imgResID = imgResID;
+    }
+  
+    public DrawerItem(String itemName) {
+        super();
+        ItemName = itemName;
     }
 
     public String getItemName() {
@@ -23,5 +28,11 @@ public class DrawerItem {
     public void setImgResID(int imgResID) {
           this.imgResID = imgResID;
     }
+
+	@Override
+	public boolean isSection() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

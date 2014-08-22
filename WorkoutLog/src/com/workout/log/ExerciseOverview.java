@@ -1,227 +1,275 @@
 package com.workout.log;
 
-import com.workout.log.bo.Exercise;
-import com.workout.log.data.*;
-import com.example.workoutlog.R;
-import com.workout.log.db.WorkoutplanMapper;
-import com.workout.log.dialog.ExerciseLongClickDialogFragment;
-import com.workout.log.dialog.ExerciseLongClickDialogFragment.ExerciseSelectionDialogListener;
-import com.workout.log.listAdapter.CustomDrawerAdapter;
+import java.util.ArrayList;
 
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
-import android.app.DialogFragment;
+import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 
-public class ExerciseOverview extends ActionBarActivity implements OnItemLongClickListener, OnItemClickListener, ExerciseSelectionDialogListener  {
+import com.remic.workoutlog.R;
+import com.workout.log.bo.Exercise;
+import com.workout.log.bo.MuscleGroup;
+import com.workout.log.bo.TrainingDay;
+import com.workout.log.bo.Workoutplan;
+import com.workout.log.data.ListItem;
+import com.workout.log.data.MuscleGroupSectionItem;
+import com.workout.log.db.ExerciseMapper;
+import com.workout.log.db.MuscleGroupMapper;
+import com.workout.log.db.TrainingDayMapper;
+import com.workout.log.db.WorkoutplanMapper;
+import com.workout.log.fragment.ActionBarTrainingDayPickerFragment;
+import com.workout.log.listAdapter.OverviewAdapter;
 
-	private static ListView exerciseView; 
-	private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
-
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
-
-    private CustomDrawerAdapter adapter;
-    private UpdateListView updateOverview; 
-    private MenueListe l = new MenueListe();
+public class ExerciseOverview extends Fragment implements OnItemClickListener {
+	private static ListView exerciseListView; 
     
+	private static Activity activity;
+	private static int trainingDayId = -1;
+    private static ExerciseSpecific exerciseSpecific = new ExerciseSpecific();
+    public static ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = null;
+    private static String[] muscleGroupArray;
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.exercise_overview);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.exercise_overview, container, false);
+		/**
+		 * Add the top navigation fragment to the current fragment
+		 */
+	    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.replace(R.id.overview_trainingDayPicker, new ActionBarTrainingDayPickerFragment(), "TrainingDayPicker");
+        transaction.commit();
 		
-        mTitle = mDrawerTitle = getTitle();
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-                    GravityCompat.START);
+        activity = getActivity();
         
-        // Add Drawer Item to dataList
-        adapter = new CustomDrawerAdapter(this, R.layout.custom_drawer_item, l.getDataList());
-        mDrawerList.setAdapter(adapter);
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        muscleGroupArray = getResources().getStringArray(R.array.MuscleGroup);
         
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-
-       mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                    R.drawable.ic_drawer, R.string.drawer_open,
-                    R.string.drawer_close) {
-              public void onDrawerClosed(View view) {
-                    getActionBar().setTitle(mTitle);
-                    invalidateOptionsMenu(); // creates call to
-                                                              // onPrepareOptionsMenu()
-              }
-              public void onDrawerOpened(View drawerView) {
-                    getActionBar().setTitle(mDrawerTitle);
-                    invalidateOptionsMenu(); // creates call to
-                    // onPrepareOptionsMenu()
-              }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);   	
-        mDrawerLayout.setDrawerListener(mDrawerToggle);      
+        return view;
 	}
 	
+    /**
+     * If the Activity was called with a setExtra method, 
+     * the ListView is filled by a method call in the fragment
+     * 
+     * @author Eric Schmidt
+     * @date 18.04.2014
+     */  
 	@Override
-	protected void onResume(){
+	public void onResume(){
 		super.onResume();
-        /**
-         * Calls the <code>UpdateListView</code> Singleton Constructor for the first time 
-         * and sets the ListView reference
-         * 
-         * @author Eric Schmidt
-         * @date 18.04.2014
-         */  
-		exerciseView = (ListView) findViewById(R.id.exerciseOverviewList);
-		updateOverview = UpdateListView.updateListView(exerciseView);
-		updateOverview.ExerciseListViewUpdate(this,1);
-
-		exerciseView.setOnItemLongClickListener(this);
-		exerciseView.setOnItemClickListener(this);
-	}
+	
+		exerciseSpecific = new ExerciseSpecific();
+		actionBarTrainingDayPickerFragment = (ActionBarTrainingDayPickerFragment) getActivity().
+				getSupportFragmentManager().findFragmentByTag("TrainingDayPicker");
 		
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.exercise_overview_menu, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		
-		// The action bar home/up action should open or close the drawer.
-	      // ActionBarDrawerToggle will take care of this.
-	     if (mDrawerToggle.onOptionsItemSelected(item)) {
-	            return true;
-	      }
-	 
-	      
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		Intent intent= null;
-		switch (item.getItemId()){
-			case R.id.menu_add:
-				intent = new Intent();
-				intent.setClass(this, ExerciseAdd.class);
-				startActivity(intent);
-				WorkoutplanMapper m = new WorkoutplanMapper(this);
-				break;
-			case R.id.menu_workoutplan:
-				intent = new Intent();
-				intent.setClass(this, ManageTrainingDays.class);
-				startActivity(intent);
-				break;
+		final Bundle transferExtras = getArguments();
+		exerciseListView = (ListView) getView().findViewById(R.id.exerciseOverviewList);
+		if (transferExtras != null){				
+			try{
+				trainingDayId = transferExtras.getInt("TrainingDayId");
+				actionBarTrainingDayPickerFragment.setCurrentTrainingDay(trainingDayId);
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}else{	
+			updateListView(trainingDayId);
 		}
-		return super.onOptionsItemSelected(item);
-	}
+		exerciseListView.setOnItemClickListener(this);
 
-	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View view,
-			int position, long id) {
-	//	this.showDialogLongClickFragment();
-		return true;
 	}
-
+	
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		Exercise exercise;
-		exercise = (Exercise) exerciseView.getItemAtPosition(position);
+		exercise = (Exercise) exerciseListView.getItemAtPosition(position);
 		openExerciseSpecific(exercise);
-		
 	}
 	
-	private void openExerciseSpecific (Exercise exercise){
-		Intent intent = new Intent();
-		intent.setClass(this, ExerciseSpecific.class);
-		intent.putExtra("ExerciseID", exercise.getId());
-		intent.putExtra("ExerciseName", exercise.getName());
-		startActivity(intent);
+	public static void setTrainingDay(int id){
+		trainingDayId = id;
 	}
 	
-/*	public void showDialogLongClickFragment(){
-		DialogFragment dialogFragment = ExerciseLongClickDialogFragment.newInstance();
-		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
+	/**
+	 * Updates Exercise ListViews using a AsyncTask. 
+	 * If the TrainingDay is unknown parse -1 as parameter. This method is then using
+	 * the first trainingDay as the source of exercises.
+	 * 
+	 * @param trainingDayId
+	 * @author Eric Schmidt
+	 */
+	public void updateListView(int trainingDayId){
+		new BackGroundTask(exerciseListView).execute(trainingDayId);
 	}
-*/
+
 	@Override
-	public void onExerciseSelectionItemLongClick(
-			ExerciseLongClickDialogFragment dialog) {
-		// TODO Auto-generated method stub
-		
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent= null;
+		int itemId = item.getItemId();
+		if (itemId == R.id.menu_add) {
+			intent = new Intent();
+			intent.setClass(getActivity(), ExerciseAdd.class);
+			startActivity(intent);
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	/**
-	 * A placeholder fragment containing a simple view.
+	 * Method to open the ExerciseSpecific Activity with the selected Exercise and the current TrainingDay
 	 * 
-	 *
+	 * @param exercise
+	 * @author Eric Schmidt
 	 */
-	public void SelectItem(int possition) { 
+	private void openExerciseSpecific (Exercise exercise){
+		Bundle data = new Bundle();
+		ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = 
+				(ActionBarTrainingDayPickerFragment) getFragmentManager().findFragmentByTag("TrainingDayPicker");
 		
-		switch(possition) {
-		case 0:
-			Intent intent= null;
-			intent = new Intent();
-			intent.setClass(this, ExerciseOverview.class);
-			startActivity(intent);
-			break;
-		case 1: 
-			Intent intent1= null;
-			intent1 = new Intent();
-			intent1.setClass(this, ManageWorkoutplan.class);
-			startActivity(intent1);
-			break;
-		case 2: 
-			Intent intent4 = null;
-			intent4 = new Intent();
-			intent4.setClass(this, ManageTrainingDays.class);
-			startActivity(intent4);
-			break;
-		case 3: 
-			Intent intent2= null;
-			intent2 = new Intent();
-			intent2.setClass(this, ExerciseAdd.class);
-			startActivity(intent2);
-			break;
+        data.putInt("ExerciseID",exercise.getId());
+        data.putString("ExerciseName",exercise.getName());
+        data.putInt("TrainingDayId",actionBarTrainingDayPickerFragment.getCurrentTrainingDay().getId());
+        
+        exerciseSpecific.setArguments(data);
+        
+	    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.replace(R.id.fragment_container, exerciseSpecific , "ExerciseSpecific");
+        transaction.commit();
+	}
+		
+	/**
+	 * Handels the Database queries in an Async Task
+	 * 
+	 * @author Eric Schmidt
+	 */
+	public class BackGroundTask extends AsyncTask<Integer, Void, OverviewAdapter> {
+	    /**
+	     * Variables for the UpdateListView method
+	     */
+		private ArrayList<TrainingDay> tList;
+		private ArrayList<Exercise> eList;
+		private ArrayList<MuscleGroup> mList;
+		private ArrayList<ListItem> listComplete;
+		
+		private ListView exerciseView;
+
+		public BackGroundTask (ListView exerciseView){	
+			this.exerciseView = exerciseView;
 			
+			exerciseView.setAdapter(null);
 		}
-		
-		/**
-		 * TODOO
-		 * 
-		 */
+
+	    @Override
+	    protected void onPreExecute() {
+	        super.onPreExecute();
+	        activity.setProgressBarIndeterminateVisibility(true);
+	    }
+	    
+	    private String getMuscleGroupNameById(MuscleGroup muscleGroup){
+			String muscleGroupName = "";
+			
+			switch (muscleGroup.getId()){
+		    	case 1:
+		    		muscleGroupName = muscleGroupArray[0]; //Back
+		    		break;
+		    	case 2:
+		    		muscleGroupName =  muscleGroupArray[1]; //Abs
+		    		break;
+		    	case 3:
+		    		muscleGroupName =  muscleGroupArray[3]; //Chest
+		    		break;
+		    	case 4:
+		    		muscleGroupName =  muscleGroupArray[4]; //Legs
+		    		break;
+		    	case 5:
+		    		muscleGroupName =  muscleGroupArray[6]; //Biceps
+		    		break;
+		    	case 6:
+		    		muscleGroupName =  muscleGroupArray[5]; //Triceps
+		    		break;
+		    	case 8:
+		    		muscleGroupName =  muscleGroupArray[2]; //Shoulder
+		    		break;
+		    	case 7:
+		    		//muscleGroupName =  muscleGroupArray[7]; --> Cardio
+		    		break;
+			}
+			return muscleGroupName;	
+		}
+	    
+	    @Override
+	    protected OverviewAdapter doInBackground(Integer... params) {
+	    	/**
+	    	 * Ensures that there are no unnecessary Database queries
+	    	 * if the ArrayList<TrainingDay> is already referenced.
+	    	 */
+			if (tList == null){
+				//Select Current Workoutplan
+				WorkoutplanMapper wMapper = new WorkoutplanMapper(activity);
+				Workoutplan w = wMapper.getCurrent();
+				//Select all Trainingdays from the current Workoutplan
+				TrainingDayMapper tMapper = new TrainingDayMapper(activity);
+				tList = tMapper.getAllTrainingDaysFromWorkoutplan(w.getId());
+			}
+			if (!tList.isEmpty()){
+		    	int trainingDayId;
+		    	if (params[0] == -1){
+		    		trainingDayId = tList.get(0).getId();
+		    	}else{
+		    		trainingDayId = params[0];
+		    	}
+		    	
+		    	if (mList == null){	
+					//Select all MuscleGroups
+					MuscleGroupMapper mMapper = new MuscleGroupMapper(activity);
+					mList = mMapper.getAll();
+				}
+				//Select Exercises from Selected Trainingday and MuscleGroup 
+				ExerciseMapper eMapper = new ExerciseMapper(activity);
+				eList = eMapper.getExerciseByTrainingDay(trainingDayId);
+				listComplete = new ArrayList<ListItem>();
+				
+				for(int i = 0; i < eList.size(); i++) {
+					MuscleGroup mg = eList.get(i).getMuscleGroup();
+					
+					if (i > 0){
+						if(!mg.getName().equals(eList.get(i-1).getMuscleGroup().getName())) {
+							listComplete.add(new MuscleGroupSectionItem(getMuscleGroupNameById(mg)));
+							listComplete.add(eList.get(i));
+						}else{
+							listComplete.add(eList.get(i));
+						}
+					}else{
+						listComplete.add(new MuscleGroupSectionItem(getMuscleGroupNameById(mg)));
+						listComplete.add(eList.get(i));
+					}
+					
+				}
+		    
+				OverviewAdapter adapter = new OverviewAdapter(activity, listComplete, trainingDayId);
+				return adapter;	
+			}
+			return null;
+	    }
+
+	    @Override
+	    protected void onPostExecute(OverviewAdapter result) {
+	        super.onPostExecute(result);
+
+	        if (result != null){
+	        	exerciseView.setAdapter(result);
+	        }
+	        activity.setProgressBarIndeterminateVisibility(false);  
+	    }
 	}
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-	      super.onConfigurationChanged(newConfig);
-	      // Pass any configuration change to the drawer toggles
-	      mDrawerToggle.onConfigurationChanged(newConfig);
-	}
-	private class DrawerItemClickListener implements
-    ListView.OnItemClickListener {
-		
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-	          long id) {
-	    SelectItem(position);
-	
-	}
-}
 }

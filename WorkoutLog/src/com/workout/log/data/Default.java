@@ -1,14 +1,11 @@
 package com.workout.log.data;
 
-public class Default {
+public class Default implements ManageWorkoutplanListItem {
 
 	private String mTitel = "";
 	private String mHint = "";
 	
-	public  Default(String titel, String hint){
-		setTitel(titel);
-		setHint(hint);
-		
+	public  Default(){
 	}
 
 	public String getTitel() {

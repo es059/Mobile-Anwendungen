@@ -6,25 +6,70 @@
     tools:context="com.workout.log.ExerciseSpecific"
     tools:ignore="MergeRootFrame" >
 
-    <fragment
+    <FrameLayout
         android:id="@+id/specific_dateTimePicker"
-        android:name="com.workout.log.fragment.ActionBarTrainingDayPickerFragment"
         android:layout_width="match_parent"
         android:layout_height="@dimen/actionbar_height"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        tools:layout="@layout/actionbar_training_day_picker_fragment" />
-
-    <ListView
-        android:id="@+id/exerciseSpecificList"
+        android:layout_centerHorizontal="true" />
+    
+    <!--  Cardio Play/Pause Button -->
+    <LinearLayout
+        android:id="@+id/CardioWrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tableLayout"
-        android:layout_centerHorizontal="true"
-        android:longClickable="true" >
+        android:layout_height="fill_parent"
+        android:layout_centerVertical="true"
+        android:orientation="horizontal" >
+		<RelativeLayout
+		    android:layout_width="match_parent"
+        	android:layout_height="fill_parent"
+        	android:orientation="vertical">
+        	
+		   	<Chronometer
+	            android:id="@+id/CardioTimer"
+	            android:layout_width="fill_parent"
+	            android:gravity="center"
+	            android:format="%s"
+	            android:layout_centerHorizontal="true"
+	            android:layout_above="@+id/CardioButton"
+	        	android:layout_height="50dp"
+	        	android:textSize="50sp"
+	        	android:layout_marginBottom="20dp"/>
+        
+	        <ImageButton
+	            android:id="@+id/CardioButton"
+	            style="?android:attr/actionButtonStyle"
+	            android:layout_width="wrap_content"
+	            android:layout_centerVertical="true"
+	            android:layout_centerHorizontal="true"
+	            android:layout_height="wrap_content"
+	            android:src="@+drawable/record" />
+	        
+	        <FrameLayout
+		        android:id="@+id/specific_pedometer"
+		        android:layout_width="match_parent"
+		        android:layout_below="@+id/CardioButton"
+		        android:layout_alignParentBottom="true"
+		        android:layout_height="fill_parent"/>
+		</RelativeLayout>
 
-    </ListView>
+	</LinearLayout>
+    
+    <!-- Used for the Undo TextField  -->
+    <LinearLayout
+        android:id="@+id/undobar"
+        style="@style/UndoBar"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
+        <TextView
+            android:id="@+id/undobar_message"
+            style="@style/UndoBarMessage" ></TextView>
+        <Button
+            android:id="@+id/undobar_button"
+            style="@style/UndoBarButton" ></Button>
+    </LinearLayout>
 
+    <!-- First Row of the Table containing the headlines -->
     <TableLayout
         android:id="@+id/tableLayout"
         android:layout_below="@+id/specific_dateTimePicker"
@@ -34,7 +79,8 @@
 
         <TableRow
             android:id="@+id/tableRow1"
-            android:layout_width="wrap_content"
+            android:background="#303030"
+			android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
 	        <TextView
@@ -42,33 +88,46 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_gravity="center"
+	            android:textColor="#FFFFFF"
         		android:gravity="center"
+        		style="?android:attr/listSeparatorTextViewStyle"
         		android:textStyle="bold"
 	            android:layout_weight="1"
-	            android:text="@+string/specific_set"
-	            android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+	            android:text="@+string/specific_set"/>
 	        
 	        <TextView
-		        android:id="@+id/textView3"
-		        android:layout_width="wrap_content"
-		        android:layout_weight="1"
-		        android:layout_gravity="center"
-		        android:gravity="center"
-		        android:textStyle="bold"
-		        android:layout_height="wrap_content"
-		        android:text="@+string/specific_weight"
-		        android:textAppearance="?android:attr/textAppearanceListItemSmall"  />
+	            android:id="@+id/textView3"
+	            style="?android:attr/listSeparatorTextViewStyle"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center_horizontal"
+	            android:gravity="center"
+	            android:layout_weight="1"
+	            android:text="@+string/specific_weight"
+	            android:textColor="#FFFFFF"
+	            android:textStyle="bold" />
 	
 	    	<TextView
-		        android:id="@+id/textView2"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_weight="1"
-		        android:textStyle="bold"
-		        android:layout_gravity="center"
-		        android:gravity="center"
-		        android:text="@+string/specific_repetition"
-		        android:textAppearance="?android:attr/textAppearanceListItemSmall"  />
+	    	    android:id="@+id/textView2"
+	    	    style="?android:attr/listSeparatorTextViewStyle"
+	    	    android:layout_width="wrap_content"
+	    	    android:layout_height="wrap_content"
+	    	    android:layout_gravity="center_horizontal"
+	    	    android:gravity="center"
+	    	    android:layout_weight="1"
+	    	    android:text="@+string/specific_repetition"
+	    	    android:textColor="#FFFFFF"
+	    	    android:textStyle="bold" />
+
         </TableRow>
     </TableLayout>
+    
+    
+    <ListView
+        android:id="@+id/exerciseSpecificList"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/tableLayout"
+        android:layout_centerHorizontal="true"
+        android:longClickable="true" />
 </RelativeLayout>

@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- String resources for HelperActivity -->
+    <string name="HelperActivity_Close">Erneut drücken um zu Beenden</string>
+    
+    <!-- String resources for ExerciseSpecific -->
+    <string name="ExerciseSpecific_NoDataAvailable">Leider sind keine Daten verfügbar</string>
+    <string name="ExerciseSpecific_NewSet">Neuen Satz hinzugefügt!</string>
+    
+    <!--  String resources for ActionBarDatePickerFragment -->
+    <string name="ActionBarDatePickerFragment_Today">Heute</string>
+    
+    <!-- String resources for ImportExport -->
+    <string name="ImportExport_Finished">Import der Daten abgeschlossen</string>
+    <string name="ImportExport_ExportTo">Export in Verzeichnis</string>
+    <string name="ImportExport_ChooseDb">Bitte wählen Sie eine DB-Datei aus</string>
+    
+    <!-- String resources for TrainingDayExerciseOverview -->
+    <string name="TrainingDayExerciseOverview_DDActive">Drag und Drop ist aktiviert</string>
+    <string name="TrainingDayExerciseOverview_DDInactive">Drag und Drop ist deaktiviert</string>
+    
+    <!-- String resources for MenuList -->
+    <string name="MenuList_Functions">Funktionen</string>
+    <string name="MenuList_Diary">Tagebuch</string>
+    <string name="MenuList_Statistic">Statistic</string>
+    <string name="MenuList_Import_Export">Import/Export</string>
+    <string name="MenuList_Manage">Verwaltung</string>
+    <string name="MenuList_Workoutplans">Trainingspläne</string>
+    <string name="MenuList_Trainingdays">Trainingstage</string>
+    <string name="MenuList_Exercises">Übungen</string>
+    
+    <!-- String resources for ExerciseAddDialogFragment-->
+    <string name="ExerciseAddDialogFragment_ExerciseAdd">Übungen hinzufügen</string>
+    <string name="ExerciseAddDialogFragment_AddSuccess">Übung wurde erfolgreich hinzugefügt!</string>
+    <string name="ExerciseAddDialogFragment_ExerciseExists">Übung existiert bereits</string>
+    
+    <!-- String resources for ExerciseSpecificAddDialogFragment-->
+    <string name="ExerciseSpecificAddDialogFragment_ExerciseAdd">Hinzufügen der Übungen</string>
+    
+    <string name="ExerciseSpecificAddDialogFramgent_AddSuccess">Übung wurde erfolgreich dem Trainingstag hinzugefügt</string>
+    <string name="ExerciseSpecificAddDialogFramgent_AddFailure">Übung kann nicht doppelt hinzugefügt werden</string>
+    
+    <!-- String resources for ExerciseUpdateDialogFragment-->
+    <string name="ExerciseUpdateDialogFragment_EditSuccess">Übung wurde erfolgreich geändert!</string>
+    
+    <!-- String resources for TrainingDayAddDialogFragment-->
+	<string name="TrainingDayAddDialogFragment_AddSuccess">Trainingstag wurde erfolgreich hinzugefügt!</string>
+	
+	<!--  String resources for TrainingDayAddToWorkoutplanDialogFragment -->
+	<string name="TrainingDayAddToWorkoutplanDialogFragment_AddSuccess">Trainingstag wurde erfolgreich dem Trainingsplan hinzugefügt!</string> 
+    <string name="TrainingDayAddDialogFragment_CustomToast">Füge Übungen hinzu</string>
+	
+ 	<!--  String resources for WorkoutplanAddDialogFragment -->
+ 	<string name="WorkoutplanAddDialogFragment_WorkoutplanAdd">Trainingsplan hinzufügen</string>
+ 	
+ 	<!--  String resources for ImportExport -->
+ 	<string name="ImportExport_ConfirmImport">Es werden sämtliche Einträge gelöscht und mit den Inhalten der ausgewählten Datei ersetzt.\n\nSind Sie sicher?</string>
+	<string name="ImportExport_ConfirmImportTitle">Bestätigen</string>
+	<string name="ImportExport_WorkoutplanImportComplete">Der Trainingsplan wurde erfolgreich hinzugefügt</string>
+	
+	<!--  String resources for WorkoutplanDataBaseHelper -->
+	<string name="WorkoutplanDatabaseName">Trainingsplan</string>
+ 	
+ 	<!--  String resources for LineGraph -->
+ 	<string name="LineGraph_Rep">Wiederholung</string>
+ 	
+    <!-- Common string resources-->
+    <string name="ItemsDeleted">Item(s) gelöscht</string>
+    <string name="NotFound">nicht gefunden</string>
+    <string name="Add">Hinzufügen</string>
+    <string name="DataSaved">Daten wurden gespeichert</string>
+    <string name="Set">Sätze</string>
+    <string name="Weight">Gewicht</string>
+    <string name="Rep">Wdh</string>
+    <string name="Exercises">Übungen</string>
+    <string name="TrainingDays">Trainingstage</string>
+    
+    <string name="noTrainingDay">Neuen Trainingstag hinzufügen</string>
+    <string name="noExercise">Neue Übung hinzufügen</string>
+    <string name="noExerciseInTrainingDay">Übungen dem Trainingstag hinzufügen</string>
+    <string name="AddTrainingDayToWorkoutplan">Trainingstage dem Trainingsplan hinzufügen</string>
+    
+    <string name="Save">Speichern</string>
+    <string name="Cancel">Abbrechen</string>
+    <string name="Update">Ändern</string>
+    <string name="ExerciseEdit">Übung bearbeiten</string>
+    <string name="MissingField">"Bitte füllen Sie sämtliche Felder aus!"</string>
+    <string name="TrainingDayAddToWorkoutplan">Traniningstag hinzufügen</string>
+    <string name="TrainingDayAdd">Traniningstag hinzufügen</string>
+    <string name="TrainingDayEdit">Trainingsplan Ändern</string>
+    <string name="TrainingDayEditSuccess">Trainingstag wurde erfolgreich geändert!</string>
+    <string name="Delete">Löschen</string>
+    <string name="Cardio">Cardio</string>
+    <string name="Min">Min</string>
+    
+        <!-- ShowcaseView String resources -->
+    <string name="firstShowcaseViewTitle">Erstelle einen neuen Trainingsplan</string>
+    <string name="firstShowcaseViewContext">Klicke hier, um einen neuen Trainingsplan zu erstellen\n\nHinweis: Falls mehr als ein Trainingsplan
+           		vorhanden sein sollte, kann mit Hilfe dieses Buttons zwischen ihnen gewechselt werden</string>
+    
+    <string name="secondShowcaseViewTitle">Hinzufügen eines neuen Trainingstags</string>
+    <string name="secondShowcaseViewContext">Klicke hier, um einen neuen Trainingstag dem aktuellen Trainingsplan hinzuzufügen</string>
+    
+    <string name="thirdShowcaseViewTitle">Erstelle einen neuen Trainingstag</string>
+    <string name="thirdShowcaseViewContext">Klicke hier, um einen neuen Trainingstag zu erstellen\n\nWichtiger Hinweis: Um weitere Trainingstage hinzuzufügen, nutze
+        			das +-Symbol in der oberen Leiste</string>  
+    
+    <string name="fourthShowcaseViewTitle">Füge den Trainingstag dem Trainingsplan hinzu</string>
+    <string name="fourthShowcaseViewContext">Klicke einen Trainingstag in der Liste um ihn dem Trainingsplan hinzuzufügen</string>
+    
+   	<string name="fifthShowcaseViewTitle">Befülle den Trainingstag mit Übungen</string>
+   	<string name="fifthShowcaseViewContext">Nutze den Short-Cut oder gehe zurück und klicke den Navigationseintrag <b>Trainingstage</b> um die Trainingstage
+   	    			mit Übungen zu befüllen</string>
+   	
+    <string name="sithShowcaseViewTitle">Füge dem Trainingstag Übungen hinzu</string>
+    <string name="sithShowcaseViewContext">Klicke hier, um eine Übung dem aktuellen Trainingstag hinzuzufügen\n\nWichtiger Hinweis: Um weitere Übungen hinzuzufügen,
+        			nutze das +-Symbol in der oberen Leiste</string>
+    
+    <string name="seventhShowcaseViewTitle">Füge eine Übung dem Trainingstag hinzu</string>
+    <string name="seventhShowcaseViewContext">Klicke eine Übung in der Liste um sie dem Trainingstag hinzuzufügen</string>
+    
+    <string name="eigthShowcaseViewTitle">Du hast das Tutorial beendet</string>
+    <string name="eigthShowcaseViewContext">Du hast deinen ersten Trainingsplan erstellt! Auf dem Navigationseintrag <b>Log</b> kannst du nun mit deinem Training beginnen
+        		. Viel Spass!</string>
+    
+    <!-- ActionBar XML string resources-->
+  	<string name="ActionBar_Date">Datum</string>
+   	<string name="ActionBar_Search">Suchen</string>
+    <string name="ActionBar_Workoutplans">Trainingspläne</string>
+    <string name="Dialog_ExerciseAdd">Übungsname</string>
+    
+    <!-- Common XML string resources-->
+    <string name="specific_repetition">Wdh</string>
+  	<string name="specific_set">Satz</string>
+  	<string name="specific_weight">Gewicht</string>
+  
+    <string name="DialogFragmentTrainingDayEdit_TrainingdayName">Trainingstagname</string>
+  	<string name="DiaglogFragmentWorkoutplanEdit">Trainingsplaname</string>
+    
+    <string name="app_name">Workout Log</string>
+    <string name="title_activity_exercise_specific">Übung</string>
+    <string name="title_activity_add">Übung hinzufügen</string>
+    <string name="title_activity_workoutplan_add">Trainingsplan</string>
+    <string name="menu_add">Hinzufügen</string>
+    <string name="menu_save">Speichern</string>
+    <string name="menu_edit">Übung ändern</string>
+    <string name="menu_sort">Sortieren</string>
+    <string name="menu_workoutplan">Trainingsplan</string>
+    <string name="menu_settings">Einstellungen</string>
+    <string name="drawer_open">Open drawer</string>
+    <string name="drawer_close">Close drawer</string>
+    
+    <string name="noWorkoutplan">Kein Trainingsplan verfügbar</string>
+
+    <string-array name="exerciseLongClickDialogArray">
+        <item>Löschen</item>
+        <item>Ändern</item>
+    </string-array>
+    
+    <string-array name="MuscleGroup">
+        <item>Rücken</item>
+        <item>Bauch</item>
+        <item>Schulter</item>
+        <item>Brust</item>
+        <item>Beine</item>
+        <item>Trizeps</item>
+        <item>Bizeps</item>
+        <!-- Cardio is not available <item>Cardio</item> -->
+    </string-array>
+
+    <string name="title_activity_training_day_add">TrainingDayAdd</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="navigations_Liste">
+        <item>Home</item>
+        <item>Tagebuch</item>
+        <item>Trainingsplan</item>
+    </string-array>
+
+    <string name="title_activity_training_day_select">TrainingDaySelect</string>
+    <string name="title_activity_workout_select">WorkoutSelect</string>
+    <string name="title_activity_graph">GraphActivity</string>
+    <string name="title_activity_exercise_add_to_training_day">ExerciseAddToTrainingDay</string>
+    <string name="title_activity_training_day_exercise_overview">TrainingDayExerciseOverview</string>
+
+    <plurals name="items">
+        <item quantity="one">1 item removed</item>
+        <item quantity="other">%d items removed</item>
+    </plurals>
+
+    <string name="title_activity_manage_workoutplan">ManageWorkoutplan</string>
+    <string name="title_activity_training_day_add_to_workoutplan">TrainingDayAddToWorkoutplan</string>
+    
+   	<!-- Pedometer -->
+    <string name="notification_subtitle">Counting your steps</string>
+
+    <string name="started">Pedometer started.</string>
+    <string name="stopped">Pedometer stopped.</string>
+
+    <string name="steps">steps</string>
+    <string name="meters">Meter</string>
+    <string name="miles">miles</string>
+    <string name="steps_per_minute">steps / minute</string>
+    <string name="kilometers_per_hour">kilometers / hour</string>
+    <string name="miles_per_hour">miles / hour</string>
+    <string name="calories_burned">calories burned</string>
+    <string name="centimeters">centimeters</string>
+    <string name="inches">inches</string>
+    <string name="kilograms">kilograms</string>
+    <string name="pounds">pounds</string>
+
+    <string name="desired_pace">Desired pace:</string>
+    <string name="desired_speed">Desired speed:</string>
+
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
+    <string name="reset">Reset</string>
+    
+    <!-- Settings -->
+    <string name="settings">Settings</string>
+    <string name="activity_settings">Pedometer Settings</string>
+    <string name="steps_settings_title">Basic Settings</string>
+    <string name="sensitivity_setting">Sensitivity</string>
+    <string name="sensitivity_setting_details">Calibrate the step detector</string>
+    <string name="sensitivity_setting_title">Select sensitivity level</string>
+    <string name="extra_high">extra high</string>
+    <string name="very_high">very high</string>
+    <string name="high">high</string>
+    <string name="higher">higher</string>
+    <string name="medium">medium</string>
+    <string name="lower">lower</string>
+    <string name="low">low</string>
+    <string name="very_low">very low</string>
+    <string name="extra_low">extra low</string>
+    <string name="operation_level_setting">Operational level</string>
+    <string name="operation_level_setting_details">Some OS versions prevent using sensors when the screen is off; set the level that works for you</string>
+    <string name="operation_level_setting_title">Select operational level</string>
+    <string name="run_in_background">Normal (just try running in background)</string>
+    <string name="keep_screen_on">Screen on (keep screen dim)</string>
+    <string name="wake_up">Aggressive (wake up when I turn screen off)</string>
+    <string name="units_setting">Units</string>
+    <string name="units_setting_details">Imperial or metric units</string>
+    <string name="units_setting_title">Choose your units</string>
+    <string name="units_metric">metric (kilometers)</string>
+    <string name="units_imperial">imperial (miles)</string>
+    <string name="step_length_setting">Step length</string>
+    <string name="step_length_setting_details">For distance, speed &amp; calorie calculation</string>
+    <string name="step_length_setting_title">Enter your step length</string>
+    <string name="body_weight_setting">Body weight</string>
+    <string name="body_weight_setting_details">For calorie calculation</string>
+    <string name="body_weight_setting_title">Enter your body weight</string>
+    <string name="exercise_type_setting">Exercise type</string>
+    <string name="exercise_type_setting_details">For calorie calculation</string>
+    <string name="exercise_type_setting_title">Choose exercise type</string>
+    <string name="exercise_type_running">running</string>
+    <string name="exercise_type_walking">walking</string>
+    <string name="maintain_setting">Maintain pace/speed</string>
+    <string name="maintain_setting_details">Maintaining a desired a pace/speed</string>
+    <string name="maintain_setting_title">Maintain:</string>
+    <string name="maintain_nothing">nothing</string>
+    <string name="maintain_pace">pace</string>
+    <string name="maintain_speed">speed</string>
+    <string name="voice_settings_title">Voice</string>
+    <string name="voice_setting">Speak</string>
+    <string name="voice_setting_details">Enable/disable voice notification</string>
+    <string name="speaking_interval_setting">Interval</string>
+    <string name="speaking_interval_setting_details">Voice notification interval</string>
+    <string name="interval_15_seconds">15 seconds</string>
+    <string name="interval_30_seconds">30 seconds</string>
+    <string name="interval_1_minute">1 minute</string>
+    <string name="interval_2_minutes">2 minutes</string>
+    <string name="interval_5_minutes">5 minutes</string>
+    <string name="interval_10_minutes">10 minutes</string>
+    <string name="tell_what">What to tell</string>
+    <string name="tell_steps_setting">Steps</string>
+    <string name="tell_steps_setting_details"></string>
+    <string name="tell_pace_setting">Pace</string>
+    <string name="tell_pace_setting_details">steps / minute</string>
+    <string name="tell_distance_setting">Distance</string>
+    <string name="tell_distance_setting_details">kilometers or miles</string>
+    <string name="tell_speed_setting">Speed</string>
+    <string name="tell_speed_setting_details">km/h or mph</string>
+    <string name="tell_calories_setting">Calories burned</string>
+    <string name="tell_calories_setting_details"></string>
+    <string name="tell_fasterslower_setting">Faster/slower</string>
+    <string name="tell_fasterslower_setting_details">Helps you maintain your desired pace or speed (interval doesn\'t apply)</string>
+    <string name="incorrect_step_length">Incorrect step length format! Go to the Settings to change it!</string>
+
+    <string name="quit">Quit</string>
+</resources>

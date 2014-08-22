@@ -1,75 +1,143 @@
 package com.workout.log.dialog;
 
-import com.example.workoutlog.R;
-import com.workout.log.ManageWorkoutplan;
-import com.workout.log.TrainingDayExerciseOverview;
-import com.workout.log.db.TrainingDayMapper;
-import com.workout.log.db.WorkoutplanMapper;
-
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.Toast;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
+import com.remic.workoutlog.R;
+import com.workout.log.TrainingDayAddToWorkoutplan;
+import com.workout.log.db.WorkoutplanMapper;
+
+@SuppressLint("ValidFragment")
 public class TrainingDayAddToWorkoutplanDialogFragment extends DialogFragment {
 	
-private int workoutPlanId;
-private int trainingDayId;
-private static WorkoutplanMapper wpMapper;
+	private int workoutPlanId;
+	private int trainingDayId;
+	private static WorkoutplanMapper wpMapper;
+	private ShowcaseView fifthShowcaseView = null;
+	private Context context;
+	private TrainingDayAddToWorkoutplan trainingDayAddToWorkoutplan = null;
+	
 	public static TrainingDayAddToWorkoutplanDialogFragment newInstance(Context a, int trainingDayId, int workoutPlanId) {
 		TrainingDayAddToWorkoutplanDialogFragment trainingDayAddToWorkoutplan = new TrainingDayAddToWorkoutplanDialogFragment(a, trainingDayId, workoutPlanId );
-	
-	
 		return trainingDayAddToWorkoutplan;
+	}
+
+	public TrainingDayAddToWorkoutplanDialogFragment(){
 		
-
-}
-
-	public TrainingDayAddToWorkoutplanDialogFragment(Context c, int a, int b) {
-		super();
-		wpMapper = new WorkoutplanMapper(c);
-		workoutPlanId = b;
-		trainingDayId = a;
-		// TODO Auto-generated constructor stub
 	}
 	
+	public TrainingDayAddToWorkoutplanDialogFragment(Context context, int trainingDayId, int workoutplanId) {
+		super();
+		this.context = context;
+		wpMapper = new WorkoutplanMapper(context);
+		this.workoutPlanId = workoutplanId;
+		this.trainingDayId = trainingDayId;
+	}
+	
+	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState){
 		AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-	
-
-		final Toast toast = Toast.makeText(getActivity(), "Trainingstag wurde erfolgreich dem Trainingsplan hinzugefügt!", Toast.LENGTH_SHORT );
+		alert.setTitle(getResources().getString(R.string.TrainingDayAddToWorkoutplan));
+		trainingDayAddToWorkoutplan = (TrainingDayAddToWorkoutplan) ((FragmentActivity) context).getSupportFragmentManager().findFragmentByTag("TrainingDayAddToWorkoutplan");
 		
-		alert.setTitle("Trainingstag hinzufügen");
-		alert.setMessage("Wollen Sie diesen Trainingstag dem Trainingsplan hinzufügen?");
-	
-		alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+		alert.setPositiveButton(getResources().getString(R.string.Save), new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int whichButton) {
-			
+				/**
+				 * Save the trainingday to the current workoutplan
+				 */
 				wpMapper.addTrainingDayToWorkoutplan(trainingDayId, workoutPlanId);
-				toast.show();
-				Intent intent = new Intent();
-				intent.setClass(getActivity(), ManageWorkoutplan.class);
-				intent.putExtra("WorkoutplanId", workoutPlanId);
-				startActivity(intent);
-				
-					
+						
+		        /**
+		         * Show a Message that the trainingday was added to the workoutplan
+		         */
+		        //Toast.makeText(getActivity(), getResources().getString(R.string.TrainingDayAddToWorkoutplanDialogFragment_AddSuccess), Toast.LENGTH_SHORT ).show();
+		        
+		        /**
+		         * Show CustomToast
+		         */
+				if (isFirstTime()){
+					writeSharedPrefs();
+					trainingDayAddToWorkoutplan.getCustomToast().showUndoBar(false, getString(R.string.TrainingDayAddDialogFragment_CustomToast), false);
+				}else{
+					trainingDayAddToWorkoutplan.getCustomToast().showUndoBar(false, getString(R.string.TrainingDayAddDialogFragment_CustomToast), true);
+				}
+				 /**
+		         * Show ShowcaseView
+		         */
+				showFifthHelperOverlay();
 			  }
 			});
 
-			alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			  public void onClick(DialogInterface dialog, int whichButton) {
+			alert.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
+			  @Override
+			public void onClick(DialogInterface dialog, int whichButton) {
 			    // Canceled.
 			  }
 			});
 
 			return alert.show();
-		}
+	}
+	
+	/**
+     * ShowcaseView which points to the first entry of the listView
+     */
+    public void showFifthHelperOverlay(){
+    	if (fifthShowcaseView == null){	
+    		ViewTarget target = new ViewTarget(trainingDayAddToWorkoutplan.getCustomToast().getButton());
+    		
+    		fifthShowcaseView = new ShowcaseView.Builder(getActivity())
+	    	.setTarget(target)
+		    .setContentTitle(getString(R.string.fifthShowcaseViewTitle))
+		    .setContentText(getString(R.string.fifthShowcaseViewContext))
+		    .setStyle(R.style.CustomShowcaseTheme)
+		    //.singleShot(45)
+		    .build();
+    		
+    		fifthShowcaseView.hideButton();
+    		fifthShowcaseView.refreshDrawableState();
+   		
+    		/* 	RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) fifthShowcaseView.getButton().getLayoutParams();
+    		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+    		layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
+    		fifthShowcaseView.setButtonPosition(layoutParams);*/
+    		
+    	}else{
+    		fifthShowcaseView.refreshDrawableState();
+    	}
+    }
+    
+    /**
+     * Write in SharedPrefs
+     */
+    private void writeSharedPrefs(){
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("Toast", 45);
+        editor.commit();
+    }
+    
+    /**
+     * Read in SharedPres
+     */
+    private boolean isFirstTime(){
+    	SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+    	int retrievedValue = sharedPref.getInt("Toast", -1);
+    	if (retrievedValue == -1) return true;
+    	return false;
+    }
+    
+    public ShowcaseView getShowcaseView(){
+    	return fifthShowcaseView;
+    }
+
 }

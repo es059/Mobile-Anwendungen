@@ -1,26 +1,27 @@
 package com.workout.log.bo;
 
-public class TrainingDay {
+import java.util.ArrayList;
+
+import com.workout.log.data.ManageWorkoutplanListItem;
+
+public class TrainingDay implements ManageWorkoutplanListItem {
 
 	private String mName = "";
-	private  int mId = 0;
-	private int trainingDayHasWorkoutplanId = 0;
+	private int mId = 0;
 	
-	public int getTrainingDayHasWorkoutplanId() {
-		return trainingDayHasWorkoutplanId;
+	/**
+	 * Needed to Undo removal 
+	 */
+	private ArrayList<Workoutplan> mWorkoutplanList = null;
+	private ArrayList<PerformanceTarget> mPerformanceTargetList = null;
+	private ArrayList<Exercise> mExerciseList = null;
+	
+	public  ArrayList<Workoutplan> getWorkoutplanList() {
+		return mWorkoutplanList;
 	}
 
-	public void setTrainingDayHasWorkoutplanId(int trainingDayHasWorkoutplanId) {
-		this.trainingDayHasWorkoutplanId = trainingDayHasWorkoutplanId;
-	}
-
-	public TrainingDay(){
-		
-	}
-	
-	public  TrainingDay(String name){
-		setName(name);
-		setID(getID() + 1);
+	public void setWorkoutplanList( ArrayList<Workoutplan> workoutplanList) {
+		this.mWorkoutplanList = workoutplanList;
 	}
 
 	public String getName() {
@@ -31,15 +32,29 @@ public class TrainingDay {
 		this.mName = Name;
 	}
 
-	public  int getID() {
+	public  int getId() {
 		return mId;
 	}
 
-	public void setID(int Id) {
+	public void setId(int Id) {
 		mId = Id;
 	}
 
-	
-		
+	public ArrayList<PerformanceTarget> getPerformanceTargetList() {
+		return mPerformanceTargetList;
 	}
+
+	public void setPerformanceTargetList(ArrayList<PerformanceTarget> performanceTargetList) {
+		this.mPerformanceTargetList = performanceTargetList;
+	}
+
+	public ArrayList<Exercise> getExerciseList() {
+		return mExerciseList;
+	}
+
+	public void setExerciseList(ArrayList<Exercise> mExerciseList) {
+		this.mExerciseList = mExerciseList;
+	}
+	
+}
 

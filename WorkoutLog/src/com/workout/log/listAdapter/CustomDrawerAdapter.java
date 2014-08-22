@@ -2,67 +2,101 @@ package com.workout.log.listAdapter;
 
 import java.util.List;
 
-import com.example.workoutlog.R;
-import com.workout.log.data.DrawerItem;
-
-import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.remic.workoutlog.R;
+import com.workout.log.data.DrawerHeader;
+import com.workout.log.data.DrawerItem;
+import com.workout.log.data.ListItem;
+import com.workout.log.db.ExerciseMapper;
+import com.workout.log.db.TrainingDayMapper;
+import com.workout.log.db.WorkoutplanMapper;
  
-public class CustomDrawerAdapter extends ArrayAdapter<DrawerItem> {
+public class CustomDrawerAdapter extends ArrayAdapter<ListItem> {
+      private List<ListItem> drawerItemList;
+      private LayoutInflater layoutInflater;
+      private Context context = null;
+      private boolean upperPart = true;
  
-      Context context;
-      List<DrawerItem> drawerItemList;
-      int layoutResID;
- 
-      public CustomDrawerAdapter(Context context, int layoutResourceID,
-                  List<DrawerItem> listItems) {
-            super(context, layoutResourceID, listItems);
-            this.context = context;
+      public CustomDrawerAdapter(Context context, List<ListItem> listItems) {
+            super(context, 0, listItems);
             this.drawerItemList = listItems;
-            this.layoutResID = layoutResourceID;
- 
+            this.context = context;
+            this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       }
  
       @Override
       public View getView(int position, View convertView, ViewGroup parent) {
-            // TODO Auto-generated method stub
- 
-            DrawerItemHolder drawerHolder;
             View view = convertView;
  
-            if (view == null) {
-                  LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-                  drawerHolder = new DrawerItemHolder();
- 
-                  view = inflater.inflate(layoutResID, parent, false);
-                  drawerHolder.ItemName = (TextView) view
-                              .findViewById(R.id.drawer_itemName);
-                  drawerHolder.icon = (ImageView) view.findViewById(R.id.drawer_icon);
- 
-                  view.setTag(drawerHolder);
- 
-            } else {
-                  drawerHolder = (DrawerItemHolder) view.getTag();
- 
-            }
- 
-            DrawerItem dItem = (DrawerItem) this.drawerItemList.get(position);
- 
-            drawerHolder.icon.setImageDrawable(view.getResources().getDrawable(
-                        dItem.getImgResID()));
-            drawerHolder.ItemName.setText(dItem.getItemName());
- 
+            final ListItem item = drawerItemList.get(position);
+            if (item != null){
+    			if (item.isSection()){
+    				DrawerHeader drawerHeader = (DrawerHeader) item;
+    				
+    				if (drawerHeader.getTitle() == context.getResources().getString(R.string.MenuList_Manage)) upperPart = false;
+    				if (drawerHeader.getTitle() == context.getResources().getString(R.string.MenuList_Functions)) upperPart = true;
+    				
+    				view = layoutInflater.inflate(R.layout.custom_drawer_header, null);
+    				
+    				if (upperPart){
+    					view.setBackgroundColor(Color.parseColor("#3a3a3a"));
+    				}else{
+    					view.setBackgroundColor(Color.parseColor("#232323"));
+    				}
+    				view.setOnClickListener(null); 
+    				view.setOnLongClickListener(null);
+    				view.setLongClickable(false);
+    				
+    				final TextView sectionView = (TextView) view.findViewById(R.id.drawer_header_text);
+    				sectionView.setTextColor(Color.parseColor("#fe9901"));
+    				sectionView.setText(drawerHeader.getTitle());
+    			}else{
+    				DrawerItem drawerItem = (DrawerItem) item;
+    				view = layoutInflater.inflate(R.layout.custom_drawer_item, null);
+    				
+    				if (upperPart){
+    					view.setBackgroundColor(Color.parseColor("#3a3a3a"));
+    				}else{
+    					view.setBackgroundColor(Color.parseColor("#232323"));
+    				}
+    				
+    				if (drawerItem.getItemName() == context.getResources().getString(R.string.MenuList_Import_Export)){
+    					view.setPadding(0, 0, 0, 50);
+    				}
+    				
+    				final TextView 	itemName = (TextView) view.findViewById(R.id.drawer_itemName);
+    				final ImageView	itemIcon = (ImageView) view.findViewById(R.id.drawer_icon);
+    				final TextView 	itemInformation = (TextView) view.findViewById(R.id.drawer_information);
+    				
+    				itemInformation.setTextColor(Color.WHITE);
+    				itemName.setTextColor(Color.WHITE);
+    				
+    				String itemNameString = drawerItem.getItemName();
+					if (context.getResources().getString(R.string.MenuList_Workoutplans).equals(itemNameString)) {
+						WorkoutplanMapper wMapper = new WorkoutplanMapper(context);
+						itemInformation.setText(String.valueOf(wMapper.getAll().size()));
+					} else if (context.getResources().getString(R.string.MenuList_Trainingdays).equals(itemNameString)) {
+						TrainingDayMapper tMapper = new TrainingDayMapper(context);
+						itemInformation.setText(String.valueOf(tMapper.getAllTrainingDay().size()));
+					} else if (context.getResources().getString(R.string.MenuList_Exercises).equals(itemNameString)) {
+						ExerciseMapper eMapper = new ExerciseMapper(context);
+						itemInformation.setText(String.valueOf(eMapper.getAllExercise().size()));
+					}
+    				
+    				itemName.setText(drawerItem.getItemName());
+    				if (drawerItem.getImgResID() != -1){
+    					itemIcon.setImageDrawable(view.getResources().getDrawable(drawerItem.getImgResID()));
+    				}
+    			}
+    		}
             return view;
-      }
- 
-      private static class DrawerItemHolder {
-            TextView ItemName;
-            ImageView icon;
       }
 }
