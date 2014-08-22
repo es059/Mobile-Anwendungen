@@ -129,6 +129,7 @@ public class ExerciseSpecificAddDialogFragment extends DialogFragment {
 						if (!tdMapper.checkIfExist(trainingDayId, exerciseId)){
 							tdMapper.addExerciseToTrainingDayAndPerformanceTarget(trainingDayId, exerciseId, eTargetSetCount.getValue(), eTargetRepCount.getValue());
 							Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseSpecificAddDialogFramgent_AddSuccess), Toast.LENGTH_SHORT ).show();
+							showseventhHelperOverlay();
 						}else{
 							Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseSpecificAddDialogFramgent_AddFailure), Toast.LENGTH_SHORT ).show();
 						}
