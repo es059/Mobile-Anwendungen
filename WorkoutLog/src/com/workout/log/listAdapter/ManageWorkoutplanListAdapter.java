@@ -67,7 +67,7 @@ public class ManageWorkoutplanListAdapter extends ArrayAdapter<ManageWorkoutplan
 					public void onClick(View arg0) {
 						if (((ManageWorkoutplan) fragment).getShowcaseView() != null && ((ManageWorkoutplan) fragment).getShowcaseView().isShown()) ((ManageWorkoutplan) fragment).getShowcaseView().hide();
 						
-						FragmentTransaction transaction = fragment.getFragmentManager().beginTransaction();
+						FragmentTransaction transaction = fragment.getActivity().getSupportFragmentManager().beginTransaction();
 						transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 						transaction.replace(R.id.fragment_container, new TrainingDayAddToWorkoutplan(), "TrainingDayAddToWorkoutplan");
 						transaction.addToBackStack(null);
