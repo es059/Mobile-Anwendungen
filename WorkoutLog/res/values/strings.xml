@@ -120,7 +120,7 @@
     <string name="seventhShowcaseViewTitle">Add an exercises to the training day</string>
     <string name="seventhShowcaseViewContext">Click on any exercise to add it to the current training day</string>
     
-    <string name="eigthShowcaseViewTitle">You finished the tuturial</string>
+    <string name="eigthShowcaseViewTitle">You finished the tutorial</string>
     <string name="eigthShowcaseViewContext">You finished the basic set up of a workout routine! You can now choose the navigation entry <b>Log</b>
 		    		and start working out. Have Fun!</string>
     

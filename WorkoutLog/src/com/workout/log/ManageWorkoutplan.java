@@ -28,6 +28,7 @@ import android.widget.ListView;
 
 // import com.github.amlcurran.showcaseview.targets.RectangleTarget;
 import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.RectangleTarget;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.remic.workoutlog.R;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
@@ -116,9 +117,13 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
         textViewTreeObserver.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
         	@Override
             public void onGlobalLayout() {
-    	        if (manageWorkoutplanList != null && manageWorkoutplanList.size() == 1 && trainingDayListView.getChildCount() != 0 &&
-    	        		!actionBarWorkoutPlanPickerFragment.getFirstShowcaseView().isShown()){ 
-    	        //	showSecondHelperOverlay();
+    	        if (manageWorkoutplanList != null && manageWorkoutplanList.size() == 1 && trainingDayListView.getChildCount() != 0) {
+    	        	if(actionBarWorkoutPlanPickerFragment.getFirstShowcaseView() == null) {
+    	        		showSecondHelperOverlay();	
+    	        	} else if(!actionBarWorkoutPlanPickerFragment.getFirstShowcaseView().isShown()) {
+    	        		showSecondHelperOverlay();
+    	        	}
+    	        		
     	        }
             }
         });
@@ -132,14 +137,14 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
     /**
      * ShowcaseView which points to the first entry of the listView
      */
-  /*  public void showSecondHelperOverlay(){
+    public void showSecondHelperOverlay(){
     	if (secondShowcaseView == null){
     		RectangleTarget target = new RectangleTarget(trainingDayListView.getChildAt(0));
 	    	
 	    	secondShowcaseView = new ShowcaseView.Builder(getActivity())
 	    	.setTarget(target)
-		    //.setContentTitle(getString(R.string.secondShowcaseViewTitle))
-		   // .setContentText(getString(R.string.secondShowcaseViewContext))
+		    .setContentTitle(getString(R.string.secondShowcaseViewTitle))
+	    	.setContentText(getString(R.string.secondShowcaseViewContext))
 		    .setStyle(R.style.CustomShowcaseTheme)
 		    //.singleShot(43)
 		    .build();
@@ -147,7 +152,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
     	}else{
     		secondShowcaseView.refreshDrawableState();
     	}
-    }*/
+    }
     
     public ShowcaseView getShowcaseView(){
     	return secondShowcaseView;

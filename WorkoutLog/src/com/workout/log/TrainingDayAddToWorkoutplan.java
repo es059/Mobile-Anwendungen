@@ -22,6 +22,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.RectangleTarget;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.remic.workoutlog.R;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
@@ -175,8 +176,8 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
      */
     public void showThirdHelperOverlay(){
     	if (thirdShowcaseView == null){
-	    	ViewTarget target = new ViewTarget(trainingDayListView.getChildAt(0));
-	    	
+    		RectangleTarget target = new RectangleTarget(trainingDayListView.getChildAt(0));
+	   
 	    	thirdShowcaseView = new ShowcaseView.Builder(getActivity())
 	    	.setTarget(target)
 		    .setContentTitle(getString(R.string.thirdShowcaseViewTitle))
@@ -194,7 +195,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
      */
     public void showFourthHelperOverlay(){
     	if (fourthShowcaseView == null){	
-    		ViewTarget target = new ViewTarget(trainingDayListView.getChildAt(0));
+    		RectangleTarget target = new RectangleTarget(trainingDayListView.getChildAt(0));
     		
 	    	fourthShowcaseView = new ShowcaseView.Builder(getActivity())
 	    	.setTarget(target)

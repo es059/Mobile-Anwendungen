@@ -247,11 +247,14 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 	@Override
 	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
 			long arg3) {
-		Exercise e = (Exercise) arg0.getItemAtPosition(arg2);
-		int currentExerciseId = e.getId();
-		showDialogLongClickFragment(currentExerciseId);
-		
-		return true;
+		if(arg0.getItemAtPosition(arg2) instanceof Exercise) {
+			Exercise e = (Exercise) arg0.getItemAtPosition(arg2);
+			int currentExerciseId = e.getId();
+			showDialogLongClickFragment(currentExerciseId);
+			
+			return true;
+		} 
+		return false;
 	}
 	
 	/**
