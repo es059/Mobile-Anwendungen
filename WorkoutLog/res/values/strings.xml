@@ -123,6 +123,10 @@
     <string name="eigthShowcaseViewTitle">You finished the tutorial</string>
     <string name="eigthShowcaseViewContext">You finished the basic set up of a workout routine! You can now choose the navigation entry <b>Log</b>
 		    		and start working out. Have Fun!</string>
+		    		
+  	<string name="quickWorkoutTitle">Single Exercise Log</string>
+  	<string name="qickWorkoutContext">In this mode you can track individuel exercises, which are not necessarily included in your training routine. Therefore you can choose an exercise from the upcoming list. </string>
+   
     
     <!-- ActionBar XML string resources-->
   	<string name="ActionBar_Date">Date</string>

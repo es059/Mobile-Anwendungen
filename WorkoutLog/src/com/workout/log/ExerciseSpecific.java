@@ -323,17 +323,24 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 	 */
 	public ArrayList<PerformanceActual> prepareStandardListView() {
 		PerformanceTargetMapper ptMapper = new PerformanceTargetMapper(getActivity());
-		PerformanceTarget performanceTarget = ptMapper.getPerformanceTargetByExerciseId(exercise, trainingDayId);
-
 		performanceActualList = new ArrayList<PerformanceActual>();
-
-		for (int i = 1; i <= performanceTarget.getSet(); i++) {
+		if(trainingDayId != -1) {
+			PerformanceTarget performanceTarget = ptMapper.getPerformanceTargetByExerciseId(exercise, trainingDayId);
+			for (int i = 1; i <= performanceTarget.getSet(); i++) {
+				PerformanceActual pa = new PerformanceActual();
+				pa.setExercise(exercise);
+				pa.setSet(i);
+				performanceActualList.add(pa);
+			}
+			return performanceActualList; }
+		else{
 			PerformanceActual pa = new PerformanceActual();
 			pa.setExercise(exercise);
-			pa.setSet(i);
+			pa.setSet(1);
 			performanceActualList.add(pa);
+			return performanceActualList;
 		}
-		return performanceActualList;
+		
 	}
 	
 	/**

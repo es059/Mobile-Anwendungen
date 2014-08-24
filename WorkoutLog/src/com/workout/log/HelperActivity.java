@@ -359,35 +359,42 @@ public class HelperActivity extends ActionBarActivity{
 			    transaction.addToBackStack(null);
 			    transaction.commit();
 				break;
-			case 2: 
+			case 2:
+				transaction = getSupportFragmentManager().beginTransaction();
+			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			    transaction.replace(R.id.fragment_container, new SelectExerciseForQuickWorkout(), "ExerciseOverview");
+			    transaction.addToBackStack(null);
+			    transaction.commit();
+				break;
+			case 3: 
 				transaction = getSupportFragmentManager().beginTransaction();
 			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 			    transaction.replace(R.id.fragment_container, new Graph(), "GraphActivity");
 			    transaction.addToBackStack(null);
 			    transaction.commit();
 				break;
-			case 3:
+			case 4:
 				transaction = getSupportFragmentManager().beginTransaction();
 			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 			    transaction.replace(R.id.fragment_container, new ImportExport(), "ImportExport");
 			    transaction.addToBackStack(null);
 			    transaction.commit();
 				break;
-			case 5: 
+			case 6: 
 				transaction = getSupportFragmentManager().beginTransaction();
 			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 			    transaction.replace(R.id.fragment_container, new ManageWorkoutplan(), "ManageWorkoutplan");
 			    transaction.addToBackStack(null);
 			    transaction.commit();
 				break;
-			case 6: 
+			case 7: 
 				transaction = getSupportFragmentManager().beginTransaction();
 			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 			    transaction.replace(R.id.fragment_container, new ManageTrainingDays(), "ManageTrainingDays");
 			    transaction.addToBackStack(null);
 			    transaction.commit();
 				break;
-			case 7: 
+			case 8: 
 				transaction = getSupportFragmentManager().beginTransaction();
 			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 			    transaction.replace(R.id.fragment_container, new ExerciseAdd(), "ExerciseAdd");
