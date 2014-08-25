@@ -24,6 +24,7 @@ import android.widget.ListView;
 
 import com.remic.workoutlog.R;
 import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.RectangleTarget;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -152,7 +153,7 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
      */
     public void showsixthHelperOverlay(){
     	if (sixthShowcaseView == null){
-	    	ViewTarget target = new ViewTarget(exerciseListView.getChildAt(0));
+	    	RectangleTarget target = new RectangleTarget(exerciseListView.getChildAt(0));
 	    	
 	    	sixthShowcaseView = new ShowcaseView.Builder(getActivity())
 	    	.setTarget(target)

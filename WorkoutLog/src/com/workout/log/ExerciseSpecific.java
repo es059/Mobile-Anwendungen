@@ -43,6 +43,7 @@ import com.workout.log.db.PerformanceActualMapper;
 import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.db.PlayMode;
 import com.workout.log.fragment.ActionBarDatePickerFragment;
+import com.workout.log.fragment.SpecificCounterFragment;
 import com.workout.log.listAdapter.PerformanceActualListAdapter;
 import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;
@@ -177,6 +178,14 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 			cardioWrapper.setVisibility(View.INVISIBLE);
 			muscleGroupType = MuscleGroupType.Normal;
 			
+			
+			/**
+			 * Load the bottom timer fragment into the current fragment
+			 */
+			transaction = getActivity().getSupportFragmentManager().beginTransaction();
+			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			transaction.replace(R.id.specific_timer, new SpecificCounterFragment(), "SpecificCounterFragment");
+			transaction.commit();
 			
 			if (performanceActualList.isEmpty()) {
 				performanceActualList = paMapper.getCurrentPerformanceActual(exercise, sp.format(new Date()));
