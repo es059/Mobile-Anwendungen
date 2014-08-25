@@ -18,6 +18,10 @@ public class MenuList {
 		 diary.setImgResID(R.drawable.task);
 		 dataList.add(diary);
 		 
+		 DrawerItem quickWorkout = new DrawerItem("Schnelles Training");
+		 quickWorkout.setImgResID(R.drawable.weightlifter3);
+		 dataList.add(quickWorkout);
+		 
 		 DrawerItem statistic = new DrawerItem(context.getResources().getString(R.string.MenuList_Statistic));
 		 statistic.setImgResID(R.drawable.statistic);
 		 dataList.add(statistic);

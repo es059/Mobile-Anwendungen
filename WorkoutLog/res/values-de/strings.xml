@@ -123,6 +123,10 @@
     <string name="eigthShowcaseViewTitle">Du hast das Tutorial beendet</string>
     <string name="eigthShowcaseViewContext">Du hast deinen ersten Trainingsplan erstellt! Auf dem Navigationseintrag <b>Log</b> kannst du nun mit deinem Training beginnen
         		. Viel Spass!</string>
+        		
+    <string name="quickWorkoutTitle">Einzelne Übungen protokollieren</string>
+  	<string name="qickWorkoutContext">In diesem Modus können Übungen getracked werden, welche nicht zwangsläufig in Ihrem Trainingsplan enthalten sind. Dafür wählen Sie in der Liste die gewünschte Übung aus.  </string>
+   
     
     <!-- ActionBar XML string resources-->
   	<string name="ActionBar_Date">Datum</string>

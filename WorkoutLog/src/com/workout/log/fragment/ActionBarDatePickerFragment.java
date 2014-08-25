@@ -65,20 +65,25 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 		/**
 		 * Fill the Information of the Exercise
 		 */
-		PerformanceTargetMapper ptMapper = new PerformanceTargetMapper(getActivity());
-		PerformanceTarget performanceTarget = ptMapper.getPerformanceTargetByExerciseId(exerciseSpecific.getExercise(), exerciseSpecific.getTrainingDayId());
-		
-		if(!exerciseSpecific.getExercise().getMuscleGroup().getName().equals(getResources().getString(R.string.Cardio))){
+		if(exerciseSpecific.getTrainingDayId() != -1) {
+			PerformanceTargetMapper ptMapper = new PerformanceTargetMapper(getActivity());
+			PerformanceTarget performanceTarget = ptMapper.getPerformanceTargetByExerciseId(exerciseSpecific.getExercise(), exerciseSpecific.getTrainingDayId());
 			
-			set.setText(getString(R.string.Set) + ": " + String.valueOf(performanceTarget.getSet()));
-			rep.setText(getString(R.string.Rep) + ": " + String.valueOf(performanceTarget.getRepetition()));
-		}else{
+			if(!exerciseSpecific.getExercise().getMuscleGroup().getName().equals(getResources().getString(R.string.Cardio))){
+				
+				set.setText(getString(R.string.Set) + ": " + String.valueOf(performanceTarget.getSet()));
+				rep.setText(getString(R.string.Rep) + ": " + String.valueOf(performanceTarget.getRepetition()));
+			}else{
+				((View) view).findViewById(R.id.divider).setVisibility(View.GONE);
+				
+				set.setVisibility(View.GONE);
+				rep.setText(getString(R.string.Min) + ":" + String.valueOf(performanceTarget.getRepetition()));
+			}
+		} else{
 			((View) view).findViewById(R.id.divider).setVisibility(View.GONE);
-			
 			set.setVisibility(View.GONE);
-			rep.setText(getString(R.string.Min) + ":" + String.valueOf(performanceTarget.getRepetition()));
+			rep.setVisibility(View.GONE);
 		}
-		
 		
 		setDate();
 		
