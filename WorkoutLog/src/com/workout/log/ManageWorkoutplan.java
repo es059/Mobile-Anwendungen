@@ -29,7 +29,6 @@ import android.widget.ListView;
 // import com.github.amlcurran.showcaseview.targets.RectangleTarget;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.RectangleTarget;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.remic.workoutlog.R;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.SwipeToDelete.UndoBarController;
@@ -58,7 +57,6 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	private UndoBarController mUndoBarController = null;
 	
 	private static int workoutplanId = -1;
-	private int currentListId = -1;
 	private View view;
 	private Stack<File> fileStack = null;
 	
@@ -435,7 +433,6 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	    @Override
 	    protected ManageWorkoutplanListAdapter doInBackground(ArrayList<TrainingDay>... params) {
 	    	manageWorkoutplanListAdapter = null;
-	    	currentListId = -1;
 	    	
 			wpMapper = new WorkoutplanMapper(getActivity());
 			
@@ -458,12 +455,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 			}
 			
 			if (workoutplanList.size() != 0){
-				for(int i = 0; i < workoutplanList.size(); i++) {
-					if(workoutplanList.get(i).getId() == workoutplanId) {
-						currentListId = i;
-					}
-				}
-				if (params[0] == null) params[0] = tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanList.get(currentListId).getId());
+				if (params[0] == null) params[0] = tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanId);
 				for(int i = 0; i < params[0].size(); i++) {
 					manageWorkoutplanList.add(params[0].get(i));
 				}

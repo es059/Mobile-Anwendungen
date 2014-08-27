@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.widget.RelativeLayout;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
@@ -102,14 +103,14 @@ public class TrainingDayAddToWorkoutplanDialogFragment extends DialogFragment {
 		    .setStyle(R.style.CustomShowcaseTheme)
 		    //.singleShot(45)
 		    .build();
-    		
-    		fifthShowcaseView.hideButton();
-    		fifthShowcaseView.refreshDrawableState();
+ 
    		
-    		/* 	RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) fifthShowcaseView.getButton().getLayoutParams();
-    		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-    		layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-    		fifthShowcaseView.setButtonPosition(layoutParams);*/
+    		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+    				//(RelativeLayout.LayoutParams)fifthShowcaseView.getButton().getLayoutParams();
+    		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+    		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
+    		layoutParams.setMargins(30, 0, 0, 30);
+    		fifthShowcaseView.setButtonPosition(layoutParams);
     		
     	}else{
     		fifthShowcaseView.refreshDrawableState();

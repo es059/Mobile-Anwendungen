@@ -13,48 +13,39 @@
         style="?android:attr/actionButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="bottom"
         android:layout_weight="1"
-        android:src="@drawable/decrease"
-        android:antialias="true" />
+        android:src="@drawable/decrease"/>
 
    <ImageButton
        android:id="@+id/increase_time"
        style="?android:attr/actionButtonStyle"
        android:layout_width="wrap_content"
        android:layout_height="match_parent"
-       android:layout_gravity="bottom"
-       android:layout_weight="1"
-       android:src="@drawable/increase"
-       android:antialias="true" />
+         android:layout_weight="1"
+       android:src="@drawable/increase"/>
 
     <RelativeLayout
-     android:id="@+id/Time"
-     android:layout_width="match_parent"
-     android:layout_height="fill_parent"
-     android:layout_weight="8"
-     android:gravity="center">
+        android:id="@+id/Time"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="8" >
     
 		<TextView
 		    android:id="@+id/counter_timer"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_centerHorizontal="true"
-		    android:layout_centerInParent="true"
-		    android:layout_gravity="center"
-		    android:gravity="center"
-		    android:paddingLeft="5dp"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:gravity="center_horizontal"
 		    android:textColor="#FFFFFF"
 		    android:text="0"
 		    android:textSize="30sp"
 		    android:textStyle="bold"
 		/>
     </RelativeLayout>
+    
     <ImageButton
         android:id="@+id/action_timer"
         android:layout_width="wrap_content"
         style="?android:attr/actionButtonStyle"
-        android:layout_height="wrap_content"
-        android:antialias="true"/>
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

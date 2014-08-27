@@ -1,6 +1,9 @@
 package com.workout.log.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -14,22 +17,47 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.remic.workoutlog.R;
+import com.workout.log.data.CountDownBroadcastService;
 public class SpecificCounterFragment extends Fragment{
 	
 	private ImageButton increase = null;
 	private ImageButton decrease = null;
 	private ImageButton counterAction = null;
 	private TextView timeView = null;
-	
-	private MyCountDownTimer countDownTimer = null;
+
+	private Vibrator v = null;
 	
 	private int timeCount = 0;
-	private final int interval = 1 * 1000;
+	private static boolean isRunning =false;
+	
+	private BroadcastReceiver  br = new BroadcastReceiver(){
+	    @Override
+	    public void onReceive(Context context, Intent intent) {            
+	        updateTextView(intent); // or whatever method used to update your GUI fields
+	    }
+
+		private void updateTextView(Intent intent) {
+		    if (intent.getExtras() != null) {
+		        long secondsUntilFinished = intent.getLongExtra("countdown", -1);
+		        if (secondsUntilFinished != -1) {
+		        	timeView.setText(String.valueOf(secondsUntilFinished));
+		        }else{
+		        	timeView.setText(String.valueOf(timeCount));			
+					v.vibrate(2000);			
+					counterAction.setImageDrawable(getResources().getDrawable(R.drawable.play_timer));
+					
+					increase.setEnabled(true);
+					decrease.setEnabled(true);
+		        }
+		    }
+		}
+	};
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		View view = inflater.inflate(R.layout.count_down_fragment, container,false);
 		
+		v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 		return view;
 	}
 
@@ -37,12 +65,14 @@ public class SpecificCounterFragment extends Fragment{
 	public void onResume(){
 		super.onResume();
 		
+		getActivity().registerReceiver(br, new IntentFilter(CountDownBroadcastService.COUNTDOWN_BR));
+		
 		increase = (ImageButton) getView().findViewById(R.id.increase_time);
 		decrease = (ImageButton) getView().findViewById(R.id.decrease_time);
 		counterAction = (ImageButton) getView().findViewById(R.id.action_timer);
 		timeView = (TextView) getView().findViewById(R.id.counter_timer);
 		
-		counterAction.setBackgroundDrawable(getResources().getDrawable(R.drawable.play_timer));
+		counterAction.setImageDrawable(getResources().getDrawable(R.drawable.play_timer));
 		
 		if (readSharedPrefs() != -1) {
 			timeCount = readSharedPrefs();
@@ -72,11 +102,50 @@ public class SpecificCounterFragment extends Fragment{
 		counterAction.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				countDownTimer = new MyCountDownTimer(timeCount * 1000, interval);
-				countDownTimer.start();
-				counterAction.setBackgroundDrawable(getResources().getDrawable(R.drawable.pause_timer));
+				if (!isRunning){			
+					getActivity().startService(new Intent(getActivity(), CountDownBroadcastService.class));
+					
+					counterAction.setImageDrawable(getResources().getDrawable(R.drawable.stop_timer));
+					
+					increase.setEnabled(false);
+					decrease.setEnabled(false);
+					
+					isRunning = true;
+				}else{
+					getActivity().stopService(new Intent(getActivity(), CountDownBroadcastService.class));
+					
+					timeView.setText(String.valueOf(timeCount));					
+					counterAction.setImageDrawable(getResources().getDrawable(R.drawable.play_timer));
+					
+					increase.setEnabled(true);
+					decrease.setEnabled(true);
+					
+					isRunning = false;
+				}
 			}
 		});
+	}
+	
+	@Override
+	public void onPause() {
+	    super.onPause();
+	    getActivity().unregisterReceiver(br);
+	}
+
+	@Override
+	public void onStop() {
+	    try {
+	    	getActivity().unregisterReceiver(br);
+	    } catch (Exception e) {
+	        // Receiver was probably already stopped in onPause()
+	    }
+	    super.onStop();
+	}
+	
+	@Override
+	public void onDestroy() {        
+		getActivity().stopService(new Intent(getActivity(), CountDownBroadcastService.class));
+	    super.onDestroy();
 	}
 	
 	/**
@@ -97,29 +166,4 @@ public class SpecificCounterFragment extends Fragment{
     	int retrievedValue = sharedPref.getInt("counterTime", -1);
     	return retrievedValue;
     }
-	
-	 public class MyCountDownTimer extends CountDownTimer {
-		 
-		private Vibrator v = null;
-		private long startTime = 0;
-		
-		public MyCountDownTimer(long startTime, long interval) {
-		    super(startTime, interval);
-		    this.startTime = startTime;
-		    v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
-		}
-		
-		@Override
-		public void onFinish() {
-			timeView.setText(String.valueOf(startTime / 1000));			
-			v.vibrate(2000);			
-			counterAction.setBackgroundDrawable(getResources().getDrawable(R.drawable.play_timer));
-		}
-
-		@Override
-		public void onTick(long millisUntilFinished) {
-			// TODO Auto-generated method stub
-			timeView.setText(String.valueOf(millisUntilFinished / 1000));
-		} 
-	 }
 }
