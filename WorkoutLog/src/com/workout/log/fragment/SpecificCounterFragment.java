@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 
 import com.remic.workoutlog.R;
 import com.workout.log.data.CountDownBroadcastService;
+
 public class SpecificCounterFragment extends Fragment{
 	
 	private ImageButton increase = null;
@@ -29,6 +29,7 @@ public class SpecificCounterFragment extends Fragment{
 	
 	private int timeCount = 0;
 	private static boolean isRunning =false;
+	private static boolean isPaused = false;
 	
 	private BroadcastReceiver  br = new BroadcastReceiver(){
 	    @Override
@@ -72,18 +73,21 @@ public class SpecificCounterFragment extends Fragment{
 		counterAction = (ImageButton) getView().findViewById(R.id.action_timer);
 		timeView = (TextView) getView().findViewById(R.id.counter_timer);
 		
-		counterAction.setImageDrawable(getResources().getDrawable(R.drawable.play_timer));
-		
-		if (readSharedPrefs() != -1) {
-			timeCount = readSharedPrefs();
-			timeView.setText(String.valueOf(readSharedPrefs()));
+		if (!isRunning){
+			counterAction.setImageDrawable(getResources().getDrawable(R.drawable.play_timer));
+			if (readSharedPrefs() != -1) {
+				timeCount = readSharedPrefs();
+				timeView.setText(String.valueOf(readSharedPrefs()));
+			}
+		}else{
+			counterAction.setImageDrawable(getResources().getDrawable(R.drawable.stop_timer));
 		}
 		
 		increase.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
 				timeCount = Integer.parseInt(timeView.getText().toString());
-				timeCount++;
+				timeCount += 5;
 				timeView.setText(String.valueOf(timeCount));		
 				writeSharedPrefs();
 			}
@@ -93,7 +97,11 @@ public class SpecificCounterFragment extends Fragment{
 			@Override
 			public void onClick(View arg0) {
 				timeCount = Integer.parseInt(timeView.getText().toString());
-				timeCount--;
+				if(timeCount - 5 > 0) {
+					timeCount -= 5;
+				}else{
+					timeCount = 0;
+				}
 				timeView.setText(String.valueOf(timeCount));	
 				writeSharedPrefs();
 			}
@@ -102,8 +110,10 @@ public class SpecificCounterFragment extends Fragment{
 		counterAction.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				if (!isRunning){			
-					getActivity().startService(new Intent(getActivity(), CountDownBroadcastService.class));
+				if (!isRunning){	
+					Intent startBroadcast = new Intent(getActivity(), CountDownBroadcastService.class);
+					startBroadcast.putExtra("Time", timeCount);
+					getActivity().startService(startBroadcast);
 					
 					counterAction.setImageDrawable(getResources().getDrawable(R.drawable.stop_timer));
 					
@@ -121,6 +131,7 @@ public class SpecificCounterFragment extends Fragment{
 					decrease.setEnabled(true);
 					
 					isRunning = false;
+					isPaused = false;
 				}
 			}
 		});
@@ -129,12 +140,14 @@ public class SpecificCounterFragment extends Fragment{
 	@Override
 	public void onPause() {
 	    super.onPause();
+	    isPaused = true;
 	    getActivity().unregisterReceiver(br);
 	}
 
 	@Override
 	public void onStop() {
 	    try {
+	    	isPaused = true;
 	    	getActivity().unregisterReceiver(br);
 	    } catch (Exception e) {
 	        // Receiver was probably already stopped in onPause()
@@ -144,7 +157,7 @@ public class SpecificCounterFragment extends Fragment{
 	
 	@Override
 	public void onDestroy() {        
-		getActivity().stopService(new Intent(getActivity(), CountDownBroadcastService.class));
+		if (!isPaused) getActivity().stopService(new Intent(getActivity(), CountDownBroadcastService.class));
 	    super.onDestroy();
 	}
 	

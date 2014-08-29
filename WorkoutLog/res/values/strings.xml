@@ -23,6 +23,7 @@
     <!-- String resources for MenuList -->
     <string name="MenuList_Functions">Functions</string>
     <string name="MenuList_Diary">Log</string>
+    <string name="MenuList_FreePractice">Free Practice</string>
     <string name="MenuList_Statistic">Statistics</string>
     <string name="MenuList_Import_Export">Import/Export</string>
     <string name="MenuList_Manage">Manage</string>
@@ -96,8 +97,7 @@
     
     <!-- ShowcaseView String resources -->
     <string name="firstShowcaseViewTitle">Create a new workout routine</string>
-    <string name="firstShowcaseViewContext">Click here to create a new workout routine.\n\nHint: If you have more than one
-	    		workout routine you can use the button to switch between them</string>
+    <string name="firstShowcaseViewContext">Click here to create a new workout routine</string>
     
     <string name="secondShowcaseViewTitle">Create/Add a new training day</string>
     <string name="secondShowcaseViewContext">Click here to Add a new training day to the current workout routine</string>
@@ -118,11 +118,14 @@
 		    		 to add additional exercises</string>
     
     <string name="seventhShowcaseViewTitle">Add an exercises to the training day</string>
-    <string name="seventhShowcaseViewContext">Click on any exercise to add it to the current training day</string>
+    <string name="seventhShowcaseViewContext">Click on any exercise to add it to the current training day\n\nHint: Use the +-Symbol to create new exercises</string>
     
-    <string name="eigthShowcaseViewTitle">You finished the tutorial</string>
-    <string name="eigthShowcaseViewContext">You finished the basic set up of a workout routine! You can now choose the navigation entry <b>Log</b>
-		    		and start working out. Have Fun!</string>
+   	<string name="eigthShowcaseViewTitle">Statistic</string>
+    <string name="eigthShowcaseViewContext">Choose an exercise to display your training results.\n\nHint: Exercises have to
+        		be exercised at least once to evaluate them</string>
+        		
+    <string name="ninthShowcaseViewTitle">Statistic</string>
+    <string name="ninthShowcaseViewContext">The statistic evaluates the results of each training day with the most weight and the highest repeat number</string>
 		    		
   	<string name="quickWorkoutTitle">Single Exercise Log</string>
   	<string name="qickWorkoutContext">In this mode you can track individuel exercises, which are not necessarily included in your training routine. Therefore you can choose an exercise from the upcoming list. </string>

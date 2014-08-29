@@ -362,7 +362,7 @@ public class HelperActivity extends ActionBarActivity{
 			case 2:
 				transaction = getSupportFragmentManager().beginTransaction();
 			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-			    transaction.replace(R.id.fragment_container, new SelectExerciseForQuickWorkout(), "ExerciseOverview");
+			    transaction.replace(R.id.fragment_container, new SelectExerciseForQuickWorkout(), "SelectExerciseForQuickWorkout");
 			    transaction.addToBackStack(null);
 			    transaction.commit();
 				break;

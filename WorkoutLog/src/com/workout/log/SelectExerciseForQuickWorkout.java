@@ -19,11 +19,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.RectangleTarget;
 import com.github.amlcurran.showcaseview.targets.Target;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.remic.workoutlog.R;
-import com.workout.log.SelectExerciseForQuickWorkout.BackGroundTask;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.SwipeToDelete.UndoBarController;
 import com.workout.log.SwipeToDelete.UndoItem;
@@ -41,7 +39,6 @@ import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.db.TrainingDayMapper;
 import com.workout.log.dialog.ExerciseAddDialogFragment;
 import com.workout.log.dialog.ExerciseUpdateDialogFragment;
-import com.workout.log.fragment.ActionBarTrainingDayPickerFragment;
 import com.workout.log.fragment.ExerciseSearchBarFragment;
 import com.workout.log.listAdapter.DefaultAddListAdapter;
 import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
@@ -110,7 +107,7 @@ public class SelectExerciseForQuickWorkout extends Fragment implements OnItemLon
 	    .setContentTitle(getString(R.string.quickWorkoutTitle))
     	.setContentText(getString(R.string.qickWorkoutContext))
 	    .setStyle(R.style.CustomShowcaseTheme)
-	    //.singleShot(50)
+	    .singleShot(55)
 	    .build();
 	}
 	

@@ -23,7 +23,9 @@ public class TrainingDayAddToWorkoutplanDialogFragment extends DialogFragment {
 	private int workoutPlanId;
 	private int trainingDayId;
 	private static WorkoutplanMapper wpMapper;
-	private ShowcaseView fifthShowcaseView = null;
+	
+	private ShowcaseView showcaseView = null;
+	
 	private Context context;
 	private TrainingDayAddToWorkoutplan trainingDayAddToWorkoutplan = null;
 	
@@ -75,7 +77,7 @@ public class TrainingDayAddToWorkoutplanDialogFragment extends DialogFragment {
 				 /**
 		         * Show ShowcaseView
 		         */
-				showFifthHelperOverlay();
+				showHelperOverlay();
 			  }
 			});
 
@@ -92,11 +94,11 @@ public class TrainingDayAddToWorkoutplanDialogFragment extends DialogFragment {
 	/**
      * ShowcaseView which points to the first entry of the listView
      */
-    public void showFifthHelperOverlay(){
-    	if (fifthShowcaseView == null){	
+    public void showHelperOverlay(){
+    	if (showcaseView == null){	
     		ViewTarget target = new ViewTarget(trainingDayAddToWorkoutplan.getCustomToast().getButton());
     		
-    		fifthShowcaseView = new ShowcaseView.Builder(getActivity())
+    		showcaseView = new ShowcaseView.Builder(getActivity())
 	    	.setTarget(target)
 		    .setContentTitle(getString(R.string.fifthShowcaseViewTitle))
 		    .setContentText(getString(R.string.fifthShowcaseViewContext))
@@ -110,10 +112,10 @@ public class TrainingDayAddToWorkoutplanDialogFragment extends DialogFragment {
     		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
     		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
     		layoutParams.setMargins(30, 0, 0, 30);
-    		fifthShowcaseView.setButtonPosition(layoutParams);
+    		showcaseView.setButtonPosition(layoutParams);
     		
     	}else{
-    		fifthShowcaseView.refreshDrawableState();
+    		showcaseView.refreshDrawableState();
     	}
     }
     
@@ -138,7 +140,7 @@ public class TrainingDayAddToWorkoutplanDialogFragment extends DialogFragment {
     }
     
     public ShowcaseView getShowcaseView(){
-    	return fifthShowcaseView;
+    	return showcaseView;
     }
 
 }

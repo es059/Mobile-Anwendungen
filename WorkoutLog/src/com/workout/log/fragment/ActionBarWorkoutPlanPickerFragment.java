@@ -42,7 +42,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 	private ManageWorkoutplan manageWorkoutplan; 
 	
 	private static int currentListId = 0;
-	private ShowcaseView firstShowcaseView = null;
+	private ShowcaseView showcaseView = null;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -127,7 +127,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 				/**
 				 * Show the ShowcaseView
 				 */
-				showFirstHelperOverlay();
+				showHelperOverlay();
 				nextButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_add));
 			}
 		
@@ -144,24 +144,24 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
     /**
      * ShowcaseView which points to the + Symbol 
      */
-    private void showFirstHelperOverlay(){
-    	if (firstShowcaseView == null){    		
+    private void showHelperOverlay(){
+    	if (showcaseView == null){    		
 	    	ViewTarget target = new ViewTarget(R.id.Next, this);
 	    	
-			firstShowcaseView = new ShowcaseView.Builder(getActivity())
+			showcaseView = new ShowcaseView.Builder(getActivity())
 		    .setTarget(target)
 		    .setContentTitle(getString(R.string.firstShowcaseViewTitle))
 		    .setContentText(getString(R.string.firstShowcaseViewContext))
 		    .setStyle(R.style.CustomShowcaseTheme)
-		    //.singleShot(42)
+		    .singleShot(42)
 		    .build();	
     	}else{
-    		firstShowcaseView.refreshDrawableState();
+    		showcaseView.refreshDrawableState();
     	}
     }
     
 	public ShowcaseView getFirstShowcaseView() {
-		return firstShowcaseView;
+		return showcaseView;
 	}
 	
 	@SuppressLint("SimpleDateFormat")
@@ -172,7 +172,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 			/**
 			 * Hide the ShowcaseView if visible
 			 */
-			if(firstShowcaseView != null && firstShowcaseView.isShown()) firstShowcaseView.hide();
+			if(showcaseView != null && showcaseView.isShown()) showcaseView.hide();
 			
 			if(workoutplanList.size() <= currentListId +1) {
 				WorkoutplanAddDialogFragment dialogFragment = WorkoutplanAddDialogFragment.newInstance(getActivity(), workoutplanList);

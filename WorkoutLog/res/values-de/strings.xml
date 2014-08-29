@@ -23,6 +23,7 @@
     <!-- String resources for MenuList -->
     <string name="MenuList_Functions">Funktionen</string>
     <string name="MenuList_Diary">Tagebuch</string>
+    <string name="MenuList_FreePractice">Freies Training</string>
     <string name="MenuList_Statistic">Statistic</string>
     <string name="MenuList_Import_Export">Import/Export</string>
     <string name="MenuList_Manage">Verwaltung</string>
@@ -96,14 +97,13 @@
     
         <!-- ShowcaseView String resources -->
     <string name="firstShowcaseViewTitle">Erstelle einen neuen Trainingsplan</string>
-    <string name="firstShowcaseViewContext">Klicke hier, um einen neuen Trainingsplan zu erstellen\n\nHinweis: Falls mehr als ein Trainingsplan
-           		vorhanden sein sollte, kann mit Hilfe dieses Buttons zwischen ihnen gewechselt werden</string>
+    <string name="firstShowcaseViewContext">Klicke hier, um einen neuen Trainingsplan zu erstellen</string>
     
     <string name="secondShowcaseViewTitle">Hinzufügen eines neuen Trainingstags</string>
     <string name="secondShowcaseViewContext">Klicke hier, um einen neuen Trainingstag dem aktuellen Trainingsplan hinzuzufügen</string>
     
     <string name="thirdShowcaseViewTitle">Erstelle einen neuen Trainingstag</string>
-    <string name="thirdShowcaseViewContext">Klicke hier, um einen neuen Trainingstag zu erstellen\n\nWichtiger Hinweis: Um weitere Trainingstage hinzuzufügen, nutze
+    <string name="thirdShowcaseViewContext">Klicke hier, um einen neuen Trainingstag zu erstellen.\n\nWichtiger Hinweis: Um weitere Trainingstage hinzuzufügen, nutze
         			das +-Symbol in der oberen Leiste</string>  
     
     <string name="fourthShowcaseViewTitle">Füge den Trainingstag dem Trainingsplan hinzu</string>
@@ -114,15 +114,19 @@
    	    			mit Übungen zu befüllen</string>
    	
     <string name="sithShowcaseViewTitle">Füge dem Trainingstag Übungen hinzu</string>
-    <string name="sithShowcaseViewContext">Klicke hier, um eine Übung dem aktuellen Trainingstag hinzuzufügen\n\nWichtiger Hinweis: Um weitere Übungen hinzuzufügen,
+    <string name="sithShowcaseViewContext">Klicke hier, um eine Übung dem aktuellen Trainingstag hinzuzufügen.\n\nWichtiger Hinweis: Um weitere Übungen hinzuzufügen,
         			nutze das +-Symbol in der oberen Leiste</string>
     
     <string name="seventhShowcaseViewTitle">Füge eine Übung dem Trainingstag hinzu</string>
-    <string name="seventhShowcaseViewContext">Klicke eine Übung in der Liste um sie dem Trainingstag hinzuzufügen</string>
-    
-    <string name="eigthShowcaseViewTitle">Du hast das Tutorial beendet</string>
-    <string name="eigthShowcaseViewContext">Du hast deinen ersten Trainingsplan erstellt! Auf dem Navigationseintrag <b>Log</b> kannst du nun mit deinem Training beginnen
-        		. Viel Spass!</string>
+    <string name="seventhShowcaseViewContext">Klicke eine Übung in der Liste um sie dem Trainingstag hinzuzufügen.\n\nHinweis: Um eine neue Übung zu erstellen, nutze das +-Symbol
+        			in der oberen Leiste</string>
+
+   	<string name="eigthShowcaseViewTitle">Statistik</string>
+    <string name="eigthShowcaseViewContext">Wähle eine Übung aus, um dir deine Trainingserfolge anzeigen zu lassen. \n\nHinweis: Übungen müssen mindestens einen einmal trainiert worden sein
+  	    			um ausgewertet zu werden</string>
+  	    			
+    <string name="ninthShowcaseViewTitle">Statistik</string>
+    <string name="ninthShowcaseViewContext">Die Statistik wertet jeweils den Trainingstag mit dem meisten Gewicht und dessen höchste Wiederholungszahl aus</string>
         		
     <string name="quickWorkoutTitle">Einzelne Übungen protokollieren</string>
   	<string name="qickWorkoutContext">In diesem Modus können Übungen getracked werden, welche nicht zwangsläufig in Ihrem Trainingsplan enthalten sind. Dafür wählen Sie in der Liste die gewünschte Übung aus.  </string>

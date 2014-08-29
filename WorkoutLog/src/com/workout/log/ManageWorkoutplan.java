@@ -60,7 +60,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	private View view;
 	private Stack<File> fileStack = null;
 	
-	private ShowcaseView secondShowcaseView = null;
+	private ShowcaseView showcaseView = null;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -117,9 +117,9 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
             public void onGlobalLayout() {
     	        if (manageWorkoutplanList != null && manageWorkoutplanList.size() == 1 && trainingDayListView.getChildCount() != 0) {
     	        	if(actionBarWorkoutPlanPickerFragment.getFirstShowcaseView() == null) {
-    	        		showSecondHelperOverlay();	
+    	        		showHelperOverlay();	
     	        	} else if(!actionBarWorkoutPlanPickerFragment.getFirstShowcaseView().isShown()) {
-    	        		showSecondHelperOverlay();
+    	        		showHelperOverlay();
     	        	}
     	        		
     	        }
@@ -135,25 +135,25 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
     /**
      * ShowcaseView which points to the first entry of the listView
      */
-    public void showSecondHelperOverlay(){
-    	if (secondShowcaseView == null){
+    public void showHelperOverlay(){
+    	if (showcaseView == null){
     		RectangleTarget target = new RectangleTarget(trainingDayListView.getChildAt(0));
 	    	
-	    	secondShowcaseView = new ShowcaseView.Builder(getActivity())
+	    	showcaseView = new ShowcaseView.Builder(getActivity())
 	    	.setTarget(target)
 		    .setContentTitle(getString(R.string.secondShowcaseViewTitle))
 	    	.setContentText(getString(R.string.secondShowcaseViewContext))
 		    .setStyle(R.style.CustomShowcaseTheme)
-		    //.singleShot(43)
+		    .singleShot(43)
 		    .build();
 	    	
     	}else{
-    		secondShowcaseView.refreshDrawableState();
+    		showcaseView.refreshDrawableState();
     	}
     }
     
     public ShowcaseView getShowcaseView(){
-    	return secondShowcaseView;
+    	return showcaseView;
     }
     
 	/**
