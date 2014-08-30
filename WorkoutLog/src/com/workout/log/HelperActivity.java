@@ -24,13 +24,13 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.remic.workoutlog.R;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.remic.workoutlog.R;
 import com.workout.log.ad.BannerFragment;
 import com.workout.log.analytics.MyApplication;
 import com.workout.log.analytics.MyApplication.TrackerName;
@@ -362,7 +362,7 @@ public class HelperActivity extends ActionBarActivity{
 			case 2:
 				transaction = getSupportFragmentManager().beginTransaction();
 			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-			    transaction.replace(R.id.fragment_container, new SelectExerciseForQuickWorkout(), "ExerciseOverview");
+			    transaction.replace(R.id.fragment_container, new SelectExerciseForQuickWorkout(), "SelectExerciseForQuickWorkout");
 			    transaction.addToBackStack(null);
 			    transaction.commit();
 				break;

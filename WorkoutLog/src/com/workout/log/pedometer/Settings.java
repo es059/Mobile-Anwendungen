@@ -18,10 +18,10 @@
 
 package com.workout.log.pedometer;
 
-import com.remic.workoutlog.R;
-
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+
+import com.remic.workoutlog.R;
 
 /**
  * Activity for Pedometer settings.

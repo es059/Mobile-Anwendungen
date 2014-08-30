@@ -122,12 +122,19 @@
         </TableRow>
     </TableLayout>
     
-    
     <ListView
         android:id="@+id/exerciseSpecificList"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/specific_timer"
         android:layout_below="@+id/tableLayout"
         android:layout_centerHorizontal="true"
         android:longClickable="true" />
+    
+    <FrameLayout
+        android:id="@+id/specific_timer"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/actionbar_height"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

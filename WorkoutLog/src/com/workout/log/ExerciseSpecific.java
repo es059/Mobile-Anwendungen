@@ -29,8 +29,8 @@ import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.Toast;
 
-import com.remic.workoutlog.R;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingRightInAnimationAdapter;
+import com.remic.workoutlog.R;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.SwipeToDelete.UndoBarController;
 import com.workout.log.SwipeToDelete.UndoItem;
@@ -43,6 +43,7 @@ import com.workout.log.db.PerformanceActualMapper;
 import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.db.PlayMode;
 import com.workout.log.fragment.ActionBarDatePickerFragment;
+import com.workout.log.fragment.SpecificCounterFragment;
 import com.workout.log.listAdapter.PerformanceActualListAdapter;
 import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;
@@ -80,43 +81,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		View view = inflater.inflate(R.layout.exercise_specific, container,false);
 		
 		performanceActualList = new ArrayList<PerformanceActual>();
-		/**
-		 * Set the visibility of the NavigationDrawer to Invisible
-		 */
-		((HelperActivity) getActivity()).setNavigationDrawerVisibility(false);
-		((HelperActivity) getActivity()).setCalledGetParentActivityIntent(false);
 		
-		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-		setHasOptionsMenu(true);
-
-		/**
-		 * Handles the behavior if the back button is pressed
-		 */
-		((HelperActivity) getActivity())
-				.setOnBackPressedListener(new OnBackPressedListener() {
-					@Override
-					public void doBack() {
-						savePerformanceActual();
-						openExerciseOverview();
-						((HelperActivity) getActivity())
-								.setOnBackPressedListener(null);
-					}
-				});
-		/**
-		 * Handles the behavior if the Home button in the actionbar is pressed
-		 */
-		((HelperActivity) getActivity())
-				.setOnHomePressedListener(new OnHomePressedListener() {
-					@Override
-					public Intent doHome() {
-						savePerformanceActual();
-						openExerciseOverview();
-						((HelperActivity) getActivity())
-								.setOnBackPressedListener(null);
-						return null;
-					}
-				});
-
 		/**
 		 * Receive the arguments set by ExerciseOverview
 		 */		
@@ -132,6 +97,46 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 				e.printStackTrace();
 			}
 		}
+		
+		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+		((HelperActivity) getActivity()).setNavigationDrawerVisibility(false);
+		setHasOptionsMenu(true);
+		
+		if (trainingDayId != -1){
+			/**
+			 * Set the visibility of the NavigationDrawer to Invisible
+			 */
+			((HelperActivity) getActivity()).setCalledGetParentActivityIntent(false);
+			
+			/**
+			 * Handles the behavior if the back button is pressed
+			 */
+			((HelperActivity) getActivity())
+					.setOnBackPressedListener(new OnBackPressedListener() {
+						@Override
+						public void doBack() {
+							savePerformanceActual();
+							openExerciseOverview();
+							((HelperActivity) getActivity())
+									.setOnBackPressedListener(null);
+						}
+					});
+			/**
+			 * Handles the behavior if the Home button in the actionbar is pressed
+			 */
+			((HelperActivity) getActivity())
+					.setOnHomePressedListener(new OnHomePressedListener() {
+						@Override
+						public Intent doHome() {
+							savePerformanceActual();
+							openExerciseOverview();
+							((HelperActivity) getActivity())
+									.setOnBackPressedListener(null);
+							return null;
+						}
+					});
+		}
+
 		return view;
 	}
 
@@ -177,6 +182,14 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 			cardioWrapper.setVisibility(View.INVISIBLE);
 			muscleGroupType = MuscleGroupType.Normal;
 			
+			
+			/**
+			 * Load the bottom timer fragment into the current fragment
+			 */
+			transaction = getActivity().getSupportFragmentManager().beginTransaction();
+			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+			transaction.replace(R.id.specific_timer, new SpecificCounterFragment(), "SpecificCounterFragment");
+			transaction.commit();
 			
 			if (performanceActualList.isEmpty()) {
 				performanceActualList = paMapper.getCurrentPerformanceActual(exercise, sp.format(new Date()));

@@ -23,7 +23,6 @@ import android.widget.ListView;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.RectangleTarget;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.remic.workoutlog.R;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.SwipeToDelete.UndoBarController;
@@ -68,8 +67,8 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 	private ArrayList<TrainingDay> trainingDayList = null;
 	private UndoBarController mUndoBarController = null;
 	
-	private ShowcaseView thirdShowcaseView = null;
-	private ShowcaseView fourthShowcaseView = null;
+	private ShowcaseView showcaseView1 = null;
+	private ShowcaseView showcaseView2 = null;
 	
 	private TrainingDayAddToWorkoutPlanCustomToast customToast = null;
 	private TrainingDayAddToWorkoutplanDialogFragment AddTrainingDayDialogFragment = null;
@@ -84,6 +83,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 		 * Set the visibility of the NavigationDrawer to Invisible
 		 */
 		((HelperActivity) getActivity()).setNavigationDrawerVisibility(false);
+		((HelperActivity) getActivity()).setCalledGetParentActivityIntent(false);
 		
 		/**
 		 * Handles the behavior if the back button is pressed
@@ -157,9 +157,9 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
         	@Override
             public void onGlobalLayout() {
         		if (trainingDayListView.getAdapter() != null && trainingDayListView.getChildCount() != 0 && trainingDayListView.getAdapter().getItem(0) instanceof Default){ 
-    	        	showThirdHelperOverlay();
+        			showHelperOverlay1();
     	        }else if (trainingDayListView.getAdapter() != null && trainingDayListView.getChildCount() != 0 && trainingDayListView.getAdapter().getItem(0) instanceof TrainingDay){
-    	        	showFourthHelperOverlay();
+    	        	showHelperOverlay2();
     	        }
             }
         });
@@ -174,38 +174,38 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 	/**
      * ShowcaseView which points to the first entry of the listView
      */
-    public void showThirdHelperOverlay(){
-    	if (thirdShowcaseView == null){
+    public void showHelperOverlay1(){
+    	if (showcaseView1 == null){
     		RectangleTarget target = new RectangleTarget(trainingDayListView.getChildAt(0));
 	   
-	    	thirdShowcaseView = new ShowcaseView.Builder(getActivity())
+	    	showcaseView1 = new ShowcaseView.Builder(getActivity())
 	    	.setTarget(target)
 		    .setContentTitle(getString(R.string.thirdShowcaseViewTitle))
 		    .setContentText(getString(R.string.thirdShowcaseViewContext))
 		    .setStyle(R.style.CustomShowcaseTheme)
-		    //.singleShot(44)
+		    .singleShot(44)
 		    .build();
     	}else{
-    		thirdShowcaseView.refreshDrawableState();
+    		showcaseView1.refreshDrawableState();
     	}
     }
     
 	/**
      * ShowcaseView which points to the first entry of the listView
      */
-    public void showFourthHelperOverlay(){
-    	if (fourthShowcaseView == null){	
+    public void showHelperOverlay2(){
+    	if (showcaseView2 == null){	
     		RectangleTarget target = new RectangleTarget(trainingDayListView.getChildAt(0));
     		
-	    	fourthShowcaseView = new ShowcaseView.Builder(getActivity())
+	    	showcaseView2 = new ShowcaseView.Builder(getActivity())
 	    	.setTarget(target)
 		    .setContentTitle(getString(R.string.fourthShowcaseViewTitle))
 		    .setContentText(getString(R.string.fourthShowcaseViewContext))
 		    .setStyle(R.style.CustomShowcaseTheme)
-		    //.singleShot(45)
+		    .singleShot(45)
 		    .build();
     	}else{
-    		fourthShowcaseView.refreshDrawableState();
+    		showcaseView2.refreshDrawableState();
     	}
     }
     
@@ -232,7 +232,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		if (fourthShowcaseView != null && fourthShowcaseView.isShown()) fourthShowcaseView.hide();
+		if (showcaseView2 != null && showcaseView2.isShown()) showcaseView2.hide();
 		
 		selectedTrainingDay = (TrainingDay) arg0.getItemAtPosition(arg2);
 		int trainingDayID = selectedTrainingDay.getId();
@@ -279,7 +279,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 			trainingDayListView.setOnItemClickListener(new OnItemClickListener(){
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
-					if (thirdShowcaseView != null && thirdShowcaseView.isShown()) thirdShowcaseView.hide();
+					if (showcaseView1 != null && showcaseView1.isShown()) showcaseView1.hide();
 					showDialogAddFragment(trainingDayStringName);
 				}	
 			});
@@ -452,7 +452,8 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 	        getActivity().setProgressBarIndeterminateVisibility(true);
 	    }
 
-	    @Override
+	    @SuppressWarnings("unchecked")
+		@Override
 	    protected TrainingDayListAdapter doInBackground(ArrayList<TrainingDay>... params) {	
 			if(params[0] == null) params[0] = tdMapper.getAllTrainingDay();
 			trainingDayList = params[0];

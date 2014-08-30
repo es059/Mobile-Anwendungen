@@ -23,9 +23,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.RectangleTarget;
 import com.github.amlcurran.showcaseview.targets.Target;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.remic.workoutlog.R;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.SwipeToDelete.UndoBarController;
@@ -65,7 +63,7 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 	private ArrayList<Exercise> exerciseList = null;
 	private UndoBarController mUndoBarController = null;
 	
-	private ShowcaseView seventhShowcaseView = null;
+	private ShowcaseView showcaseView = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -123,7 +121,7 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
         	@Override
             public void onGlobalLayout() {
         		if (exerciseListView.getAdapter() != null && exerciseListView.getChildCount() != 0){ 
-        			showseventhHelperOverlay();
+        			showHelperOverlay();
     	        }
             }
         });
@@ -135,18 +133,18 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 	/**
      * ShowcaseView which points to the first entry of the listView
      */
-    public void showseventhHelperOverlay(){
-    	if (seventhShowcaseView == null){	    	
+    public void showHelperOverlay(){
+    	if (showcaseView == null){	    	
     		
-	    	seventhShowcaseView = new ShowcaseView.Builder(getActivity())
+	    	showcaseView = new ShowcaseView.Builder(getActivity())
 	    	.setTarget(Target.NONE)
 		    .setContentTitle(getString(R.string.seventhShowcaseViewTitle))
 		    .setContentText(getString(R.string.seventhShowcaseViewContext))
 		    .setStyle(R.style.CustomShowcaseTheme)
-		    //.singleShot(48)
+		    .singleShot(48)
 		    .build();
     	}else{
-    		seventhShowcaseView.refreshDrawableState();
+    		showcaseView.refreshDrawableState();
     	}
     }
 	
@@ -158,9 +156,6 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.menu_add) {
 			this.showDialogAddFragment(null);
@@ -180,7 +175,7 @@ public class ExerciseAddToTrainingDay extends Fragment implements OnItemClickLis
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		if (seventhShowcaseView != null && seventhShowcaseView.isShown()) seventhShowcaseView.hide();
+		if (showcaseView != null && showcaseView.isShown()) showcaseView.hide();
 		Exercise e = (Exercise) arg0.getItemAtPosition(arg2);
 		int currentExerciseId = e.getId();
 		showDialogClickFragment(getActivity(), trainingDayId, currentExerciseId);

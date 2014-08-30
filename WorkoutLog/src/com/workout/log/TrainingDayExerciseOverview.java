@@ -16,18 +16,18 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import com.remic.workoutlog.R;
 import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
+import com.github.amlcurran.showcaseview.targets.RectangleTarget;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
+import com.remic.workoutlog.R;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.SwipeToDelete.UndoBarController;
 import com.workout.log.SwipeToDelete.UndoItem;
@@ -64,7 +64,7 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 	
 	private UndoBarController mUndoBarController = null;
 	
-	private ShowcaseView sixthShowcaseView = null;
+	private ShowcaseView showcaseView = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -121,7 +121,7 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
         	@Override
             public void onGlobalLayout() {
         		if (exerciseListView.getAdapter() != null && exerciseListView.getChildCount() != 0 && exerciseListView.getAdapter().getItem(0) instanceof Default){ 
-    	        	showsixthHelperOverlay();
+    	        	showHelperOverlay();
     	        }
             }
         });
@@ -150,19 +150,19 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 	/**
      * ShowcaseView which points to the first entry of the listView
      */
-    public void showsixthHelperOverlay(){
-    	if (sixthShowcaseView == null){
-	    	ViewTarget target = new ViewTarget(exerciseListView.getChildAt(0));
+    public void showHelperOverlay(){
+    	if (showcaseView == null){
+	    	RectangleTarget target = new RectangleTarget(exerciseListView.getChildAt(0));
 	    	
-	    	sixthShowcaseView = new ShowcaseView.Builder(getActivity())
+	    	showcaseView = new ShowcaseView.Builder(getActivity())
 	    	.setTarget(target)
 		    .setContentTitle(getString(R.string.sithShowcaseViewTitle))
 		    .setContentText(getString(R.string.sithShowcaseViewContext))
 		    .setStyle(R.style.CustomShowcaseTheme)
-		    //.singleShot(47)
+		    .singleShot(47)
 		    .build();
     	}else{
-    		sixthShowcaseView.refreshDrawableState();
+    		showcaseView.refreshDrawableState();
     	}
     }
 	
@@ -499,7 +499,7 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
 	    			exerciseListView.setOnItemClickListener(new OnItemClickListener(){
 	    				@Override
 	    				public void onItemClick(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
-	    					if (sixthShowcaseView != null && sixthShowcaseView.isShown()) sixthShowcaseView.hide();
+	    					if (showcaseView != null && showcaseView.isShown()) showcaseView.hide();
 	    					openExerciseAddToTrainingDay();
 	    				}	
 	    			});

@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.remic.workoutlog.R;
-import com.workout.log.ManageWorkoutplan;
 import com.workout.log.bo.Workoutplan;
 import com.workout.log.db.WorkoutplanMapper;
 

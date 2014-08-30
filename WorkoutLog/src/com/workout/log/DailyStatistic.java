@@ -14,8 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.remic.workoutlog.R;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
+import com.remic.workoutlog.R;
 import com.workout.log.data.StatisticListElement;
 import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.PerformanceActualMapper;

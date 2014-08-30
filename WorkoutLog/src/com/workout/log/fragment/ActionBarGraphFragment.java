@@ -11,6 +11,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Spinner;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.RectangleTarget;
+import com.github.amlcurran.showcaseview.targets.Target;
 import com.remic.workoutlog.R;
 import com.workout.log.bo.Exercise;
 import com.workout.log.db.ExerciseMapper;
@@ -26,7 +29,9 @@ public class ActionBarGraphFragment  extends Fragment implements OnItemSelectedL
 	
 	private Spinner exerciseSpinner;
 	private LineGraphFragment lineGraphFragment;
-
+	
+	private ShowcaseView showcaseView1 = null;
+	private ShowcaseView showcaseView2 = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -46,14 +51,57 @@ public class ActionBarGraphFragment  extends Fragment implements OnItemSelectedL
 		ExerciseSpinnerListAdapter adapter = new ExerciseSpinnerListAdapter(getActivity(),0, exerciseList);
 		exerciseSpinner.setAdapter(adapter);
 		exerciseSpinner.setOnItemSelectedListener(this);
+		
+		showHelperOverlay1();
 	}
+	
+	/**
+     * ShowcaseView which points to the first entry of the listView
+     */
+    public void showHelperOverlay1(){
+    	if (showcaseView1 == null){
+    		RectangleTarget target = new RectangleTarget(exerciseSpinner);
+	    	
+	    	showcaseView1 = new ShowcaseView.Builder(getActivity())
+	    	.setTarget(target)
+		    .setContentTitle(getString(R.string.eigthShowcaseViewTitle))
+	    	.setContentText(getString(R.string.eigthShowcaseViewContext))
+		    .setStyle(R.style.CustomShowcaseTheme)
+		    .singleShot(50)
+		    .build();
+	    	
+    	}else{
+    		showcaseView1.refreshDrawableState();
+    	}
+    }
+    
+	/**
+     * ShowcaseView which points to the first entry of the listView
+     */
+    public void showHelperOverlay2(){
+    	if (showcaseView2 == null){	    	
+    		showcaseView2 = new ShowcaseView.Builder(getActivity())
+	    	.setTarget(Target.NONE)
+		    .setContentTitle(getString(R.string.ninthShowcaseViewTitle))
+	    	.setContentText(getString(R.string.ninthShowcaseViewContext))
+		    .setStyle(R.style.CustomShowcaseTheme)
+		    .singleShot(51)
+		    .build();
+	    	
+    	}else{
+    		showcaseView2.refreshDrawableState();
+    	}
+    }
 	
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+		if (showcaseView1.isShown())showcaseView1.hide();
+		
 		if (lineGraphFragment == null){
 			lineGraphFragment = (LineGraphFragment) getActivity().getSupportFragmentManager().findFragmentByTag("LineGraphFragment");
 		}
 		lineGraphFragment.updateGraph((Exercise)parent.getItemAtPosition(pos));
+		showHelperOverlay2();
 	}
 
 	@Override

@@ -26,10 +26,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-// import com.github.amlcurran.showcaseview.targets.RectangleTarget;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.RectangleTarget;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.remic.workoutlog.R;
 import com.workout.log.SwipeToDelete.SwipeDismissListViewTouchListener;
 import com.workout.log.SwipeToDelete.UndoBarController;
@@ -43,6 +41,7 @@ import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.db.WorkoutplanSQLDumpHelper;
 import com.workout.log.fragment.ActionBarWorkoutPlanPickerFragment;
 import com.workout.log.listAdapter.ManageWorkoutplanListAdapter;
+// import com.github.amlcurran.showcaseview.targets.RectangleTarget;
 
 public class ManageWorkoutplan extends Fragment implements OnItemClickListener, UndoBarController.UndoListener{
 	private ListView trainingDayListView;
@@ -58,11 +57,10 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	private UndoBarController mUndoBarController = null;
 	
 	private static int workoutplanId = -1;
-	private int currentListId = -1;
 	private View view;
 	private Stack<File> fileStack = null;
 	
-	private ShowcaseView secondShowcaseView = null;
+	private ShowcaseView showcaseView = null;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -119,9 +117,9 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
             public void onGlobalLayout() {
     	        if (manageWorkoutplanList != null && manageWorkoutplanList.size() == 1 && trainingDayListView.getChildCount() != 0) {
     	        	if(actionBarWorkoutPlanPickerFragment.getFirstShowcaseView() == null) {
-    	        		showSecondHelperOverlay();	
+    	        		showHelperOverlay();	
     	        	} else if(!actionBarWorkoutPlanPickerFragment.getFirstShowcaseView().isShown()) {
-    	        		showSecondHelperOverlay();
+    	        		showHelperOverlay();
     	        	}
     	        		
     	        }
@@ -137,25 +135,25 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
     /**
      * ShowcaseView which points to the first entry of the listView
      */
-    public void showSecondHelperOverlay(){
-    	if (secondShowcaseView == null){
+    public void showHelperOverlay(){
+    	if (showcaseView == null){
     		RectangleTarget target = new RectangleTarget(trainingDayListView.getChildAt(0));
 	    	
-	    	secondShowcaseView = new ShowcaseView.Builder(getActivity())
+	    	showcaseView = new ShowcaseView.Builder(getActivity())
 	    	.setTarget(target)
 		    .setContentTitle(getString(R.string.secondShowcaseViewTitle))
 	    	.setContentText(getString(R.string.secondShowcaseViewContext))
 		    .setStyle(R.style.CustomShowcaseTheme)
-		    //.singleShot(43)
+		    .singleShot(43)
 		    .build();
 	    	
     	}else{
-    		secondShowcaseView.refreshDrawableState();
+    		showcaseView.refreshDrawableState();
     	}
     }
     
     public ShowcaseView getShowcaseView(){
-    	return secondShowcaseView;
+    	return showcaseView;
     }
     
 	/**
@@ -435,7 +433,6 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	    @Override
 	    protected ManageWorkoutplanListAdapter doInBackground(ArrayList<TrainingDay>... params) {
 	    	manageWorkoutplanListAdapter = null;
-	    	currentListId = -1;
 	    	
 			wpMapper = new WorkoutplanMapper(getActivity());
 			
@@ -458,12 +455,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 			}
 			
 			if (workoutplanList.size() != 0){
-				for(int i = 0; i < workoutplanList.size(); i++) {
-					if(workoutplanList.get(i).getId() == workoutplanId) {
-						currentListId = i;
-					}
-				}
-				if (params[0] == null) params[0] = tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanList.get(currentListId).getId());
+				if (params[0] == null) params[0] = tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanId);
 				for(int i = 0; i < params[0].size(); i++) {
 					manageWorkoutplanList.add(params[0].get(i));
 				}

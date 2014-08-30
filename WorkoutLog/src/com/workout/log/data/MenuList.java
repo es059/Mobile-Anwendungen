@@ -18,7 +18,7 @@ public class MenuList {
 		 diary.setImgResID(R.drawable.task);
 		 dataList.add(diary);
 		 
-		 DrawerItem quickWorkout = new DrawerItem("Schnelles Training");
+		 DrawerItem quickWorkout = new DrawerItem(context.getResources().getString(R.string.MenuList_FreePractice));
 		 quickWorkout.setImgResID(R.drawable.weightlifter3);
 		 dataList.add(quickWorkout);
 		 

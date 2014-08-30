@@ -27,9 +27,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.remic.workoutlog.R;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.remic.workoutlog.R;
 import com.workout.log.analytics.MyApplication;
 import com.workout.log.analytics.MyApplication.TrackerName;
 import com.workout.log.db.DataBaseHelper;

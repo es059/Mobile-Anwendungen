@@ -17,9 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.Target;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.remic.workoutlog.R;
 import com.workout.log.bo.Exercise;
 import com.workout.log.data.MuscleGroupType;
@@ -38,8 +35,6 @@ public class ExerciseSpecificAddDialogFragment extends DialogFragment {
 	private NumberPicker eTargetRepCount;
 	
 	private MuscleGroupType muscleGroupType = MuscleGroupType.Normal;
-	
-	private ShowcaseView eightShowcaseView = null;
 	
 	public static ExerciseSpecificAddDialogFragment newInstance(Context context, int trainingDayId, int exerciseId) {
 		ExerciseSpecificAddDialogFragment exerciseClickDialogFragment = new ExerciseSpecificAddDialogFragment(trainingDayId, exerciseId);
@@ -129,7 +124,6 @@ public class ExerciseSpecificAddDialogFragment extends DialogFragment {
 						if (!tdMapper.checkIfExist(trainingDayId, exerciseId)){
 							tdMapper.addExerciseToTrainingDayAndPerformanceTarget(trainingDayId, exerciseId, eTargetSetCount.getValue(), eTargetRepCount.getValue());
 							Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseSpecificAddDialogFramgent_AddSuccess), Toast.LENGTH_SHORT ).show();
-							showseventhHelperOverlay();
 						}else{
 							Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseSpecificAddDialogFramgent_AddFailure), Toast.LENGTH_SHORT ).show();
 						}
@@ -142,7 +136,6 @@ public class ExerciseSpecificAddDialogFragment extends DialogFragment {
 						if (!tdMapper.checkIfExist(trainingDayId, exerciseId)){
 							tdMapper.addExerciseToTrainingDayAndPerformanceTarget(trainingDayId, exerciseId, -1, eTargetRepCount.getValue());
 							Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseSpecificAddDialogFramgent_AddSuccess), Toast.LENGTH_SHORT ).show();
-							showseventhHelperOverlay();
 						}else{
 							Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseSpecificAddDialogFramgent_AddFailure), Toast.LENGTH_SHORT ).show();
 						}
@@ -156,22 +149,4 @@ public class ExerciseSpecificAddDialogFragment extends DialogFragment {
 			});
 		return alert.show();
 	}
-	
-	/**
-     * Last ShowcaseView 
-     */
-    public void showseventhHelperOverlay(){
-    	if (eightShowcaseView == null){	    	
-    		
-    		eightShowcaseView = new ShowcaseView.Builder(getActivity())
-	    	.setTarget(Target.NONE)
-		    .setContentTitle(getString(R.string.eigthShowcaseViewTitle))
-		    .setContentText(getString(R.string.eigthShowcaseViewContext))
-		    .setStyle(R.style.CustomShowcaseTheme)
-		    //.singleShot(48)
-		    .build();
-    	}else{
-    		eightShowcaseView.refreshDrawableState();
-    	}
-    }
 }

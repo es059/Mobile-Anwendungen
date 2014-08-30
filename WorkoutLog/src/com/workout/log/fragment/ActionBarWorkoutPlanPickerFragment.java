@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,7 +42,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 	private ManageWorkoutplan manageWorkoutplan; 
 	
 	private static int currentListId = 0;
-	private ShowcaseView firstShowcaseView = null;
+	private ShowcaseView showcaseView = null;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -63,99 +64,104 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 		super.onResume();
 		
 		manageWorkoutplan  = (ManageWorkoutplan) getActivity().getSupportFragmentManager().findFragmentByTag("ManageWorkoutplan");
-		previousButton = (ImageButton) getView().findViewById(R.id.Previous);
-		nextButton = (ImageButton) getView().findViewById(R.id.Next);
 		
-		workoutplanTextView = (TextView) getView().findViewById(R.id.workoutplanPicker);
-		workoutplanDateView = (TextView) getView().findViewById(R.id.workoutplanPickerDate);
-
-		workoutplanList = new ArrayList<Workoutplan>();
-		trainingDayList = new ArrayList<TrainingDay>();
-		
-		manageWorkoutplan.updateListView(null);
-		
-		workoutplanList = wpMapper.getAll();
-		if (workoutplanList.size() != 0){
-			workoutplanTextView.setHint("");
-			workoutplanDateView.setVisibility(View.VISIBLE);
-			
-			setCurrentIdByWorkoutplanId(wpMapper.getCurrent().getId());
-			trainingDayList = tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanList.get(currentListId).getId());
-			
-			workoutplanTextView.setText(workoutplanList.get(currentListId).getName());
-			
-			SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
-			workoutplanDateView.setText(sp.format(workoutplanList.get(currentListId).getTimeStamp()));
-			
-			manageWorkoutplan.setWorkoutplanId(workoutplanList.get(currentListId).getId());
-			
-			/**
-			 * ClickListener handles the Update/delete function of the workoutplan
-			 */
-			RelativeLayout workoutplanInformation = (RelativeLayout) getView().findViewById(R.id.workoutplan_Information);
-			workoutplanInformation.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View arg0) {
-					WorkoutplanUpdateDialogFragment dialogFragment = WorkoutplanUpdateDialogFragment.newInstance(getActivity(), workoutplanList.get(currentListId).getId());
-					dialogFragment.show(getActivity().getSupportFragmentManager(), "Open Exercise Settings on Long Click");			
-				}	
-			});
-			
+		if (manageWorkoutplan == null) {
+			FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+			transaction.remove(this);
+			transaction.commit();	
 		}else{
-			nextButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_add));
-			workoutplanTextView.setHint(getString(R.string.noWorkoutplan));
-			workoutplanDateView.setVisibility(View.GONE);
-		}
-		
-		previousButton.setOnClickListener(this);
-		nextButton.setOnClickListener(this);
-		
-		/**
-		 * Ensure that the previousButton is invisible, the add Button is showing if 
-		 * the currentId is the last index in the workoutplanList and that the 
-		 * current trainingDayList is added to the ListView
-		 */
-		if(currentListId == 0)previousButton.setVisibility(View.INVISIBLE); 
-		if(workoutplanList.size() <= currentListId + 1){
+			previousButton = (ImageButton) getView().findViewById(R.id.Previous);
+			nextButton = (ImageButton) getView().findViewById(R.id.Next);
+			
+			workoutplanTextView = (TextView) getView().findViewById(R.id.workoutplanPicker);
+			workoutplanDateView = (TextView) getView().findViewById(R.id.workoutplanPickerDate);
+	
+			workoutplanList = new ArrayList<Workoutplan>();
+			trainingDayList = new ArrayList<TrainingDay>();
+			
+			manageWorkoutplan.updateListView(null);
+			
+			workoutplanList = wpMapper.getAll();
+			if (workoutplanList.size() != 0){
+				workoutplanTextView.setHint("");
+				workoutplanDateView.setVisibility(View.VISIBLE);
+				
+				setCurrentIdByWorkoutplanId(wpMapper.getCurrent().getId());
+				trainingDayList = tdMapper.getAllTrainingDaysFromWorkoutplan(workoutplanList.get(currentListId).getId());
+				
+				workoutplanTextView.setText(workoutplanList.get(currentListId).getName());
+				
+				SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
+				workoutplanDateView.setText(sp.format(workoutplanList.get(currentListId).getTimeStamp()));
+				
+				manageWorkoutplan.setWorkoutplanId(workoutplanList.get(currentListId).getId());
+				
+				/**
+				 * ClickListener handles the Update/delete function of the workoutplan
+				 */
+				RelativeLayout workoutplanInformation = (RelativeLayout) getView().findViewById(R.id.workoutplan_Information);
+				workoutplanInformation.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View arg0) {
+						WorkoutplanUpdateDialogFragment dialogFragment = WorkoutplanUpdateDialogFragment.newInstance(getActivity(), workoutplanList.get(currentListId).getId());
+						dialogFragment.show(getActivity().getSupportFragmentManager(), "Open Exercise Settings on Long Click");			
+					}	
+				});
+				
+			}else{
+				nextButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_add));
+				workoutplanTextView.setHint(getString(R.string.noWorkoutplan));
+				workoutplanDateView.setVisibility(View.GONE);
+			}
+			
+			previousButton.setOnClickListener(this);
+			nextButton.setOnClickListener(this);
+			
 			/**
-			 * Show the ShowcaseView
+			 * Ensure that the previousButton is invisible, the add Button is showing if 
+			 * the currentId is the last index in the workoutplanList and that the 
+			 * current trainingDayList is added to the ListView
 			 */
-			showFirstHelperOverlay();
-			nextButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_add));
+			if(currentListId == 0)previousButton.setVisibility(View.INVISIBLE); 
+			if(workoutplanList.size() <= currentListId + 1){
+				/**
+				 * Show the ShowcaseView
+				 */
+				showHelperOverlay();
+				nextButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_menu_add));
+			}
+		
+			manageWorkoutplan.updateListView(trainingDayList);
+			
+			
+			/**
+			 * Refresh the ShareIntent
+			 */
+			manageWorkoutplan.createCurrentSqlDump();
 		}
-	
-		manageWorkoutplan.updateListView(trainingDayList);
-		
-		
-		/**
-		 * Refresh the ShareIntent
-		 */
-		manageWorkoutplan.createCurrentSqlDump();
-		
-	
 	}
 		
     /**
      * ShowcaseView which points to the + Symbol 
      */
-    private void showFirstHelperOverlay(){
-    	if (firstShowcaseView == null){    		
+    private void showHelperOverlay(){
+    	if (showcaseView == null){    		
 	    	ViewTarget target = new ViewTarget(R.id.Next, this);
 	    	
-			firstShowcaseView = new ShowcaseView.Builder(getActivity())
+			showcaseView = new ShowcaseView.Builder(getActivity())
 		    .setTarget(target)
 		    .setContentTitle(getString(R.string.firstShowcaseViewTitle))
 		    .setContentText(getString(R.string.firstShowcaseViewContext))
 		    .setStyle(R.style.CustomShowcaseTheme)
-		    //.singleShot(42)
+		    .singleShot(42)
 		    .build();	
     	}else{
-    		firstShowcaseView.refreshDrawableState();
+    		showcaseView.refreshDrawableState();
     	}
     }
     
 	public ShowcaseView getFirstShowcaseView() {
-		return firstShowcaseView;
+		return showcaseView;
 	}
 	
 	@SuppressLint("SimpleDateFormat")
@@ -166,7 +172,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 			/**
 			 * Hide the ShowcaseView if visible
 			 */
-			if(firstShowcaseView != null && firstShowcaseView.isShown()) firstShowcaseView.hide();
+			if(showcaseView != null && showcaseView.isShown()) showcaseView.hide();
 			
 			if(workoutplanList.size() <= currentListId +1) {
 				WorkoutplanAddDialogFragment dialogFragment = WorkoutplanAddDialogFragment.newInstance(getActivity(), workoutplanList);
@@ -247,6 +253,7 @@ public class ActionBarWorkoutPlanPickerFragment extends Fragment implements OnCl
 	 * @author Eric Schmidt
 	 */
 	public Workoutplan getCurrentWorkoutplan(){
+		workoutplanList = wpMapper.getAll();
 		if (workoutplanList != null && workoutplanList.size() != 0){
 			return workoutplanList.get(currentListId);
 		}

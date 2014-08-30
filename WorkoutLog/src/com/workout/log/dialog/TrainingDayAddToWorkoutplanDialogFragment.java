@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.widget.RelativeLayout;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
@@ -22,7 +23,9 @@ public class TrainingDayAddToWorkoutplanDialogFragment extends DialogFragment {
 	private int workoutPlanId;
 	private int trainingDayId;
 	private static WorkoutplanMapper wpMapper;
-	private ShowcaseView fifthShowcaseView = null;
+	
+	private ShowcaseView showcaseView = null;
+	
 	private Context context;
 	private TrainingDayAddToWorkoutplan trainingDayAddToWorkoutplan = null;
 	
@@ -74,7 +77,7 @@ public class TrainingDayAddToWorkoutplanDialogFragment extends DialogFragment {
 				 /**
 		         * Show ShowcaseView
 		         */
-				showFifthHelperOverlay();
+				showHelperOverlay();
 			  }
 			});
 
@@ -91,28 +94,28 @@ public class TrainingDayAddToWorkoutplanDialogFragment extends DialogFragment {
 	/**
      * ShowcaseView which points to the first entry of the listView
      */
-    public void showFifthHelperOverlay(){
-    	if (fifthShowcaseView == null){	
+    public void showHelperOverlay(){
+    	if (showcaseView == null){	
     		ViewTarget target = new ViewTarget(trainingDayAddToWorkoutplan.getCustomToast().getButton());
     		
-    		fifthShowcaseView = new ShowcaseView.Builder(getActivity())
+    		showcaseView = new ShowcaseView.Builder(getActivity())
 	    	.setTarget(target)
 		    .setContentTitle(getString(R.string.fifthShowcaseViewTitle))
 		    .setContentText(getString(R.string.fifthShowcaseViewContext))
 		    .setStyle(R.style.CustomShowcaseTheme)
 		    //.singleShot(45)
 		    .build();
-    		
-    		fifthShowcaseView.hideButton();
-    		fifthShowcaseView.refreshDrawableState();
+ 
    		
-    		/* 	RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) fifthShowcaseView.getButton().getLayoutParams();
-    		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-    		layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-    		fifthShowcaseView.setButtonPosition(layoutParams);*/
+    		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+    				//(RelativeLayout.LayoutParams)fifthShowcaseView.getButton().getLayoutParams();
+    		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+    		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
+    		layoutParams.setMargins(30, 0, 0, 30);
+    		showcaseView.setButtonPosition(layoutParams);
     		
     	}else{
-    		fifthShowcaseView.refreshDrawableState();
+    		showcaseView.refreshDrawableState();
     	}
     }
     
@@ -137,7 +140,7 @@ public class TrainingDayAddToWorkoutplanDialogFragment extends DialogFragment {
     }
     
     public ShowcaseView getShowcaseView(){
-    	return fifthShowcaseView;
+    	return showcaseView;
     }
 
 }

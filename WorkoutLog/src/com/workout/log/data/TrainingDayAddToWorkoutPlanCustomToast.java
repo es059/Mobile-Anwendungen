@@ -1,7 +1,5 @@
 package com.workout.log.data;
 
-import com.remic.workoutlog.R;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
@@ -10,6 +8,8 @@ import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.remic.workoutlog.R;
 
 public class TrainingDayAddToWorkoutPlanCustomToast {
     private View mBarView;
