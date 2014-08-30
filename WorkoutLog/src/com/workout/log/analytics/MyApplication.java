@@ -1,12 +1,12 @@
 package com.workout.log.analytics;
 
+import java.util.HashMap;
+
 import android.app.Application;
 
-import com.remic.workoutlog.R;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
- 
-import java.util.HashMap;
+import com.remic.workoutlog.R;
  
 public class MyApplication extends Application {
 

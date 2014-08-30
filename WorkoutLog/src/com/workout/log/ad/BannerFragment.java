@@ -1,18 +1,17 @@
 package com.workout.log.ad;
 
-import com.remic.workoutlog.R;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.provider.Settings.Secure;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.remic.workoutlog.R;
 
 /**
  * A simple {@link Activity} that embeds an AdView.

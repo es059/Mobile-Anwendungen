@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -12,8 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.remic.workoutlog.R;
+
 import com.nhaarman.listviewanimations.itemmanipulation.ExpandableListItemAdapter;
+import com.remic.workoutlog.R;
 import com.workout.log.data.StatisticListElement;
 
 public class DailyStatisticListAdapter extends ExpandableListItemAdapter<StatisticListElement> {

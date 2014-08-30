@@ -18,8 +18,6 @@
 
 package com.workout.log.pedometer;
 
-import com.remic.workoutlog.R;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -38,6 +36,8 @@ import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.remic.workoutlog.R;
 
 
 

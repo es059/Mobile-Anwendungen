@@ -11,7 +11,7 @@ public class CountDownBroadcastService extends Service {
 
     private CountDownTimer cdt = null;
     private long timerCount = 0;
-
+    
     @Override
     public void onCreate() {       
         super.onCreate();
@@ -27,7 +27,7 @@ public class CountDownBroadcastService extends Service {
 
             @Override
             public void onFinish() {
-            	bi.putExtra("countdown", -1);
+            	bi.putExtra("countdown", -1);	
                 sendBroadcast(bi);
             }
         };

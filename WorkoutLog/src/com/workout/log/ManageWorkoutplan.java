@@ -26,7 +26,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-// import com.github.amlcurran.showcaseview.targets.RectangleTarget;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.RectangleTarget;
 import com.remic.workoutlog.R;
@@ -42,6 +41,7 @@ import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.db.WorkoutplanSQLDumpHelper;
 import com.workout.log.fragment.ActionBarWorkoutPlanPickerFragment;
 import com.workout.log.listAdapter.ManageWorkoutplanListAdapter;
+// import com.github.amlcurran.showcaseview.targets.RectangleTarget;
 
 public class ManageWorkoutplan extends Fragment implements OnItemClickListener, UndoBarController.UndoListener{
 	private ListView trainingDayListView;

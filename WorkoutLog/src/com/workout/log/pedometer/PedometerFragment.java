@@ -18,8 +18,6 @@ package com.workout.log.pedometer;
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import com.remic.workoutlog.R;
-
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
@@ -37,6 +35,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.remic.workoutlog.R;
 
 
 

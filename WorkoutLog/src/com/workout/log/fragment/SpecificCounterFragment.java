@@ -49,6 +49,8 @@ public class SpecificCounterFragment extends Fragment{
 					
 					increase.setEnabled(true);
 					decrease.setEnabled(true);
+					
+					isRunning = false;
 		        }
 		    }
 		}
@@ -141,14 +143,14 @@ public class SpecificCounterFragment extends Fragment{
 	public void onPause() {
 	    super.onPause();
 	    isPaused = true;
-	    getActivity().unregisterReceiver(br);
+	    //getActivity().unregisterReceiver(br);
 	}
 
 	@Override
 	public void onStop() {
 	    try {
 	    	isPaused = true;
-	    	getActivity().unregisterReceiver(br);
+	    	//getActivity().unregisterReceiver(br);
 	    } catch (Exception e) {
 	        // Receiver was probably already stopped in onPause()
 	    }
