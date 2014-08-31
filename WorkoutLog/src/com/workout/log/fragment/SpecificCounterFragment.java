@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
@@ -31,6 +32,9 @@ public class SpecificCounterFragment extends Fragment{
 	private static boolean isRunning =false;
 	private static boolean isPaused = false;
 	
+	private Drawable play = null;
+	private Drawable stop = null;
+	
 	private BroadcastReceiver  br = new BroadcastReceiver(){
 	    @Override
 	    public void onReceive(Context context, Intent intent) {            
@@ -44,8 +48,9 @@ public class SpecificCounterFragment extends Fragment{
 		        	timeView.setText(String.valueOf(secondsUntilFinished));
 		        }else{
 		        	timeView.setText(String.valueOf(timeCount));			
-					v.vibrate(2000);			
-					counterAction.setImageDrawable(getResources().getDrawable(R.drawable.play_timer));
+					v.vibrate(2000);		
+					
+					counterAction.setImageDrawable(play);
 					
 					increase.setEnabled(true);
 					decrease.setEnabled(true);
@@ -61,6 +66,8 @@ public class SpecificCounterFragment extends Fragment{
 		View view = inflater.inflate(R.layout.count_down_fragment, container,false);
 		
 		v = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+		play = getResources().getDrawable(R.drawable.play_timer);
+		stop = getResources().getDrawable(R.drawable.stop_timer);
 		return view;
 	}
 
@@ -76,13 +83,13 @@ public class SpecificCounterFragment extends Fragment{
 		timeView = (TextView) getView().findViewById(R.id.counter_timer);
 		
 		if (!isRunning){
-			counterAction.setImageDrawable(getResources().getDrawable(R.drawable.play_timer));
+			counterAction.setImageDrawable(play);
 			if (readSharedPrefs() != -1) {
 				timeCount = readSharedPrefs();
 				timeView.setText(String.valueOf(readSharedPrefs()));
 			}
 		}else{
-			counterAction.setImageDrawable(getResources().getDrawable(R.drawable.stop_timer));
+			counterAction.setImageDrawable(stop);
 		}
 		
 		increase.setOnClickListener(new OnClickListener(){
@@ -112,12 +119,12 @@ public class SpecificCounterFragment extends Fragment{
 		counterAction.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				if (!isRunning){	
+				if (!isRunning){						
 					Intent startBroadcast = new Intent(getActivity(), CountDownBroadcastService.class);
 					startBroadcast.putExtra("Time", timeCount);
 					getActivity().startService(startBroadcast);
 					
-					counterAction.setImageDrawable(getResources().getDrawable(R.drawable.stop_timer));
+					counterAction.setImageDrawable(stop);
 					
 					increase.setEnabled(false);
 					decrease.setEnabled(false);
@@ -127,7 +134,7 @@ public class SpecificCounterFragment extends Fragment{
 					getActivity().stopService(new Intent(getActivity(), CountDownBroadcastService.class));
 					
 					timeView.setText(String.valueOf(timeCount));					
-					counterAction.setImageDrawable(getResources().getDrawable(R.drawable.play_timer));
+					counterAction.setImageDrawable(play);
 					
 					increase.setEnabled(true);
 					decrease.setEnabled(true);
