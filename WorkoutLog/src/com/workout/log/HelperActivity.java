@@ -224,7 +224,6 @@ public class HelperActivity extends ActionBarActivity{
 	    }
 	}
 	
-	
 	/**
 	 * Use this methods after the Fragments to reset this boolean to false. This will ensure that the
 	 * Method getParentActivityIntent() is only called once!
