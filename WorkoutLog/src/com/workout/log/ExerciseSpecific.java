@@ -167,12 +167,15 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		timerView = (Chronometer) getView().findViewById(R.id.CardioTimer);
 		timerView.setTypeface(timerTypeface);
 		
+		if(getActivity().getSupportFragmentManager().findFragmentByTag("DateTimePicker") == null ) {
+		 dateFragment = new ActionBarDatePickerFragment();
+		}
 		/**
 		 * Load the top navigation fragment into the current fragment
 		 */
 		FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		transaction.replace(R.id.specific_dateTimePicker, new ActionBarDatePickerFragment(), "DateTimePicker");
+		transaction.replace(R.id.specific_dateTimePicker, dateFragment, "DateTimePicker");
 		transaction.commit();
 		
 		/**
