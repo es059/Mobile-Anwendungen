@@ -41,6 +41,7 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 	private Boolean isCurrent;
 	private String formatedDate;
 	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -53,8 +54,9 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 		next = (ImageButton) view.findViewById(R.id.Next);
 		previous = (ImageButton) view.findViewById(R.id.Previous);
 		
-		calendar  = Calendar.getInstance();
 		dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+		if(calendar == null) {
+		calendar  = Calendar.getInstance(); }
 		
 		paMapper = new PerformanceActualMapper(getActivity());
 		exerciseSpecific = (ExerciseSpecific) getActivity().getSupportFragmentManager().findFragmentByTag("ExerciseSpecific");

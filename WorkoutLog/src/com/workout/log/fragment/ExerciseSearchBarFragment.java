@@ -15,6 +15,7 @@ import android.widget.EditText;
 import com.remic.workoutlog.R;
 import com.workout.log.ExerciseAdd;
 import com.workout.log.ExerciseAddToTrainingDay;
+import com.workout.log.SelectExerciseForQuickWorkout;
 import com.workout.log.bo.Exercise;
 import com.workout.log.db.ExerciseMapper;
 
@@ -59,9 +60,9 @@ public class ExerciseSearchBarFragment extends Fragment{
 	        	List = eMapper.searchKeyString(String.valueOf(s));
 	        	if (fragment instanceof ExerciseAdd){
 	        		((ExerciseAdd) fragment).updateListView(List, true, String.valueOf(s));
-	        	}else{
+	        	} else if (fragment instanceof ExerciseAddToTrainingDay) {
 	        		((ExerciseAddToTrainingDay) fragment).updateListView(List, String.valueOf(s));	
-	        	}
+	        	} else ((SelectExerciseForQuickWorkout) fragment).updateListView(List,true, String.valueOf(s));
 	        }
 	  });
 		return view;
