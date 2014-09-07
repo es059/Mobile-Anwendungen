@@ -104,9 +104,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		setHasOptionsMenu(true);
 		
 		if (trainingDayId != -1){
-			/**
-			 * Set the visibility of the NavigationDrawer to Invisible
-			 */
+			
 			((HelperActivity) getActivity()).setCalledGetParentActivityIntent(false);
 			
 			/**
@@ -854,6 +852,11 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		Fragment fragment2 = getActivity().getSupportFragmentManager().findFragmentByTag("DateTimePicker");
 		if(fragment2 != null)
 		    getActivity().getSupportFragmentManager().beginTransaction().remove(fragment2).commit();
+		Fragment fragment3 = getActivity().getSupportFragmentManager().findFragmentByTag("ExerciseSpecific");
+		if(fragment2 != null)
+		    getActivity().getSupportFragmentManager().beginTransaction().remove(fragment3).commit();
+		
+		((HelperActivity) getActivity()).setCalledGetParentActivityIntent(false);
 		super.onDestroy();
 	}
 	
