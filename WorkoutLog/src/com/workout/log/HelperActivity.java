@@ -132,8 +132,6 @@ public class HelperActivity extends ActionBarActivity{
 	    }
         
         this.getActionBar().setDisplayHomeAsUpEnabled(true);
-
-		
         /**
          * Handles the Fragment calls which are to be done first
          */

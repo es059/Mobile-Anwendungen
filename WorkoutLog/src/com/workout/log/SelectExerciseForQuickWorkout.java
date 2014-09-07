@@ -44,7 +44,7 @@ public class SelectExerciseForQuickWorkout extends Fragment implements OnItemLon
 	private ExerciseMapper eMapper = null;;
 	private ArrayList<Exercise> exerciseList = null;
 	private UndoBarController mUndoBarController = null;
-	
+	ExerciseSpecific exerciseSpecific = null;
 	private ShowcaseView showcaseView = null;
 
 	@Override
@@ -302,8 +302,12 @@ public class SelectExerciseForQuickWorkout extends Fragment implements OnItemLon
 	 * @author Eric Schmidt
 	 */
 	private void openExerciseSpecific (Exercise exercise, int i){
-		ExerciseSpecific exerciseSpecific = new ExerciseSpecific();
-		
+		if(getActivity().getSupportFragmentManager().findFragmentByTag("ExerciseSpecific") == null) {
+		exerciseSpecific = new ExerciseSpecific();
+		}
+		else {
+			exerciseSpecific = (ExerciseSpecific) getActivity().getSupportFragmentManager().findFragmentByTag("ExerciseSpecific");
+		}
 		Bundle data = new Bundle();
         data.putInt("ExerciseID",exercise.getId());
         data.putString("ExerciseName",exercise.getName());
