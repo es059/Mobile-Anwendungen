@@ -70,6 +70,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 	private PerformanceActualMapper paMapper = null;
 	private UndoBarController mUndoBarController = null;
 	private ActionBarDatePickerFragment dateFragment = null;
+	private SpecificCounterFragment counterFragment = null;
 	private static ArrayList<PerformanceActual> performanceActualList = null;
 
 	private PerformanceActualMapper pMapper = null;
@@ -189,9 +190,12 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 			/**
 			 * Load the bottom timer fragment into the current fragment
 			 */
+			if(getActivity().getSupportFragmentManager().findFragmentByTag("SpecificCounterFragment") == null ) {
+				 counterFragment = new SpecificCounterFragment();
+				}
 			transaction = getActivity().getSupportFragmentManager().beginTransaction();
 			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-			transaction.replace(R.id.specific_timer, new SpecificCounterFragment(), "SpecificCounterFragment");
+			transaction.replace(R.id.specific_timer, counterFragment, "SpecificCounterFragment");
 			transaction.commit();
 			
 			if (performanceActualList.isEmpty()) {
@@ -841,4 +845,16 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 			}
 		}
 	}
+
+	@Override
+	public void onDestroy() {
+		Fragment fragment = getActivity().getSupportFragmentManager().findFragmentByTag("SpecificCounterFragment");
+		if(fragment != null)
+		    getActivity().getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+		Fragment fragment2 = getActivity().getSupportFragmentManager().findFragmentByTag("DateTimePicker");
+		if(fragment2 != null)
+		    getActivity().getSupportFragmentManager().beginTransaction().remove(fragment2).commit();
+		super.onDestroy();
+	}
+	
 }
