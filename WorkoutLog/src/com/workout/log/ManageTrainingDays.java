@@ -70,6 +70,9 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener,
         setHasOptionsMenu(true);
         ((HelperActivity) getActivity()).setCalledGetParentActivityIntent(false);
         
+        //Set the Name of the ActionBar Title
+        ((HelperActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.MenuList_Trainingdays));
+        
 		return view;
 	}
 	
@@ -122,7 +125,7 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener,
 	
 	public void showDialogAddFragment(String trainingDayStringName){
 		TrainingDayAddDialogFragment dialogFragment = TrainingDayAddDialogFragment.newInstance(getActivity(),
-				trainingDayListAdapter, trainingDayStringName, this);
+				trainingDayListAdapter, trainingDayStringName);
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Add Dialog on Click");
 	}
 	

@@ -37,7 +37,6 @@ import com.workout.log.analytics.MyApplication.TrackerName;
 import com.workout.log.bo.Workoutplan;
 import com.workout.log.data.MenuList;
 import com.workout.log.db.WorkoutplanMapper;
-import com.workout.log.fragment.ActionBarDatePickerFragment;
 import com.workout.log.listAdapter.CustomDrawerAdapter;
 import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;
@@ -332,6 +331,18 @@ public class HelperActivity extends ActionBarActivity{
 	}
 	
 	/**
+	 * Set the Title of the Action bar 
+	 * 
+	 * @param title
+	 */
+	public void setActionBarTitle(String title){
+		 mDrawerTitle = title; 
+		 mTitle = title;
+		 getActionBar().setTitle(mDrawerTitle);
+		 invalidateOptionsMenu();
+	}
+	
+	/**
 	 * Set the visiblity of the NavigationDrawer
 	 * 
 	 * @param visible true if visible - false if not
@@ -356,6 +367,10 @@ public class HelperActivity extends ActionBarActivity{
 			    transaction.replace(R.id.fragment_container, new ExerciseOverview(), "ExerciseOverview");
 			    transaction.addToBackStack(null);
 			    transaction.commit();
+			    
+		        //Set the Name of the ActionBar Title
+		        setActionBarTitle(getTitle().toString());
+			    
 				break;
 			case 2:
 				transaction = getSupportFragmentManager().beginTransaction();

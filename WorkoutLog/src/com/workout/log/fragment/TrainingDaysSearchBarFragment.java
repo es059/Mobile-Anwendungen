@@ -53,15 +53,23 @@ public class TrainingDaysSearchBarFragment extends Fragment {
 
 	        @Override
 			public void afterTextChanged(Editable s){
-	        	
-	        	ArrayList<TrainingDay> trainingDayList = new ArrayList<TrainingDay>();
-	        	trainingDayList =   tdMapper.searchKeyString(String.valueOf(s));
-	        	
-	        	if (fragment instanceof ManageTrainingDays)((ManageTrainingDays) fragment).updateListView(trainingDayList, String.valueOf(s));
-	        	if (fragment instanceof TrainingDayAddToWorkoutplan)((TrainingDayAddToWorkoutplan) fragment).updateListView(trainingDayList, String.valueOf(s));
+	        	updateListView(String.valueOf(s));
 	        }
 	  });
 		return view;		
+	}
+	
+	public void updateListView(String searchString){
+		if (searchString == null) searchString = searchBar.getText().toString();
+		ArrayList<TrainingDay> trainingDayList = new ArrayList<TrainingDay>();
+    	trainingDayList =   tdMapper.searchKeyString(searchString);
+    	
+    	if (fragment instanceof ManageTrainingDays){
+    		((ManageTrainingDays) fragment).updateListView(trainingDayList, searchString);
+    	}
+    	if (fragment instanceof TrainingDayAddToWorkoutplan){
+    		((TrainingDayAddToWorkoutplan) fragment).updateListView(trainingDayList, searchString);
+    	}
 	}
 }
 

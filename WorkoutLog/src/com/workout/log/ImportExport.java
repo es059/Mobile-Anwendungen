@@ -72,8 +72,11 @@ public class ImportExport extends Fragment implements OnItemClickListener {
 						}
 					}
 				});
+
+	    //Set the Name of the ActionBar Title
+	    ((HelperActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.MenuList_Import_Export));
 		
-		setHasOptionsMenu(true);
+	    setHasOptionsMenu(true);
         return view;
 	}
 	
@@ -93,7 +96,7 @@ public class ImportExport extends Fragment implements OnItemClickListener {
 	    adapter = new FileExplorerAdapter(getActivity(), fileList);
 	    
 	    fileListe.setAdapter(adapter);
-	    fileListe.setOnItemClickListener(this);  
+	    fileListe.setOnItemClickListener(this);   
 	}
 	
     @Override

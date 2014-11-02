@@ -61,6 +61,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	private Stack<File> fileStack = null;
 	
 	private ShowcaseView showcaseView = null;
+	private AsyncTask createSqlDump = null;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -78,6 +79,9 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
         transaction.replace(R.id.specific_dateTimePicker, new ActionBarWorkoutPlanPickerFragment(), "ActionBarWorkoutPlanPickerFragment");
         transaction.commit();
                 
+	    //Set the Name of the ActionBar Title
+        ((HelperActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.MenuList_Workoutplans));
+        
         return view;            
 	}
 
@@ -172,7 +176,13 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 		}
 	}
     
-	
+	@Override
+	public void onPause() {
+		super.onPause();
+		
+		createSqlDump.cancel(true);	
+	}
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
@@ -218,7 +228,10 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	 * @author Eric Schmidt
 	 */
 	public void createCurrentSqlDump(){
-		new BackGroundTaskSQLDump().execute();		
+		if (createSqlDump != null){
+			createSqlDump.cancel(true);
+		}
+		createSqlDump = new BackGroundTaskSQLDump().execute();		
 	}
 	
 	/**
@@ -484,8 +497,6 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
 	 * @author Eric Schmidt
 	 */
 	public class BackGroundTaskSQLDump extends AsyncTask<Void, Void, File> {
-
-
 		public void BackGroundTask(){	
 
 		}

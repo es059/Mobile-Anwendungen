@@ -75,6 +75,9 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
         transaction.replace(R.id.add_searchBar, ExerciseSearchBarFragment.newInstance(this), "ActionBarSearchBarFragment");
         transaction.commit();
 
+        //Set the Name of the ActionBar Title
+        ((HelperActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.MenuList_Exercises));
+        
 		setHasOptionsMenu(true);
 		return view;
 	}
@@ -121,7 +124,7 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 	 */
 	public void showDialogAddFragment(String exerciseStringName){
 		ExerciseAddDialogFragment dialogFragment = ExerciseAddDialogFragment.newInstance(getActivity(), listAdapter,
-				exerciseStringName, this);
+				exerciseStringName);
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
 	}
 

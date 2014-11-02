@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,9 +16,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.remic.workoutlog.R;
-import com.workout.log.ExerciseAdd;
-import com.workout.log.ExerciseAddToTrainingDay;
 import com.workout.log.db.ExerciseMapper;
+import com.workout.log.fragment.ExerciseSearchBarFragment;
 import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
 
 public class ExerciseAddDialogFragment extends DialogFragment {
@@ -29,11 +27,10 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 	private Context applicationContext;
 	private int selectedMuscleGroupId = -1;
 	private String exerciseStringName = "";
-	private Fragment fragment;
 
 	public static ExerciseAddDialogFragment newInstance(Context context, ExerciseListWithoutSetsRepsAdapter exerciseListWithoutSetsRepsAdapter,
-			String exerciseStringName, Fragment fragment) {
-		ExerciseAddDialogFragment exerciseAddDialogFragment = new ExerciseAddDialogFragment(context, exerciseListWithoutSetsRepsAdapter, exerciseStringName, fragment);
+			String exerciseStringName) {
+		ExerciseAddDialogFragment exerciseAddDialogFragment = new ExerciseAddDialogFragment(context, exerciseListWithoutSetsRepsAdapter, exerciseStringName);
 		eMapper = new ExerciseMapper(context);
 		
 		return exerciseAddDialogFragment;
@@ -43,10 +40,9 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 		
 	}
 	
-	private ExerciseAddDialogFragment(Context context, ExerciseListWithoutSetsRepsAdapter exerciseListWithoutSetsRepsAdapter, String exerciseStringName, Fragment fragment) {
+	private ExerciseAddDialogFragment(Context context, ExerciseListWithoutSetsRepsAdapter exerciseListWithoutSetsRepsAdapter, String exerciseStringName) {
 		super();
 		this.exerciseStringName = exerciseStringName;
-		this.fragment = fragment;
 		
 		applicationContext = context;
 	}
@@ -147,10 +143,8 @@ public class ExerciseAddDialogFragment extends DialogFragment {
 						// Toast einblenden 
 						Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseAddDialogFragment_AddSuccess), Toast.LENGTH_SHORT ).show();
 						// ListView aktualisieren 
-						if (fragment instanceof ExerciseAdd) ((ExerciseAdd) 
-								fragment).updateListView(eMapper.getAllExercise(), false, null);   
-						if (fragment instanceof ExerciseAddToTrainingDay) ((ExerciseAddToTrainingDay) 
-								fragment).updateListView(eMapper.getAllExercise(), null);   
+						((ExerciseSearchBarFragment) getActivity().getSupportFragmentManager().
+								findFragmentByTag("ActionBarSearchBarFragment")).updateListView(null);
 					}else{
 						Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseAddDialogFragment_ExerciseExists), Toast.LENGTH_SHORT ).show();
 					}

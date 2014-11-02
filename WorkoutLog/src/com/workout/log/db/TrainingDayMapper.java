@@ -301,23 +301,20 @@ public class TrainingDayMapper {
 	
 	public ArrayList<TrainingDay> searchKeyString(String key){
 		SQLiteDatabase db = myDBHelper.getWritableDatabase();
-	    ArrayList<TrainingDay> trainingDayList = new ArrayList<TrainingDay>();
+	    ArrayList<TrainingDay> trainingdayList = new ArrayList<TrainingDay>();
 
-	     String selectQuery =  "SELECT * FROM TrainingDay WHERE TrainingDayName LIKE '%" + key + "%'";
-	        Cursor cursor = db.rawQuery(selectQuery, null);
-	        if (cursor.moveToFirst()) {
-	            do {
-	              TrainingDay trainingDay = new TrainingDay();
-	              trainingDay.setId(Integer.parseInt(cursor.getString(0)));
-	              trainingDay.setName(cursor.getString(1));
-	              trainingDayList.add(trainingDay);
-	            	
-	            } while (cursor.moveToNext());
-	        }
+	    String selectQuery =  "SELECT TrainingDay_Id FROM TrainingDay WHERE TrainingDayName LIKE '%" + key + "%'";				     
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+            	trainingdayList.add(getTrainingDayById(cursor.getInt(0)));
+            	
+            } while (cursor.moveToNext());
+        }
 	   
 	    cursor.close();
 	    
-	    return trainingDayList;
+	    return trainingdayList;
 	}
 }
 

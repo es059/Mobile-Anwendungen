@@ -83,6 +83,9 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
         transaction.replace(R.id.training_day_select_fragment, new ActionBarTrainingDaySelectFragment(), "ActionBarTrainingDaySelectFragment");
         transaction.commit();   
         
+        //Set the Name of the ActionBar Title
+        ((HelperActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.MenuList_Trainingdays));
+        
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true);
         ((HelperActivity) getActivity()).setCalledGetParentActivityIntent(false);

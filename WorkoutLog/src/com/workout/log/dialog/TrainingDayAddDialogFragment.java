@@ -9,18 +9,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.remic.workoutlog.R;
-import com.workout.log.ManageTrainingDays;
-import com.workout.log.TrainingDayAddToWorkoutplan;
 import com.workout.log.bo.Exercise;
+import com.workout.log.bo.PerformanceTarget;
 import com.workout.log.bo.TrainingDay;
+import com.workout.log.bo.Workoutplan;
 import com.workout.log.db.TrainingDayMapper;
+import com.workout.log.fragment.TrainingDaysSearchBarFragment;
 import com.workout.log.listAdapter.TrainingDayListAdapter;
 
 @SuppressLint("ValidFragment") 
@@ -28,13 +28,12 @@ public class TrainingDayAddDialogFragment extends DialogFragment {
 	private TrainingDayMapper tdMapper;
 	private TrainingDayListAdapter trainingDayListAdapter;
 	private String trainingDayStringName;
-	private Fragment fragment;
 
 	public static TrainingDayAddDialogFragment newInstance(Context context, TrainingDayListAdapter trainingDayListAdapter,
-			String trainingDayStringName, Fragment fragment) {
+			String trainingDayStringName) {
 		
 		TrainingDayAddDialogFragment trainingDayAddDialogFragment = new TrainingDayAddDialogFragment(context, trainingDayListAdapter,
-				trainingDayStringName, fragment);	
+				trainingDayStringName);	
 		return trainingDayAddDialogFragment;
 	}
 	
@@ -43,11 +42,10 @@ public class TrainingDayAddDialogFragment extends DialogFragment {
 	}
 	
 	private TrainingDayAddDialogFragment(Context context, TrainingDayListAdapter trainingDayListAdapter,
-			String trainingDayStringName, Fragment fragment) {
+			String trainingDayStringName) {
 		super();
 		this.trainingDayListAdapter = trainingDayListAdapter;
 		this.trainingDayStringName = trainingDayStringName;
-		this.fragment = fragment;
 		
 		tdMapper = new TrainingDayMapper(context);
 	}
@@ -78,6 +76,8 @@ public class TrainingDayAddDialogFragment extends DialogFragment {
 				 */
 				TrainingDay d = new TrainingDay();
 				d.setName(input.getText().toString());
+				d.setWorkoutplanList(new ArrayList<Workoutplan>());
+				d.setPerformanceTargetList(new ArrayList<PerformanceTarget>());
 				d.setExerciseList(new ArrayList<Exercise>());
 				tdMapper.add(d);
 				
@@ -88,13 +88,11 @@ public class TrainingDayAddDialogFragment extends DialogFragment {
 					trainingDayListAdapter.clear();
 					trainingDayListAdapter.addAll(tdMapper.getAllTrainingDay());
 					trainingDayListAdapter.notifyDataSetChanged();
-				}else{
-					if (fragment instanceof ManageTrainingDays) ((ManageTrainingDays) 
-							fragment).updateListView(tdMapper.getAllTrainingDay(), null);   
-					if (fragment instanceof TrainingDayAddToWorkoutplan) ((TrainingDayAddToWorkoutplan) 
-							fragment).updateListView(tdMapper.getAllTrainingDay(), null);  
+					
+					((TrainingDaysSearchBarFragment) getActivity().getSupportFragmentManager().
+							findFragmentByTag("ManageTrainingDaysSearchBar")).updateListView(null); 
 				}
-			
+				
 				Toast.makeText(getActivity(), getResources().getString(R.string.TrainingDayAddDialogFragment_AddSuccess), Toast.LENGTH_SHORT ).show();
 			  }
 		});

@@ -116,6 +116,9 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
         transaction.replace(R.id.add_searchBar, TrainingDaysSearchBarFragment.newInstance(this), "ManageTrainingDaysSearchBar");
         transaction.commit();
 		
+        //Set the Name of the ActionBar Title
+        ((HelperActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.MenuList_Trainingdays));
+        
 		setHasOptionsMenu(true);
 		return view;
 	}
@@ -226,7 +229,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 	
 	public void showDialogAddFragment(String trainingDayStringName){
 		TrainingDayAddDialogFragment dialogFragment = TrainingDayAddDialogFragment.newInstance(getActivity(),
-				trainingDayListAdapter, trainingDayStringName, this);
+				trainingDayListAdapter, trainingDayStringName);
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Add Dialog on Click");
 	}
 

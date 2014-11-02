@@ -28,6 +28,9 @@ public class Graph extends Fragment {
 	    transaction.replace(R.id.lineGraph, new LineGraphFragment(), "LineGraphFragment");
 	    transaction.commit();
 	    
+	    //Set the Name of the ActionBar Title
+	    ((HelperActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.MenuList_Statistic));
+	    
 	    return view;
 	}
 	

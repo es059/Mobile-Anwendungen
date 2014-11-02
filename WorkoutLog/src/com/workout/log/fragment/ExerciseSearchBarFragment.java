@@ -56,15 +56,20 @@ public class ExerciseSearchBarFragment extends Fragment{
 
 	        @Override
 			public void afterTextChanged(Editable s){
-	        	ArrayList<Exercise> List = new ArrayList<Exercise>();
-	        	List = eMapper.searchKeyString(String.valueOf(s));
-	        	if (fragment instanceof ExerciseAdd){
-	        		((ExerciseAdd) fragment).updateListView(List, true, String.valueOf(s));
-	        	} else if (fragment instanceof ExerciseAddToTrainingDay) {
-	        		((ExerciseAddToTrainingDay) fragment).updateListView(List, String.valueOf(s));	
-	        	} else ((SelectExerciseForQuickWorkout) fragment).updateListView(List,true, String.valueOf(s));
+	        	updateListView(String.valueOf(s));
 	        }
 	  });
 		return view;
+	}
+	
+	public void updateListView(String searchString){
+		if (searchString == null) searchString = searchBar.getText().toString();
+		ArrayList<Exercise> List = new ArrayList<Exercise>();
+    	List = eMapper.searchKeyString(searchString);
+    	if (fragment instanceof ExerciseAdd){
+    		((ExerciseAdd) fragment).updateListView(List, true, searchString);
+    	} else if (fragment instanceof ExerciseAddToTrainingDay) {
+    		((ExerciseAddToTrainingDay) fragment).updateListView(List, searchString);	
+    	} else ((SelectExerciseForQuickWorkout) fragment).updateListView(List,true, searchString);
 	}
 }

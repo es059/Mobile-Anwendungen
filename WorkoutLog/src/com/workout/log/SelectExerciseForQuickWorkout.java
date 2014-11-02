@@ -123,7 +123,7 @@ public class SelectExerciseForQuickWorkout extends Fragment implements OnItemLon
 	 */
 	public void showDialogAddFragment(String exerciseStringName){
 		ExerciseAddDialogFragment dialogFragment = ExerciseAddDialogFragment.newInstance(getActivity(), listAdapter,
-				exerciseStringName, this);
+				exerciseStringName);
 		dialogFragment.show(this.getFragmentManager(), "Open Exercise Settings on Long Click");
 	}
 

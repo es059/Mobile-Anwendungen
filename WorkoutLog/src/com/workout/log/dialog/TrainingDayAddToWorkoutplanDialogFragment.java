@@ -9,6 +9,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
@@ -103,16 +105,22 @@ public class TrainingDayAddToWorkoutplanDialogFragment extends DialogFragment {
 		    .setContentTitle(getString(R.string.fifthShowcaseViewTitle))
 		    .setContentText(getString(R.string.fifthShowcaseViewContext))
 		    .setStyle(R.style.CustomShowcaseTheme)
-		    //.singleShot(45)
+		    .singleShot(99)
 		    .build();
  
    		
     		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-    				//(RelativeLayout.LayoutParams)fifthShowcaseView.getButton().getLayoutParams();
     		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
     		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
     		layoutParams.setMargins(30, 0, 0, 30);
     		showcaseView.setButtonPosition(layoutParams);
+    		showcaseView.getButton().setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View arg0) {
+					trainingDayAddToWorkoutplan.getCustomToast().hideUndoBar(true);
+					showcaseView.hide();
+				}
+    		});
     		
     	}else{
     		showcaseView.refreshDrawableState();
