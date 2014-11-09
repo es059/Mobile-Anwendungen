@@ -8,7 +8,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings.Secure;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -58,6 +59,7 @@ public class HelperActivity extends ActionBarActivity{
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
+    private ActionBar actionbar;
 
     private CustomDrawerAdapter adapter;
     private MenuList menuList;
@@ -82,18 +84,33 @@ public class HelperActivity extends ActionBarActivity{
 
 	@Override
 	public void onCreate(Bundle savedInstanceState){
+		//requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		this.getWindow().requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		
 		setContentView(R.layout.activity_helper);
 
 		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        
+		
+	}
+	
+	// Invoke displayInterstitial() when you are ready to display an interstitial.
+	public void displayInterstitial() {
+	  if (interstitial.isLoaded()) {
+	    interstitial.show();
+	  }
+	}
+	
+	protected void onResume(){
+		super.onResume();
+		
+		actionbar = getSupportActionBar();
+		
 		/**
 		 * Tracker
 		 */
 		//Get a Tracker (should auto-report)
 		((MyApplication) getApplication()).getTracker(MyApplication.TrackerName.APP_TRACKER);
-		
 		
 		/**
 		 * If resolution is smaller than 4 inches than show intersitital ad
@@ -130,7 +147,7 @@ public class HelperActivity extends ActionBarActivity{
 	         });
 	    }
         
-        this.getActionBar().setDisplayHomeAsUpEnabled(true);
+	    actionbar.setDisplayHomeAsUpEnabled(true);
         /**
          * Handles the Fragment calls which are to be done first
          */
@@ -146,18 +163,7 @@ public class HelperActivity extends ActionBarActivity{
 		     transaction.replace(R.id.fragment_container, new ManageWorkoutplan(), "ManageWorkoutplan");
 		     transaction.addToBackStack(null);
 		     transaction.commit();
-		}		
-	}
-	
-	// Invoke displayInterstitial() when you are ready to display an interstitial.
-	public void displayInterstitial() {
-	  if (interstitial.isLoaded()) {
-	    interstitial.show();
-	  }
-	}
-	
-	protected void onResume(){
-		super.onResume();
+		}
 		
 		menuList = new MenuList(this);
 		loadNavigationDrawer();
@@ -244,6 +250,7 @@ public class HelperActivity extends ActionBarActivity{
 		 */
 		if (calledGetParentActivityIntent != true){
 			calledGetParentActivityIntent = true;
+			arrowToHamburger();
 			if (onBackPressedListener != null){
 		        onHomePressedListener.doHome();
 			}else{
@@ -259,6 +266,20 @@ public class HelperActivity extends ActionBarActivity{
 	        }
 		}
 		return null; 
+	}
+	
+	/**
+	 *  Change navigationdrawers arrow to hamburger
+	 */
+	public void arrowToHamburger(){
+		mDrawerToggle.setDrawerIndicatorEnabled(true);
+	}
+	
+	/**
+	 * Change navigationdrawers hamburger to arrow
+	 */
+	public void hamburgerToArrow(){
+		mDrawerToggle.setDrawerIndicatorEnabled(false);
 	}
 	
 	/**
@@ -296,15 +317,13 @@ public class HelperActivity extends ActionBarActivity{
         mDrawerList.setAdapter(adapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         
-        this.getActionBar().setDisplayHomeAsUpEnabled(true);
-        
+        actionbar.setDisplayHomeAsUpEnabled(true);
         
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                    R.drawable.ic_drawer, R.string.drawer_open,
-                    R.string.drawer_close) {
+                    R.string.drawer_open,R.string.drawer_close) {
               @Override
 			public void onDrawerClosed(View view) {
-            	  getActionBar().setTitle(mTitle);
+            	  setActionBarTitle(mTitle.toString());
             	  invalidateOptionsMenu(); 
               }
               @Override
@@ -321,13 +340,15 @@ public class HelperActivity extends ActionBarActivity{
 	  		         .setAction("Open Drawer")
 	  		         .setLabel("Open the NavigationDrawer")
 	  		         .build());
-            	  
-            	  getActionBar().setTitle(mDrawerTitle);
+	  		      
+	  		      mTitle = mDrawerTitle = getTitle();
+	  		      setActionBarTitle(mDrawerTitle.toString());
             	  adapter.notifyDataSetChanged();
             	  invalidateOptionsMenu();
               }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);   	
+        mDrawerToggle.syncState();
 	}
 	
 	/**
@@ -338,7 +359,7 @@ public class HelperActivity extends ActionBarActivity{
 	public void setActionBarTitle(String title){
 		 mDrawerTitle = title; 
 		 mTitle = title;
-		 getActionBar().setTitle(mDrawerTitle);
+		 actionbar.setTitle(mDrawerTitle);
 		 invalidateOptionsMenu();
 	}
 	

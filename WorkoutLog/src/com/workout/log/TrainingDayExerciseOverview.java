@@ -85,11 +85,11 @@ public class TrainingDayExerciseOverview extends Fragment implements OnItemLongC
         
         //Set the Name of the ActionBar Title
         ((HelperActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.MenuList_Trainingdays));
-        
-        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-        setHasOptionsMenu(true);
+        ((HelperActivity) getActivity()).hamburgerToArrow();
         ((HelperActivity) getActivity()).setCalledGetParentActivityIntent(false);
         
+        setHasOptionsMenu(true);
+
         return view;
 	}
 	

@@ -84,6 +84,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 		 */
 		((HelperActivity) getActivity()).setNavigationDrawerVisibility(false);
 		((HelperActivity) getActivity()).setCalledGetParentActivityIntent(false);
+		((HelperActivity) getActivity()).hamburgerToArrow();
 		
 		/**
 		 * Handles the behavior if the back button is pressed
@@ -93,6 +94,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 			public void doBack() {
 				openManageWorkoutplan();
 				((HelperActivity) getActivity()).setOnBackPressedListener(null);
+				((HelperActivity) getActivity()).arrowToHamburger();
 			}		
 		});
 		
@@ -104,6 +106,7 @@ public class TrainingDayAddToWorkoutplan extends Fragment implements OnItemClick
 			public Intent doHome() {
 				openManageWorkoutplan();
 				((HelperActivity) getActivity()).setOnBackPressedListener(null);
+				((HelperActivity) getActivity()).arrowToHamburger();
 				return null;
 			}		
 		});

@@ -66,7 +66,6 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener,
         transaction.replace(R.id.add_searchBar, TrainingDaysSearchBarFragment.newInstance(this), "ManageTrainingDaysSearchBar");
         transaction.commit();
 		
-        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true);
         ((HelperActivity) getActivity()).setCalledGetParentActivityIntent(false);
         

@@ -13,6 +13,7 @@ import android.os.Parcelable;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -93,14 +94,14 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 				trainingDayId = transferExtras.getInt("TrainingDayId");
 				exerciseId = transferExtras.getInt("ExerciseID");
 				exercise = eMapper.getExerciseById(exerciseId);
-				getActivity().getActionBar().setTitle(transferExtras.getString("ExerciseName"));
+				((HelperActivity) getActivity()).setActionBarTitle(transferExtras.getString("ExerciseName"));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		
-		getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 		((HelperActivity) getActivity()).setNavigationDrawerVisibility(false);
+		((HelperActivity) getActivity()).hamburgerToArrow();
 		setHasOptionsMenu(true);
 		
 		if (trainingDayId != -1){
@@ -118,6 +119,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 							openExerciseOverview();
 							((HelperActivity) getActivity())
 									.setOnBackPressedListener(null);
+							((HelperActivity) getActivity()).arrowToHamburger();
 						}
 					});
 			/**
@@ -131,6 +133,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 							openExerciseOverview();
 							((HelperActivity) getActivity())
 									.setOnBackPressedListener(null);
+							((HelperActivity) getActivity()).arrowToHamburger();
 							return null;
 						}
 					});
