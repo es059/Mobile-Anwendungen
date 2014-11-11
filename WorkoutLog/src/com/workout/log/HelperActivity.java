@@ -92,6 +92,23 @@ public class HelperActivity extends ActionBarActivity{
 
 		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
+	    /**
+         * Handles the Fragment calls which are to be done first
+         */
+		if (!firstTimeCheck()){
+		    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+	        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+	        transaction.replace(R.id.fragment_container, new ExerciseOverview(), "ExerciseOverview");
+	        transaction.addToBackStack(null);
+	        transaction.commit();
+		}else{
+			 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		     transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		     transaction.replace(R.id.fragment_container, new ManageWorkoutplan(), "ManageWorkoutplan");
+		     transaction.addToBackStack(null);
+		     transaction.commit();
+		}
+		
 	}
 	
 	// Invoke displayInterstitial() when you are ready to display an interstitial.
@@ -148,23 +165,7 @@ public class HelperActivity extends ActionBarActivity{
 	    }
         
 	    actionbar.setDisplayHomeAsUpEnabled(true);
-        /**
-         * Handles the Fragment calls which are to be done first
-         */
-		if (!firstTimeCheck()){
-		    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-	        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-	        transaction.replace(R.id.fragment_container, new ExerciseOverview(), "ExerciseOverview");
-	        transaction.addToBackStack(null);
-	        transaction.commit();
-		}else{
-			 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-		     transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		     transaction.replace(R.id.fragment_container, new ManageWorkoutplan(), "ManageWorkoutplan");
-		     transaction.addToBackStack(null);
-		     transaction.commit();
-		}
-		
+ 
 		menuList = new MenuList(this);
 		loadNavigationDrawer();
 	}
@@ -200,6 +201,7 @@ public class HelperActivity extends ActionBarActivity{
 	    if (onBackPressedListener != null){
 	        onBackPressedListener.doBack();
 	    }else{
+	    	arrowToHamburger();
 	    	if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
 	    		/**
 	    		 * Closes the application if the userer presses back twice
@@ -360,6 +362,7 @@ public class HelperActivity extends ActionBarActivity{
 		 mDrawerTitle = title; 
 		 mTitle = title;
 		 actionbar.setTitle(mDrawerTitle);
+		 actionbar.
 		 invalidateOptionsMenu();
 	}
 	
@@ -388,10 +391,6 @@ public class HelperActivity extends ActionBarActivity{
 			    transaction.replace(R.id.fragment_container, new ExerciseOverview(), "ExerciseOverview");
 			    transaction.addToBackStack(null);
 			    transaction.commit();
-			    
-		        //Set the Name of the ActionBar Title
-		        setActionBarTitle(getTitle().toString());
-			    
 				break;
 			case 2:
 				transaction = getSupportFragmentManager().beginTransaction();
@@ -457,6 +456,7 @@ public class HelperActivity extends ActionBarActivity{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int lockMode = mDrawerLayout.getDrawerLockMode(Gravity.LEFT);
+		
 	    if (lockMode == DrawerLayout.LOCK_MODE_UNLOCKED &&
 	    		mDrawerToggle.onOptionsItemSelected(item)) {
 	    	return true;

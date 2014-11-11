@@ -7,27 +7,19 @@ import java.util.Date;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Chronometer;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingRightInAnimationAdapter;
@@ -38,17 +30,14 @@ import com.workout.log.SwipeToDelete.UndoItem;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.PerformanceActual;
 import com.workout.log.bo.PerformanceTarget;
-import com.workout.log.data.MuscleGroupType;
 import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.PerformanceActualMapper;
 import com.workout.log.db.PerformanceTargetMapper;
-import com.workout.log.db.PlayMode;
 import com.workout.log.fragment.ActionBarDatePickerFragment;
 import com.workout.log.fragment.SpecificCounterFragment;
 import com.workout.log.listAdapter.PerformanceActualListAdapter;
 import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;
-import com.workout.log.pedometer.PedometerFragment;
 
 @SuppressLint("SimpleDateFormat")
 public class ExerciseSpecific extends Fragment implements UndoBarController.UndoListener{
@@ -56,33 +45,36 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 	private Exercise exercise = null;
 	private EditText repetition = null;
 	private EditText weight = null;
-	private Chronometer timerView = null;
-	private ImageButton cardioButton = null;
 	
 	private int exerciseId;
 	private int trainingDayId;
 	
 	private boolean saveMode = false;
-	private PlayMode playMode = PlayMode.Record;
 	
-	private MuscleGroupType muscleGroupType = MuscleGroupType.Normal;
 	private PerformanceActualListAdapter adapter = null;
 	private ExerciseOverview exerciseOverview = new ExerciseOverview();
 	private PerformanceActualMapper paMapper = null;
 	private UndoBarController mUndoBarController = null;
 	private ActionBarDatePickerFragment dateFragment = null;
-	private SpecificCounterFragment counterFragment = null;
 	private static ArrayList<PerformanceActual> performanceActualList = null;
 
 	private PerformanceActualMapper pMapper = null;
-
-	private Fragment pedometer;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.exercise_specific, container,false);
 		
 		performanceActualList = new ArrayList<PerformanceActual>();
+		
+		FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		transaction.replace(R.id.specific_dateTimePicker, new ActionBarDatePickerFragment(), "DateTimePicker");
+		transaction.commit();
+		
+		transaction = getActivity().getSupportFragmentManager().beginTransaction();
+		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		transaction.replace(R.id.specific_timer, new SpecificCounterFragment(), "SpecificCounterFragment");
+		transaction.commit();
 		
 		/**
 		 * Receive the arguments set by ExerciseOverview
@@ -160,153 +152,24 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 
 		exerciseListView = (ListView) getView().findViewById(R.id.exerciseSpecificList);
 		loadSwipeToDismiss();
-
-		LinearLayout cardioWrapper = (LinearLayout) getView().findViewById(R.id.CardioWrapper);
-		TableLayout headerView = (TableLayout) getView().findViewById(R.id.tableLayout);
-		cardioButton = (ImageButton) getView().findViewById(R.id.CardioButton);
-		
-		Typeface timerTypeface = Typeface.createFromAsset(getActivity().getAssets(),"DS-DIGIB.TTF");
-		timerView = (Chronometer) getView().findViewById(R.id.CardioTimer);
-		timerView.setTypeface(timerTypeface);
-		
-		if(getActivity().getSupportFragmentManager().findFragmentByTag("DateTimePicker") == null ) {
-		 dateFragment = new ActionBarDatePickerFragment();
-		}
-		/**
-		 * Load the top navigation fragment into the current fragment
-		 */
-		FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		transaction.replace(R.id.specific_dateTimePicker, dateFragment, "DateTimePicker");
-		transaction.commit();
-		
-		/**
-		 * Choose which MuscleGroup is the current exercise and act accordingly
-		 */
-		if(!exercise.getMuscleGroup().getName().equals(getResources().getString(R.string.Cardio))){
-			cardioWrapper.setVisibility(View.INVISIBLE);
-			muscleGroupType = MuscleGroupType.Normal;
-			
-			
+				
+		if (performanceActualList.isEmpty()) {
+			performanceActualList = paMapper.getCurrentPerformanceActual(exercise, sp.format(new Date()));
 			/**
-			 * Load the bottom timer fragment into the current fragment
+			 * If the ArrayList is empty it means, that there where are no
+			 * training data for today the ListView is then generated with the
+			 * information of the database table performanceTarget
 			 */
-			if(getActivity().getSupportFragmentManager().findFragmentByTag("SpecificCounterFragment") == null ) {
-				 counterFragment = new SpecificCounterFragment();
-				}
-			transaction = getActivity().getSupportFragmentManager().beginTransaction();
-			transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-			transaction.replace(R.id.specific_timer, counterFragment, "SpecificCounterFragment");
-			transaction.commit();
-			
 			if (performanceActualList.isEmpty()) {
-				performanceActualList = paMapper.getCurrentPerformanceActual(exercise, sp.format(new Date()));
-				/**
-				 * If the ArrayList is empty it means, that there where are no
-				 * training data for today the ListView is then generated with the
-				 * information of the database table performanceTarget
-				 */
-				if (performanceActualList.isEmpty()) {
-					performanceActualList = prepareStandardListView();
-					updateListView(performanceActualList);
-				} else {
-					updateListView(performanceActualList);
-				}
+				performanceActualList = prepareStandardListView();
+				updateListView(performanceActualList);
 			} else {
 				updateListView(performanceActualList);
-			}		
-		}else{
-			/**
-			 * Cardio Settings
-			 */	
-			
-			/**
-			 * Load the pedometer into the current fragment
-			 */
-			FragmentTransaction Pedometertransaction = getFragmentManager().beginTransaction();
-			Pedometertransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-			Pedometertransaction.replace(R.id.specific_pedometer, new PedometerFragment(), "Pedometer");
-			Pedometertransaction.commit();
-						    
-			cardioWrapper.setVisibility(View.VISIBLE);
-			headerView.setVisibility(View.INVISIBLE);
-			exerciseListView.setVisibility(View.INVISIBLE);
-
-			muscleGroupType = MuscleGroupType.Cardio;
-
-			Date currentDate = null;
-			if (dateFragment == null){
-				currentDate = new Date();
-			}else{
-				currentDate = dateFragment.getDate();
 			}
-			
-			final PerformanceActual item = pMapper.getPerformanceActualByExerciseAndDate(exercise, currentDate);
-			
-			if (item != null){
-				String tempTimeString = String.valueOf(item.getWeight());
-				String[] tempTime = tempTimeString.toString().split("\\.");
-				
-				if (tempTime[0].length() <= 1){
-					tempTimeString = "0" + tempTime[0] + ":";
-				}else{
-					tempTimeString = tempTime[0] + ":";
-				}
-				if (tempTime[1].length() <= 1){
-					tempTimeString += tempTime[1] + "0";
-				}else{
-					tempTimeString += tempTime[1];
-				}
-				
-				timerView.setText(tempTimeString);
-				if(!tempTimeString.equals("00:00")){
-					cardioButton.setImageDrawable(getResources().getDrawable(R.drawable.play));
-					playMode = PlayMode.Pause;
-				}else{
-					cardioButton.setImageDrawable(getResources().getDrawable(R.drawable.record));
-					playMode = PlayMode.Record;
-				}
-			}
-						
-			cardioButton.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-					pedometer = getFragmentManager().findFragmentByTag("Pedometer");
-					if (playMode == PlayMode.Record || playMode == PlayMode.Pause){
-						int stoppedMilliseconds = 0;
-
-				        String chronoText = timerView.getText().toString();
-				        String array[] = chronoText.split(":");
-				        
-				        if (array.length == 2) {
-				          stoppedMilliseconds = Integer.parseInt(array[0]) * 60 * 1000+ Integer.parseInt(array[1]) * 1000;
-				        } else if (array.length == 3) {
-				          stoppedMilliseconds = Integer.parseInt(array[0]) * 60 * 60 * 1000 + Integer.parseInt(array[1]) * 60 * 1000 + Integer.parseInt(array[2]) * 1000;
-				        }
-
-				        timerView.setBase(SystemClock.elapsedRealtime() - stoppedMilliseconds);
-						
-						cardioButton.setImageDrawable(getResources().getDrawable(R.drawable.pause)); 
-						playMode = PlayMode.Play;
-						
-						timerView.start();	
-						
-						((PedometerFragment) pedometer).startStepService();
-						((PedometerFragment) pedometer).bindStepService();
-					}else{
-						cardioButton.setImageDrawable(getResources().getDrawable(R.drawable.play)); 
-						timerView.stop();
-
-						playMode = PlayMode.Pause;	
-						
-						((PedometerFragment) pedometer).unbindStepService();
-						((PedometerFragment) pedometer).stopStepService();
-					}
-					
-				}
-				
-			});
-		}
+		} else {
+			updateListView(performanceActualList);
+		}		
+	
 	}
 
 	/**
@@ -397,31 +260,14 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.exercise_specific_menu, menu);
-		if (muscleGroupType == MuscleGroupType.Cardio) menu.findItem(R.id.menu_add).setIcon(getResources().getDrawable(R.drawable.stop));
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.menu_add) {
-			if(muscleGroupType != MuscleGroupType.Cardio){
-				addPerformanceActualItem();
-			}else{
-				timerView.setBase(SystemClock.elapsedRealtime());
-				timerView.stop();
-				cardioButton.setImageDrawable(getResources().getDrawable(R.drawable.record)); 
-				playMode = playMode.Record;
-				
-				/**
-				 * Stop Pedometer
-				 */
-				if(((PedometerFragment) pedometer).isRunning()){
-					((PedometerFragment) pedometer).resetValues(true);
-					((PedometerFragment) pedometer).unbindStepService();
-					((PedometerFragment) pedometer).stopStepService();
-				}
-                return true;
-			}
+			addPerformanceActualItem();
+            return true;
 		}
 		if (id == R.id.menu_statistic){
 			savePerformanceActual();
@@ -475,16 +321,6 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		 * Set the visibility of the NavigationDrawer to Visible
 		 */
 		((HelperActivity) getActivity()).setNavigationDrawerVisibility(true);
-		
-		if (muscleGroupType == MuscleGroupType.Cardio){
-			/**
-			 * Stop Pedometer
-			 */
-			if(((PedometerFragment) pedometer).isRunning()){
-				((PedometerFragment) pedometer).unbindStepService();
-				((PedometerFragment) pedometer).stopStepService();
-			}
-			}
 	}
 
 	/**
@@ -557,101 +393,64 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 	 */
 	public void savePerformanceActual() {
 		dateFragment = (ActionBarDatePickerFragment) getFragmentManager().findFragmentByTag("DateTimePicker");
-			
 		/**
-		 * If the MuscleGoup is anything but Cardio
+		 * Variables used to identify if a item is changed or not. True if the
+		 * values have not changed
 		 */
-		if (muscleGroupType == MuscleGroupType.Normal){
-			/**
-			 * Variables used to identify if a item is changed or not. True if the
-			 * values have not changed
-			 */
-			boolean sameRep = true;
-			boolean sameWeight = true;
-	
-			for (PerformanceActual item : performanceActualList) {
-				View v = getViewByPosition(item.getSet() - 1, exerciseListView);			
-				
-				repetition = (EditText) v.findViewById(R.id.specific_edit_repetition);
-				weight = (EditText) v.findViewById(R.id.specific_edit_weight);
-	
-				if (!repetition.getText().toString().isEmpty()) {
-					if (Integer.parseInt(repetition.getText().toString()) != item.getRepetition()) {
-						item.setRepetition(Integer.parseInt(repetition.getText().toString()));
-						sameRep = false;
-					} else {
-						sameRep = true;
-					}
-				} else {
-					item.setRepetition(-1);
-				}
-	
-				if (!weight.getText().toString().isEmpty()) {
-					if (Double.parseDouble(weight.getText().toString()) != item.getWeight()) {
-						item.setWeight(Double.parseDouble(weight.getText().toString()));
-						sameWeight = false;
-					} else {
-						sameWeight = true;
-					}
-				} else {
-					item.setWeight(-1);
-				}
-	
-				/**
-				 * This block checks if the current Day is Today. Afterwards the
-				 * Recordset is saved if either the repetition or weight TextView is
-				 * filled. After this every Entry in the ListView is saved. This
-				 * ensures that if a user goes back to an old Entry and returns to
-				 * the current all of the sets are saved.
-				 */
-				if (dateFragment.isToday()) {
-					if (saveMode == true) {
-						pMapper.addPerformanceActual(item, new Date());
-					} else if (item.getRepetition() != -1 || item.getWeight() != -1) {
-						pMapper.addPerformanceActual(item, new Date());
-						saveMode = true;
-					} else {
-						saveMode = false;
-					}
-				} else {
-					if (!sameWeight || !sameRep) {
-						pMapper.addPerformanceActual(item, item.getTimestamp());
-						saveMode = true;
-					}
-				}
-			}
-		}else{	
-			PerformanceActual item = pMapper.getPerformanceActualByExerciseAndDate(exercise, dateFragment.getDate());
-			if (item == null){
-				item = new PerformanceActual();
-			}else{
-				saveMode = true;
-			}
-			
-			if (!timerView.getText().toString().equals("00:00") || saveMode == true){
-				/**
-				 * Time is stored in the Weight Column of the database
-				 */
-				
+		boolean sameRep = true;
+		boolean sameWeight = true;
 
-				/**
-				 * Modify the text of the timerView to fit a double
-				 */
-				String[] tempTime = timerView.getText().toString().split(":");
-				
-				String tempTimeString = tempTime[0] + ".";
-				tempTimeString += tempTime[1];
-				
-				item.setExercise(exercise);
-				item.setWeight(Double.parseDouble(tempTimeString));
-				
-				if (dateFragment.isToday()) {
+		for (PerformanceActual item : performanceActualList) {
+			View v = getViewByPosition(item.getSet() - 1, exerciseListView);			
+			
+			repetition = (EditText) v.findViewById(R.id.specific_edit_repetition);
+			weight = (EditText) v.findViewById(R.id.specific_edit_weight);
+
+			if (!repetition.getText().toString().isEmpty()) {
+				if (Integer.parseInt(repetition.getText().toString()) != item.getRepetition()) {
+					item.setRepetition(Integer.parseInt(repetition.getText().toString()));
+					sameRep = false;
+				} else {
+					sameRep = true;
+				}
+			} else {
+				item.setRepetition(-1);
+			}
+
+			if (!weight.getText().toString().isEmpty()) {
+				if (Double.parseDouble(weight.getText().toString()) != item.getWeight()) {
+					item.setWeight(Double.parseDouble(weight.getText().toString()));
+					sameWeight = false;
+				} else {
+					sameWeight = true;
+				}
+			} else {
+				item.setWeight(-1);
+			}
+
+			/**
+			 * This block checks if the current Day is Today. Afterwards the
+			 * Recordset is saved if either the repetition or weight TextView is
+			 * filled. After this every Entry in the ListView is saved. This
+			 * ensures that if a user goes back to an old Entry and returns to
+			 * the current all of the sets are saved.
+			 */
+			if (dateFragment.isToday()) {
+				if (saveMode == true) {
 					pMapper.addPerformanceActual(item, new Date());
+				} else if (item.getRepetition() != -1 || item.getWeight() != -1) {
+					pMapper.addPerformanceActual(item, new Date());
+					saveMode = true;
+				} else {
+					saveMode = false;
+				}
+			} else {
+				if (!sameWeight || !sameRep) {
+					pMapper.addPerformanceActual(item, item.getTimestamp());
 					saveMode = true;
 				}
 			}
-		}
-		
+		}		
 		if (saveMode) Toast.makeText(getActivity(), getResources().getString(R.string.DataSaved), Toast.LENGTH_SHORT).show();
 	}
 

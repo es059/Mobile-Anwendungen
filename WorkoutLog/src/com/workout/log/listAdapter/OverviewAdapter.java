@@ -15,7 +15,6 @@ import com.workout.log.bo.Exercise;
 import com.workout.log.bo.PerformanceTarget;
 import com.workout.log.data.ListItem;
 import com.workout.log.data.MuscleGroupSectionItem;
-import com.workout.log.data.MuscleGroupType;
 import com.workout.log.db.PerformanceTargetMapper;
 
 public class OverviewAdapter  extends ArrayAdapter<ListItem>{
@@ -55,33 +54,19 @@ public class OverviewAdapter  extends ArrayAdapter<ListItem>{
 				sectionView.setText(si.getTitle());
 			}else{
 				Exercise exercise = (Exercise) item;
-				
-				MuscleGroupType muscleGroupType = MuscleGroupType.Normal;
-				if(exercise.getMuscleGroup().getName().equals(context.getResources().getString(R.string.Cardio))) muscleGroupType = MuscleGroupType.Cardio;
-				
+								
 				v = layoutInflater.inflate(R.layout.listview_exercise, null);
 				
 				final TextView 	exerciseView = (TextView) v.findViewById(R.id.exercise);
 				final TextView 	setView = (TextView) v.findViewById(R.id.set);
 				final TextView 	repetitionView = (TextView) v.findViewById(R.id.repetitions);
+							
+				exerciseView.setText(exercise.getName());
+				//Get target performance information (Set & Repetition)
+				PerformanceTarget performanceTarget = pMapper.getPerformanceTargetByExerciseId(exercise, trainingDayId);
 				
-				if (muscleGroupType == MuscleGroupType.Cardio){
-					exerciseView.setText(exercise.getName());
-					//Get target performance information (Set & Repetition)
-					PerformanceTarget performanceTarget = pMapper.getPerformanceTargetByExerciseId(exercise, trainingDayId);
-					
-					v.findViewById(R.id.setDivider).setVisibility(View.GONE);
-					setView.setVisibility(View.GONE);
-					
-					repetitionView.setHint(context.getResources().getString((R.string.Min)) + ": " + String.valueOf(performanceTarget.getRepetition()));
-				}else{					
-					exerciseView.setText(exercise.getName());
-					//Get target performance information (Set & Repetition)
-					PerformanceTarget performanceTarget = pMapper.getPerformanceTargetByExerciseId(exercise, trainingDayId);
-					
-					setView.setHint(context.getResources().getString((R.string.Set)) + ": " + String.valueOf(performanceTarget.getSet()));
-					repetitionView.setHint(context.getResources().getString((R.string.Rep)) + ": " + String.valueOf(performanceTarget.getRepetition()));
-				}
+				setView.setHint(context.getResources().getString((R.string.Set)) + ": " + String.valueOf(performanceTarget.getSet()));
+				repetitionView.setHint(context.getResources().getString((R.string.Rep)) + ": " + String.valueOf(performanceTarget.getRepetition()));
 			}
 		}
 		return v;
