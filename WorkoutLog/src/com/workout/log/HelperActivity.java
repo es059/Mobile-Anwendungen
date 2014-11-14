@@ -108,7 +108,9 @@ public class HelperActivity extends ActionBarActivity{
 		     transaction.addToBackStack(null);
 		     transaction.commit();
 		}
-		
+
+		loadNavigationDrawer();
+
 	}
 	
 	// Invoke displayInterstitial() when you are ready to display an interstitial.
@@ -167,7 +169,6 @@ public class HelperActivity extends ActionBarActivity{
 	    actionbar.setDisplayHomeAsUpEnabled(true);
  
 		menuList = new MenuList(this);
-		loadNavigationDrawer();
 	}
 	
 	/**
@@ -325,9 +326,12 @@ public class HelperActivity extends ActionBarActivity{
                     R.string.drawer_open,R.string.drawer_close) {
               @Override
 			public void onDrawerClosed(View view) {
+
             	  setActionBarTitle(mTitle.toString());
             	  invalidateOptionsMenu(); 
               }
+
+
               @Override
 			public void onDrawerOpened(View drawerView) {
             	  /**
