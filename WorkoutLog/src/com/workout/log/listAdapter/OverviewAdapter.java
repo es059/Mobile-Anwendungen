@@ -4,13 +4,18 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.remic.workoutlog.R;
+import com.workout.log.ExerciseSpecific;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.PerformanceTarget;
 import com.workout.log.data.ListItem;
@@ -23,16 +28,20 @@ public class OverviewAdapter  extends ArrayAdapter<ListItem>{
 	private LayoutInflater layoutInflater;
 	private PerformanceTargetMapper pMapper = null;
 	private int trainingDayId;
-	private Context context = null;
+	private Context activityContext = null;
+	private static Context fragmentContext = null;
+	private static FragmentActivity mainActivity;
 	
-	public OverviewAdapter(Context context, ArrayList<ListItem> items, int trainingDayId){
-		super(context,0,items);
+	public OverviewAdapter(FragmentActivity activityContext, ArrayList<ListItem> items, int trainingDayId){
+		super(activityContext,0,items);
 		this.items = items;
 		this.trainingDayId = trainingDayId;
-		this.context = context;
+		this.activityContext = activityContext;
+		this.mainActivity = activityContext;
+		
 		
 		pMapper = new PerformanceTargetMapper(getContext());
-		layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		layoutInflater = (LayoutInflater) activityContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 	
 	@Override
@@ -54,17 +63,25 @@ public class OverviewAdapter  extends ArrayAdapter<ListItem>{
 				sectionView.setTextColor(Color.WHITE);
 				sectionView.setText(si.getTitle());
 			}else{
-				Exercise exercise = (Exercise) item;
+				final Exercise exercise = (Exercise) item;
 				
 				MuscleGroupType muscleGroupType = MuscleGroupType.Normal;
-				if(exercise.getMuscleGroup().getName().equals(context.getResources().getString(R.string.Cardio))) muscleGroupType = MuscleGroupType.Cardio;
+				if(exercise.getMuscleGroup().getName().equals(activityContext.getResources().getString(R.string.Cardio))) muscleGroupType = MuscleGroupType.Cardio;
 				
 				v = layoutInflater.inflate(R.layout.listview_exercise, null);
 				
 				final TextView 	exerciseView = (TextView) v.findViewById(R.id.exercise);
 				final TextView 	setView = (TextView) v.findViewById(R.id.set);
 				final TextView 	repetitionView = (TextView) v.findViewById(R.id.repetitions);
-				
+				v.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View arg0) {
+						openExerciseSpecific(exercise);
+						
+					}
+					
+				});
 				if (muscleGroupType == MuscleGroupType.Cardio){
 					exerciseView.setText(exercise.getName());
 					//Get target performance information (Set & Repetition)
@@ -73,17 +90,39 @@ public class OverviewAdapter  extends ArrayAdapter<ListItem>{
 					v.findViewById(R.id.setDivider).setVisibility(View.GONE);
 					setView.setVisibility(View.GONE);
 					
-					repetitionView.setHint(context.getResources().getString((R.string.Min)) + ": " + String.valueOf(performanceTarget.getRepetition()));
+					repetitionView.setHint(activityContext.getResources().getString((R.string.Min)) + ": " + String.valueOf(performanceTarget.getRepetition()));
 				}else{					
 					exerciseView.setText(exercise.getName());
 					//Get target performance information (Set & Repetition)
 					PerformanceTarget performanceTarget = pMapper.getPerformanceTargetByExerciseId(exercise, trainingDayId);
 					
-					setView.setHint(context.getResources().getString((R.string.Set)) + ": " + String.valueOf(performanceTarget.getSet()));
-					repetitionView.setHint(context.getResources().getString((R.string.Rep)) + ": " + String.valueOf(performanceTarget.getRepetition()));
+					setView.setHint(activityContext.getResources().getString((R.string.Set)) + ": " + String.valueOf(performanceTarget.getSet()));
+					repetitionView.setHint(activityContext.getResources().getString((R.string.Rep)) + ": " + String.valueOf(performanceTarget.getRepetition()));
 				}
 			}
 		}
 		return v;
+	}
+	
+	/**
+	 * Method to open the ExerciseSpecific Activity with the selected Exercise and the current TrainingDay
+	 * 
+	 * @param exercise
+	 * @author Eric Schmidt
+	 */
+	
+	private void openExerciseSpecific (Exercise exercise){
+		ExerciseSpecific exerciseSpecific = new ExerciseSpecific();
+		Bundle data = new Bundle();
+        data.putInt("ExerciseID",exercise.getId());
+        data.putString("ExerciseName",exercise.getName());
+        data.putInt("TrainingDayId",trainingDayId);
+        
+        exerciseSpecific.setArguments(data);
+        
+	    FragmentTransaction transaction = mainActivity.getSupportFragmentManager().beginTransaction();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.replace(R.id.fragment_container, exerciseSpecific , "ExerciseSpecific");
+        transaction.commit();
 	}
 }

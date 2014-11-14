@@ -67,12 +67,13 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 	private MuscleGroupType muscleGroupType = MuscleGroupType.Normal;
 	private PerformanceActualListAdapter adapter = null;
 	private ExerciseOverview exerciseOverview = new ExerciseOverview();
+	private ExerciseOverviewViewPager exerciseOverviewViewPager = null;
 	private PerformanceActualMapper paMapper = null;
 	private UndoBarController mUndoBarController = null;
 	private ActionBarDatePickerFragment dateFragment = null;
 	private SpecificCounterFragment counterFragment = null;
 	private static ArrayList<PerformanceActual> performanceActualList = null;
-
+	
 	private PerformanceActualMapper pMapper = null;
 
 	private Fragment pedometer;
@@ -453,17 +454,20 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 	 * @author Eric Schmidt
 	 */
 	public void openExerciseOverview() {
+	
+		exerciseOverviewViewPager = new ExerciseOverviewViewPager();
+		
 		Bundle data = new Bundle();
 
 		data.putInt("TrainingDayId", trainingDayId);
 		data.putBoolean("SaveMode", saveMode);
-
-		exerciseOverview = new ExerciseOverview();
-		exerciseOverview.setArguments(data);
-
+		
+		//exerciseOverview = new ExerciseOverview();
+		//exerciseOverview.setArguments(data);
+		exerciseOverviewViewPager.setArguments(data);
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-		transaction.replace(R.id.fragment_container, exerciseOverview, "ExerciseOverview");
+		transaction.replace(R.id.fragment_container, exerciseOverviewViewPager, "ExerciseOverviewViewPager");
 		transaction.commit();
 
 		closeKeyboard();

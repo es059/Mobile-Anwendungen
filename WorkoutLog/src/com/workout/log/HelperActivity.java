@@ -138,7 +138,7 @@ public class HelperActivity extends ActionBarActivity{
 		if (!firstTimeCheck()){
 		    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 	        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-	        transaction.replace(R.id.fragment_container, new ExerciseOverview(), "ExerciseOverview");
+	        transaction.replace(R.id.fragment_container, new ExerciseOverviewViewPager(), "ExerciseOverviewViewPager");
 	        transaction.addToBackStack(null);
 	        transaction.commit();
 		}else{

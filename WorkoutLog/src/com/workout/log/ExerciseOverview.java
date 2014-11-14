@@ -30,29 +30,38 @@ import com.workout.log.db.WorkoutplanMapper;
 import com.workout.log.fragment.ActionBarTrainingDayPickerFragment;
 import com.workout.log.listAdapter.OverviewAdapter;
 
-public class ExerciseOverview extends Fragment implements OnItemClickListener {
+public class ExerciseOverview extends Fragment  {
 	private static ListView exerciseListView; 
     
 	private static Activity activity;
 	private static int trainingDayId = -1;
-    private static ExerciseSpecific exerciseSpecific = new ExerciseSpecific();
     public static ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = null;
     private static String[] muscleGroupArray;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.exercise_overview, container, false);
-		/**
-		 * Add the top navigation fragment to the current fragment
-		*/
-	    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        transaction.replace(R.id.overview_trainingDayPicker, new ActionBarTrainingDayPickerFragment(), "TrainingDayPicker");
-        transaction.commit(); 
+		
+		View actionBar = view.findViewById(R.id.overview_trainingDayPicker); 
+	
+        actionBar.setVisibility(View.GONE);
 		
         activity = getActivity();
         
         muscleGroupArray = getResources().getStringArray(R.array.MuscleGroup);
+        
+        final Bundle transferExtras = getArguments();
+		exerciseListView = (ListView) view.findViewById(R.id.exerciseOverviewList);
+		if (transferExtras != null){				
+			try{
+				trainingDayId = transferExtras.getInt("TrainingDayId");
+				updateListView(trainingDayId);
+				if(actionBarTrainingDayPickerFragment != null){
+				actionBarTrainingDayPickerFragment.setCurrentTrainingDay(trainingDayId);}
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}
         
         return view;
 	}
@@ -67,33 +76,6 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 	@Override
 	public void onResume(){
 		super.onResume();
-	
-		exerciseSpecific = new ExerciseSpecific();
-		actionBarTrainingDayPickerFragment = (ActionBarTrainingDayPickerFragment) getActivity().
-				getSupportFragmentManager().findFragmentByTag("TrainingDayPicker");
-		
-		final Bundle transferExtras = getArguments();
-		exerciseListView = (ListView) getView().findViewById(R.id.exerciseOverviewList);
-		if (transferExtras != null){				
-			try{
-				trainingDayId = transferExtras.getInt("TrainingDayId");
-				actionBarTrainingDayPickerFragment.setCurrentTrainingDay(trainingDayId);
-			} catch (Exception e){
-				e.printStackTrace();
-			}
-		}else{	
-			updateListView(trainingDayId);
-		}
-		exerciseListView.setOnItemClickListener(this);
-
-	}
-	
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		Exercise exercise;
-		exercise = (Exercise) exerciseListView.getItemAtPosition(position);
-		openExerciseSpecific(exercise);
 	}
 	
 	public static void setTrainingDay(int id){
@@ -124,28 +106,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 		return super.onOptionsItemSelected(item);
 	}
 
-	/**
-	 * Method to open the ExerciseSpecific Activity with the selected Exercise and the current TrainingDay
-	 * 
-	 * @param exercise
-	 * @author Eric Schmidt
-	 */
-	private void openExerciseSpecific (Exercise exercise){
-		Bundle data = new Bundle();
-		ActionBarTrainingDayPickerFragment actionBarTrainingDayPickerFragment = 
-				(ActionBarTrainingDayPickerFragment) getFragmentManager().findFragmentByTag("TrainingDayPicker");
-		
-        data.putInt("ExerciseID",exercise.getId());
-        data.putString("ExerciseName",exercise.getName());
-        data.putInt("TrainingDayId",actionBarTrainingDayPickerFragment.getCurrentTrainingDay().getId());
-        
-        exerciseSpecific.setArguments(data);
-        
-	    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        transaction.replace(R.id.fragment_container, exerciseSpecific , "ExerciseSpecific");
-        transaction.commit();
-	}
+	
 		
 	/**
 	 * Handels the Database queries in an Async Task
@@ -256,7 +217,7 @@ public class ExerciseOverview extends Fragment implements OnItemClickListener {
 					
 				}
 		    
-				OverviewAdapter adapter = new OverviewAdapter(activity, listComplete, trainingDayId);
+				OverviewAdapter adapter = new OverviewAdapter(getActivity(), listComplete, trainingDayId);
 				return adapter;	
 			}
 			return null;

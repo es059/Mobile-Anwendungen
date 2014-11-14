@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -24,6 +26,7 @@ public class SpecificCounterFragment extends Fragment{
 	private ImageButton decrease = null;
 	private ImageButton counterAction = null;
 	private TextView timeView = null;
+	//private Window window = getActivity().getWindow();
 
 	private Vibrator v = null;
 	
@@ -44,7 +47,8 @@ public class SpecificCounterFragment extends Fragment{
 		        	timeView.setText(String.valueOf(secondsUntilFinished));
 		        }else{
 		        	timeView.setText(String.valueOf(timeCount));			
-					v.vibrate(2000);			
+					v.vibrate(2000);	
+	//				window.addFlags(LayoutParams.FLAG_TURN_SCREEN_ON);
 					counterAction.setImageDrawable(getResources().getDrawable(R.drawable.play_timer));
 					
 					increase.setEnabled(true);
