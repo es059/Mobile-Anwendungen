@@ -34,6 +34,7 @@ import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.PerformanceActualMapper;
 import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.fragment.ActionBarDatePickerFragment;
+import com.workout.log.fragment.SpecificAddSetFragment;
 import com.workout.log.fragment.SpecificCounterFragment;
 import com.workout.log.listAdapter.PerformanceActualListAdapter;
 import com.workout.log.navigation.OnBackPressedListener;
@@ -74,6 +75,11 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		transaction = getActivity().getSupportFragmentManager().beginTransaction();
 		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		transaction.replace(R.id.specific_timer, new SpecificCounterFragment(), "SpecificCounterFragment");
+		transaction.commit();
+		
+		transaction = getActivity().getSupportFragmentManager().beginTransaction();
+		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		transaction.replace(R.id.specific_centralAddSet, new SpecificAddSetFragment(), "SpecificAddSetFragment");
 		transaction.commit();
 		
 		/**
@@ -155,21 +161,9 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 				
 		if (performanceActualList.isEmpty()) {
 			performanceActualList = paMapper.getCurrentPerformanceActual(exercise, sp.format(new Date()));
-			/**
-			 * If the ArrayList is empty it means, that there where are no
-			 * training data for today the ListView is then generated with the
-			 * information of the database table performanceTarget
-			 */
-			if (performanceActualList.isEmpty()) {
-				performanceActualList = prepareStandardListView();
-				updateListView(performanceActualList);
-			} else {
-				updateListView(performanceActualList);
-			}
-		} else {
-			updateListView(performanceActualList);
-		}		
-	
+		}
+		
+		updateListView(performanceActualList);
 	}
 
 	/**
@@ -265,10 +259,6 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.menu_add) {
-			addPerformanceActualItem();
-            return true;
-		}
 		if (id == R.id.menu_statistic){
 			savePerformanceActual();
 			openDailyStatistic();
@@ -327,13 +317,17 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 	 * Add a new PerformanceActual Object to the ListView
 	 * 
 	 */
-	public void addPerformanceActualItem() {
+	public void addPerformanceActualItem(double weight, int rep) {
 		if (dateFragment == null) dateFragment = (ActionBarDatePickerFragment) getFragmentManager().findFragmentByTag("DateTimePicker");
 		// New PerformanceActual Object
 		PerformanceActual pa = new PerformanceActual();
 		pa.setExercise(exercise);
 		pa.setSet(performanceActualList.size() + 1);
 		pa.setTimestamp(dateFragment.getDate());
+
+		pa.setWeight(weight);
+		pa.setRepetition(rep);
+		
 		// Update Adapter + ListView
 		adapter.add(pa);
 		//Save the data into the ArrayList
@@ -342,6 +336,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		performanceActualList = adapter.getPerformanceActualList();
 		// Show the User a hint message
 		Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseSpecific_NewSet),Toast.LENGTH_SHORT).show();
+		
 	}
 
 	/**

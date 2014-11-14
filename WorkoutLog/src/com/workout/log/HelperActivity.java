@@ -109,7 +109,6 @@ public class HelperActivity extends ActionBarActivity{
 		     transaction.commit();
 		}
 
-		loadNavigationDrawer();
 
 	}
 	
@@ -169,6 +168,7 @@ public class HelperActivity extends ActionBarActivity{
 	    actionbar.setDisplayHomeAsUpEnabled(true);
  
 		menuList = new MenuList(this);
+		loadNavigationDrawer();
 	}
 	
 	/**
