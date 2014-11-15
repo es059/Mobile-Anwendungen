@@ -9,9 +9,10 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     
     <uses-sdk
-        android:minSdkVersion="12"
+        android:minSdkVersion="14"
         android:targetSdkVersion="21" />
 
     <application
@@ -41,5 +42,15 @@
         
         <service android:name="com.workout.log.pedometer.StepService"/>
         <service android:name="com.workout.log.data.CountDownBroadcastService" />
+        
+        <receiver android:name="com.workout.log.widget.LockScreenWidgetProvider">
+			 <intent-filter>
+			 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			 </intent-filter>
+			 <meta-data android:name="android.appwidget.provider"
+			 android:resource="@xml/lockwidget_provider" />
+		</receiver>
+		
+        <service android:enabled="true" android:name="LockControlService" />
     </application>
 </manifest>

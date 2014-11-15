@@ -80,7 +80,7 @@ public class ManageWorkoutplan extends Fragment implements OnItemClickListener, 
         transaction.commit();
                 
 	    //Set the Name of the ActionBar Title
-        ((HelperActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.MenuList_Workoutplans));
+  //      ((HelperActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.MenuList_Workoutplans));
         
         return view;            
 	}

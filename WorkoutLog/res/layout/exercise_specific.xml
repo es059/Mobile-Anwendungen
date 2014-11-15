@@ -13,6 +13,13 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
     
+     <FrameLayout
+        android:id="@+id/specific_centralAddSet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tableLayout"
+        android:layout_centerHorizontal="true" />
+    
     <!-- Used for the Undo TextField  -->
     <LinearLayout
         android:id="@+id/undobar"
@@ -85,7 +92,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/specific_timer"
-        android:layout_below="@+id/tableLayout"
+        android:layout_below="@+id/specific_centralAddSet"
         android:layout_centerHorizontal="true"
         android:longClickable="true" />
     

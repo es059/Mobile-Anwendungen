@@ -1,48 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:layout_gravity="bottom"  >
-    
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+     android:id="@+id/listExercise"
+	 android:layout_width="match_parent"
+	 android:layout_height="wrap_content"
+	 android:orientation="horizontal"
+	 android:background="#503a3a3a">
+	<LinearLayout     
+    	android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="top"
+	    android:orientation="horizontal" >
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 	       <TableRow
 	            android:id="@+id/tableRow1"
 	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_gravity="bottom" >
+	            android:layout_height="wrap_content" >
 
-		        <EditText
-		            android:id="@+id/specific_edit_weight"
-		            android:layout_width="5dp"
-		            android:layout_height="wrap_content"
-		            android:layout_gravity="center_vertical"
-		            android:layout_marginLeft="10dp"
+
+	            <ImageButton
+	             android:id="@+id/ivAddSet"
+	             android:layout_width="40dp"
+	             android:layout_height="40dp"
+	             android:layout_gravity="center"
+	        	 android:gravity="center"
+	        	 android:layout_marginLeft="18dp"
+				 android:layout_marginRight="20dp"
+	             android:background="@drawable/add" />
+	             
+		        
+		       <EditText
+		            android:id="@+id/etEditWeight"
 		            android:layout_weight="1"
-		            android:background="@null"
-		            android:digits="0123456789."
-		            android:ems="10"
-		            android:hint="@+string/Weight"
-		            android:inputType="phone" />
+		            android:layout_width="5dp"
+		            android:layout_marginLeft="10dp"
+		            android:layout_height="wrap_content"
+		            android:gravity="center"
+					android:hint="@+string/Weight"
+					android:digits="0123456789."
+					android:inputType="phone"
+		            android:ems="10" />
 		       
 		       <EditText
-		           android:id="@+id/specific_edit_repetition"
-		           android:layout_width="5dp"
-		           android:layout_height="wrap_content"
-		           android:layout_gravity="center_vertical"
-		           android:layout_marginLeft="10dp"
-		           android:layout_weight="1"
-		           android:background="@null"
-		           android:digits="0123456789."
-		           android:ems="10"
-		           android:hint="@string/Rep"
-		           android:inputType="phone" />
-
-		       <ImageButton
-		           android:id="@+id/add"
-		           android:layout_width="40dp"
-		           android:layout_height="40dp"
-		           android:background="@drawable/add" />
-
+		            android:id="@+id/etEditRepetition"
+		            android:layout_weight="1"
+		            android:layout_width="5dp"
+		            android:layout_marginLeft="10dp"
+		            android:gravity="center"
+		            android:layout_height="wrap_content"
+					android:hint="@string/Rep"
+					android:digits="0123456789."
+					android:inputType="phone"
+		            android:ems="10" />
         	</TableRow>
-
-</TableLayout>
+    	</TableLayout>
+	</LinearLayout>
+</RelativeLayout>	
