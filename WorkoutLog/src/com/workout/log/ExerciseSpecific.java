@@ -81,7 +81,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		transaction.replace(R.id.specific_centralAddSet, new SpecificAddSetFragment(), "SpecificAddSetFragment");
 		transaction.commit();
-		
+			
 		/**
 		 * Receive the arguments set by ExerciseOverview
 		 */		

@@ -9,7 +9,7 @@
     <FrameLayout
         android:id="@+id/specific_dateTimePicker"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/actionbar_height"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
     
@@ -17,7 +17,9 @@
         android:id="@+id/specific_centralAddSet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tableLayout"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_below="@id/specific_dateTimePicker"
         android:layout_centerHorizontal="true" />
     
     <!-- Used for the Undo TextField  -->
@@ -34,67 +36,77 @@
             style="@style/UndoBarButton" ></Button>
     </LinearLayout>
 
-    <!-- First Row of the Table containing the headlines -->
-    <TableLayout
-        android:id="@+id/tableLayout"
-        android:layout_below="@+id/specific_dateTimePicker"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_alignParentLeft="true" >
-
-        <TableRow
-            android:id="@+id/tableRow1"
-            android:background="#303030"
-			android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-	        <TextView
-	            android:id="@+id/textView1"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_gravity="center"
-	            android:textColor="#FFFFFF"
-        		android:gravity="center"
-        		style="?android:attr/listSeparatorTextViewStyle"
-        		android:textStyle="bold"
-	            android:layout_weight="1"
-	            android:text="@+string/specific_set"/>
-	        
-	        <TextView
-	            android:id="@+id/textView3"
-	            style="?android:attr/listSeparatorTextViewStyle"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_gravity="center_horizontal"
-	            android:gravity="center"
-	            android:layout_weight="1"
-	            android:text="@+string/specific_weight"
-	            android:textColor="#FFFFFF"
-	            android:textStyle="bold" />
-	
-	    	<TextView
-	    	    android:id="@+id/textView2"
-	    	    style="?android:attr/listSeparatorTextViewStyle"
-	    	    android:layout_width="wrap_content"
-	    	    android:layout_height="wrap_content"
-	    	    android:layout_gravity="center_horizontal"
-	    	    android:gravity="center"
-	    	    android:layout_weight="1"
-	    	    android:text="@+string/specific_repetition"
-	    	    android:textColor="#FFFFFF"
-	    	    android:textStyle="bold" />
-
-        </TableRow>
-    </TableLayout>
-    
-    <ListView
-        android:id="@+id/exerciseSpecificList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/specific_timer"
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardViewWrapper"
         android:layout_below="@+id/specific_centralAddSet"
-        android:layout_centerHorizontal="true"
-        android:longClickable="true" />
+       	android:layout_width="match_parent"
+       	android:layout_height="wrap_content"
+       	android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
+        
+	    <!-- First Row of the Table containing the headlines -->
+	    <LinearLayout 
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical">
+	    <TableLayout
+	        android:id="@+id/tableLayout"
+	        android:layout_width="match_parent"
+	        android:layout_height="30dp"
+	        android:layout_alignParentLeft="true" >
+	
+	        <TableRow
+	            android:id="@+id/tableRow1"
+	            android:background="#303030"
+				android:layout_width="wrap_content"
+	            android:layout_height="wrap_content" >
+	
+		        <TextView
+		            android:id="@+id/textView1"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_gravity="center"
+		            android:textColor="#FFFFFF"
+	        		android:gravity="center"
+	        		style="?android:attr/listSeparatorTextViewStyle"
+	        		android:textStyle="bold"
+		            android:layout_weight="1"
+		            android:text="@+string/specific_set"/>
+		        
+		        <TextView
+		            android:id="@+id/textView3"
+		            style="?android:attr/listSeparatorTextViewStyle"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_gravity="center_horizontal"
+		            android:gravity="center"
+		            android:layout_weight="1"
+		            android:text="@+string/specific_weight"
+		            android:textColor="#FFFFFF"
+		            android:textStyle="bold" />
+		
+		    	<TextView
+		    	    android:id="@+id/textView2"
+		    	    style="?android:attr/listSeparatorTextViewStyle"
+		    	    android:layout_width="wrap_content"
+		    	    android:layout_height="wrap_content"
+		    	    android:layout_gravity="center_horizontal"
+		    	    android:gravity="center"
+		    	    android:layout_weight="1"
+		    	    android:text="@+string/specific_repetition"
+		    	    android:textColor="#FFFFFF"
+		    	    android:textStyle="bold" />
+	
+	        </TableRow>
+	    </TableLayout>
+	    
+	    <ListView
+	        android:id="@+id/exerciseSpecificList"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:longClickable="true" />
+	    </LinearLayout>
+    </android.support.v7.widget.CardView>
     
     <FrameLayout
         android:id="@+id/specific_timer"

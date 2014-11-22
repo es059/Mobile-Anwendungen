@@ -1,22 +1,25 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
    	android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.workout.log.ExerciseOverview"
-    tools:ignore="MergeRootFrame" >
+    tools:ignore="MergeRootFrame"
+    android:orientation="vertical" >
 	    <FrameLayout
 	        android:id="@+id/overview_trainingDayPicker"
 	        android:layout_width="match_parent"
-	        android:layout_height="@dimen/actionbar_height"
-	        android:layout_alignParentTop="true"
-	        android:layout_centerHorizontal="true"/>
+	        android:layout_height="wrap_content"/>
+	    
 	    <ListView
 	        android:id="@+id/exerciseOverviewList"
 	        android:layout_width="match_parent"
 	        android:layout_height="fill_parent"
-	        android:layout_below="@+id/overview_trainingDayPicker"
-	        android:layout_centerHorizontal="true"
+	        android:divider="@null"
+	        android:dividerHeight="0dp"
+	        android:layout_marginLeft="5dp"
+        	android:layout_marginRight="5dp"
+        	android:layout_marginTop="10dp"
 	        android:longClickable="true"/>			  
-</RelativeLayout>   
+</LinearLayout>   
   

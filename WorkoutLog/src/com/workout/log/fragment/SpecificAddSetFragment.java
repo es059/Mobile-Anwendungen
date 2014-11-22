@@ -1,26 +1,15 @@
 package com.workout.log.fragment;
 
-import java.util.Date;
-
 import com.remic.workoutlog.R;
 import com.workout.log.ExerciseSpecific;
-import com.workout.log.bo.PerformanceActual;
-import com.workout.log.data.CountDownBroadcastService;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Toast;
-
 
 public class SpecificAddSetFragment extends Fragment {
 	
@@ -29,12 +18,10 @@ public class SpecificAddSetFragment extends Fragment {
 	private EditText etWeight;
 	private View rootView;
 	private ExerciseSpecific exerciseSpecific;
-	private ImageView ivAdd;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		rootView = inflater.inflate(R.layout.fragment_central_add_set, container,false);
-		
-		
 		
 		return rootView;
 	}
