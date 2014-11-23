@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
@@ -274,44 +275,75 @@ public class PerformanceActualMapper {
 	 * @author Eric Schmidt
 	 */
 	public ArrayList<PerformanceActual> getPreviousPerformanceActual(Calendar currentDate, Exercise currentExercise){
+		int i = 0;
+		Date dateItem =new Date();
+		ArrayList<Date> dateList = new ArrayList<Date>();
+		boolean noMatch = false;
+		
 		ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 		Cursor cursor;
-		Calendar c = currentDate;
-		int dayCount=0;
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
+		
 		/**
-		 * Search for the latest date. If the latest date is older than 100 Days than
-		 * it will be ignored
+		 * Create a List of dates where this exercise was exercised. The List starts with the oldest date
 		 */
-		do{
-			dayCount++;
-			c.add(Calendar.DATE, -1);
-			sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + currentExercise.getId()
-						+ " AND TimestampActual = '" + sp.format(c.getTime()) + "' ORDER BY SetActual";
-			cursor = db.rawQuery(sql,null);
-		} while (!cursor.moveToFirst() && dayCount != 100);
+		sql = "SELECT DISTINCT TimestampActual FROM PerformanceActual WHERE Exercise_ID = " + currentExercise.getId();
 		cursor = db.rawQuery(sql,null);
 		if (cursor.moveToFirst()){
-			do{
-				PerformanceActual performanceActual = new PerformanceActual();
-				performanceActual.setId(cursor.getInt(0));
-				if (cursor.getString(1) != null) performanceActual.setRepetition(cursor.getInt(1));
-				performanceActual.setSet(cursor.getInt(2));
-				if (cursor.getString(3) != null) performanceActual.setWeight(cursor.getDouble(3));
+			do {
 				try {
-					performanceActual.setTimestamp(sp.parse(cursor.getString(4)));
+					if (!cursor.getString(0).equals(sp.format(currentDate.getTime()))){
+						dateList.add(sp.parse(cursor.getString(0)));
+					}
 				} catch (ParseException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
-				performanceActual.setExercise(currentExercise);
-				performanceActualList.add(performanceActual);
-			}while(cursor.moveToNext());
-		}else if (dayCount == 100){
-			c.add(Calendar.DATE, 100);
+				}	
+			} while (cursor.moveToNext());
 		}
-		cursor.close();
 		
+		/**
+		 * Reverse ArrayList so that the newest date is the first entry
+		 */
+		Collections.reverse(dateList);
+		
+		/**
+		 * Get the first date which is before the currentDate. Since the List is in order the first match
+		 * will always be the right one
+		 */
+		do{
+			if (i >= dateList.size()){
+				noMatch = true;
+			}else{
+				dateItem = dateList.get(i);
+			}
+			i++;
+		}while (noMatch == false && !dateItem.before(currentDate.getTime()));
+		
+		if (noMatch != true){
+			sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + currentExercise.getId()
+					+ " AND TimestampActual = '" + sp.format(dateItem.getTime()) + "' ORDER BY SetActual";
+			cursor = db.rawQuery(sql,null);
+			if (cursor.moveToFirst()){
+				do{
+					PerformanceActual performanceActual = new PerformanceActual();
+					performanceActual.setId(cursor.getInt(0));
+					if (cursor.getString(1) != null) performanceActual.setRepetition(cursor.getInt(1));
+					performanceActual.setSet(cursor.getInt(2));
+					if (cursor.getString(3) != null) performanceActual.setWeight(cursor.getDouble(3));
+					try {
+						performanceActual.setTimestamp(sp.parse(cursor.getString(4)));
+					} catch (ParseException e) { 
+						e.printStackTrace();
+					}
+					performanceActual.setExercise(currentExercise);
+					performanceActualList.add(performanceActual);
+				}while(cursor.moveToNext());
+			}
+			
+			cursor.close();
+		}
 		return performanceActualList;
 		
 	}
@@ -326,42 +358,71 @@ public class PerformanceActualMapper {
 	 * @author Eric Schmidt
 	 */
 	public ArrayList<PerformanceActual> getNextPerformanceActual(Calendar currentDate, Exercise currentExercise){
+		int i = 0;
+		boolean noMatch = false;
+		Date dateItem =new Date();
+		ArrayList<Date> dateList = new ArrayList<Date>();
+		
 		ArrayList<PerformanceActual> performanceActualList = new ArrayList<PerformanceActual>();
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
 		Cursor cursor;
-		Calendar c = currentDate;
-		int dayCount=0;
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
+	
 		/**
-		 * Search for the newest date. If the newest date is older than 100 Days than
-		 * the standard PerformanceActual will be shown
+		 * Create a List of dates where this exercise was exercised. The List starts with the oldest date
 		 */
-		do{
-			dayCount++;
-			c.add(Calendar.DATE, 1);
-			sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + currentExercise.getId()
-						+ " AND TimestampActual = '" + sp.format(c.getTime()) + "' ORDER BY SetActual";
-			cursor = db.rawQuery(sql,null);
-		} while (!cursor.moveToFirst() && dayCount != 100);
+		sql = "SELECT DISTINCT TimestampActual FROM PerformanceActual WHERE Exercise_ID = " + currentExercise.getId();
 		cursor = db.rawQuery(sql,null);
 		if (cursor.moveToFirst()){
-			do{
-				PerformanceActual performanceActual = new PerformanceActual();
-				performanceActual.setId(cursor.getInt(0));
-				if (cursor.getString(1) != null) performanceActual.setRepetition(cursor.getInt(1));
-				performanceActual.setSet(cursor.getInt(2));
-				if (cursor.getString(3) != null) performanceActual.setWeight(cursor.getDouble(3));
+			do {
 				try {
-					performanceActual.setTimestamp(sp.parse(cursor.getString(4)));
+					dateList.add(sp.parse(cursor.getString(0)));
 				} catch (ParseException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
-				performanceActual.setExercise(currentExercise);
-				performanceActualList.add(performanceActual);
-			}while(cursor.moveToNext());
+				}	
+			} while (cursor.moveToNext());
 		}
-		cursor.close();
 		
+		Collections.sort(dateList);
+		
+		
+		/**
+		 * Get the first date which is after the currentDate. Since the List is in order the first match
+		 * will always be the right one
+		 */
+		do{
+			if (i >= dateList.size()){
+				noMatch = true;
+			}else{
+				dateItem = dateList.get(i);
+			}
+			i++;
+		}while (noMatch == false && !dateItem.after(currentDate.getTime()));
+		
+		if (noMatch != true){
+			sql = "SELECT * FROM PerformanceActual WHERE Exercise_Id = " + currentExercise.getId()
+					+ " AND TimestampActual = '" + sp.format(dateItem.getTime()) + "' ORDER BY SetActual";
+			cursor = db.rawQuery(sql,null);
+			
+			if (cursor.moveToFirst()){
+				do{
+					PerformanceActual performanceActual = new PerformanceActual();
+					performanceActual.setId(cursor.getInt(0));
+					if (cursor.getString(1) != null) performanceActual.setRepetition(cursor.getInt(1));
+					performanceActual.setSet(cursor.getInt(2));
+					if (cursor.getString(3) != null) performanceActual.setWeight(cursor.getDouble(3));
+					try {
+						performanceActual.setTimestamp(sp.parse(cursor.getString(4)));
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					performanceActual.setExercise(currentExercise);
+					performanceActualList.add(performanceActual);
+				}while(cursor.moveToNext());
+			}
+			cursor.close();
+		}
 		return performanceActualList;
 		
 	}

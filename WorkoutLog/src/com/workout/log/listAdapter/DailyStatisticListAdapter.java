@@ -33,8 +33,7 @@ public class DailyStatisticListAdapter extends ExpandableListItemAdapter<Statist
         super(context, R.layout.activity_expandablelistitem_card, R.id.activity_expandablelistitem_card_title, R.id.activity_expandablelistitem_card_content, items);   
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.items = items;
-        this.context = context;
-        
+        this.context = context;    
     }
 
     @SuppressLint("SimpleDateFormat") 
@@ -44,7 +43,6 @@ public class DailyStatisticListAdapter extends ExpandableListItemAdapter<Statist
         if (v == null) {
             v = layoutInflater.inflate(R.layout.statistic_header, null);
         }
-        v.setBackgroundColor(Color.parseColor("#FF9900"));
         TextView date = (TextView) v.findViewById(R.id.listview_exericse_header_text);
         TextView set = (TextView) v.findViewById(R.id.header_Set);
         
@@ -59,6 +57,7 @@ public class DailyStatisticListAdapter extends ExpandableListItemAdapter<Statist
         
         date.setText(sp.format(tempDate));
         set.setText(items.get(position).getPerformanceActualList().size() + " " + context.getResources().getString((R.string.Set)));
+        
         date.setTextColor(Color.WHITE);
         set.setTextColor(Color.WHITE);
         return v;

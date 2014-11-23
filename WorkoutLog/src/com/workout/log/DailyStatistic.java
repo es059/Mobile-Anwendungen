@@ -1,6 +1,5 @@
 package com.workout.log;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +23,6 @@ import com.workout.log.listAdapter.DailyStatisticListAdapter;
 import com.workout.log.navigation.OnBackPressedListener;
 import com.workout.log.navigation.OnHomePressedListener;
 
-
 public class DailyStatistic extends Fragment{
 	private ListView expandableListView = null;
 	private DailyStatisticListAdapter adapter = null;
@@ -34,7 +32,6 @@ public class DailyStatistic extends Fragment{
 	private int exercise_Id;
 	private String exerciseName;
 	
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.daily_statistic, container, false);
@@ -68,7 +65,6 @@ public class DailyStatistic extends Fragment{
 		return view;
 	}
 	
-
 	@Override
 	public void onResume(){
 		super.onResume();

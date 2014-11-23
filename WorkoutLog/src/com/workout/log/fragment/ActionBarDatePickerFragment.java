@@ -55,8 +55,8 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 		previous = (ImageButton) view.findViewById(R.id.Previous);
 		
 		dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-		if(calendar == null) {
-		calendar  = Calendar.getInstance(); }
+		calendar  = Calendar.getInstance(); 
+		calendar.setTime(new Date());
 		
 		paMapper = new PerformanceActualMapper(getActivity());
 		exerciseSpecific = (ExerciseSpecific) getActivity().getSupportFragmentManager().findFragmentByTag("ExerciseSpecific");
@@ -92,7 +92,6 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 		return view;	
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -111,10 +110,12 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 				/**
 				 * If the ArrayList is empty it means, that the next PerformanceActual is the current one today
 				 */
-				performanceActualList = exerciseSpecific.prepareStandardListView();
+				performanceActualList = paMapper.getCurrentPerformanceActual(exerciseSpecific.getExercise(), sp.format(new Date()));
 				exerciseSpecific.updateListView(performanceActualList);
 				calendar.setTime(new Date());
 				setDate();
+				
+				exerciseSpecific.showAddSetFragment();
 			}
 		} else if (id == R.id.Previous) {
 			performanceActualList = paMapper.getPreviousPerformanceActual(calendar, exerciseSpecific.getExercise());
@@ -125,6 +126,8 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 				
 				calendar.setTime(performanceActualList.get(0).getTimestamp());
 				setDate();
+				
+				exerciseSpecific.hideAddSetFragment();
 			}else{
 				Toast.makeText(getActivity(), "Keine letzte Übung gefunden", Toast.LENGTH_SHORT).show();
 			}
@@ -137,10 +140,9 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 	 * 
 	 * @author Eric Schmidt
 	 */
-	@SuppressWarnings("deprecation")
 	private void setDate(){
 		Calendar c = Calendar.getInstance();
-		if (String.valueOf(calendar.getTime().getDate()) == String.valueOf(c.getTime().getDate())){
+		if (String.valueOf(calendar.getTime()).equals(String.valueOf(c.getTime()))){
 			date.setText(getResources().getString(R.string.ActionBarDatePickerFragment_Today));
 			next.setVisibility(View.INVISIBLE);
 			isCurrent = true;

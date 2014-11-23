@@ -29,10 +29,8 @@ import com.workout.log.SwipeToDelete.UndoBarController;
 import com.workout.log.SwipeToDelete.UndoItem;
 import com.workout.log.bo.Exercise;
 import com.workout.log.bo.PerformanceActual;
-import com.workout.log.bo.PerformanceTarget;
 import com.workout.log.db.ExerciseMapper;
 import com.workout.log.db.PerformanceActualMapper;
-import com.workout.log.db.PerformanceTargetMapper;
 import com.workout.log.fragment.ActionBarDatePickerFragment;
 import com.workout.log.fragment.SpecificAddSetFragment;
 import com.workout.log.fragment.SpecificCounterFragment;
@@ -194,31 +192,17 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 	}
 
 	/**
-	 * Prepares the ListView for the case that there was no current
-	 * PerformanceActual Object Mainly for the external call from <@see
-	 * ActionBarDatePickerFragment>
-	 * 
+	 * Hide the AddSet-Fragment in the View
 	 */
-	public ArrayList<PerformanceActual> prepareStandardListView() {
-		PerformanceTargetMapper ptMapper = new PerformanceTargetMapper(getActivity());
-		performanceActualList = new ArrayList<PerformanceActual>();
-		if(trainingDayId != -1) {
-			PerformanceTarget performanceTarget = ptMapper.getPerformanceTargetByExerciseId(exercise, trainingDayId);
-			for (int i = 1; i <= performanceTarget.getSet(); i++) {
-				PerformanceActual pa = new PerformanceActual();
-				pa.setExercise(exercise);
-				pa.setSet(i);
-				performanceActualList.add(pa);
-			}
-			return performanceActualList; }
-		else{
-			PerformanceActual pa = new PerformanceActual();
-			pa.setExercise(exercise);
-			pa.setSet(1);
-			performanceActualList.add(pa);
-			return performanceActualList;
-		}
-		
+	public void hideAddSetFragment(){
+		getView().findViewById(R.id.specific_centralAddSet).setVisibility(View.GONE);
+	}
+	
+	/**
+	 * Show the AddSet-Fragment in the View
+	 */
+	public void showAddSetFragment(){
+		getView().findViewById(R.id.specific_centralAddSet).setVisibility(View.VISIBLE);
 	}
 	
 	/**
@@ -331,7 +315,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		// Update Adapter + ListView
 		adapter.add(pa);
 		//Save the data into the ArrayList
-		saveIntoList();
+		savePerformanceActualToday();
 		// Set the ArrayList on the current value
 		performanceActualList = adapter.getPerformanceActualList();
 		// Show the User a hint message
@@ -342,7 +326,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 	/**
 	 * Save the current data in the ListView into the ArrayList
 	 */
-	public void saveIntoList(){
+	public void savePerformanceActualToday(){
 		for (PerformanceActual item : performanceActualList) {
 			View v = getViewByPosition(item.getSet() - 1, exerciseListView);			
 			
@@ -351,10 +335,18 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 
 			if (!repetition.getText().toString().isEmpty()) {
 				item.setRepetition(Integer.parseInt(repetition.getText().toString()));
+			}else{
+				item.setRepetition(-1);
 			}
-
+			
 			if (!weight.getText().toString().isEmpty()) {
 				item.setWeight(Double.parseDouble(weight.getText().toString()));
+			}else{
+				item.setWeight(-1);
+			}
+			
+			if (item.getWeight() != -1 && item.getRepetition() != -1){
+				pMapper.addPerformanceActual(item, new Date());
 			}
 		}
 	}
@@ -387,6 +379,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 	 * 
 	 */
 	public void savePerformanceActual() {
+		saveMode = false;
 		dateFragment = (ActionBarDatePickerFragment) getFragmentManager().findFragmentByTag("DateTimePicker");
 		/**
 		 * Variables used to identify if a item is changed or not. True if the
@@ -431,13 +424,9 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 			 * the current all of the sets are saved.
 			 */
 			if (dateFragment.isToday()) {
-				if (saveMode == true) {
-					pMapper.addPerformanceActual(item, new Date());
-				} else if (item.getRepetition() != -1 || item.getWeight() != -1) {
+				if ((item.getRepetition() != -1 || item.getWeight() != -1) && (!sameWeight || !sameRep)) {
 					pMapper.addPerformanceActual(item, new Date());
 					saveMode = true;
-				} else {
-					saveMode = false;
 				}
 			} else {
 				if (!sameWeight || !sameRep) {
@@ -501,11 +490,6 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 			            itemPositions =new int[performanceActualList.size()];
 			            arrayCount=0;
 		        	}
-		            
-	            	/**
-	              	 * Save the data into the ArrayList
-	              	 */
-	        		saveIntoList();
 		        	
 		            for (int position : reverseSortedPositions) {
 		            	PerformanceActual performanceActual = (PerformanceActual) exerciseListView.getItemAtPosition(position);
