@@ -20,7 +20,7 @@ public class Graph extends Fragment {
 		
 		transaction = getActivity().getSupportFragmentManager().beginTransaction();
 	    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-	    transaction.replace(R.id.overview_dateTimePicker, new ActionBarGraphFragment(), "ActionBarGraphFragment");
+	    transaction.replace(R.id.exercisePicker, new ActionBarGraphFragment(), "ActionBarGraphFragment");
 	    transaction.commit();
 	    
 	    transaction = getActivity().getSupportFragmentManager().beginTransaction();

@@ -311,46 +311,18 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 
 		pa.setWeight(weight);
 		pa.setRepetition(rep);
+		pa.setTimestamp(new Date());
+		
+		pMapper.addPerformanceActual(pa, new Date());
 		
 		// Update Adapter + ListView
 		adapter.add(pa);
-		//Save the data into the ArrayList
-		savePerformanceActualToday();
 		// Set the ArrayList on the current value
 		performanceActualList = adapter.getPerformanceActualList();
 		// Show the User a hint message
 		Toast.makeText(getActivity(), getResources().getString(R.string.ExerciseSpecific_NewSet),Toast.LENGTH_SHORT).show();
 		
-	}
-
-	/**
-	 * Save the current data in the ListView into the ArrayList
-	 */
-	public void savePerformanceActualToday(){
-		for (PerformanceActual item : performanceActualList) {
-			View v = getViewByPosition(item.getSet() - 1, exerciseListView);			
-			
-			repetition = (EditText) v.findViewById(R.id.specific_edit_repetition);
-			weight = (EditText) v.findViewById(R.id.specific_edit_weight);
-
-			if (!repetition.getText().toString().isEmpty()) {
-				item.setRepetition(Integer.parseInt(repetition.getText().toString()));
-			}else{
-				item.setRepetition(-1);
-			}
-			
-			if (!weight.getText().toString().isEmpty()) {
-				item.setWeight(Double.parseDouble(weight.getText().toString()));
-			}else{
-				item.setWeight(-1);
-			}
-			
-			if (item.getWeight() != -1 && item.getRepetition() != -1){
-				pMapper.addPerformanceActual(item, new Date());
-			}
-		}
-	}
-	
+	}	
 	
 	/**
 	 * Helps to determine the view of the current item in the listview.

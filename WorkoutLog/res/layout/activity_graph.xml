@@ -10,9 +10,9 @@
     tools:ignore="MergeRootFrame" >
 
     <FrameLayout
-        android:id="@+id/overview_dateTimePicker"
+        android:id="@+id/exercisePicker"
   		android:layout_width="match_parent"
-        android:layout_height="@dimen/actionbar_height"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
@@ -20,6 +20,6 @@
         android:id="@+id/lineGraph"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/overview_dateTimePicker"
+        android:layout_below="@id/exercisePicker"
         android:layout_centerHorizontal="true"/>    
 </RelativeLayout>
