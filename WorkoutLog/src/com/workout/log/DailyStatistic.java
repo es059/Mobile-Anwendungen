@@ -36,42 +36,49 @@ public class DailyStatistic extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.daily_statistic, container, false);
 		
-		/**
-		 * Handles the behavior if the back button is pressed
-		 */
-		((HelperActivity) getActivity())
-				.setOnBackPressedListener(new OnBackPressedListener() {
-					@Override
-					public void doBack() {
-						openExerciseSpecific();
-						((HelperActivity) getActivity())
-								.setOnBackPressedListener(null);
-					}
-				});
-		/**
-		 * Handles the behavior if the Home button in the actionbar is pressed
-		 */
-		((HelperActivity) getActivity())
-				.setOnHomePressedListener(new OnHomePressedListener() {
-					@Override
-					public Intent doHome() {
-						openExerciseSpecific();
-						((HelperActivity) getActivity())
-								.setOnBackPressedListener(null);
-						return null;
-					}
-				});
+		SetOnBackPressListener();
+		SetOnHomePressListener();
 		
 		return view;
+	}
+	
+	/**
+	 * Handles the behavior if the back button is pressed
+	 */
+	public void SetOnBackPressListener() {
+		((HelperActivity) getActivity())
+		.setOnBackPressedListener(new OnBackPressedListener() {
+			@Override
+			public void doBack() {
+				openExerciseSpecific();
+				((HelperActivity) getActivity())
+						.setOnBackPressedListener(null);
+			}
+		});
+	}
+	
+	/**
+	 * Handles the behavior if the Home button in the actionbar is pressed
+	 */
+	public void SetOnHomePressListener() {
+		((HelperActivity) getActivity())
+		.setOnHomePressedListener(new OnHomePressedListener() {
+			@Override
+			public Intent doHome() {
+				openExerciseSpecific();
+				((HelperActivity) getActivity())
+						.setOnBackPressedListener(null);
+				return null;
+			}
+		});
 	}
 	
 	@Override
 	public void onResume(){
 		super.onResume();
 		
-		Bundle bundle = this.getArguments();
-		exercise_Id = bundle.getInt("exercise_Id");
-		exerciseName = bundle.getString("exerciseName");
+		
+		getBundleData();
 		
 		expandableListView = (ListView) getView().findViewById(R.id.expandable_listView);
 		
@@ -90,6 +97,12 @@ public class DailyStatistic extends Fragment{
         expandableListView.setAdapter(alphaInAnimationAdapter);
         adapter.expand(0);
 		
+	}
+	
+	public void getBundleData(){
+		Bundle bundle = this.getArguments();
+		exercise_Id = bundle.getInt("exercise_Id");
+		exerciseName = bundle.getString("exerciseName");
 	}
 	
 	private void openExerciseSpecific() {

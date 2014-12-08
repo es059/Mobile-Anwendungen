@@ -48,9 +48,9 @@ import com.workout.log.listAdapter.ExerciseListWithoutSetsRepsAdapter;
  *
  */
 public class ExerciseAdd extends Fragment implements OnItemLongClickListener, UndoBarController.UndoListener{
+	
 	private ListView exerciseListView = null;;
 	private ExerciseListWithoutSetsRepsAdapter listAdapter = null;
-	
 	private ExerciseMapper eMapper = null;;
 	private TrainingDayMapper tMapper = null;
 	private PerformanceActualMapper paMapper = null;
@@ -63,23 +63,31 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.exercise_add, container, false);
 	
-		paMapper = new PerformanceActualMapper(getActivity());
-		ptMapper = new PerformanceTargetMapper(getActivity());
-		tMapper = new TrainingDayMapper(getActivity());
+		initMapper();
+		initSearchBar();
 		
-        /**
-		 * Add the searchBar fragment to the current fragment
-		 */
-	    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        transaction.replace(R.id.add_searchBar, ExerciseSearchBarFragment.newInstance(this), "ActionBarSearchBarFragment");
-        transaction.commit();
-
         //Set the Name of the ActionBar Title
         ((HelperActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.MenuList_Exercises));
         
 		setHasOptionsMenu(true);
 		return view;
+	}
+	
+	public void initMapper() {
+		paMapper = new PerformanceActualMapper(getActivity());
+		ptMapper = new PerformanceTargetMapper(getActivity());
+		tMapper = new TrainingDayMapper(getActivity());
+	}
+	
+	 /**
+	 * Add the searchBar fragment to the current fragment
+	 */
+	public void initSearchBar() {
+		 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+	     transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+	     transaction.replace(R.id.add_searchBar, ExerciseSearchBarFragment.newInstance(this), "ActionBarSearchBarFragment");
+	     transaction.commit();
+
 	}
 	
 	/**
@@ -158,29 +166,32 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 	@SuppressWarnings("unchecked")
 	public void updateListView(ArrayList<Exercise> list, boolean searchMode, final String exerciseStringName){
 		exerciseList = list;
-		if (exerciseList.size() == 0){
-			Default d = new Default();
-			if (exerciseStringName == null || exerciseStringName.equals("")){
-				d.setTitel(getString(R.string.noExercise));
-			}else{
-				d.setTitel(exerciseStringName + " " + getResources().getString(R.string.NotFound));
-				d.setHint(getResources().getString(R.string.Add));
-			}
-			ArrayList<Default> ld = new ArrayList<Default>();
-			ld.add(d);
-			DefaultAddListAdapter l = new DefaultAddListAdapter(getActivity(), 0, ld);
-			exerciseListView.setAdapter(l);
-			exerciseListView.setOnItemClickListener(new OnItemClickListener(){
-				@Override
-				public void onItemClick(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
-					showDialogAddFragment(exerciseStringName);
-				}	
-			});
-			
+		if (exerciseList.size() == 0){	
+			initDefaultListItem(exerciseStringName);
 		}else{
 			exerciseListView.setOnItemClickListener(null);
 			new BackGroundTask(exerciseListView, searchMode).execute(list);
 		}
+	}
+	
+	public void initDefaultListItem(final String exerciseStringName) {
+		Default d = new Default();
+		if (exerciseStringName == null || exerciseStringName.equals("")){
+			d.setTitel(getString(R.string.noExercise));
+		}else{
+			d.setTitel(exerciseStringName + " " + getResources().getString(R.string.NotFound));
+			d.setHint(getResources().getString(R.string.Add));
+		}
+		ArrayList<Default> ld = new ArrayList<Default>();
+		ld.add(d);
+		DefaultAddListAdapter l = new DefaultAddListAdapter(getActivity(), 0, ld);
+		exerciseListView.setAdapter(l);
+		exerciseListView.setOnItemClickListener(new OnItemClickListener(){
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
+				showDialogAddFragment(exerciseStringName);
+			}	
+		});
 	}
 	
 	/**
@@ -213,50 +224,53 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 		        	}
 		        	
 		        	for (int position : reverseSortedPositions) {
-		            	Exercise e = (Exercise) exerciseListView.getItemAtPosition(position);
-		            	
 		            	/**
 		            	 * Fill the exercise Object with additional data to ensure that 
 		            	 * the undo method is working
 		            	 */
+		        		Exercise e = (Exercise) exerciseListView.getItemAtPosition(position);
 		            	e = eMapper.addAdditionalInfo(e);
-		            	
-                    	/**
-                    	 * Delete from TrainingDayHasExercise, PerformanceActual
-                    	 * and PerformanceTarget
-                    	 */
-                    	eMapper.deleteExerciseFromAllTrainingDays(e);
-                    	eMapper.delete(e);
-                    	
-                    	ptMapper.deleteExerciseFromPerfromanceTarget(e);
-                    	paMapper.deleteExerciseFromPerfromanceActual(e);
-		        		
-                    	Exercise item= (Exercise) listAdapter.getItem(position);
-		            	listAdapter.remove(item);
-		            	
-		                items[arrayCount]=item;
-	 	               	itemPositions[arrayCount]=position;
-	 	               	arrayCount++;
-	 	               	
+
+		            	deleteExerciseReferencesInDB(e);
+		            	deleteExerciseFromCurrentListView(position);
 		            }
 		            listAdapter.notifyDataSetChanged();
 		            
-		            UndoItem itemUndo=new UndoItem(items,itemPositions);
-		  		   
- 		            /**
- 		             * Undobar message
- 		             */
- 		            int count = 0;
- 		            for (Exercise e : items){
- 		            	if (e != null){
- 		            		count++;
- 		            	}
- 		            }
- 		            String messageUndoBar = count + " " + getResources().getString(R.string.ItemsDeleted);
- 		            		 
- 		            mUndoBarController.showUndoBar(false,messageUndoBar,itemUndo);	
+		            initUndoBar();
+ 		           
+		        }
+		        
+		        public void initUndoBar() {
+		        	String messageUndoBar = arrayCount + " " + getResources().getString(R.string.ItemsDeleted);
+ 		           	UndoItem itemUndo=new UndoItem(items,itemPositions);		 
+ 		           	mUndoBarController.showUndoBar(false,messageUndoBar,itemUndo);	
+		        }
+		        
+		        /**
+            	 * Delete from TrainingDayHasExercise, PerformanceActual
+            	 * and PerformanceTarget
+            	 */
+		        public void deleteExerciseReferencesInDB(Exercise e) {
+		        	eMapper.deleteExerciseFromAllTrainingDays(e);
+                	eMapper.delete(e);
+                	ptMapper.deleteExerciseFromPerfromanceTarget(e);
+                	paMapper.deleteExerciseFromPerfromanceActual(e);
+		        }
+		        
+		        public void deleteExerciseFromCurrentListView(int position) {
+		        	Exercise item= (Exercise) listAdapter.getItem(position);
+	            	listAdapter.remove(item);
+	            	
+	            	addDeletedExerciseToUndoArray(item, position);
+		        }
+		        
+		        public void addDeletedExerciseToUndoArray(Exercise item, int position) {
+		        	items[arrayCount]=item;
+ 	               	itemPositions[arrayCount]=position;
+ 	               	arrayCount++;
 		        }
 		    });
+		 
 		 exerciseListView.setOnTouchListener(touchListener);
 		 /** Setting this scroll listener is required to ensure that during ListView scrolling,
 		  *  we don't look for swipes.
@@ -289,34 +303,44 @@ public class ExerciseAdd extends Fragment implements OnItemLongClickListener, Un
 			int[] itemPositions = itemRetrieve.itemPosition;
 
 			if (items != null && itemPositions != null) {
-				int end= 0;
-			    for (Exercise e : items){
-	            	 if (e != null){
-	            		 end++;
-	            	 }
-	             }
-			    
-				for (int i = end - 1; i >= 0; i--) {
-					Exercise item = items[i];
-					int itemPosition = itemPositions[i];
-					
-					eMapper.add(item);
-					for (Integer trainingDayId : item.getTrainingDayIdList()){
-						tMapper.addExerciseToTrainingDay(trainingDayId, item.getId());
-					}
-                	for (PerformanceTarget pt : item.getPerformanceTargetList()){
-                		ptMapper.addPerformanceTarget(pt);
-                	}
-                	for (PerformanceActual pt : item.getPerformanceActualList()){
-                		paMapper.addPerformanceActual(pt, pt.getTimestamp());
-                	}
-					
-					listAdapter.insert(item, itemPosition);
-					listAdapter.notifyDataSetChanged();
-				}
+				int end= countItems(items);
+			    restoreData(end, items, itemPositions);		
 			}
 		}		
 	}
+	
+	public void restoreData(int end, Exercise [] items, int[] itemPositions) {
+		for (int i = end - 1; i >= 0; i--) {
+			Exercise item = items[i];
+			int itemPosition = itemPositions[i];
+			
+			eMapper.add(item);
+			for (Integer trainingDayId : item.getTrainingDayIdList()){
+				tMapper.addExerciseToTrainingDay(trainingDayId, item.getId());
+			}
+        	for (PerformanceTarget pt : item.getPerformanceTargetList()){
+        		ptMapper.addPerformanceTarget(pt);
+        	}
+        	for (PerformanceActual pt : item.getPerformanceActualList()){
+        		paMapper.addPerformanceActual(pt, pt.getTimestamp());
+        	}
+			
+			listAdapter.insert(item, itemPosition);
+			listAdapter.notifyDataSetChanged();
+		}
+	}
+	
+	public int countItems(Exercise[] items) {
+		int count = 0;
+		for (Exercise e : items){
+       	 if (e != null){
+       		count++;
+       	 }
+        }
+		return count;
+	}
+	
+	
 	
 	/**
 	 * Handels the Database queries in an Async Task

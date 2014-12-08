@@ -21,13 +21,13 @@ public class LockScreenWidgetProvider extends AppWidgetProvider {
 		      Intent intent = new Intent(Intent.ACTION_VIEW);
 		      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		      intent.setData(Uri.parse(url));
-		      PendingIntent pending = PendingIntent.getActivity(context, 0,
-		      intent, 0);
+		   /*   PendingIntent pending = PendingIntent.getActivity(context, 0,
+		      intent, 0);*/
 		      RemoteViews views = new RemoteViews(context.getPackageName(),
 		      R.layout.fragment_central_add_set);
 		     // views.setOnClickPendingIntent(R.id.button1, pending);
 		      appWidgetManager.updateAppWidget(currentWidgetId,views);
-		      Toast.makeText(context, "widget added", Toast.LENGTH_SHORT).show();	
+		   //   Toast.makeText(context, "widget added", Toast.LENGTH_SHORT).show();	
 		      }
 	 
 	}
