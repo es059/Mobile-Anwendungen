@@ -181,6 +181,10 @@ public class ManageTrainingDays extends Fragment implements OnItemClickListener,
 			ArrayList<Default> ld = new ArrayList<Default>();
 			ld.add(d);
 			DefaultAddListAdapter l = new DefaultAddListAdapter(getActivity(), 0, ld);
+			//Create a reference to the trainingDayListAdapter or the variable is null 
+			ArrayList<TrainingDay> tdList = new ArrayList<TrainingDay>();
+			trainingDayListAdapter = new TrainingDayListAdapter(getActivity(), R.layout.listview_training_day, tdList);
+			
 			trainingDayListView.setOnTouchListener(null);
 			trainingDayListView.setAdapter(l);
 			trainingDayListView.setOnItemClickListener(new OnItemClickListener(){
