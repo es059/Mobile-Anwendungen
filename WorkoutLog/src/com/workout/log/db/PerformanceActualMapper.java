@@ -434,7 +434,7 @@ public class PerformanceActualMapper {
 	 *  @return Exercise
 	 *  @author Eric Schmidt
 	 */
-	public void addPerformanceActual(PerformanceActual performanceActual, Date date){
+	public PerformanceActual addPerformanceActual(PerformanceActual performanceActual, Date date){
 		int id = 1;
 		SimpleDateFormat sp = new SimpleDateFormat("dd.MM.yyyy");
 		SQLiteDatabase db = this.myDBHelper.getReadableDatabase();
@@ -445,23 +445,24 @@ public class PerformanceActualMapper {
 				if (!cursor.isNull(0)){
 					id = Integer.parseInt(cursor.getString(0));
 					id++;
+					performanceActual.setId(id);
 				}
 			}
 			cursor.close();
-		}else{
-			id = performanceActual.getId();
 		}
+		
 		sql= "INSERT OR REPLACE INTO PerformanceActual "
 				+ "(PerformanceActual_Id, RepetitionActual, SetActual, "
 				+ "WeightActual, TimestampActual, Exercise_Id) "
-				+ "VALUES (" + id + "," +((performanceActual.getRepetition() == -1) ? null :  performanceActual.getRepetition()) 
+				+ "VALUES (" + performanceActual.getId() + "," +((performanceActual.getRepetition() == -1) ? null :  performanceActual.getRepetition()) 
 				+ "," + performanceActual.getSet()
 				+ "," + ((performanceActual.getWeight() == -1) ? null : performanceActual.getWeight())
 				+ ",'" + sp.format(date)
 				+ "'," + performanceActual.getExercise().getId() + ")";
 				
 		db.execSQL(sql);
-		db.close();		
+		db.close();	
+		return performanceActual;
 	}
 	
 	/**

@@ -44,7 +44,7 @@ public class SelectExerciseForQuickWorkout extends Fragment implements OnItemLon
 	private ExerciseMapper eMapper = null;;
 	private ArrayList<Exercise> exerciseList = null;
 	private UndoBarController mUndoBarController = null;
-	ExerciseSpecific exerciseSpecific = null;
+	private ExerciseSpecific exerciseSpecific = null;
 	private ShowcaseView showcaseView = null;
 
 	@Override

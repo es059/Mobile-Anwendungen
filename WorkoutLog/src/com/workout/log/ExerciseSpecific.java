@@ -97,7 +97,6 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		}
 		
 		((HelperActivity) getActivity()).setNavigationDrawerVisibility(false);
-		((HelperActivity) getActivity()).hamburgerToArrow();
 		setHasOptionsMenu(true);
 		
 		if (trainingDayId != -1){
@@ -146,7 +145,10 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 	@Override
 	public void onResume() {
 		super.onResume();
-
+		
+		//Convert the Hamburger in the ActionBar to an arrow
+		((HelperActivity) getActivity()).hamburgerToArrow();
+		
 		pMapper = new PerformanceActualMapper(getActivity());
 		
 		dateFragment = (ActionBarDatePickerFragment) getFragmentManager().findFragmentByTag("DateTimePicker");
@@ -313,7 +315,7 @@ public class ExerciseSpecific extends Fragment implements UndoBarController.Undo
 		pa.setRepetition(rep);
 		pa.setTimestamp(new Date());
 		
-		pMapper.addPerformanceActual(pa, new Date());
+		pa = pMapper.addPerformanceActual(pa, new Date());
 		
 		// Update Adapter + ListView
 		adapter.add(pa);

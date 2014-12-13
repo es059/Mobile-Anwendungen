@@ -114,8 +114,6 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 				exerciseSpecific.updateListView(performanceActualList);
 				calendar.setTime(new Date());
 				setDate();
-				
-				exerciseSpecific.showAddSetFragment();
 			}
 		} else if (id == R.id.Previous) {
 			performanceActualList = paMapper.getPreviousPerformanceActual(calendar, exerciseSpecific.getExercise());
@@ -142,10 +140,14 @@ public class ActionBarDatePickerFragment extends Fragment implements OnClickList
 	 */
 	private void setDate(){
 		Calendar c = Calendar.getInstance();
-		if (String.valueOf(calendar.getTime()).equals(String.valueOf(c.getTime()))){
+		SimpleDateFormat simpleDF = new SimpleDateFormat("dd.MM.yyyy");
+		
+		if (simpleDF.format(calendar.getTime()).equals(simpleDF.format(c.getTime()))){
 			date.setText(getResources().getString(R.string.ActionBarDatePickerFragment_Today));
 			next.setVisibility(View.INVISIBLE);
 			isCurrent = true;
+			//Show the AdSetFragment
+			exerciseSpecific.showAddSetFragment();
 		}else{
 			formatedDate = dateFormat.format(calendar.getTime());
 			date.setText(formatedDate);

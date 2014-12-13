@@ -75,8 +75,7 @@ public class DailyStatistic extends Fragment{
 	
 	@Override
 	public void onResume(){
-		super.onResume();
-		
+		super.onResume();		
 		
 		getBundleData();
 		

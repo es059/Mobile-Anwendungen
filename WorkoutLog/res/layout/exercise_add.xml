@@ -1,9 +1,9 @@
-   <FrameLayout
-       android:id="@+id/content_frame"
-       xmlns:android="http://schemas.android.com/apk/res/android"
-   	xmlns:tools="http://schemas.android.com/tools"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent" >
+<FrameLayout
+    android:id="@+id/content_frame"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 	<RelativeLayout
 	    android:id="@+id/container"
 	    android:layout_width="match_parent"
@@ -18,20 +18,22 @@
 	        android:layout_alignParentTop="true"
 	        android:layout_centerHorizontal="true"/>
 
-		<ScrollView android:fillViewport="true"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="0dp">
-            <LinearLayout android:id="@+id/dismissable_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-       	</ScrollView>
+			<ScrollView android:fillViewport="true"
+	            android:layout_width="match_parent"
+	            android:layout_weight="1"
+	            android:layout_height="0dp">
+	            <LinearLayout android:id="@+id/dismissable_container"
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content"
+	                android:orientation="vertical" />
+	       	</ScrollView>
 
 	    <ListView
 	        android:id="@+id/add_exerciseList"
 	        android:layout_width="match_parent"
 	        android:layout_height="fill_parent"
+	       	android:divider="@null"
+	        android:dividerHeight="0dp"
 	        android:layout_below="@+id/add_searchBar"
 	        android:layout_centerHorizontal="true"
 	        android:longClickable="true"/><!-- Used for the Undo TextField -->
